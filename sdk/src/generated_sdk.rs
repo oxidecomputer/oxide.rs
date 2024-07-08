@@ -11654,6 +11654,15 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional networks that this interface
+    /// may send and receive traffic on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
+    ///    },
     ///    "vpc_id": {
     ///      "description": "The VPC to which the interface belongs.",
     ///      "type": "string",
@@ -11686,6 +11695,10 @@ pub mod types {
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        /// A set of additional networks that this interface may send and
+        /// receive traffic on.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        pub transit_ips: Vec<IpNet>,
         /// The VPC to which the interface belongs.
         pub vpc_id: uuid::Uuid,
     }
@@ -11970,6 +11983,15 @@ pub mod types {
     /// a secondary will return an error.",
     ///      "default": false,
     ///      "type": "boolean"
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional networks that this interface
+    /// may send and receive traffic on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
     ///    }
     ///  }
     /// }
@@ -11994,6 +12016,10 @@ pub mod types {
         /// secondary will return an error.
         #[serde(default)]
         pub primary: bool,
+        /// A set of additional networks that this interface may send and
+        /// receive traffic on.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        pub transit_ips: Vec<IpNet>,
     }
 
     impl From<&InstanceNetworkInterfaceUpdate> for InstanceNetworkInterfaceUpdate {
@@ -14715,7 +14741,8 @@ pub mod types {
 
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
-    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
+    /// with a '-'. Names cannot be a UUID, but they may contain a UUID. They
+    /// can be at most 63 characters long.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14724,8 +14751,8 @@ pub mod types {
     ///  "title": "A name unique within the parent collection",
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",
+    /// '-', and may not end with a '-'. Names cannot be a UUID, but they may
+    /// contain a UUID. They can be at most 63 characters long.",
     ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
@@ -15145,6 +15172,13 @@ pub mod types {
     ///    "subnet": {
     ///      "$ref": "#/components/schemas/IpNet"
     ///    },
+    ///    "transit_ips": {
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
+    ///    },
     ///    "vni": {
     ///      "$ref": "#/components/schemas/Vni"
     ///    }
@@ -15162,6 +15196,8 @@ pub mod types {
         pub primary: bool,
         pub slot: u8,
         pub subnet: IpNet,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        pub transit_ips: Vec<IpNet>,
         pub vni: Vni,
     }
 
@@ -17278,6 +17314,750 @@ pub mod types {
 
     impl RouteConfig {
         pub fn builder() -> builder::RouteConfig {
+            Default::default()
+        }
+    }
+
+    /// A `RouteDestination` is used to match traffic with a routing rule, on
+    /// the destination of that traffic.
+    ///
+    /// When traffic is to be sent to a destination that is within a given
+    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
+    /// will be forward to the `RouteTarget` for that rule.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A `RouteDestination` is used to match traffic with a
+    /// routing rule, on the destination of that traffic.\n\nWhen traffic is to
+    /// be sent to a destination that is within a given `RouteDestination`, the
+    /// corresponding `RouterRoute` applies, and traffic will be forward to the
+    /// `RouteTarget` for that rule.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Route applies to traffic destined for a specific IP
+    /// address",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ip"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Route applies to traffic destined for a specific IP
+    /// subnet",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ip_net"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Route applies to traffic destined for the given
+    /// VPC.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "vpc"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Route applies to traffic",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "subnet"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "value")]
+    pub enum RouteDestination {
+        /// Route applies to traffic destined for a specific IP address
+        #[serde(rename = "ip")]
+        Ip(std::net::IpAddr),
+        /// Route applies to traffic destined for a specific IP subnet
+        #[serde(rename = "ip_net")]
+        IpNet(IpNet),
+        /// Route applies to traffic destined for the given VPC.
+        #[serde(rename = "vpc")]
+        Vpc(Name),
+        /// Route applies to traffic
+        #[serde(rename = "subnet")]
+        Subnet(Name),
+    }
+
+    impl From<&RouteDestination> for RouteDestination {
+        fn from(value: &RouteDestination) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<std::net::IpAddr> for RouteDestination {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
+        }
+    }
+
+    impl From<IpNet> for RouteDestination {
+        fn from(value: IpNet) -> Self {
+            Self::IpNet(value)
+        }
+    }
+
+    /// A `RouteTarget` describes the possible locations that traffic matching a
+    /// route destination can be sent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A `RouteTarget` describes the possible locations that
+    /// traffic matching a route destination can be sent.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Forward traffic to a particular IP address.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ip"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Forward traffic to a VPC",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "vpc"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Forward traffic to a VPC Subnet",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "subnet"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Forward traffic to a specific instance",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "instance"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Forward traffic to an internet gateway",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "internet_gateway"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Drop matching traffic",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "drop"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "value")]
+    pub enum RouteTarget {
+        /// Forward traffic to a particular IP address.
+        #[serde(rename = "ip")]
+        Ip(std::net::IpAddr),
+        /// Forward traffic to a VPC
+        #[serde(rename = "vpc")]
+        Vpc(Name),
+        /// Forward traffic to a VPC Subnet
+        #[serde(rename = "subnet")]
+        Subnet(Name),
+        /// Forward traffic to a specific instance
+        #[serde(rename = "instance")]
+        Instance(Name),
+        /// Forward traffic to an internet gateway
+        #[serde(rename = "internet_gateway")]
+        InternetGateway(Name),
+        #[serde(rename = "drop")]
+        Drop,
+    }
+
+    impl From<&RouteTarget> for RouteTarget {
+        fn from(value: &RouteTarget) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<std::net::IpAddr> for RouteTarget {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
+        }
+    }
+
+    /// A route defines a rule that governs where traffic should be sent based
+    /// on its destination.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A route defines a rule that governs where traffic
+    /// should be sent based on its destination.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "destination",
+    ///    "id",
+    ///    "kind",
+    ///    "name",
+    ///    "target",
+    ///    "time_created",
+    ///    "time_modified",
+    ///    "vpc_router_id"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "destination": {
+    ///      "description": "Selects which traffic this routing rule will apply
+    /// to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteDestination"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "kind": {
+    ///      "description": "Describes the kind of router. Set at creation.
+    /// `read-only`",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouterRouteKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "target": {
+    ///      "description": "The location that matched packets should be
+    /// forwarded to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteTarget"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "vpc_router_id": {
+    ///      "description": "The ID of the VPC Router to which the route
+    /// belongs",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct RouterRoute {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// Selects which traffic this routing rule will apply to.
+        pub destination: RouteDestination,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// Describes the kind of router. Set at creation. `read-only`
+        pub kind: RouterRouteKind,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// The location that matched packets should be forwarded to.
+        pub target: RouteTarget,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        /// The ID of the VPC Router to which the route belongs
+        pub vpc_router_id: uuid::Uuid,
+    }
+
+    impl From<&RouterRoute> for RouterRoute {
+        fn from(value: &RouterRoute) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouterRoute {
+        pub fn builder() -> builder::RouterRoute {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for a `RouterRoute`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for a `RouterRoute`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "destination",
+    ///    "name",
+    ///    "target"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "destination": {
+    ///      "description": "Selects which traffic this routing rule will apply
+    /// to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteDestination"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "target": {
+    ///      "description": "The location that matched packets should be
+    /// forwarded to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteTarget"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct RouterRouteCreate {
+        pub description: String,
+        /// Selects which traffic this routing rule will apply to.
+        pub destination: RouteDestination,
+        pub name: Name,
+        /// The location that matched packets should be forwarded to.
+        pub target: RouteTarget,
+    }
+
+    impl From<&RouterRouteCreate> for RouterRouteCreate {
+        fn from(value: &RouterRouteCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouterRouteCreate {
+        pub fn builder() -> builder::RouterRouteCreate {
+            Default::default()
+        }
+    }
+
+    /// The kind of a `RouterRoute`
+    ///
+    /// The kind determines certain attributes such as if the route is
+    /// modifiable and describes how or where the route was created.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The kind of a `RouterRoute`\n\nThe kind determines
+    /// certain attributes such as if the route is modifiable and describes how
+    /// or where the route was created.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Determines the default destination of traffic, such
+    /// as whether it goes to the internet or not.\n\n`Destination: An Internet
+    /// Gateway` `Modifiable: true`",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "default"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Automatically added for each VPC Subnet in the
+    /// VPC\n\n`Destination: A VPC Subnet` `Modifiable: false`",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "vpc_subnet"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Automatically added when VPC peering is
+    /// established\n\n`Destination: A different VPC` `Modifiable: false`",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "vpc_peering"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Created by a user; see
+    /// `RouteTarget`\n\n`Destination: User defined` `Modifiable: true`",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "custom"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum RouterRouteKind {
+        /// Determines the default destination of traffic, such as whether it
+        /// goes to the internet or not.
+        ///
+        /// `Destination: An Internet Gateway` `Modifiable: true`
+        #[serde(rename = "default")]
+        Default,
+        /// Automatically added for each VPC Subnet in the VPC
+        ///
+        /// `Destination: A VPC Subnet` `Modifiable: false`
+        #[serde(rename = "vpc_subnet")]
+        VpcSubnet,
+        /// Automatically added when VPC peering is established
+        ///
+        /// `Destination: A different VPC` `Modifiable: false`
+        #[serde(rename = "vpc_peering")]
+        VpcPeering,
+        /// Created by a user; see `RouteTarget`
+        ///
+        /// `Destination: User defined` `Modifiable: true`
+        #[serde(rename = "custom")]
+        Custom,
+    }
+
+    impl From<&RouterRouteKind> for RouterRouteKind {
+        fn from(value: &RouterRouteKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for RouterRouteKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Default => "default".to_string(),
+                Self::VpcSubnet => "vpc_subnet".to_string(),
+                Self::VpcPeering => "vpc_peering".to_string(),
+                Self::Custom => "custom".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for RouterRouteKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "default" => Ok(Self::Default),
+                "vpc_subnet" => Ok(Self::VpcSubnet),
+                "vpc_peering" => Ok(Self::VpcPeering),
+                "custom" => Ok(Self::Custom),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for RouterRouteKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for RouterRouteKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for RouterRouteKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/RouterRoute"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct RouterRouteResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<RouterRoute>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&RouterRouteResultsPage> for RouterRouteResultsPage {
+        fn from(value: &RouterRouteResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouterRouteResultsPage {
+        pub fn builder() -> builder::RouterRouteResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Updateable properties of a `RouterRoute`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of a `RouterRoute`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "destination",
+    ///    "target"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "destination": {
+    ///      "description": "Selects which traffic this routing rule will apply
+    /// to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteDestination"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "target": {
+    ///      "description": "The location that matched packets should be
+    /// forwarded to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/RouteTarget"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct RouterRouteUpdate {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub description: Option<String>,
+        /// Selects which traffic this routing rule will apply to.
+        pub destination: RouteDestination,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub name: Option<Name>,
+        /// The location that matched packets should be forwarded to.
+        pub target: RouteTarget,
+    }
+
+    impl From<&RouterRouteUpdate> for RouterRouteUpdate {
+        fn from(value: &RouterRouteUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouterRouteUpdate {
+        pub fn builder() -> builder::RouterRouteUpdate {
             Default::default()
         }
     }
@@ -22606,16 +23386,16 @@ pub mod types {
 
     /// View of a Built-in User
     ///
-    /// A Built-in User is explicitly created as opposed to being derived from
-    /// an Identify Provider.
+    /// Built-in users are identities internal to the system, used when the
+    /// control plane performs actions autonomously
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of a Built-in User\n\nA Built-in User is
-    /// explicitly created as opposed to being derived from an Identify
-    /// Provider.",
+    ///  "description": "View of a Built-in User\n\nBuilt-in users are
+    /// identities internal to the system, used when the control plane performs
+    /// actions autonomously",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -22791,7 +23571,8 @@ pub mod types {
 
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
-    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
+    /// with a '-'. Names cannot be a UUID, but they may contain a UUID. They
+    /// can be at most 63 characters long.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -22800,8 +23581,8 @@ pub mod types {
     ///  "title": "A name unique within the parent collection",
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",
+    /// '-', and may not end with a '-'. Names cannot be a UUID, but they may
+    /// contain a UUID. They can be at most 63 characters long.",
     ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
@@ -24795,8 +25576,318 @@ pub mod types {
         }
     }
 
+    /// A VPC router defines a series of rules that indicate where traffic
+    /// should be sent depending on its destination.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A VPC router defines a series of rules that indicate
+    /// where traffic should be sent depending on its destination.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "kind",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified",
+    ///    "vpc_id"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "kind": {
+    ///      "$ref": "#/components/schemas/VpcRouterKind"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "vpc_id": {
+    ///      "description": "The VPC to which the router belongs.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct VpcRouter {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        pub kind: VpcRouterKind,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        /// The VPC to which the router belongs.
+        pub vpc_id: uuid::Uuid,
+    }
+
+    impl From<&VpcRouter> for VpcRouter {
+        fn from(value: &VpcRouter) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VpcRouter {
+        pub fn builder() -> builder::VpcRouter {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for a `VpcRouter`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for a `VpcRouter`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct VpcRouterCreate {
+        pub description: String,
+        pub name: Name,
+    }
+
+    impl From<&VpcRouterCreate> for VpcRouterCreate {
+        fn from(value: &VpcRouterCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VpcRouterCreate {
+        pub fn builder() -> builder::VpcRouterCreate {
+            Default::default()
+        }
+    }
+
+    /// VpcRouterKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "system",
+    ///    "custom"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum VpcRouterKind {
+        #[serde(rename = "system")]
+        System,
+        #[serde(rename = "custom")]
+        Custom,
+    }
+
+    impl From<&VpcRouterKind> for VpcRouterKind {
+        fn from(value: &VpcRouterKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for VpcRouterKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::System => "system".to_string(),
+                Self::Custom => "custom".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for VpcRouterKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "system" => Ok(Self::System),
+                "custom" => Ok(Self::Custom),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for VpcRouterKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for VpcRouterKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for VpcRouterKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/VpcRouter"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct VpcRouterResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<VpcRouter>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&VpcRouterResultsPage> for VpcRouterResultsPage {
+        fn from(value: &VpcRouterResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VpcRouterResultsPage {
+        pub fn builder() -> builder::VpcRouterResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Updateable properties of a `VpcRouter`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of a `VpcRouter`",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct VpcRouterUpdate {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub description: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub name: Option<Name>,
+    }
+
+    impl From<&VpcRouterUpdate> for VpcRouterUpdate {
+        fn from(value: &VpcRouterUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VpcRouterUpdate {
+        pub fn builder() -> builder::VpcRouterUpdate {
+            Default::default()
+        }
+    }
+
     /// A VPC subnet represents a logical grouping for instances that allows
-    /// network traffic between them, within a IPv4 subnetwork or optionall an
+    /// network traffic between them, within a IPv4 subnetwork or optionally an
     /// IPv6 subnetwork.
     ///
     /// <details><summary>JSON schema</summary>
@@ -24805,7 +25896,7 @@ pub mod types {
     /// {
     ///  "description": "A VPC subnet represents a logical grouping for
     /// instances that allows network traffic between them, within a IPv4
-    /// subnetwork or optionall an IPv6 subnetwork.",
+    /// subnetwork or optionally an IPv6 subnetwork.",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -24818,6 +25909,14 @@ pub mod types {
     ///    "vpc_id"
     ///  ],
     ///  "properties": {
+    ///    "custom_router_id": {
+    ///      "description": "ID for an attached custom router.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -24874,6 +25973,9 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnet {
+        /// ID for an attached custom router.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub custom_router_id: Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
@@ -24918,6 +26020,18 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
+    ///    "custom_router": {
+    ///      "description": "An optional router, used to direct packets sent
+    /// from hosts in this subnet to any destination address.\n\nCustom routers
+    /// apply in addition to the VPC-wide *system* router, and have higher
+    /// priority than the system router for an otherwise equal-prefix-length
+    /// match.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -24952,6 +26066,14 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetCreate {
+        /// An optional router, used to direct packets sent from hosts in this
+        /// subnet to any destination address.
+        ///
+        /// Custom routers apply in addition to the VPC-wide *system* router,
+        /// and have higher priority than the system router for an otherwise
+        /// equal-prefix-length match.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub custom_router: Option<NameOrId>,
         pub description: String,
         /// The IPv4 address range for this subnet.
         ///
@@ -25042,6 +26164,15 @@ pub mod types {
     ///  "description": "Updateable properties of a `VpcSubnet`",
     ///  "type": "object",
     ///  "properties": {
+    ///    "custom_router": {
+    ///      "description": "An optional router, used to direct packets sent
+    /// from hosts in this subnet to any destination address.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": [
     ///        "string",
@@ -25061,6 +26192,10 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetUpdate {
+        /// An optional router, used to direct packets sent from hosts in this
+        /// subnet to any destination address.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub custom_router: Option<NameOrId>,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -33157,6 +34292,7 @@ pub mod types {
             subnet_id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            transit_ips: Result<Vec<super::IpNet>, String>,
             vpc_id: Result<uuid::Uuid, String>,
         }
 
@@ -33173,6 +34309,7 @@ pub mod types {
                     subnet_id: Err("no value supplied for subnet_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
+                    transit_ips: Ok(Default::default()),
                     vpc_id: Err("no value supplied for vpc_id".to_string()),
                 }
             }
@@ -33279,6 +34416,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T::Error: std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -33307,6 +34454,7 @@ pub mod types {
                     subnet_id: value.subnet_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
+                    transit_ips: value.transit_ips?,
                     vpc_id: value.vpc_id?,
                 })
             }
@@ -33325,6 +34473,7 @@ pub mod types {
                     subnet_id: Ok(value.subnet_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
+                    transit_ips: Ok(value.transit_ips),
                     vpc_id: Ok(value.vpc_id),
                 }
             }
@@ -33499,6 +34648,7 @@ pub mod types {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
             primary: Result<bool, String>,
+            transit_ips: Result<Vec<super::IpNet>, String>,
         }
 
         impl Default for InstanceNetworkInterfaceUpdate {
@@ -33507,6 +34657,7 @@ pub mod types {
                     description: Ok(Default::default()),
                     name: Ok(Default::default()),
                     primary: Ok(Default::default()),
+                    transit_ips: Ok(Default::default()),
                 }
             }
         }
@@ -33542,6 +34693,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for primary: {}", e));
                 self
             }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T::Error: std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<InstanceNetworkInterfaceUpdate>
@@ -33555,6 +34716,7 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                     primary: value.primary?,
+                    transit_ips: value.transit_ips?,
                 })
             }
         }
@@ -33565,6 +34727,7 @@ pub mod types {
                     description: Ok(value.description),
                     name: Ok(value.name),
                     primary: Ok(value.primary),
+                    transit_ips: Ok(value.transit_ips),
                 }
             }
         }
@@ -35307,6 +36470,7 @@ pub mod types {
             primary: Result<bool, String>,
             slot: Result<u8, String>,
             subnet: Result<super::IpNet, String>,
+            transit_ips: Result<Vec<super::IpNet>, String>,
             vni: Result<super::Vni, String>,
         }
 
@@ -35321,6 +36485,7 @@ pub mod types {
                     primary: Err("no value supplied for primary".to_string()),
                     slot: Err("no value supplied for slot".to_string()),
                     subnet: Err("no value supplied for subnet".to_string()),
+                    transit_ips: Ok(Default::default()),
                     vni: Err("no value supplied for vni".to_string()),
                 }
             }
@@ -35407,6 +36572,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for subnet: {}", e));
                 self
             }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T::Error: std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
             pub fn vni<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Vni>,
@@ -35431,6 +36606,7 @@ pub mod types {
                     primary: value.primary?,
                     slot: value.slot?,
                     subnet: value.subnet?,
+                    transit_ips: value.transit_ips?,
                     vni: value.vni?,
                 })
             }
@@ -35447,6 +36623,7 @@ pub mod types {
                     primary: Ok(value.primary),
                     slot: Ok(value.slot),
                     subnet: Ok(value.subnet),
+                    transit_ips: Ok(value.transit_ips),
                     vni: Ok(value.vni),
                 }
             }
@@ -37069,6 +38246,390 @@ pub mod types {
             fn from(value: super::RouteConfig) -> Self {
                 Self {
                     routes: Ok(value.routes),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouterRoute {
+            description: Result<String, String>,
+            destination: Result<super::RouteDestination, String>,
+            id: Result<uuid::Uuid, String>,
+            kind: Result<super::RouterRouteKind, String>,
+            name: Result<super::Name, String>,
+            target: Result<super::RouteTarget, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            vpc_router_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for RouterRoute {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    destination: Err("no value supplied for destination".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    target: Err("no value supplied for target".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    vpc_router_id: Err("no value supplied for vpc_router_id".to_string()),
+                }
+            }
+        }
+
+        impl RouterRoute {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn destination<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteDestination>,
+                T::Error: std::fmt::Display,
+            {
+                self.destination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouterRouteKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn target<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteTarget>,
+                T::Error: std::fmt::Display,
+            {
+                self.target = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+            pub fn vpc_router_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.vpc_router_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for vpc_router_id: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouterRoute> for super::RouterRoute {
+            type Error = super::error::ConversionError;
+            fn try_from(value: RouterRoute) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    destination: value.destination?,
+                    id: value.id?,
+                    kind: value.kind?,
+                    name: value.name?,
+                    target: value.target?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    vpc_router_id: value.vpc_router_id?,
+                })
+            }
+        }
+
+        impl From<super::RouterRoute> for RouterRoute {
+            fn from(value: super::RouterRoute) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    id: Ok(value.id),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_router_id: Ok(value.vpc_router_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouterRouteCreate {
+            description: Result<String, String>,
+            destination: Result<super::RouteDestination, String>,
+            name: Result<super::Name, String>,
+            target: Result<super::RouteTarget, String>,
+        }
+
+        impl Default for RouterRouteCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    destination: Err("no value supplied for destination".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    target: Err("no value supplied for target".to_string()),
+                }
+            }
+        }
+
+        impl RouterRouteCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn destination<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteDestination>,
+                T::Error: std::fmt::Display,
+            {
+                self.destination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn target<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteTarget>,
+                T::Error: std::fmt::Display,
+            {
+                self.target = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouterRouteCreate> for super::RouterRouteCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: RouterRouteCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    destination: value.destination?,
+                    name: value.name?,
+                    target: value.target?,
+                })
+            }
+        }
+
+        impl From<super::RouterRouteCreate> for RouterRouteCreate {
+            fn from(value: super::RouterRouteCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouterRouteResultsPage {
+            items: Result<Vec<super::RouterRoute>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for RouterRouteResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl RouterRouteResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::RouterRoute>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouterRouteResultsPage> for super::RouterRouteResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RouterRouteResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::RouterRouteResultsPage> for RouterRouteResultsPage {
+            fn from(value: super::RouterRouteResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouterRouteUpdate {
+            description: Result<Option<String>, String>,
+            destination: Result<super::RouteDestination, String>,
+            name: Result<Option<super::Name>, String>,
+            target: Result<super::RouteTarget, String>,
+        }
+
+        impl Default for RouterRouteUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    destination: Err("no value supplied for destination".to_string()),
+                    name: Ok(Default::default()),
+                    target: Err("no value supplied for target".to_string()),
+                }
+            }
+        }
+
+        impl RouterRouteUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn destination<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteDestination>,
+                T::Error: std::fmt::Display,
+            {
+                self.destination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for destination: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn target<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::RouteTarget>,
+                T::Error: std::fmt::Display,
+            {
+                self.target = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouterRouteUpdate> for super::RouterRouteUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: RouterRouteUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    destination: value.destination?,
+                    name: value.name?,
+                    target: value.target?,
+                })
+            }
+        }
+
+        impl From<super::RouterRouteUpdate> for RouterRouteUpdate {
+            fn from(value: super::RouterRouteUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
                 }
             }
         }
@@ -43340,7 +44901,308 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct VpcRouter {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            kind: Result<super::VpcRouterKind, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            vpc_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for VpcRouter {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    vpc_id: Err("no value supplied for vpc_id".to_string()),
+                }
+            }
+        }
+
+        impl VpcRouter {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::VpcRouterKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+            pub fn vpc_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.vpc_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<VpcRouter> for super::VpcRouter {
+            type Error = super::error::ConversionError;
+            fn try_from(value: VpcRouter) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    kind: value.kind?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    vpc_id: value.vpc_id?,
+                })
+            }
+        }
+
+        impl From<super::VpcRouter> for VpcRouter {
+            fn from(value: super::VpcRouter) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct VpcRouterCreate {
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for VpcRouterCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl VpcRouterCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<VpcRouterCreate> for super::VpcRouterCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: VpcRouterCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::VpcRouterCreate> for VpcRouterCreate {
+            fn from(value: super::VpcRouterCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct VpcRouterResultsPage {
+            items: Result<Vec<super::VpcRouter>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for VpcRouterResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl VpcRouterResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::VpcRouter>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<VpcRouterResultsPage> for super::VpcRouterResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: VpcRouterResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::VpcRouterResultsPage> for VpcRouterResultsPage {
+            fn from(value: super::VpcRouterResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct VpcRouterUpdate {
+            description: Result<Option<String>, String>,
+            name: Result<Option<super::Name>, String>,
+        }
+
+        impl Default for VpcRouterUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl VpcRouterUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<VpcRouterUpdate> for super::VpcRouterUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: VpcRouterUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::VpcRouterUpdate> for VpcRouterUpdate {
+            fn from(value: super::VpcRouterUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct VpcSubnet {
+            custom_router_id: Result<Option<uuid::Uuid>, String>,
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
             ipv4_block: Result<super::Ipv4Net, String>,
@@ -43354,6 +45216,7 @@ pub mod types {
         impl Default for VpcSubnet {
             fn default() -> Self {
                 Self {
+                    custom_router_id: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     ipv4_block: Err("no value supplied for ipv4_block".to_string()),
@@ -43367,6 +45230,19 @@ pub mod types {
         }
 
         impl VpcSubnet {
+            pub fn custom_router_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.custom_router_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for custom_router_id: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -43453,6 +45329,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: VpcSubnet) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    custom_router_id: value.custom_router_id?,
                     description: value.description?,
                     id: value.id?,
                     ipv4_block: value.ipv4_block?,
@@ -43468,6 +45345,7 @@ pub mod types {
         impl From<super::VpcSubnet> for VpcSubnet {
             fn from(value: super::VpcSubnet) -> Self {
                 Self {
+                    custom_router_id: Ok(value.custom_router_id),
                     description: Ok(value.description),
                     id: Ok(value.id),
                     ipv4_block: Ok(value.ipv4_block),
@@ -43482,6 +45360,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnetCreate {
+            custom_router: Result<Option<super::NameOrId>, String>,
             description: Result<String, String>,
             ipv4_block: Result<super::Ipv4Net, String>,
             ipv6_block: Result<Option<super::Ipv6Net>, String>,
@@ -43491,6 +45370,7 @@ pub mod types {
         impl Default for VpcSubnetCreate {
             fn default() -> Self {
                 Self {
+                    custom_router: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     ipv4_block: Err("no value supplied for ipv4_block".to_string()),
                     ipv6_block: Ok(Default::default()),
@@ -43500,6 +45380,16 @@ pub mod types {
         }
 
         impl VpcSubnetCreate {
+            pub fn custom_router<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.custom_router = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for custom_router: {}", e)
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -43546,6 +45436,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: VpcSubnetCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    custom_router: value.custom_router?,
                     description: value.description?,
                     ipv4_block: value.ipv4_block?,
                     ipv6_block: value.ipv6_block?,
@@ -43557,6 +45448,7 @@ pub mod types {
         impl From<super::VpcSubnetCreate> for VpcSubnetCreate {
             fn from(value: super::VpcSubnetCreate) -> Self {
                 Self {
+                    custom_router: Ok(value.custom_router),
                     description: Ok(value.description),
                     ipv4_block: Ok(value.ipv4_block),
                     ipv6_block: Ok(value.ipv6_block),
@@ -43626,6 +45518,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnetUpdate {
+            custom_router: Result<Option<super::NameOrId>, String>,
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
         }
@@ -43633,6 +45526,7 @@ pub mod types {
         impl Default for VpcSubnetUpdate {
             fn default() -> Self {
                 Self {
+                    custom_router: Ok(Default::default()),
                     description: Ok(Default::default()),
                     name: Ok(Default::default()),
                 }
@@ -43640,6 +45534,16 @@ pub mod types {
         }
 
         impl VpcSubnetUpdate {
+            pub fn custom_router<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.custom_router = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for custom_router: {}", e)
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Option<String>>,
@@ -43666,6 +45570,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: VpcSubnetUpdate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    custom_router: value.custom_router?,
                     description: value.description?,
                     name: value.name?,
                 })
@@ -43675,6 +45580,7 @@ pub mod types {
         impl From<super::VpcSubnetUpdate> for VpcSubnetUpdate {
             fn from(value: super::VpcSubnetUpdate) -> Self {
                 Self {
+                    custom_router: Ok(value.custom_router),
                     description: Ok(value.description),
                     name: Ok(value.name),
                 }
@@ -43771,7 +45677,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20240502.0
+/// Version: 20240710.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -43824,7 +45730,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "20240502.0"
+        "20240710.0"
     }
 }
 
@@ -47460,6 +49366,217 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
+    /// List routes
+    ///
+    /// List the routes associated with a router in a particular VPC.
+    ///
+    /// Sends a `GET` request to `/v1/vpc-router-routes`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
+    ///   a `Name`
+    /// ```ignore
+    /// let response = client.vpc_router_route_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .router(router)
+    ///    .sort_by(sort_by)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
+    /// Create route
+    ///
+    /// Sends a `POST` request to `/v1/vpc-router-routes`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
+    ///   a `Name`
+    /// - `body`
+    /// ```ignore
+    /// let response = client.vpc_router_route_create()
+    ///    .project(project)
+    ///    .router(router)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
+    /// Fetch route
+    ///
+    /// Sends a `GET` request to `/v1/vpc-router-routes/{route}`
+    ///
+    /// Arguments:
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
+    ///   a `Name`
+    /// ```ignore
+    /// let response = client.vpc_router_route_view()
+    ///    .route(route)
+    ///    .project(project)
+    ///    .router(router)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
+    /// Update route
+    ///
+    /// Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
+    ///
+    /// Arguments:
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
+    ///   a `Name`
+    /// - `body`
+    /// ```ignore
+    /// let response = client.vpc_router_route_update()
+    ///    .route(route)
+    ///    .project(project)
+    ///    .router(router)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
+    /// Delete route
+    ///
+    /// Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
+    ///
+    /// Arguments:
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
+    ///   a `Name`
+    /// ```ignore
+    /// let response = client.vpc_router_route_delete()
+    ///    .route(route)
+    ///    .project(project)
+    ///    .router(router)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
+    /// List routers
+    ///
+    /// Sends a `GET` request to `/v1/vpc-routers`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.vpc_router_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_list(&self) -> builder::VpcRouterList;
+    /// Create VPC router
+    ///
+    /// Sends a `POST` request to `/v1/vpc-routers`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
+    /// ```ignore
+    /// let response = client.vpc_router_create()
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_create(&self) -> builder::VpcRouterCreate;
+    /// Fetch router
+    ///
+    /// Sends a `GET` request to `/v1/vpc-routers/{router}`
+    ///
+    /// Arguments:
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.vpc_router_view()
+    ///    .router(router)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_view(&self) -> builder::VpcRouterView;
+    /// Update router
+    ///
+    /// Sends a `PUT` request to `/v1/vpc-routers/{router}`
+    ///
+    /// Arguments:
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
+    /// ```ignore
+    /// let response = client.vpc_router_update()
+    ///    .router(router)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
+    /// Delete router
+    ///
+    /// Sends a `DELETE` request to `/v1/vpc-routers/{router}`
+    ///
+    /// Arguments:
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.vpc_router_delete()
+    ///    .router(router)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
     /// List subnets
     ///
     /// Sends a `GET` request to `/v1/vpc-subnets`
@@ -47673,6 +49790,46 @@ impl ClientVpcsExt for Client {
 
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate {
         builder::VpcFirewallRulesUpdate::new(self)
+    }
+
+    fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList {
+        builder::VpcRouterRouteList::new(self)
+    }
+
+    fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate {
+        builder::VpcRouterRouteCreate::new(self)
+    }
+
+    fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView {
+        builder::VpcRouterRouteView::new(self)
+    }
+
+    fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate {
+        builder::VpcRouterRouteUpdate::new(self)
+    }
+
+    fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete {
+        builder::VpcRouterRouteDelete::new(self)
+    }
+
+    fn vpc_router_list(&self) -> builder::VpcRouterList {
+        builder::VpcRouterList::new(self)
+    }
+
+    fn vpc_router_create(&self) -> builder::VpcRouterCreate {
+        builder::VpcRouterCreate::new(self)
+    }
+
+    fn vpc_router_view(&self) -> builder::VpcRouterView {
+        builder::VpcRouterView::new(self)
+    }
+
+    fn vpc_router_update(&self) -> builder::VpcRouterUpdate {
+        builder::VpcRouterUpdate::new(self)
+    }
+
+    fn vpc_router_delete(&self) -> builder::VpcRouterDelete {
+        builder::VpcRouterDelete::new(self)
     }
 
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList {
@@ -65100,6 +67257,1344 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_route_list`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterRouteList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        router: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterRouteList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                router: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/vpc-router-routes`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::RouterRouteResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                router,
+                sort_by,
+                vpc,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &router {
+                query.push(("router", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/vpc-router-routes`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::RouterRoute, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                router: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_route_create`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterRouteCreate<'a> {
+        client: &'a super::Client,
+        project: Result<Option<types::NameOrId>, String>,
+        router: Result<types::NameOrId, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::RouterRouteCreate, String>,
+    }
+
+    impl<'a> VpcRouterRouteCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Ok(None),
+                router: Err("router was not initialized".to_string()),
+                vpc: Ok(None),
+                body: Ok(types::builder::RouterRouteCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::RouterRouteCreate>,
+            <V as std::convert::TryInto<types::RouterRouteCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `RouterRouteCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::RouterRouteCreate,
+            ) -> types::builder::RouterRouteCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/vpc-router-routes`
+        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                router,
+                vpc,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::RouterRouteCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            query.push(("router", router.to_string()));
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_route_view`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterRouteView<'a> {
+        client: &'a super::Client,
+        route: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        router: Result<types::NameOrId, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterRouteView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                route: Err("route was not initialized".to_string()),
+                project: Ok(None),
+                router: Err("router was not initialized".to_string()),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn route<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.route = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/vpc-router-routes/{route}`
+        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
+            let Self {
+                client,
+                route,
+                project,
+                router,
+                vpc,
+            } = self;
+            let route = route.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-router-routes/{}",
+                client.baseurl,
+                encode_path(&route.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            query.push(("router", router.to_string()));
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_route_update`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterRouteUpdate<'a> {
+        client: &'a super::Client,
+        route: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        router: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::RouterRouteUpdate, String>,
+    }
+
+    impl<'a> VpcRouterRouteUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                route: Err("route was not initialized".to_string()),
+                project: Ok(None),
+                router: Ok(None),
+                vpc: Ok(None),
+                body: Ok(types::builder::RouterRouteUpdate::default()),
+            }
+        }
+
+        pub fn route<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.route = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::RouterRouteUpdate>,
+            <V as std::convert::TryInto<types::RouterRouteUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `RouterRouteUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::RouterRouteUpdate,
+            ) -> types::builder::RouterRouteUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
+        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
+            let Self {
+                client,
+                route,
+                project,
+                router,
+                vpc,
+                body,
+            } = self;
+            let route = route.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::RouterRouteUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-router-routes/{}",
+                client.baseurl,
+                encode_path(&route.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &router {
+                query.push(("router", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_route_delete`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterRouteDelete<'a> {
+        client: &'a super::Client,
+        route: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        router: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterRouteDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                route: Err("route was not initialized".to_string()),
+                project: Ok(None),
+                router: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn route<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.route = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                route,
+                project,
+                router,
+                vpc,
+            } = self;
+            let route = route.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-router-routes/{}",
+                client.baseurl,
+                encode_path(&route.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &router {
+                query.push(("router", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_list`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/vpc-routers`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::VpcRouterResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+                vpc,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/vpc-routers", client.baseurl,);
+            let mut query = Vec::with_capacity(5usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/vpc-routers`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::VpcRouter, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_create`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterCreate<'a> {
+        client: &'a super::Client,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<types::NameOrId, String>,
+        body: Result<types::builder::VpcRouterCreate, String>,
+    }
+
+    impl<'a> VpcRouterCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Ok(None),
+                vpc: Err("vpc was not initialized".to_string()),
+                body: Ok(types::builder::VpcRouterCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::VpcRouterCreate>,
+            <V as std::convert::TryInto<types::VpcRouterCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `VpcRouterCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcRouterCreate) -> types::builder::VpcRouterCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/vpc-routers`
+        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                vpc,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::VpcRouterCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/vpc-routers", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            query.push(("vpc", vpc.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_view`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterView<'a> {
+        client: &'a super::Client,
+        router: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                router: Err("router was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/vpc-routers/{router}`
+        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
+            let Self {
+                client,
+                router,
+                project,
+                vpc,
+            } = self;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-routers/{}",
+                client.baseurl,
+                encode_path(&router.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_update`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterUpdate<'a> {
+        client: &'a super::Client,
+        router: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::VpcRouterUpdate, String>,
+    }
+
+    impl<'a> VpcRouterUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                router: Err("router was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+                body: Ok(types::builder::VpcRouterUpdate::default()),
+            }
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::VpcRouterUpdate>,
+            <V as std::convert::TryInto<types::VpcRouterUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `VpcRouterUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcRouterUpdate) -> types::builder::VpcRouterUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/vpc-routers/{router}`
+        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
+            let Self {
+                client,
+                router,
+                project,
+                vpc,
+                body,
+            } = self;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::VpcRouterUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-routers/{}",
+                client.baseurl,
+                encode_path(&router.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::vpc_router_delete`]
+    ///
+    /// [`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete
+    #[derive(Debug, Clone)]
+    pub struct VpcRouterDelete<'a> {
+        client: &'a super::Client,
+        router: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcRouterDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                router: Err("router was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn router<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.router = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/vpc-routers/{router}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                router,
+                project,
+                vpc,
+            } = self;
+            let router = router.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-routers/{}",
+                client.baseurl,
+                encode_path(&router.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

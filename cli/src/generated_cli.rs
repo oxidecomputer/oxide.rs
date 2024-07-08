@@ -222,6 +222,16 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
+            CliCommand::VpcRouterRouteList => Self::cli_vpc_router_route_list(),
+            CliCommand::VpcRouterRouteCreate => Self::cli_vpc_router_route_create(),
+            CliCommand::VpcRouterRouteView => Self::cli_vpc_router_route_view(),
+            CliCommand::VpcRouterRouteUpdate => Self::cli_vpc_router_route_update(),
+            CliCommand::VpcRouterRouteDelete => Self::cli_vpc_router_route_delete(),
+            CliCommand::VpcRouterList => Self::cli_vpc_router_list(),
+            CliCommand::VpcRouterCreate => Self::cli_vpc_router_create(),
+            CliCommand::VpcRouterView => Self::cli_vpc_router_view(),
+            CliCommand::VpcRouterUpdate => Self::cli_vpc_router_update(),
+            CliCommand::VpcRouterDelete => Self::cli_vpc_router_delete(),
             CliCommand::VpcSubnetList => Self::cli_vpc_subnet_list(),
             CliCommand::VpcSubnetCreate => Self::cli_vpc_subnet_create(),
             CliCommand::VpcSubnetView => Self::cli_vpc_subnet_view(),
@@ -5062,6 +5072,448 @@ impl<T: CliConfig> Cli<T> {
             .about("Replace firewall rules")
     }
 
+    pub fn cli_vpc_router_route_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
+                    ),
+            )
+            .about("List routes")
+            .long_about("List the routes associated with a router in a particular VPC.")
+    }
+
+    pub fn cli_vpc_router_route_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create route")
+    }
+
+    pub fn cli_vpc_router_route_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("route")
+                    .long("route")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the route"),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
+                    ),
+            )
+            .about("Fetch route")
+    }
+
+    pub fn cli_vpc_router_route_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("route")
+                    .long("route")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the route"),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update route")
+    }
+
+    pub fn cli_vpc_router_route_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("route")
+                    .long("route")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the route"),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
+                    ),
+            )
+            .about("Delete route")
+    }
+
+    pub fn cli_vpc_router_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("List routers")
+    }
+
+    pub fn cli_vpc_router_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the VPC"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create VPC router")
+    }
+
+    pub fn cli_vpc_router_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("Fetch router")
+    }
+
+    pub fn cli_vpc_router_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the VPC"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update router")
+    }
+
+    pub fn cli_vpc_router_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("router")
+                    .long("router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the router"),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("Delete router")
+    }
+
     pub fn cli_vpc_subnet_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5105,6 +5557,18 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_vpc_subnet_create() -> clap::Command {
         clap::Command::new("")
+            .arg(
+                clap::Arg::new("custom-router")
+                    .long("custom-router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "An optional router, used to direct packets sent from hosts in this \
+                         subnet to any destination address.\n\nCustom routers apply in addition \
+                         to the VPC-wide *system* router, and have higher priority than the \
+                         system router for an otherwise equal-prefix-length match.",
+                    ),
+            )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
@@ -5203,6 +5667,16 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_vpc_subnet_update() -> clap::Command {
         clap::Command::new("")
+            .arg(
+                clap::Arg::new("custom-router")
+                    .long("custom-router")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "An optional router, used to direct packets sent from hosts in this \
+                         subnet to any destination address.",
+                    ),
+            )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
@@ -5806,6 +6280,16 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcFirewallRulesUpdate => {
                 self.execute_vpc_firewall_rules_update(matches).await
             }
+            CliCommand::VpcRouterRouteList => self.execute_vpc_router_route_list(matches).await,
+            CliCommand::VpcRouterRouteCreate => self.execute_vpc_router_route_create(matches).await,
+            CliCommand::VpcRouterRouteView => self.execute_vpc_router_route_view(matches).await,
+            CliCommand::VpcRouterRouteUpdate => self.execute_vpc_router_route_update(matches).await,
+            CliCommand::VpcRouterRouteDelete => self.execute_vpc_router_route_delete(matches).await,
+            CliCommand::VpcRouterList => self.execute_vpc_router_list(matches).await,
+            CliCommand::VpcRouterCreate => self.execute_vpc_router_create(matches).await,
+            CliCommand::VpcRouterView => self.execute_vpc_router_view(matches).await,
+            CliCommand::VpcRouterUpdate => self.execute_vpc_router_update(matches).await,
+            CliCommand::VpcRouterDelete => self.execute_vpc_router_delete(matches).await,
             CliCommand::VpcSubnetList => self.execute_vpc_subnet_list(matches).await,
             CliCommand::VpcSubnetCreate => self.execute_vpc_subnet_create(matches).await,
             CliCommand::VpcSubnetView => self.execute_vpc_subnet_view(matches).await,
@@ -11510,6 +11994,418 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_vpc_router_route_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_route_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_vpc_router_route_list(matches, &mut request)?;
+        self.config.list_start::<types::RouterRouteResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::RouterRouteResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_route_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_route_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_vpc_router_route_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_route_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_route_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
+            request = request.route(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_vpc_router_route_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_route_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_route_update();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
+            request = request.route(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_vpc_router_route_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_route_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_route_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
+            request = request.route(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_vpc_router_route_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config.execute_vpc_router_list(matches, &mut request)?;
+        self.config.list_start::<types::VpcRouterResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::VpcRouterResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_vpc_router_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config.execute_vpc_router_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_update();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_vpc_router_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_vpc_router_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.vpc_router_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
+            request = request.router(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_vpc_router_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_vpc_subnet_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11559,6 +12455,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_create();
+        if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
+            request = request.body_map(|body| body.custom_router(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -11637,6 +12537,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_update();
+        if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
+            request = request.body_map(|body| body.custom_router(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -13355,6 +14259,86 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_vpc_router_route_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterRouteList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_route_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterRouteCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_route_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterRouteView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_route_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterRouteUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_route_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterRouteDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_vpc_router_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::VpcRouterDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_vpc_subnet_list(
         &self,
         matches: &clap::ArgMatches,
@@ -13621,6 +14605,16 @@ pub enum CliCommand {
     UtilizationView,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
+    VpcRouterRouteList,
+    VpcRouterRouteCreate,
+    VpcRouterRouteView,
+    VpcRouterRouteUpdate,
+    VpcRouterRouteDelete,
+    VpcRouterList,
+    VpcRouterCreate,
+    VpcRouterView,
+    VpcRouterUpdate,
+    VpcRouterDelete,
     VpcSubnetList,
     VpcSubnetCreate,
     VpcSubnetView,
@@ -13812,6 +14806,16 @@ impl CliCommand {
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
+            CliCommand::VpcRouterRouteList,
+            CliCommand::VpcRouterRouteCreate,
+            CliCommand::VpcRouterRouteView,
+            CliCommand::VpcRouterRouteUpdate,
+            CliCommand::VpcRouterRouteDelete,
+            CliCommand::VpcRouterList,
+            CliCommand::VpcRouterCreate,
+            CliCommand::VpcRouterView,
+            CliCommand::VpcRouterUpdate,
+            CliCommand::VpcRouterDelete,
             CliCommand::VpcSubnetList,
             CliCommand::VpcSubnetCreate,
             CliCommand::VpcSubnetView,
