@@ -86,7 +86,3 @@ lto = "thin"
 #progenitor = { path = "../progenitor/progenitor" }
 #[patch."https://github.com/oxidecomputer/typify"]
 #typify = { path = "../typify/typify" }
-
-[patch."crates-io"]
-clap_complete = { path = "../clap/clap_complete" }
-clap = { path = "../clap" }
