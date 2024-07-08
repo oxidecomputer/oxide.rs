@@ -360,9 +360,9 @@ checksum = "8b75356056920673b02621b35afd0f7dda9306d03c79a30f5c56c44cf256e3de"
 
 [[package]]
 name = "async-trait"
-version = "0.1.80"
+version = "0.1.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6fa2087f2753a7da8cc1c0dbfcf89579dd57458e36769de5ac750b4671737ca"
+checksum = "6e0c28dcc82d7c8ead5cb13beb15405b57b8546e93215673ff8ca0349a028107"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -883,7 +883,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#84aaeb7d7aadceaa77010e550811df6701bd5b55"
+source = "git+https://github.com/oxidecomputer/dropshot#6a3f84ca5fd8d0c5c010cfe837efbe6b5d117d9d"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -928,8 +928,9 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#84aaeb7d7aadceaa77010e550811df6701bd5b55"
+source = "git+https://github.com/oxidecomputer/dropshot#6a3f84ca5fd8d0c5c010cfe837efbe6b5d117d9d"
 dependencies = [
+ "heck 0.5.0",
  "proc-macro2",
  "quote",
  "serde",
@@ -3584,9 +3585,9 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.22.14"
+version = "0.22.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f21c7aaf97f1bd9ca9d4f9e73b0a6c74bd5afef56f2bc931943a6e1c37e04e38"
+checksum = "d59a3a72298453f564e2b111fa896f8d07fabb36f51f06d7e875fc5e0b5a3ef1"
 dependencies = [
  "indexmap",
  "serde",
