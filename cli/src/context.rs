@@ -38,8 +38,9 @@ fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> T {
 
 impl Context {
     pub fn new(client_config: ClientConfig) -> Result<Self, OxideError> {
-        let cred_file = read_or_default(client_config.config_dir.join("credentials.toml"));
-        let config_file = read_or_default(client_config.config_dir.join("config.toml"));
+        let config_dir = client_config.config_dir();
+        let cred_file = read_or_default(config_dir.join("credentials.toml"));
+        let config_file = read_or_default(config_dir.join("config.toml"));
 
         Ok(Self {
             client_config,

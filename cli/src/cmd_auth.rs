@@ -4,7 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{fs::File, io::Read, net::SocketAddr, time::Duration};
+use std::{fs::File, io::Read};
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -14,7 +14,6 @@ use oauth2::{
     ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
 };
 use oxide::{Client, ClientConfig, ClientSessionExt};
-use reqwest::ClientBuilder;
 use toml_edit::{Item, Table};
 use uuid::Uuid;
 
@@ -101,43 +100,6 @@ fn yes(prompt: impl Into<String>) -> Result<bool> {
     }
 }
 
-fn make_client(host: &str, token: String, config: &ClientConfig) -> Client {
-    Client::new_with_client(host, make_raw_client(Some(token), config).build().unwrap())
-}
-
-fn make_raw_client(token: Option<String>, config: &ClientConfig) -> reqwest::ClientBuilder {
-    let mut client_builder = ClientBuilder::new().connect_timeout(Duration::from_secs(15));
-
-    if let Some(token) = token {
-        let mut bearer =
-            reqwest::header::HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
-        bearer.set_sensitive(true);
-        client_builder = client_builder.default_headers(
-            [(reqwest::header::AUTHORIZATION, bearer)]
-                .into_iter()
-                .collect(),
-        );
-    }
-
-    if let Some(oxide::ResolveValue { domain, addr }) = &config.resolve {
-        client_builder = client_builder.resolve(domain, SocketAddr::new(*addr, 0));
-    }
-    if let Some(cert) = &config.cert {
-        client_builder = client_builder.add_root_certificate(cert.clone());
-    }
-    if let Some(timeout) = &config.timeout {
-        client_builder = client_builder.timeout(Duration::from_secs(*timeout));
-    }
-
-    if config.insecure {
-        client_builder = client_builder
-            .danger_accept_invalid_hostnames(true)
-            .danger_accept_invalid_certs(true);
-    }
-
-    client_builder
-}
-
 // fn parse_host_interactively(ctx: &mut crate::context::Context) -> Result<url::Url> {
 //     loop {
 //         match dialoguer::Input::<String>::new()
@@ -211,9 +173,8 @@ impl CmdAuthLogin {
 
         let profile = ctx
             .client_config()
-            .profile
-            .as_ref()
-            .or_else(|| ctx.config_file().basics.default_profile.as_ref());
+            .profile()
+            .or_else(|| ctx.config_file().basics.default_profile.as_deref());
 
         if let Some(profile_name) = profile {
             // If the profile already has a token, alert the user.
@@ -256,15 +217,15 @@ impl CmdAuthLogin {
 
             token
         } else {
+            // Make the client for use by oauth2
+            let client = &ctx
+                .client_config()
+                .make_unauthenticated_client_builder()
+                .redirect(reqwest::redirect::Policy::none())
+                .build()?;
             // Copied from oauth2::async_http_client to customize the
             // reqwest::Client with the top-level command-line options.
             let async_http_client_custom = |request: oauth2::HttpRequest| async move {
-                let client = make_raw_client(None, ctx.client_config())
-                    // Following redirects opens the client up to SSRF
-                    // vulnerabilities.
-                    .redirect(reqwest::redirect::Policy::none())
-                    .build()?;
-
                 let mut request_builder = client
                     .request(request.method, request.url.as_str())
                     .body(request.body);
@@ -335,7 +296,10 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let client = make_client(host, token.clone(), ctx.client_config());
+        let client = Client::new_authenticated_config(
+            &ClientConfig::default().with_host_and_token(host, &token),
+        )
+        .unwrap();
 
         let user = client.current_user_view().send().await?;
 
@@ -354,7 +318,7 @@ impl CmdAuthLogin {
         println!("Logged in as {} under profile {}", uid, profile_name);
 
         // Read / modify / write the credentials file.
-        let credentials_path = ctx.client_config().config_dir.join("credentials.toml");
+        let credentials_path = ctx.client_config().config_dir().join("credentials.toml");
         let mut credentials =
             if let Ok(contents) = std::fs::read_to_string(credentials_path.clone()) {
                 contents.parse::<toml_edit::DocumentMut>().unwrap()
@@ -402,7 +366,7 @@ impl CmdAuthLogin {
         // If there is no default profile then we'll set this new profile to be
         // the default.
         if ctx.config_file().basics.default_profile.is_none() {
-            let config_path = ctx.client_config().config_dir.join("config.toml");
+            let config_path = ctx.client_config().config_dir().join("config.toml");
             let mut config = if let Ok(contents) = std::fs::read_to_string(config_path.clone()) {
                 contents.parse::<toml_edit::DocumentMut>().unwrap()
             } else {
@@ -438,7 +402,7 @@ impl CmdAuthLogout {
             return Ok(());
         }
 
-        let credentials_path = ctx.client_config().config_dir.join("credentials.toml");
+        let credentials_path = ctx.client_config().config_dir().join("credentials.toml");
 
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.
@@ -447,9 +411,8 @@ impl CmdAuthLogout {
         } else {
             let profile = ctx
                 .client_config()
-                .profile
-                .as_ref()
-                .or_else(|| ctx.config_file().basics.default_profile.as_ref());
+                .profile()
+                .or_else(|| ctx.config_file().basics.default_profile.as_deref());
             let Some(profile_name) = profile else {
                 bail!("No profile specified and no default profile");
             };
@@ -487,11 +450,11 @@ pub struct CmdAuthStatus {}
 impl CmdAuthStatus {
     pub async fn run(&self, ctx: &Context) -> Result<()> {
         for (profile_name, profile_info) in &ctx.cred_file().profile {
-            let client = make_client(
-                &profile_info.host,
-                profile_info.token.clone(),
-                ctx.client_config(),
-            );
+            let client = Client::new_authenticated_config(
+                &ClientConfig::default()
+                    .with_host_and_token(&profile_info.host, &profile_info.token),
+            )
+            .unwrap();
 
             let result = client.current_user_view().send().await;
             let status = match result {

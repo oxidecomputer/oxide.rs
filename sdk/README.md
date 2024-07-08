@@ -1,11 +1,11 @@
 # The Oxide Rust SDK
 
-Generated bindings for the Oxide API.
+SDK for the Oxide API.
 
 ## Installation
 
-The `oxide` crate is available on crates.io. You'll probably want to use `tokio` as well. Add them to your `Cargo.toml` file
-or use `cargo add`:
+The `oxide` crate is available on crates.io. You'll probably want to use
+`tokio` as well. Add them to your `Cargo.toml` file or use `cargo add`:
 
 ```console
 $ cargo add oxide
@@ -15,17 +15,19 @@ $ cargo add tokio
 ## Authentication
 
 To connect to the Oxide API, the SDK needs a host URL and a token. There are
-two ways to specify these:
+several ways to specify these:
 
 * Configuration files: When you run oxide auth login in the CLI, `config.toml`
   and `credentials.toml` files are generated in `$HOME/.config/oxide/`. The
   credentials file contains sensitive information such as your token and user
   ID.
-* Environment variables: You can set the OXIDE_HOST and OXIDE_TOKEN environment
-  variables.
+* Environment variables: You can set the `OXIDE_HOST` and `OXIDE_TOKEN`
+  environment variables.
+* Explicit host URL and token.
 
-The SDK will first look for the environment variables, and if they are not
-defined, it will look for the config file.
+The simplest way to create an authenticated client is to use
+`oxide::Client::new_authenticated()` which uses the same credentials and
+authentication logic as the CLI.
 
 ## Example
 

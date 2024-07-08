@@ -30,7 +30,7 @@ use std::{
     collections::BTreeMap,
     fmt::Display,
     net::{IpAddr, SocketAddr},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use crate::Client;
@@ -53,12 +53,18 @@ pub struct ResolveValue {
 
 /// Configuration for creating a [Client]
 pub struct ClientConfig {
-    pub config_dir: PathBuf,
-    pub profile: Option<String>,
-    pub resolve: Option<ResolveValue>,
-    pub cert: Option<reqwest::Certificate>,
-    pub insecure: bool,
-    pub timeout: Option<u64>,
+    config_dir: PathBuf,
+    auth_method: AuthMethod,
+    resolve: Option<ResolveValue>,
+    cert: Option<reqwest::Certificate>,
+    insecure: bool,
+    timeout: Option<u64>,
+}
+
+enum AuthMethod {
+    DefaultProfile,
+    Profile(String),
+    HostToken { host: String, token: String },
 }
 
 impl Default for ClientConfig {
@@ -68,7 +74,7 @@ impl Default for ClientConfig {
         config_dir.push("oxide");
         Self {
             config_dir,
-            profile: None,
+            auth_method: AuthMethod::DefaultProfile,
             resolve: None,
             cert: None,
             insecure: false,
@@ -78,13 +84,21 @@ impl Default for ClientConfig {
 }
 
 impl ClientConfig {
-    pub fn with_profile(mut self, profile: impl ToString) -> Self {
-        self.profile = Some(profile.to_string());
+    pub fn with_config_dir(mut self, config_dir: impl Into<PathBuf>) -> Self {
+        self.config_dir = config_dir.into();
         self
     }
 
-    pub fn with_config_dir(mut self, config_dir: impl Into<PathBuf>) -> Self {
-        self.config_dir = config_dir.into();
+    pub fn with_profile(mut self, profile: impl ToString) -> Self {
+        self.auth_method = AuthMethod::Profile(profile.to_string());
+        self
+    }
+
+    pub fn with_host_and_token(mut self, host: impl ToString, token: impl ToString) -> Self {
+        self.auth_method = AuthMethod::HostToken {
+            host: host.to_string(),
+            token: token.to_string(),
+        };
         self
     }
 
@@ -109,6 +123,17 @@ impl ClientConfig {
     pub fn with_timeout(mut self, timeout: u64) -> Self {
         self.timeout = Some(timeout);
         self
+    }
+
+    pub fn config_dir(&self) -> &PathBuf {
+        &self.config_dir
+    }
+
+    pub fn profile(&self) -> Option<&str> {
+        match &self.auth_method {
+            AuthMethod::Profile(profile) => Some(profile.as_ref()),
+            _ => None,
+        }
     }
 }
 
@@ -146,52 +171,45 @@ impl Client {
     pub fn new_authenticated_config(config: &ClientConfig) -> Result<Self, ClientAuthError> {
         let ClientConfig {
             config_dir,
-            profile,
+            auth_method,
+            ..
+        } = config;
+
+        let (host, token) = match auth_method {
+            AuthMethod::DefaultProfile => get_profile_auth(config_dir, None)?,
+            AuthMethod::Profile(profile) => get_profile_auth(config_dir, Some(profile))?,
+            AuthMethod::HostToken { host, token } => (host.clone(), token.clone()),
+        };
+
+        let mut client_builder = config.make_unauthenticated_client_builder();
+
+        let mut bearer =
+            reqwest::header::HeaderValue::from_str(format!("Bearer {}", &token).as_str()).unwrap();
+        bearer.set_sensitive(true);
+        client_builder = client_builder.default_headers(
+            [(reqwest::header::AUTHORIZATION, bearer)]
+                .into_iter()
+                .collect(),
+        );
+
+        Ok(Self::new_with_client(
+            &host,
+            client_builder.build().unwrap(),
+        ))
+    }
+}
+
+impl ClientConfig {
+    pub fn make_unauthenticated_client_builder(&self) -> ClientBuilder {
+        let ClientConfig {
             resolve,
             cert,
             insecure,
             timeout,
-        } = config;
-
-        // We only need config files if OXIDE_TOKEN is not specified
-        let (host, token) = if let Ok(env_token) = std::env::var("OXIDE_TOKEN") {
-            let env_host = std::env::var("OXIDE_HOST").map_err(|_| ClientAuthError)?;
-            (env_host, env_token)
-        } else {
-            let credentials_path = config_dir.join("credentials.toml");
-            let contents = std::fs::read_to_string(credentials_path).unwrap();
-            let creds = toml::from_str::<CredentialsFile>(&contents).unwrap();
-
-            // TODO
-            // For backward compatibility, allow users to specify a profile by
-            // naming its host in OXIDE_HOST
-            assert!(std::env::var("OXIDE_HOST").is_err());
-
-            let profile_name = if let Some(profile_name) = profile {
-                profile_name.clone()
-            } else {
-                let config_path = config_dir.join("config.toml");
-                let contents = std::fs::read_to_string(config_path).unwrap();
-                let config = toml::from_str::<BasicConfigFile>(&contents).unwrap();
-                config.default_profile.clone().unwrap()
-            };
-            // TODO unwrap
-            let profile = creds.profile.get(&profile_name).unwrap();
-            (profile.host.clone(), profile.token.clone())
-        };
-
+            ..
+        } = self;
         let dur = std::time::Duration::from_secs(timeout.unwrap_or(15));
-        let mut bearer =
-            reqwest::header::HeaderValue::from_str(format!("Bearer {}", &token).as_str()).unwrap();
-        bearer.set_sensitive(true);
-        let mut client_builder = ClientBuilder::new()
-            .connect_timeout(dur)
-            .timeout(dur)
-            .default_headers(
-                [(reqwest::header::AUTHORIZATION, bearer)]
-                    .into_iter()
-                    .collect(),
-            );
+        let mut client_builder = ClientBuilder::new().connect_timeout(dur).timeout(dur);
 
         if let Some(ResolveValue { domain, addr }) = resolve {
             client_builder = client_builder.resolve(domain, SocketAddr::new(*addr, 0));
@@ -206,10 +224,38 @@ impl Client {
                 .danger_accept_invalid_certs(true);
         }
 
-        Ok(Self::new_with_client(
-            &host,
-            client_builder.build().unwrap(),
-        ))
+        client_builder
+    }
+}
+
+fn get_profile_auth(
+    config_dir: &Path,
+    profile: Option<&String>,
+) -> Result<(String, String), ClientAuthError> {
+    if let (None, Ok(env_token)) = (profile, std::env::var("OXIDE_TOKEN")) {
+        let env_host = std::env::var("OXIDE_HOST").map_err(|_| ClientAuthError)?;
+        Ok((env_host, env_token))
+    } else {
+        let credentials_path = config_dir.join("credentials.toml");
+        let contents = std::fs::read_to_string(credentials_path).unwrap();
+        let creds = toml::from_str::<CredentialsFile>(&contents).unwrap();
+
+        // TODO
+        // For backward compatibility, allow users to specify a profile by
+        // naming its host in OXIDE_HOST
+        assert!(std::env::var("OXIDE_HOST").is_err());
+
+        let profile_name = if let Some(profile_name) = profile {
+            profile_name.clone()
+        } else {
+            let config_path = config_dir.join("config.toml");
+            let contents = std::fs::read_to_string(config_path).unwrap();
+            let config = toml::from_str::<BasicConfigFile>(&contents).unwrap();
+            config.default_profile.clone().unwrap()
+        };
+        // TODO unwrap
+        let profile = creds.profile.get(&profile_name).unwrap();
+        Ok((profile.host.clone(), profile.token.clone()))
     }
 }
 
