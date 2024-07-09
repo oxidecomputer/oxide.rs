@@ -10747,6 +10747,65 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingBgpAnnounceSetUpdateWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::PUT).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::BgpAnnounceSetCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetUpdateThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpAnnounceSet) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingBgpAnnounceSetCreateWhen(httpmock::When);
     impl NetworkingBgpAnnounceSetCreateWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -16163,6 +16222,12 @@ pub trait MockServerExt {
             operations::NetworkingBgpAnnounceSetListWhen,
             operations::NetworkingBgpAnnounceSetListThen,
         );
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
+        );
     fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -18097,6 +18162,21 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::NetworkingBgpAnnounceSetListWhen::new(when),
                 operations::NetworkingBgpAnnounceSetListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpAnnounceSetUpdateWhen::new(when),
+                operations::NetworkingBgpAnnounceSetUpdateThen::new(then),
             )
         })
     }
