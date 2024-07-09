@@ -2076,6 +2076,16 @@
               ]
             },
             {
+              "name": "filter",
+              "about": "Set a filtering specification for a peer",
+              "args": [
+                {
+                  "long": "no-filtering",
+                  "help": "Do not filter. Takes precedence over allowed list"
+                }
+              ]
+            },
+            {
               "name": "status",
               "about": "Observe BGP status"
             },

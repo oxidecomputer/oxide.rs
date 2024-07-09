@@ -214,6 +214,7 @@ impl RunnableCmd for CmdBgp {
             BgpSubCommand::Config(cmd) => cmd.run(ctx).await,
             BgpSubCommand::Announce(cmd) => cmd.run(ctx).await,
             BgpSubCommand::Withdraw(cmd) => cmd.run(ctx).await,
+            BgpSubCommand::Filter(cmd) => cmd.run(ctx).await,
         }
     }
 }
@@ -232,6 +233,9 @@ enum BgpSubCommand {
 
     /// Make a BGP announcement.
     Withdraw(CmdBgpWithdraw),
+
+    /// Set a filtering specification for a peer.
+    Filter(CmdBgpFilter),
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -324,6 +328,87 @@ impl RunnableCmd for CmdBgpWithdraw {
             .send()
             .await?;
 
+        Ok(())
+    }
+}
+
+#[derive(clap::ValueEnum, Clone, Debug)]
+enum FilterDirection {
+    Import,
+    Export,
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "announce")]
+pub struct CmdBgpFilter {
+    /// Id of the rack to add the address to.
+    rack: Uuid,
+
+    /// Switch to add the address to.
+    #[arg(value_enum)]
+    switch: Switch,
+
+    /// Port to add the port to.
+    #[arg(value_enum)]
+    port: Port,
+
+    /// Peer to apply allow list to.
+    peer: IpAddr,
+
+    /// Whether to apply the filter to imported or exported prefixes.
+    #[arg(value_enum)]
+    direction: FilterDirection,
+
+    /// Prefixes to allow for the peer.
+    allowed: Vec<oxnet::IpNet>,
+
+    /// Do not filter. Takes precedence over allowed list.
+    #[clap(long)]
+    no_filtering: bool,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpFilter {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        match settings.bgp_peers.get_mut(PHY0) {
+            None => return Err(anyhow::anyhow!("no BGP peers configured")),
+            Some(config) => {
+                let peer = config
+                    .peers
+                    .iter_mut()
+                    .find(|x| x.addr == self.peer)
+                    .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
+
+                let list: Vec<IpNet> = self
+                    .allowed
+                    .iter()
+                    .map(|x| x.to_string().parse().unwrap())
+                    .collect();
+                match self.direction {
+                    FilterDirection::Import => {
+                        if self.no_filtering {
+                            peer.allowed_import = ImportExportPolicy::NoFiltering;
+                        } else {
+                            peer.allowed_import = ImportExportPolicy::Allow(list);
+                        }
+                    }
+                    FilterDirection::Export => {
+                        if self.no_filtering {
+                            peer.allowed_export = ImportExportPolicy::NoFiltering;
+                        } else {
+                            peer.allowed_export = ImportExportPolicy::Allow(list);
+                        }
+                    }
+                }
+            }
+        }
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
         Ok(())
     }
 }
