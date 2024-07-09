@@ -23260,7 +23260,8 @@ pub mod types {
     ///  "type": "string",
     ///  "enum": [
     ///    "count",
-    ///    "bytes"
+    ///    "bytes",
+    ///    "seconds"
     ///  ]
     /// }
     /// ```
@@ -23283,6 +23284,8 @@ pub mod types {
         Count,
         #[serde(rename = "bytes")]
         Bytes,
+        #[serde(rename = "seconds")]
+        Seconds,
     }
 
     impl From<&Units> for Units {
@@ -23296,6 +23299,7 @@ pub mod types {
             match *self {
                 Self::Count => "count".to_string(),
                 Self::Bytes => "bytes".to_string(),
+                Self::Seconds => "seconds".to_string(),
             }
         }
     }
@@ -23306,6 +23310,7 @@ pub mod types {
             match value {
                 "count" => Ok(Self::Count),
                 "bytes" => Ok(Self::Bytes),
+                "seconds" => Ok(Self::Seconds),
                 _ => Err("invalid value".into()),
             }
         }
