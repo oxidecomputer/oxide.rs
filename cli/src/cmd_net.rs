@@ -8,11 +8,12 @@ use colored::*;
 use oxide::{
     context::Context,
     types::{
-        Address, AddressConfig, BgpPeer, BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet,
-        LinkConfigCreate, LinkFec, LinkSpeed, LldpServiceConfigCreate, Name, NameOrId, Route,
-        RouteConfig, SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2,
-        SwitchLocation, SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry,
-        SwitchPortGeometry2, SwitchPortSettingsCreate,
+        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
+        BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
+        LinkSpeed, LldpServiceConfigCreate, Name, NameOrId, Route, RouteConfig,
+        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
+        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
+        SwitchPortSettingsCreate,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -211,6 +212,8 @@ impl RunnableCmd for CmdBgp {
         match &self.subcmd {
             BgpSubCommand::Status(cmd) => cmd.run(ctx).await,
             BgpSubCommand::Config(cmd) => cmd.run(ctx).await,
+            BgpSubCommand::Announce(cmd) => cmd.run(ctx).await,
+            BgpSubCommand::Withdraw(cmd) => cmd.run(ctx).await,
         }
     }
 }
@@ -223,6 +226,106 @@ enum BgpSubCommand {
 
     /// Manage BGP configuration.
     Config(CmdBgpConfig),
+
+    /// Make a BGP announcement.
+    Announce(CmdBgpAnnounce),
+
+    /// Make a BGP announcement.
+    Withdraw(CmdBgpWithdraw),
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "announce")]
+pub struct CmdBgpAnnounce {
+    /// The announce set to announce from.
+    announce_set: Name,
+
+    /// The address lot to draw from.
+    address_lot: Name,
+
+    /// The prefix to announce.
+    prefix: oxnet::IpNet,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpAnnounce {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut current: Vec<BgpAnnouncementCreate> = ctx
+            .client()?
+            .networking_bgp_announce_set_list()
+            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .send()
+            .await?
+            .into_inner()
+            .into_iter()
+            .map(|x| BgpAnnouncementCreate {
+                address_lot_block: NameOrId::Id(x.address_lot_block_id),
+                network: x.network,
+            })
+            .collect();
+
+        current.push(BgpAnnouncementCreate {
+            address_lot_block: NameOrId::Name(self.address_lot.clone()),
+            network: self.prefix.to_string().parse().unwrap(),
+        });
+
+        ctx.client()?
+            .networking_bgp_announce_set_update()
+            .body(BgpAnnounceSetCreate {
+                announcement: current,
+                name: self.announce_set.clone(),
+                description: self.announce_set.to_string(), //TODO?
+            })
+            .send()
+            .await?;
+
+        Ok(())
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "announce")]
+pub struct CmdBgpWithdraw {
+    /// The announce set to withdraw from.
+    announce_set: Name,
+
+    /// The prefix to withdraw.
+    prefix: oxnet::IpNet,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpWithdraw {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut current: Vec<BgpAnnouncementCreate> = ctx
+            .client()?
+            .networking_bgp_announce_set_list()
+            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .send()
+            .await?
+            .into_inner()
+            .into_iter()
+            .map(|x| BgpAnnouncementCreate {
+                address_lot_block: NameOrId::Id(x.address_lot_block_id),
+                network: x.network,
+            })
+            .collect();
+
+        current.retain(|x| x.network.to_string() != self.prefix.to_string());
+
+        ctx.client()?
+            .networking_bgp_announce_set_update()
+            .body(BgpAnnounceSetCreate {
+                announcement: current,
+                name: self.announce_set.clone(),
+                description: self.announce_set.to_string(), //TODO?
+            })
+            .send()
+            .await?;
+
+        Ok(())
+    }
 }
 
 #[derive(Parser, Debug, Clone)]

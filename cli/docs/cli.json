@@ -1990,6 +1990,10 @@
           "about": "BGP management",
           "subcommands": [
             {
+              "name": "announce",
+              "about": "Make a BGP announcement"
+            },
+            {
               "name": "config",
               "about": "Manage BGP configuration",
               "subcommands": [
@@ -2074,6 +2078,10 @@
             {
               "name": "status",
               "about": "Observe BGP status"
+            },
+            {
+              "name": "withdraw",
+              "about": "Make a BGP announcement"
             }
           ]
         },
@@ -3384,6 +3392,26 @@
                         {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP port settings"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update",
+                      "about": "Update a BGP announce set",
+                      "args": [
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "name"
                         }
                       ]
                     }
