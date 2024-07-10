@@ -1,3 +1,9 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+// Copyright 2024 Oxide Computer Company
+
 use std::{collections::HashMap, net::IpAddr};
 
 use crate::RunnableCmd;
@@ -5,6 +11,7 @@ use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use colored::*;
+use futures::TryStreamExt;
 use oxide::{
     context::Context,
     types::{
@@ -109,14 +116,15 @@ enum LinkSubCommand {
 #[command(name = "add")]
 pub struct CmdLinkAdd {
     /// Id of the rack to add the link to.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to add the link to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to add the link to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Whether or not to set auto-negotiation
@@ -124,7 +132,7 @@ pub struct CmdLinkAdd {
     pub autoneg: bool,
 
     /// The forward error correction mode of the link.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     pub fec: LinkFec,
 
     /// Maximum transmission unit for the link.
@@ -132,7 +140,7 @@ pub struct CmdLinkAdd {
     pub mtu: u16,
 
     /// The speed of the link.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     pub speed: LinkSpeed,
 }
 
@@ -173,14 +181,15 @@ impl RunnableCmd for CmdLinkAdd {
 #[command(name = "del")]
 pub struct CmdLinkDel {
     /// Id of the rack to remove the link from.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to remove the link from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to remove the link from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 }
 
@@ -243,13 +252,19 @@ enum BgpSubCommand {
 #[command(name = "announce")]
 pub struct CmdBgpAnnounce {
     /// The announce set to announce from.
+    #[arg(long)]
     announce_set: Name,
 
     /// The address lot to draw from.
+    #[arg(long)]
     address_lot: Name,
 
     /// The prefix to announce.
+    #[arg(long)]
     prefix: oxnet::IpNet,
+
+    #[arg(long, default_value = "")]
+    description: String,
 }
 
 #[async_trait]
@@ -279,7 +294,7 @@ impl RunnableCmd for CmdBgpAnnounce {
             .body(BgpAnnounceSetCreate {
                 announcement: current,
                 name: self.announce_set.clone(),
-                description: self.announce_set.to_string(), //TODO?
+                description: self.description.clone(),
             })
             .send()
             .await?;
@@ -293,9 +308,11 @@ impl RunnableCmd for CmdBgpAnnounce {
 #[command(name = "announce")]
 pub struct CmdBgpWithdraw {
     /// The announce set to withdraw from.
+    #[arg(long)]
     announce_set: Name,
 
     /// The prefix to withdraw.
+    #[arg(long)]
     prefix: oxnet::IpNet,
 }
 
@@ -343,28 +360,31 @@ enum FilterDirection {
 #[command(name = "announce")]
 pub struct CmdBgpFilter {
     /// Id of the rack to add the address to.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to add the address to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to add the port to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Peer to apply allow list to.
+    #[arg(long)]
     peer: IpAddr,
 
     /// Whether to apply the filter to imported or exported prefixes.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     direction: FilterDirection,
 
     /// Prefixes to allow for the peer.
+    #[clap(long, conflicts_with = "no_filtering")]
     allowed: Vec<oxnet::IpNet>,
 
-    /// Do not filter. Takes precedence over allowed list.
-    #[clap(long)]
+    /// Do not filter.
+    #[clap(long, conflicts_with = "allowed")]
     no_filtering: bool,
 }
 
@@ -457,23 +477,27 @@ impl RunnableCmd for CmdNet {
 #[command(name = "add")]
 pub struct CmdAddrAdd {
     /// Id of the rack to add the address to.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to add the address to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to add the port to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Address to add.
+    #[arg(long)]
     addr: oxnet::Ipv4Net,
 
     /// Address lot to allocate from.
+    #[arg(long)]
     lot: NameOrId,
 
     /// Optional VLAN to assign to the address.
+    #[arg(long)]
     vlan: Option<u16>,
 }
 
@@ -513,17 +537,19 @@ impl RunnableCmd for CmdAddrAdd {
 #[command(name = "del")]
 pub struct CmdAddrDel {
     /// Id of the rack to remove the address from.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to remove the address from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to remove the address from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Address to remove.
+    #[arg(long)]
     addr: oxnet::Ipv4Net,
 }
 
@@ -600,34 +626,37 @@ enum BgpConfigPeerSubCommand {
 #[command(name = "add")]
 pub struct CmdBgpPeerAdd {
     /// Id of the rack to add the peer to.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to add the peer to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to add the peer to.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Address of the peer to add.
+    #[arg(long)]
     addr: IpAddr,
 
     /// BGP configuration this peer is associated with.
+    #[arg(long)]
     bgp_config: NameOrId,
 
     /// Prefixes that may be imported form the peer. Empty list means all prefixes
     /// allowed.
-    #[clap(long)]
+    #[arg(long)]
     allowed_imports: Vec<oxnet::IpNet>,
 
     /// Prefixes that may be exported to the peer. Empty list means all prefixes
     /// allowed.
-    #[clap(long)]
+    #[arg(long)]
     allowed_exports: Vec<oxnet::IpNet>,
 
     /// Include the provided communities in updates sent to the peer.
-    #[clap(long)]
+    #[arg(long)]
     communities: Vec<u32>,
 
     /// How long to to wait between TCP connection retries (seconds).
@@ -658,28 +687,28 @@ pub struct CmdBgpPeerAdd {
     pub idle_hold_time: u32,
 
     /// Apply a local preference to routes received from this peer.
-    #[clap(long)]
+    #[arg(long)]
     pub local_pref: Option<u32>,
 
     /// Use the given key for TCP-MD5 authentication with the peer.
-    #[clap(long)]
+    #[arg(long)]
     pub md5_auth_key: Option<String>,
 
     /// Require messages from a peer have a minimum IP time to live field.
-    #[clap(long)]
+    #[arg(long)]
     pub min_ttl: Option<u8>,
 
     /// Apply the provided multi-exit discriminator (MED) updates sent to
     /// the peer.
-    #[clap(long)]
+    #[arg(long)]
     pub multi_exit_discriminator: Option<u32>,
 
     /// Require that a peer has a specified ASN.
-    #[clap(long)]
+    #[arg(long)]
     pub remote_asn: Option<u32>,
 
     /// Associate a VLAN ID with a peer.
-    #[clap(long)]
+    #[arg(long)]
     pub vlan_id: Option<u16>,
 }
 
@@ -751,17 +780,19 @@ impl RunnableCmd for CmdBgpPeerAdd {
 #[command(name = "del")]
 pub struct CmdBgpPeerDel {
     /// Id of the rack to remove the peer from.
+    #[arg(long)]
     rack: Uuid,
 
     /// Switch to remove the peer from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     switch: Switch,
 
     /// Port to remove the peer from.
-    #[arg(value_enum)]
+    #[arg(long, value_enum)]
     port: Port,
 
     /// Address of the peer to remove.
+    #[arg(long)]
     addr: IpAddr,
 }
 
@@ -794,11 +825,9 @@ impl RunnableCmd for CmdPortConfig {
 
         let ports = c
             .networking_switch_port_list()
-            .limit(u32::MAX)
-            .send()
-            .await?
-            .into_inner()
-            .items;
+            .stream()
+            .try_collect::<Vec<_>>()
+            .await?;
 
         let mut tw = TabWriter::new(std::io::stdout()).ansi(true);
 
@@ -806,22 +835,18 @@ impl RunnableCmd for CmdPortConfig {
         // address reference to address lot block is terribad
         let addr_lots = c
             .networking_address_lot_list()
-            .limit(u32::MAX)
-            .send()
-            .await?
-            .into_inner()
-            .items;
+            .stream()
+            .try_collect::<Vec<_>>()
+            .await?;
 
         let mut addr_lot_blocks = Vec::new();
         for a in addr_lots.iter() {
             let blocks = c
                 .networking_address_lot_block_list()
                 .address_lot(a.id)
-                .limit(u32::MAX)
-                .send()
-                .await?
-                .into_inner()
-                .items;
+                .stream()
+                .try_collect::<Vec<_>>()
+                .await?;
 
             for b in blocks.iter() {
                 addr_lot_blocks.push((a.clone(), b.clone()));
@@ -839,11 +864,9 @@ impl RunnableCmd for CmdPortConfig {
 
                 let bgp_configs: HashMap<Uuid, Name> = c
                     .networking_bgp_config_list()
-                    .limit(u32::MAX)
-                    .send()
+                    .stream()
+                    .try_collect::<Vec<_>>()
                     .await?
-                    .into_inner()
-                    .items
                     .into_iter()
                     .map(|x| (x.id, x.name))
                     .collect();
@@ -1022,11 +1045,9 @@ impl RunnableCmd for CmdPortStatus {
 
         let ports = c
             .networking_switch_port_list()
-            .limit(u32::MAX)
-            .send()
-            .await?
-            .into_inner()
-            .items;
+            .stream()
+            .try_collect::<Vec<_>>()
+            .await?;
 
         let (mut sw0, mut sw1): (Vec<&SwitchPort>, Vec<&SwitchPort>) = ports
             .iter()
@@ -1161,16 +1182,10 @@ impl CmdPortStatus {
                     .unwrap_or("-".to_string()),
             )?;
 
-            let monitors: Option<Monitors> = match status.as_ref() {
-                Some(x) => match x.get("monitors") {
-                    Some(x) => match serde_json::from_value(x.clone()) {
-                        Ok(x) => Some(x),
-                        Err(_) => None,
-                    },
-                    None => None,
-                },
-                None => None,
-            };
+            let monitors = status
+                .as_ref()
+                .and_then(|value| value.get("monitors"))
+                .and_then(|value| Monitors::deserialize(value).ok());
 
             writeln!(
                 &mut mtw,
@@ -1207,12 +1222,9 @@ async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSe
     let list = ctx
         .client()?
         .networking_switch_port_settings_list()
-        .limit(u32::MAX)
-        .send()
-        .await
-        .unwrap()
-        .into_inner()
-        .items;
+        .stream()
+        .try_collect::<Vec<_>>()
+        .await?;
 
     let name = list
         .iter()
@@ -1234,23 +1246,18 @@ async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSe
     let lots = ctx
         .client()?
         .networking_address_lot_list()
-        .limit(u32::MAX)
-        .send()
-        .await
-        .unwrap()
-        .into_inner()
-        .items;
+        .stream()
+        .try_collect::<Vec<_>>()
+        .await?;
+
     for lot in lots.iter() {
         let lot_blocks = ctx
             .client()?
             .networking_address_lot_block_list()
             .address_lot(lot.id)
-            .limit(u32::MAX)
-            .send()
-            .await
-            .unwrap()
-            .into_inner()
-            .items;
+            .stream()
+            .try_collect::<Vec<_>>()
+            .await?;
         for block in lot_blocks.iter() {
             block_to_lot.insert(block.id, lot.id);
         }
@@ -1436,12 +1443,9 @@ async fn get_port(
     let ports = ctx
         .client()?
         .networking_switch_port_list()
-        .limit(u32::MAX)
-        .send()
-        .await
-        .unwrap()
-        .into_inner()
-        .items;
+        .stream()
+        .try_collect::<Vec<_>>()
+        .await?;
 
     let port = ports
         .into_iter()

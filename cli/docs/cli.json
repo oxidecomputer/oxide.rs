@@ -1977,11 +1977,131 @@
           "subcommands": [
             {
               "name": "add",
-              "about": "Add an address to a port configuration"
+              "about": "Add an address to a port configuration",
+              "args": [
+                {
+                  "long": "addr",
+                  "help": "Address to add"
+                },
+                {
+                  "long": "lot",
+                  "help": "Address lot to allocate from"
+                },
+                {
+                  "long": "port",
+                  "values": [
+                    "qsfp0",
+                    "qsfp1",
+                    "qsfp2",
+                    "qsfp3",
+                    "qsfp4",
+                    "qsfp5",
+                    "qsfp6",
+                    "qsfp7",
+                    "qsfp8",
+                    "qsfp9",
+                    "qsfp10",
+                    "qsfp11",
+                    "qsfp12",
+                    "qsfp13",
+                    "qsfp14",
+                    "qsfp15",
+                    "qsfp16",
+                    "qsfp17",
+                    "qsfp18",
+                    "qsfp19",
+                    "qsfp20",
+                    "qsfp21",
+                    "qsfp22",
+                    "qsfp23",
+                    "qsfp24",
+                    "qsfp25",
+                    "qsfp26",
+                    "qsfp27",
+                    "qsfp28",
+                    "qsfp29",
+                    "qsfp30",
+                    "qsfp31"
+                  ],
+                  "help": "Port to add the port to"
+                },
+                {
+                  "long": "rack",
+                  "help": "Id of the rack to add the address to"
+                },
+                {
+                  "long": "switch",
+                  "values": [
+                    "switch0",
+                    "switch1"
+                  ],
+                  "help": "Switch to add the address to"
+                },
+                {
+                  "long": "vlan",
+                  "help": "Optional VLAN to assign to the address"
+                }
+              ]
             },
             {
               "name": "del",
-              "about": "Remove an address from a port configuration"
+              "about": "Remove an address from a port configuration",
+              "args": [
+                {
+                  "long": "addr",
+                  "help": "Address to remove"
+                },
+                {
+                  "long": "port",
+                  "values": [
+                    "qsfp0",
+                    "qsfp1",
+                    "qsfp2",
+                    "qsfp3",
+                    "qsfp4",
+                    "qsfp5",
+                    "qsfp6",
+                    "qsfp7",
+                    "qsfp8",
+                    "qsfp9",
+                    "qsfp10",
+                    "qsfp11",
+                    "qsfp12",
+                    "qsfp13",
+                    "qsfp14",
+                    "qsfp15",
+                    "qsfp16",
+                    "qsfp17",
+                    "qsfp18",
+                    "qsfp19",
+                    "qsfp20",
+                    "qsfp21",
+                    "qsfp22",
+                    "qsfp23",
+                    "qsfp24",
+                    "qsfp25",
+                    "qsfp26",
+                    "qsfp27",
+                    "qsfp28",
+                    "qsfp29",
+                    "qsfp30",
+                    "qsfp31"
+                  ],
+                  "help": "Port to remove the address from"
+                },
+                {
+                  "long": "rack",
+                  "help": "Id of the rack to remove the address from"
+                },
+                {
+                  "long": "switch",
+                  "values": [
+                    "switch0",
+                    "switch1"
+                  ],
+                  "help": "Switch to remove the address from"
+                }
+              ]
             }
           ]
         },
@@ -1991,7 +2111,24 @@
           "subcommands": [
             {
               "name": "announce",
-              "about": "Make a BGP announcement"
+              "about": "Make a BGP announcement",
+              "args": [
+                {
+                  "long": "address-lot",
+                  "help": "The address lot to draw from"
+                },
+                {
+                  "long": "announce-set",
+                  "help": "The announce set to announce from"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "prefix",
+                  "help": "The prefix to announce"
+                }
+              ]
             },
             {
               "name": "config",
@@ -2006,12 +2143,20 @@
                       "about": "Add a BGP peer to a port configuration",
                       "args": [
                         {
+                          "long": "addr",
+                          "help": "Address of the peer to add"
+                        },
+                        {
                           "long": "allowed-exports",
                           "help": "Prefixes that may be exported to the peer. Empty list means all prefixes allowed"
                         },
                         {
                           "long": "allowed-imports",
                           "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "bgp-config",
+                          "help": "BGP configuration this peer is associated with"
                         },
                         {
                           "long": "communities",
@@ -2058,8 +2203,58 @@
                           "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer"
                         },
                         {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to add the peer to"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to add the peer to"
+                        },
+                        {
                           "long": "remote-asn",
                           "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to add the peer to"
                         },
                         {
                           "long": "vlan-id",
@@ -2069,7 +2264,63 @@
                     },
                     {
                       "name": "del",
-                      "about": "Remove a BGP from a port configuration"
+                      "about": "Remove a BGP from a port configuration",
+                      "args": [
+                        {
+                          "long": "addr",
+                          "help": "Address of the peer to remove"
+                        },
+                        {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to remove the peer from"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to remove the peer from"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to remove the peer from"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -2080,8 +2331,74 @@
               "about": "Set a filtering specification for a peer",
               "args": [
                 {
+                  "long": "allowed",
+                  "help": "Prefixes to allow for the peer"
+                },
+                {
+                  "long": "direction",
+                  "values": [
+                    "import",
+                    "export"
+                  ],
+                  "help": "Whether to apply the filter to imported or exported prefixes"
+                },
+                {
                   "long": "no-filtering",
-                  "help": "Do not filter. Takes precedence over allowed list"
+                  "help": "Do not filter"
+                },
+                {
+                  "long": "peer",
+                  "help": "Peer to apply allow list to"
+                },
+                {
+                  "long": "port",
+                  "values": [
+                    "qsfp0",
+                    "qsfp1",
+                    "qsfp2",
+                    "qsfp3",
+                    "qsfp4",
+                    "qsfp5",
+                    "qsfp6",
+                    "qsfp7",
+                    "qsfp8",
+                    "qsfp9",
+                    "qsfp10",
+                    "qsfp11",
+                    "qsfp12",
+                    "qsfp13",
+                    "qsfp14",
+                    "qsfp15",
+                    "qsfp16",
+                    "qsfp17",
+                    "qsfp18",
+                    "qsfp19",
+                    "qsfp20",
+                    "qsfp21",
+                    "qsfp22",
+                    "qsfp23",
+                    "qsfp24",
+                    "qsfp25",
+                    "qsfp26",
+                    "qsfp27",
+                    "qsfp28",
+                    "qsfp29",
+                    "qsfp30",
+                    "qsfp31"
+                  ],
+                  "help": "Port to add the port to"
+                },
+                {
+                  "long": "rack",
+                  "help": "Id of the rack to add the address to"
+                },
+                {
+                  "long": "switch",
+                  "values": [
+                    "switch0",
+                    "switch1"
+                  ],
+                  "help": "Switch to add the address to"
                 }
               ]
             },
@@ -2091,7 +2408,17 @@
             },
             {
               "name": "withdraw",
-              "about": "Make a BGP announcement"
+              "about": "Make a BGP announcement",
+              "args": [
+                {
+                  "long": "announce-set",
+                  "help": "The announce set to withdraw from"
+                },
+                {
+                  "long": "prefix",
+                  "help": "The prefix to withdraw"
+                }
+              ]
             }
           ]
         },
@@ -2108,14 +2435,124 @@
                   "help": "Whether or not to set auto-negotiation"
                 },
                 {
+                  "long": "fec",
+                  "help": "The forward error correction mode of the link"
+                },
+                {
                   "long": "mtu",
                   "help": "Maximum transmission unit for the link"
+                },
+                {
+                  "long": "port",
+                  "values": [
+                    "qsfp0",
+                    "qsfp1",
+                    "qsfp2",
+                    "qsfp3",
+                    "qsfp4",
+                    "qsfp5",
+                    "qsfp6",
+                    "qsfp7",
+                    "qsfp8",
+                    "qsfp9",
+                    "qsfp10",
+                    "qsfp11",
+                    "qsfp12",
+                    "qsfp13",
+                    "qsfp14",
+                    "qsfp15",
+                    "qsfp16",
+                    "qsfp17",
+                    "qsfp18",
+                    "qsfp19",
+                    "qsfp20",
+                    "qsfp21",
+                    "qsfp22",
+                    "qsfp23",
+                    "qsfp24",
+                    "qsfp25",
+                    "qsfp26",
+                    "qsfp27",
+                    "qsfp28",
+                    "qsfp29",
+                    "qsfp30",
+                    "qsfp31"
+                  ],
+                  "help": "Port to add the link to"
+                },
+                {
+                  "long": "rack",
+                  "help": "Id of the rack to add the link to"
+                },
+                {
+                  "long": "speed",
+                  "help": "The speed of the link"
+                },
+                {
+                  "long": "switch",
+                  "values": [
+                    "switch0",
+                    "switch1"
+                  ],
+                  "help": "Switch to add the link to"
                 }
               ]
             },
             {
               "name": "del",
-              "about": "Remove a link from a port"
+              "about": "Remove a link from a port",
+              "args": [
+                {
+                  "long": "port",
+                  "values": [
+                    "qsfp0",
+                    "qsfp1",
+                    "qsfp2",
+                    "qsfp3",
+                    "qsfp4",
+                    "qsfp5",
+                    "qsfp6",
+                    "qsfp7",
+                    "qsfp8",
+                    "qsfp9",
+                    "qsfp10",
+                    "qsfp11",
+                    "qsfp12",
+                    "qsfp13",
+                    "qsfp14",
+                    "qsfp15",
+                    "qsfp16",
+                    "qsfp17",
+                    "qsfp18",
+                    "qsfp19",
+                    "qsfp20",
+                    "qsfp21",
+                    "qsfp22",
+                    "qsfp23",
+                    "qsfp24",
+                    "qsfp25",
+                    "qsfp26",
+                    "qsfp27",
+                    "qsfp28",
+                    "qsfp29",
+                    "qsfp30",
+                    "qsfp31"
+                  ],
+                  "help": "Port to remove the link from"
+                },
+                {
+                  "long": "rack",
+                  "help": "Id of the rack to remove the link from"
+                },
+                {
+                  "long": "switch",
+                  "values": [
+                    "switch0",
+                    "switch1"
+                  ],
+                  "help": "Switch to remove the link from"
+                }
+              ]
             }
           ]
         },
@@ -3366,26 +3803,6 @@
                   "name": "announce-set",
                   "subcommands": [
                     {
-                      "name": "create",
-                      "about": "Create new BGP announce set",
-                      "args": [
-                        {
-                          "long": "description"
-                        },
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "name"
-                        }
-                      ]
-                    },
-                    {
                       "name": "delete",
                       "about": "Delete BGP announce set",
                       "args": [
@@ -3407,7 +3824,8 @@
                     },
                     {
                       "name": "update",
-                      "about": "Update a BGP announce set",
+                      "about": "Update BGP announce set",
+                      "long_about": "If the announce set exists, this endpoint replaces the existing announce set with the one specified.",
                       "args": [
                         {
                           "long": "description"

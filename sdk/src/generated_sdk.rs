@@ -48504,7 +48504,10 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList;
-    /// Update a BGP announce set
+    /// Update BGP announce set
+    ///
+    /// If the announce set exists, this endpoint replaces the existing announce
+    /// set with the one specified.
     ///
     /// Sends a `PUT` request to `/v1/system/networking/bgp-announce`
     ///
@@ -48515,17 +48518,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_update(&self) -> builder::NetworkingBgpAnnounceSetUpdate;
-    /// Create new BGP announce set
-    ///
-    /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
-    ///
-    /// ```ignore
-    /// let response = client.networking_bgp_announce_set_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate;
     /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
@@ -48816,10 +48808,6 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_announce_set_update(&self) -> builder::NetworkingBgpAnnounceSetUpdate {
         builder::NetworkingBgpAnnounceSetUpdate::new(self)
-    }
-
-    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate {
-        builder::NetworkingBgpAnnounceSetCreate::new(self)
     }
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
@@ -63788,82 +63776,6 @@ pub mod builder {
             let mut request = client
                 .client
                 .put(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_create
-    #[derive(Debug, Clone)]
-    pub struct NetworkingBgpAnnounceSetCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::BgpAnnounceSetCreate, String>,
-    }
-
-    impl<'a> NetworkingBgpAnnounceSetCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(types::builder::BgpAnnounceSetCreate::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::BgpAnnounceSetCreate>,
-            <V as std::convert::TryInto<types::BgpAnnounceSetCreate>>::Error: std::fmt::Display,
-        {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `BgpAnnounceSetCreate` for body failed: {}",
-                    s
-                )
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::BgpAnnounceSetCreate,
-            ) -> types::builder::BgpAnnounceSetCreate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::BgpAnnounceSetCreate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
