@@ -23261,7 +23261,8 @@ pub mod types {
     ///  "enum": [
     ///    "count",
     ///    "bytes",
-    ///    "seconds"
+    ///    "seconds",
+    ///    "nanoseconds"
     ///  ]
     /// }
     /// ```
@@ -23286,6 +23287,8 @@ pub mod types {
         Bytes,
         #[serde(rename = "seconds")]
         Seconds,
+        #[serde(rename = "nanoseconds")]
+        Nanoseconds,
     }
 
     impl From<&Units> for Units {
@@ -23300,6 +23303,7 @@ pub mod types {
                 Self::Count => "count".to_string(),
                 Self::Bytes => "bytes".to_string(),
                 Self::Seconds => "seconds".to_string(),
+                Self::Nanoseconds => "nanoseconds".to_string(),
             }
         }
     }
@@ -23311,6 +23315,7 @@ pub mod types {
                 "count" => Ok(Self::Count),
                 "bytes" => Ok(Self::Bytes),
                 "seconds" => Ok(Self::Seconds),
+                "nanoseconds" => Ok(Self::Nanoseconds),
                 _ => Err("invalid value".into()),
             }
         }
