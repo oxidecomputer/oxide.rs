@@ -10747,11 +10747,11 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingBgpAnnounceSetCreateWhen(httpmock::When);
-    impl NetworkingBgpAnnounceSetCreateWhen {
+    pub struct NetworkingBgpAnnounceSetUpdateWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetUpdateWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
-                inner.method(httpmock::Method::POST).path_matches(
+                inner.method(httpmock::Method::PUT).path_matches(
                     regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
                 ),
             )
@@ -10766,8 +10766,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingBgpAnnounceSetCreateThen(httpmock::Then);
-    impl NetworkingBgpAnnounceSetCreateThen {
+    pub struct NetworkingBgpAnnounceSetUpdateThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetUpdateThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -16163,11 +16163,11 @@ pub trait MockServerExt {
             operations::NetworkingBgpAnnounceSetListWhen,
             operations::NetworkingBgpAnnounceSetListThen,
         );
-    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingBgpAnnounceSetCreateWhen,
-            operations::NetworkingBgpAnnounceSetCreateThen,
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
         );
     fn networking_bgp_announce_set_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
@@ -18101,17 +18101,17 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingBgpAnnounceSetCreateWhen,
-            operations::NetworkingBgpAnnounceSetCreateThen,
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingBgpAnnounceSetCreateWhen::new(when),
-                operations::NetworkingBgpAnnounceSetCreateThen::new(then),
+                operations::NetworkingBgpAnnounceSetUpdateWhen::new(when),
+                operations::NetworkingBgpAnnounceSetUpdateThen::new(then),
             )
         })
     }

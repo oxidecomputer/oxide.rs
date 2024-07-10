@@ -48504,17 +48504,20 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList;
-    /// Create new BGP announce set
+    /// Update BGP announce set
     ///
-    /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
+    /// If the announce set exists, this endpoint replaces the existing announce
+    /// set with the one specified.
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/bgp-announce`
     ///
     /// ```ignore
-    /// let response = client.networking_bgp_announce_set_create()
+    /// let response = client.networking_bgp_announce_set_update()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate;
+    fn networking_bgp_announce_set_update(&self) -> builder::NetworkingBgpAnnounceSetUpdate;
     /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
@@ -48803,8 +48806,8 @@ impl ClientSystemNetworkingExt for Client {
         builder::NetworkingBgpAnnounceSetList::new(self)
     }
 
-    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate {
-        builder::NetworkingBgpAnnounceSetCreate::new(self)
+    fn networking_bgp_announce_set_update(&self) -> builder::NetworkingBgpAnnounceSetUpdate {
+        builder::NetworkingBgpAnnounceSetUpdate::new(self)
     }
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
@@ -63719,16 +63722,16 @@ pub mod builder {
     }
 
     /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_update`]
     ///
-    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_create
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_update`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_update
     #[derive(Debug, Clone)]
-    pub struct NetworkingBgpAnnounceSetCreate<'a> {
+    pub struct NetworkingBgpAnnounceSetUpdate<'a> {
         client: &'a super::Client,
         body: Result<types::builder::BgpAnnounceSetCreate, String>,
     }
 
-    impl<'a> NetworkingBgpAnnounceSetCreate<'a> {
+    impl<'a> NetworkingBgpAnnounceSetUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -63760,7 +63763,7 @@ pub mod builder {
             self
         }
 
-        /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
+        /// Sends a `PUT` request to `/v1/system/networking/bgp-announce`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
@@ -63772,7 +63775,7 @@ pub mod builder {
             #[allow(unused_mut)]
             let mut request = client
                 .client
-                .post(url)
+                .put(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
