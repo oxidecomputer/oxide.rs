@@ -42,9 +42,9 @@ enum SubCommand {
 impl RunnableCmd for CmdAuth {
     async fn run(&self, ctx: &Context) -> Result<()> {
         match &self.subcmd {
-            SubCommand::Login(cmd) => cmd.run(ctx).await,
-            SubCommand::Logout(cmd) => cmd.run(ctx).await,
-            SubCommand::Status(cmd) => cmd.run(ctx).await,
+            SubCommand::Login(cmd) => cmd.login(ctx).await,
+            SubCommand::Logout(cmd) => cmd.logout(ctx).await,
+            SubCommand::Status(cmd) => cmd.status(ctx).await,
         }
     }
 }
@@ -164,7 +164,7 @@ impl CmdAuthLogin {
     //   (if there's a conflict I guess we prompt: overwrite / new name)
     // - If there's no default profile, we make the newly authenticated profile
     //   the new default
-    pub async fn run(&self, ctx: &Context) -> Result<()> {
+    pub async fn login(&self, ctx: &Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
         //     return Err(anyhow!(
         //         "--with-token required when not running interactively"
@@ -397,7 +397,7 @@ pub struct CmdAuthLogout {
 }
 
 impl CmdAuthLogout {
-    pub async fn run(&self, ctx: &Context) -> Result<()> {
+    pub async fn logout(&self, ctx: &Context) -> Result<()> {
         if !self.force && !yes("Confirm authentication information deletion:")? {
             return Ok(());
         }
@@ -448,7 +448,7 @@ impl CmdAuthLogout {
 pub struct CmdAuthStatus {}
 
 impl CmdAuthStatus {
-    pub async fn run(&self, ctx: &Context) -> Result<()> {
+    pub async fn status(&self, ctx: &Context) -> Result<()> {
         for (profile_name, profile_info) in &ctx.cred_file().profile {
             let client = Client::new_authenticated_config(
                 &ClientConfig::default()
@@ -696,9 +696,7 @@ mod tests {
 
         let temp_dir = tempfile::tempdir().unwrap().into_path();
 
-        println!("SERVER {}", server.url(""));
-
-        let x = Command::cargo_bin("oxide")
+        let cmd = Command::cargo_bin("oxide")
             .unwrap()
             .env("RUST_BACKTRACE", "1")
             .arg("--config-dir")
@@ -710,9 +708,12 @@ mod tests {
             .arg(server.url(""))
             .assert()
             .success();
-        let x = x.get_output();
+        let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
 
-        println!("{}", String::from_utf8_lossy(&x.stdout));
+        assert_contents(
+            "tests/data/test_auth_login_first_stdout.toml",
+            &scrub_server(stdout.to_string(), server.url("")),
+        );
 
         device_auth.assert();
         device_token.assert();
@@ -730,6 +731,7 @@ mod tests {
             "tests/data/test_auth_login_first_config.toml",
             &read_to_string(temp_dir.join("config.toml")).unwrap(),
         );
+        panic!()
     }
 
     fn scrub_server(raw: String, server: String) -> String {
