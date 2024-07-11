@@ -164,8 +164,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetList => {
                 Self::cli_networking_bgp_announce_set_list()
             }
-            CliCommand::NetworkingBgpAnnounceSetCreate => {
-                Self::cli_networking_bgp_announce_set_create()
+            CliCommand::NetworkingBgpAnnounceSetUpdate => {
+                Self::cli_networking_bgp_announce_set_update()
             }
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 Self::cli_networking_bgp_announce_set_delete()
@@ -4212,7 +4212,7 @@ impl<T: CliConfig> Cli<T> {
             .about("Get originated routes for a BGP configuration")
     }
 
-    pub fn cli_networking_bgp_announce_set_create() -> clap::Command {
+    pub fn cli_networking_bgp_announce_set_update() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("description")
@@ -4240,7 +4240,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create new BGP announce set")
+            .about("Update BGP announce set")
+            .long_about(
+                "If the announce set exists, this endpoint replaces the existing announce set \
+                 with the one specified.",
+            )
     }
 
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
@@ -6209,8 +6213,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetList => {
                 self.execute_networking_bgp_announce_set_list(matches).await
             }
-            CliCommand::NetworkingBgpAnnounceSetCreate => {
-                self.execute_networking_bgp_announce_set_create(matches)
+            CliCommand::NetworkingBgpAnnounceSetUpdate => {
+                self.execute_networking_bgp_announce_set_update(matches)
                     .await
             }
             CliCommand::NetworkingBgpAnnounceSetDelete => {
@@ -10824,11 +10828,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_bgp_announce_set_create(
+    pub async fn execute_networking_bgp_announce_set_update(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_bgp_announce_set_create();
+        let mut request = self.client.networking_bgp_announce_set_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -10845,7 +10849,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_bgp_announce_set_create(matches, &mut request)?;
+            .execute_networking_bgp_announce_set_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -13955,10 +13959,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_networking_bgp_announce_set_create(
+    fn execute_networking_bgp_announce_set_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingBgpAnnounceSetCreate,
+        request: &mut builder::NetworkingBgpAnnounceSetUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -14567,7 +14571,7 @@ pub enum CliCommand {
     NetworkingBgpConfigCreate,
     NetworkingBgpConfigDelete,
     NetworkingBgpAnnounceSetList,
-    NetworkingBgpAnnounceSetCreate,
+    NetworkingBgpAnnounceSetUpdate,
     NetworkingBgpAnnounceSetDelete,
     NetworkingBgpMessageHistory,
     NetworkingBgpImportedRoutesIpv4,
@@ -14768,7 +14772,7 @@ impl CliCommand {
             CliCommand::NetworkingBgpConfigCreate,
             CliCommand::NetworkingBgpConfigDelete,
             CliCommand::NetworkingBgpAnnounceSetList,
-            CliCommand::NetworkingBgpAnnounceSetCreate,
+            CliCommand::NetworkingBgpAnnounceSetUpdate,
             CliCommand::NetworkingBgpAnnounceSetDelete,
             CliCommand::NetworkingBgpMessageHistory,
             CliCommand::NetworkingBgpImportedRoutesIpv4,

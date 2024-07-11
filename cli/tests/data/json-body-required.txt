@@ -1,10 +1,6 @@
 oxide image create
 oxide policy update
 oxide project policy update
-oxide system networking address-lot create
-oxide system networking bgp announce-set create
-oxide system networking switch-port-settings create
-oxide system policy update
 oxide silo idp local user create
 oxide silo idp local user set-password
 oxide silo create
@@ -13,3 +9,7 @@ oxide vpc firewall-rules update
 oxide vpc router route create
 oxide vpc router route update
 oxide disk create
+oxide system policy update
+oxide system networking address-lot create
+oxide system networking switch-port-settings create
+oxide system networking bgp announce-set update

@@ -23,6 +23,7 @@ mod cmd_completion;
 mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
+mod cmd_net;
 mod cmd_timeseries;
 
 mod cmd_version;
@@ -51,6 +52,15 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
         .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
+        .add_custom::<cmd_net::CmdAddr>("system networking addr")
+        .add_custom::<cmd_net::CmdLink>("system networking link")
+        .add_custom::<cmd_net::CmdPortConfig>("system networking switch-port-settings show")
+        .add_custom::<cmd_net::CmdPortStatus>("system hardware switch-port show-status")
+        .add_custom::<cmd_net::CmdBgpStatus>("system networking bgp show-status")
+        .add_custom::<cmd_net::CmdBgpPeer>("system networking bgp peer")
+        .add_custom::<cmd_net::CmdBgpAnnounce>("system networking bgp announce")
+        .add_custom::<cmd_net::CmdBgpWithdraw>("system networking bgp withdraw")
+        .add_custom::<cmd_net::CmdBgpFilter>("system networking bgp filter")
 }
 
 #[tokio::main]

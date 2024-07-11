@@ -439,8 +439,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp config create"),
         CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp config delete"),
         CliCommand::NetworkingBgpConfigList => Some("system networking bgp config list"),
-        CliCommand::NetworkingBgpAnnounceSetCreate => {
-            Some("system networking bgp announce-set create")
+        CliCommand::NetworkingBgpAnnounceSetUpdate => {
+            Some("system networking bgp announce-set update")
         }
         CliCommand::NetworkingBgpAnnounceSetDelete => {
             Some("system networking bgp announce-set delete")

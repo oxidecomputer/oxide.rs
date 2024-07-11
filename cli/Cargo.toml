@@ -24,16 +24,19 @@ base64 = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 clap_complete = { workspace = true }
+colored = { workspace = true }
 crossterm = { workspace = true }
 dialoguer = { workspace = true }
 dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
+humantime = { workspace = true }
 indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
 oxide = { workspace = true }
+oxnet = { workspace = true }
 predicates = { workspace = true }
 ratatui = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }
