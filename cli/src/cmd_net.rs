@@ -34,33 +34,12 @@ use uuid::Uuid;
 // in a breakout.
 const PHY0: &str = "phy0";
 
-#[derive(Parser, Debug, Clone)]
-#[command(verbatim_doc_comment)]
-#[command(name = "port")]
-pub struct CmdPort {
-    #[clap(subcommand)]
-    subcmd: PortSubCommand,
-}
-
-#[async_trait]
-impl RunnableCmd for CmdPort {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        match &self.subcmd {
-            PortSubCommand::Config(cmd) => cmd.run(ctx).await,
-            PortSubCommand::Status(cmd) => cmd.run(ctx).await,
-        }
-    }
-}
-
-#[derive(Parser, Debug, Clone)]
-enum PortSubCommand {
-    /// Manage port configuration.
-    Config(CmdPortConfig),
-
-    /// Observe port status.
-    Status(CmdPortStatus),
-}
-
+/// Manage switch port links.
+///
+/// Links carry layer-2 Ethernet properties for a lane or set of lanes on a
+/// switch port. Lane geometry is defined in physical port settings. At the
+/// present time only single lane configurations are supported, and thus only
+/// a single link per physical port is supported.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "link")]
@@ -88,6 +67,11 @@ enum LinkSubCommand {
     Del(CmdLinkDel),
 }
 
+/// Add a link to a switch port.
+///
+/// This operation performs a read-modify write on the port settings object
+/// identified by the rack/switch/port parameters, adding a link to the
+/// corresponding port settings.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "add")]
@@ -153,6 +137,11 @@ impl RunnableCmd for CmdLinkAdd {
     }
 }
 
+/// Remove a link from a switch port.
+///
+/// This operation performs a read-modify write on the port settings object
+/// identified by the rack/switch/port parameters, removing a link from the
+/// corresponding port settings.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "del")]
@@ -184,6 +173,8 @@ impl RunnableCmd for CmdLinkDel {
     }
 }
 
+/// Manage and query rack Border Gateway Protocol (BGP) configuration and
+/// status.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "bgp")]
@@ -224,6 +215,11 @@ enum BgpSubCommand {
     Filter(CmdBgpFilter),
 }
 
+/// Announce a prefix over BGP.
+///
+/// This command adds the provided prefix to the specified announce set. It is
+/// required that the prefix be available in the given address lot. The add is
+/// performed as a read-modify-write on the specified address lot.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "announce")]
@@ -280,9 +276,13 @@ impl RunnableCmd for CmdBgpAnnounce {
     }
 }
 
+/// Withdraw a prefix over BGP.
+///
+/// This command removes the provided prefix to the specified announce set.
+/// The remove is performed as a read-modify-write on the specified address lot.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "announce")]
+#[command(name = "withdraw")]
 pub struct CmdBgpWithdraw {
     /// The announce set to withdraw from.
     #[arg(long)]
@@ -332,9 +332,17 @@ enum FilterDirection {
     Export,
 }
 
+/// Add a filtering requirement to a BGP session.
+///
+/// The Oxide BGP implementation can filter prefixes received from peers
+/// on import and filter prefixes sent to peers on export. This command
+/// provides a way to specify import/export filtering. Filtering is a
+/// property of the BGP peering settings found in port settings configuration.
+/// This command works by performing a read-modify-write on the port settings
+/// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "announce")]
+#[command(name = "filter")]
 pub struct CmdBgpFilter {
     /// Id of the rack to add the address to.
     #[arg(long)]
@@ -410,6 +418,7 @@ impl RunnableCmd for CmdBgpFilter {
     }
 }
 
+/// Manage switch port addresses.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "addr")]
@@ -437,6 +446,11 @@ enum AddrSubCommand {
     Del(CmdAddrDel),
 }
 
+/// Add an address to a switch port.
+///
+/// Addresses are a part of switch port settings configuration. This command
+/// works by performing a read-modify-write on the switch port settings
+/// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "add")]
@@ -497,6 +511,11 @@ impl RunnableCmd for CmdAddrAdd {
     }
 }
 
+/// Remove an address from a switch port.
+///
+/// Addresses are a part of switch port settings configuration. This command
+/// works by performing a read-modify-write on the switch port settings
+/// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "del")]
@@ -536,6 +555,10 @@ impl RunnableCmd for CmdAddrDel {
     }
 }
 
+/// Manage a rack's BGP configuration.
+///
+/// Rack BGP configuration is centered around peers. The subcommands available
+/// within this command allow for managing BGP peer sessions.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "config")]
@@ -559,6 +582,12 @@ enum BgpConfigSubCommand {
     Peer(CmdBgpPeer),
 }
 
+/// Manage BGP peers.
+///
+/// This command provides add and delete subcommands for managing BGP peers.
+/// BGP peer configuration is a part of a switch port settings configuration.
+/// The peer add and remove subcommands perform read-modify-write operations
+/// on switch port settings objects to manage BGP peer configurations.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "peer")]
@@ -586,6 +615,10 @@ enum BgpConfigPeerSubCommand {
     Del(CmdBgpPeerDel),
 }
 
+/// Add a BGP peer to a given switch port configuration.
+///
+/// This performs a read-modify-write on the specified switch port
+/// configuration.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "add")]
@@ -740,6 +773,10 @@ impl RunnableCmd for CmdBgpPeerAdd {
     }
 }
 
+/// Remove a BGP peer from a given switch port configuration.
+///
+/// This performs a read-modify-write on the specified switch port
+/// configuration.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "del")]
@@ -961,7 +998,9 @@ impl RunnableCmd for CmdPortConfig {
     }
 }
 
-/// Get the status of BGP.
+/// Get the status of BGP on the rack.
+///
+/// This will show the peering status for all peers on all switches.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "net bgp status")]

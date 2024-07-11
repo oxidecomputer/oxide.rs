@@ -3010,6 +3010,7 @@
           "subcommands": [
             {
               "name": "addr",
+              "about": "Manage switch port addresses.",
               "subcommands": [
                 {
                   "name": "add",
@@ -3334,6 +3335,8 @@
               "subcommands": [
                 {
                   "name": "announce",
+                  "about": "Announce a prefix over BGP.",
+                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the specified address lot.",
                   "args": [
                     {
                       "long": "address-lot",
@@ -3468,6 +3471,8 @@
                 },
                 {
                   "name": "filter",
+                  "about": "Add a filtering requirement to a BGP session.",
+                  "long_about": "Add a filtering requirement to a BGP session.\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "allowed",
@@ -3568,6 +3573,8 @@
                 },
                 {
                   "name": "peer",
+                  "about": "Manage BGP peers.",
+                  "long_about": "Manage BGP peers.\n\nThis command provides add and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer add and remove subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
                   "subcommands": [
                     {
                       "name": "add",
@@ -3757,7 +3764,8 @@
                 },
                 {
                   "name": "show-status",
-                  "about": "Get the status of BGP."
+                  "about": "Get the status of BGP on the rack.",
+                  "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches."
                 },
                 {
                   "name": "status",
@@ -3765,6 +3773,8 @@
                 },
                 {
                   "name": "withdraw",
+                  "about": "Withdraw a prefix over BGP.",
+                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix to the specified announce set.\nThe remove is performed as a read-modify-write on the specified address lot.",
                   "args": [
                     {
                       "long": "announce-set",
@@ -3780,6 +3790,8 @@
             },
             {
               "name": "link",
+              "about": "Manage switch port links.",
+              "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
               "subcommands": [
                 {
                   "name": "add",
