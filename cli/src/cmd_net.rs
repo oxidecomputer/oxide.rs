@@ -36,29 +36,6 @@ const PHY0: &str = "phy0";
 
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "net")]
-pub struct CmdNet {
-    #[clap(subcommand)]
-    subcmd: NetSubCommand,
-}
-
-#[derive(Parser, Debug, Clone)]
-enum NetSubCommand {
-    /// Address management.
-    Addr(CmdAddr),
-
-    /// Port management.
-    Port(CmdPort),
-
-    /// Link management.
-    Link(CmdLink),
-
-    /// BGP management.
-    Bgp(CmdBgp),
-}
-
-#[derive(Parser, Debug, Clone)]
-#[command(verbatim_doc_comment)]
 #[command(name = "port")]
 pub struct CmdPort {
     #[clap(subcommand)]
@@ -458,18 +435,6 @@ enum AddrSubCommand {
 
     /// Remove an address from a port configuration.
     Del(CmdAddrDel),
-}
-
-#[async_trait]
-impl RunnableCmd for CmdNet {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        match &self.subcmd {
-            NetSubCommand::Addr(cmd) => cmd.run(ctx).await,
-            NetSubCommand::Port(cmd) => cmd.run(ctx).await,
-            NetSubCommand::Link(cmd) => cmd.run(ctx).await,
-            NetSubCommand::Bgp(cmd) => cmd.run(ctx).await,
-        }
-    }
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -1380,6 +1345,7 @@ async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSe
 
     Ok(create)
 }
+
 #[derive(clap::ValueEnum, Clone, Debug)]
 enum Switch {
     Switch0,
