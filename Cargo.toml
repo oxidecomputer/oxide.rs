@@ -17,6 +17,7 @@ built = { version = "0.7.3", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.7", features = ["derive", "string", "env"] }
 clap_complete = "4.5.7"
+colored = "2.1.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
@@ -25,6 +26,7 @@ env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.30"
 httpmock = "0.6.8"
+humantime = "2"
 indicatif = "0.17"
 log = "0.4.22"
 newline-converter = "0.3.0"
@@ -32,6 +34,7 @@ oauth2 = "4.4.2"
 open = "4.2.0"
 oxide = { path = "sdk", version = "0.5.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.5.0" }
+oxnet = { git = "https://github.com/oxidecomputer/oxnet" }
 predicates = "3.1.0"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }

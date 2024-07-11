@@ -631,6 +631,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b6a852b24ab71dffc585bcb46eaf7959d175cb865a7152e35b348d1b2960422"
 
 [[package]]
+name = "colored"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbf2150cce219b664a8a70df7a1f933836724b503f8a413af9365b4dcc4d90b8"
+dependencies = [
+ "lazy_static",
+ "windows-sys 0.48.0",
+]
+
+[[package]]
 name = "compact_str"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1597,6 +1607,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f518f335dce6725a761382244631d86cf0ccb2863413590b31338feb467f9c3"
 
 [[package]]
+name = "ipnetwork"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf466541e9d546596ee94f9f69590f89473455f88372423e0008fc1a7daf100e"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "is-docker"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2124,6 +2143,7 @@ dependencies = [
  "chrono",
  "clap",
  "clap_complete",
+ "colored",
  "crossterm",
  "dialoguer",
  "dirs",
@@ -2132,12 +2152,14 @@ dependencies = [
  "expectorate",
  "futures",
  "httpmock",
+ "humantime",
  "indicatif",
  "log",
  "oauth2",
  "open",
  "oxide",
  "oxide-httpmock",
+ "oxnet",
  "predicates",
  "pretty_assertions",
  "rand",
@@ -2166,6 +2188,17 @@ dependencies = [
  "regex",
  "serde_json",
  "uuid",
+]
+
+[[package]]
+name = "oxnet"
+version = "0.1.0"
+source = "git+https://github.com/oxidecomputer/oxnet#f37a7aaf5ca96d87af5f8194c19b20e276b5d5e1"
+dependencies = [
+ "ipnetwork",
+ "schemars",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
