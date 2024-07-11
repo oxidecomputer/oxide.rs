@@ -135,7 +135,7 @@ pub struct CmdAuthLogin {
     with_token: bool,
 
     /// The host of the Oxide instance to authenticate with.
-    /// This assumes http; specify an `http://` prefix if needed.
+    /// This assumes https; specify an `http://` prefix if needed.
     #[clap(short = 'H', long, value_parser = parse_host)]
     host: url::Url,
 
