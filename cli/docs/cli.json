@@ -89,7 +89,7 @@
             {
               "long": "host",
               "short": "H",
-              "help": "The host of the Oxide instance to authenticate with. This assumes http; specify an `http://` prefix if needed"
+              "help": "The host of the Oxide instance to authenticate with. This assumes https; specify an `http://` prefix if needed"
             },
             {
               "long": "no-browser",
