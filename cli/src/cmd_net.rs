@@ -863,7 +863,13 @@ impl RunnableCmd for CmdPortConfig {
                 tw.flush()?;
                 println!();
 
-                writeln!(&mut tw, "{}\t{}", "Address".dimmed(), "Lot".dimmed())?;
+                writeln!(
+                    &mut tw,
+                    "{}\t{}\t{}",
+                    "Address".dimmed(),
+                    "Lot".dimmed(),
+                    "VLAN".dimmed()
+                )?;
                 for a in &config.addresses {
                     let addr = match &a.address {
                         oxide::types::IpNet::V4(a) => a.to_string(),
@@ -875,7 +881,7 @@ impl RunnableCmd for CmdPortConfig {
                         .find(|x| x.1.id == a.address_lot_block_id)
                         .unwrap();
 
-                    writeln!(&mut tw, "{}\t{}", addr, *alb.0.name)?;
+                    writeln!(&mut tw, "{}\t{}\t{:?}", addr, *alb.0.name, a.vlan_id)?;
                 }
                 tw.flush()?;
                 println!();
@@ -904,14 +910,28 @@ impl RunnableCmd for CmdPortConfig {
                 for p in &config.bgp_peers {
                     writeln!(
                         &mut tw,
-                        "{}\t{}\t{:?}\t{:?}\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
+                        "{}\t{}\t[{}]\t[{}]\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
                         p.addr,
                         match &p.bgp_config {
                             NameOrId::Id(id) =>  bgp_configs[id].to_string(),
                             NameOrId::Name(name) => name.to_string(),
                         },
-                        p.allowed_export,
-                        p.allowed_import,
+                        match &p.allowed_export {
+                            ImportExportPolicy::NoFiltering => String::from("no filtering"),
+                            ImportExportPolicy::Allow(list) => list
+                                .iter()
+                                .map(|x| x.to_string())
+                                .collect::<Vec<String>>()
+                                .join(" "),
+                        },
+                        match &p.allowed_import {
+                            ImportExportPolicy::NoFiltering => String::from("no filtering"),
+                            ImportExportPolicy::Allow(list) => list
+                                .iter()
+                                .map(|x| x.to_string())
+                                .collect::<Vec<String>>()
+                                .join(" "),
+                        },
                         p.communities,
                         p.connect_retry,
                         p.delay_open,
