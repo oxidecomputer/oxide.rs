@@ -6,14 +6,13 @@
 
 use std::{collections::HashMap, net::IpAddr};
 
-use crate::RunnableCmd;
+use crate::AuthenticatedCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use colored::*;
 use futures::TryStreamExt;
 use oxide::{
-    context::Context,
     types::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
@@ -49,11 +48,11 @@ pub struct CmdLink {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdLink {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl AuthenticatedCmd for CmdLink {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            LinkSubCommand::Add(cmd) => cmd.run(ctx).await,
-            LinkSubCommand::Del(cmd) => cmd.run(ctx).await,
+            LinkSubCommand::Add(cmd) => cmd.run(client).await,
+            LinkSubCommand::Del(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -106,9 +105,10 @@ pub struct CmdLinkAdd {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdLinkAdd {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdLinkAdd {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
             fec: self.fec,
@@ -128,7 +128,7 @@ impl RunnableCmd for CmdLinkAdd {
                 settings.links.insert(String::from(PHY0), link);
             }
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -160,11 +160,12 @@ pub struct CmdLinkDel {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdLinkDel {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdLinkDel {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         settings.links.clear();
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -184,14 +185,14 @@ pub struct CmdBgp {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgp {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl AuthenticatedCmd for CmdBgp {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            BgpSubCommand::Status(cmd) => cmd.run(ctx).await,
-            BgpSubCommand::Config(cmd) => cmd.run(ctx).await,
-            BgpSubCommand::Announce(cmd) => cmd.run(ctx).await,
-            BgpSubCommand::Withdraw(cmd) => cmd.run(ctx).await,
-            BgpSubCommand::Filter(cmd) => cmd.run(ctx).await,
+            BgpSubCommand::Status(cmd) => cmd.run(client).await,
+            BgpSubCommand::Config(cmd) => cmd.run(client).await,
+            BgpSubCommand::Announce(cmd) => cmd.run(client).await,
+            BgpSubCommand::Withdraw(cmd) => cmd.run(client).await,
+            BgpSubCommand::Filter(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -241,10 +242,9 @@ pub struct CmdBgpAnnounce {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpAnnounce {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut current: Vec<BgpAnnouncementCreate> = ctx
-            .client()?
+impl AuthenticatedCmd for CmdBgpAnnounce {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announce_set_list()
             .name_or_id(NameOrId::Name(self.announce_set.clone()))
             .send()
@@ -262,7 +262,7 @@ impl RunnableCmd for CmdBgpAnnounce {
             network: self.prefix.to_string().parse().unwrap(),
         });
 
-        ctx.client()?
+        client
             .networking_bgp_announce_set_update()
             .body(BgpAnnounceSetCreate {
                 announcement: current,
@@ -294,10 +294,9 @@ pub struct CmdBgpWithdraw {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpWithdraw {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut current: Vec<BgpAnnouncementCreate> = ctx
-            .client()?
+impl AuthenticatedCmd for CmdBgpWithdraw {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announce_set_list()
             .name_or_id(NameOrId::Name(self.announce_set.clone()))
             .send()
@@ -312,7 +311,7 @@ impl RunnableCmd for CmdBgpWithdraw {
 
         current.retain(|x| x.network.to_string() != self.prefix.to_string());
 
-        ctx.client()?
+        client
             .networking_bgp_announce_set_update()
             .body(BgpAnnounceSetCreate {
                 announcement: current,
@@ -374,9 +373,10 @@ pub struct CmdBgpFilter {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpFilter {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdBgpFilter {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         match settings.bgp_peers.get_mut(PHY0) {
             None => return Err(anyhow::anyhow!("no BGP peers configured")),
             Some(config) => {
@@ -409,7 +409,7 @@ impl RunnableCmd for CmdBgpFilter {
                 }
             }
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -428,11 +428,11 @@ pub struct CmdAddr {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdAddr {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl AuthenticatedCmd for CmdAddr {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            AddrSubCommand::Add(cmd) => cmd.run(ctx).await,
-            AddrSubCommand::Del(cmd) => cmd.run(ctx).await,
+            AddrSubCommand::Add(cmd) => cmd.run(client).await,
+            AddrSubCommand::Del(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -481,9 +481,10 @@ pub struct CmdAddrAdd {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdAddrAdd {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdAddrAdd {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let addr = Address {
             address: IpNet::V4(self.addr.to_string().parse().unwrap()),
             address_lot: self.lot.clone(),
@@ -502,7 +503,7 @@ impl RunnableCmd for CmdAddrAdd {
                 );
             }
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -538,15 +539,16 @@ pub struct CmdAddrDel {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdAddrDel {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdAddrDel {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         if let Some(addrs) = settings.addresses.get_mut(PHY0) {
             addrs
                 .addresses
                 .retain(|x| x.address.to_string() != self.addr.to_string());
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -568,10 +570,10 @@ pub struct CmdBgpConfig {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpConfig {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl AuthenticatedCmd for CmdBgpConfig {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            BgpConfigSubCommand::Peer(cmd) => cmd.run(ctx).await,
+            BgpConfigSubCommand::Peer(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -597,11 +599,11 @@ pub struct CmdBgpPeer {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpPeer {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl AuthenticatedCmd for CmdBgpPeer {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            BgpConfigPeerSubCommand::Add(cmd) => cmd.run(ctx).await,
-            BgpConfigPeerSubCommand::Del(cmd) => cmd.run(ctx).await,
+            BgpConfigPeerSubCommand::Add(cmd) => cmd.run(client).await,
+            BgpConfigPeerSubCommand::Del(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -711,9 +713,10 @@ pub struct CmdBgpPeerAdd {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpPeerAdd {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdBgpPeerAdd {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let peer = BgpPeer {
             addr: self.addr,
             allowed_import: if self.allowed_imports.is_empty() {
@@ -764,7 +767,7 @@ impl RunnableCmd for CmdBgpPeerAdd {
                     .insert(String::from(PHY0), BgpPeerConfig { peers: vec![peer] });
             }
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -799,13 +802,14 @@ pub struct CmdBgpPeerDel {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdBgpPeerDel {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+impl AuthenticatedCmd for CmdBgpPeerDel {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         if let Some(config) = settings.bgp_peers.get_mut(PHY0) {
             config.peers.retain(|x| x.addr != self.addr);
         }
-        ctx.client()?
+        client
             .networking_switch_port_settings_create()
             .body(settings)
             .send()
@@ -821,11 +825,9 @@ impl RunnableCmd for CmdBgpPeerDel {
 pub struct CmdPortConfig {}
 
 #[async_trait]
-impl RunnableCmd for CmdPortConfig {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let c = ctx.client()?;
-
-        let ports = c
+impl AuthenticatedCmd for CmdPortConfig {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let ports = client
             .networking_switch_port_list()
             .stream()
             .try_collect::<Vec<_>>()
@@ -835,7 +837,7 @@ impl RunnableCmd for CmdPortConfig {
 
         // TODO bad API, having to pull all address lots to work backwards from
         // address reference to address lot block is terribad
-        let addr_lots = c
+        let addr_lots = client
             .networking_address_lot_list()
             .stream()
             .try_collect::<Vec<_>>()
@@ -843,7 +845,7 @@ impl RunnableCmd for CmdPortConfig {
 
         let mut addr_lot_blocks = Vec::new();
         for a in addr_lots.iter() {
-            let blocks = c
+            let blocks = client
                 .networking_address_lot_block_list()
                 .address_lot(a.id)
                 .stream()
@@ -857,14 +859,14 @@ impl RunnableCmd for CmdPortConfig {
 
         for p in &ports {
             if let Some(id) = p.port_settings_id {
-                let config = c
+                let config = client
                     .networking_switch_port_settings_view()
                     .port(id)
                     .send()
                     .await?
                     .into_inner();
 
-                let bgp_configs: HashMap<Uuid, Name> = c
+                let bgp_configs: HashMap<Uuid, Name> = client
                     .networking_bgp_config_list()
                     .stream()
                     .try_collect::<Vec<_>>()
@@ -1007,11 +1009,9 @@ impl RunnableCmd for CmdPortConfig {
 pub struct CmdBgpStatus {}
 
 #[async_trait]
-impl RunnableCmd for CmdBgpStatus {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let c = ctx.client()?;
-
-        let status = c.networking_bgp_status().send().await?.into_inner();
+impl AuthenticatedCmd for CmdBgpStatus {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let status = client.networking_bgp_status().send().await?.into_inner();
 
         let (sw0, sw1) = status
             .iter()
@@ -1063,11 +1063,9 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
 pub struct CmdPortStatus {}
 
 #[async_trait]
-impl RunnableCmd for CmdPortStatus {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let c = ctx.client()?;
-
-        let ports = c
+impl AuthenticatedCmd for CmdPortStatus {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let ports = client
             .networking_switch_port_list()
             .stream()
             .try_collect::<Vec<_>>()
@@ -1082,11 +1080,11 @@ impl RunnableCmd for CmdPortStatus {
 
         println!("{}", "switch0".dimmed());
         println!("{}", "=======".dimmed());
-        self.show_switch(c, "switch0", &sw0).await?;
+        self.show_switch(client, "switch0", &sw0).await?;
 
         println!("{}", "switch1".dimmed());
         println!("{}", "=======".dimmed());
-        self.show_switch(c, "switch1", &sw1).await?;
+        self.show_switch(client, "switch1", &sw1).await?;
 
         Ok(())
     }
@@ -1242,9 +1240,8 @@ impl CmdPortStatus {
 //       switch port settings view into a corresponding switch port
 //       settings create request. It's the preliminary step for a read-
 //       modify-write operation.
-async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSettingsCreate> {
-    let list = ctx
-        .client()?
+async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPortSettingsCreate> {
+    let list = client
         .networking_switch_port_settings_list()
         .stream()
         .try_collect::<Vec<_>>()
@@ -1257,8 +1254,7 @@ async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSe
         .name
         .clone();
 
-    let current = ctx
-        .client()?
+    let current = client
         .networking_switch_port_settings_view()
         .port(settings_id)
         .send()
@@ -1267,16 +1263,14 @@ async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSe
         .into_inner();
 
     let mut block_to_lot = HashMap::new();
-    let lots = ctx
-        .client()?
+    let lots = client
         .networking_address_lot_list()
         .stream()
         .try_collect::<Vec<_>>()
         .await?;
 
     for lot in lots.iter() {
-        let lot_blocks = ctx
-            .client()?
+        let lot_blocks = client
             .networking_address_lot_block_list()
             .address_lot(lot.id)
             .stream()
@@ -1460,13 +1454,12 @@ impl std::fmt::Display for Port {
 }
 
 async fn get_port(
-    ctx: &Context,
+    client: &Client,
     rack_id: &Uuid,
     switch: &Switch,
     port: &Port,
 ) -> Result<SwitchPort> {
-    let ports = ctx
-        .client()?
+    let ports = client
         .networking_switch_port_list()
         .stream()
         .try_collect::<Vec<_>>()
@@ -1490,12 +1483,12 @@ async fn get_port(
 }
 
 async fn get_port_settings_id(
-    ctx: &Context,
+    client: &Client,
     rack_id: &Uuid,
     switch: &Switch,
     port: &Port,
 ) -> Result<Uuid> {
-    let port = get_port(ctx, rack_id, switch, port).await?;
+    let port = get_port(client, rack_id, switch, port).await?;
     let id = port.port_settings_id.ok_or(anyhow::anyhow!(
         "Port settings uninitialized. Initialize by creating a link."
     ))?;
@@ -1503,12 +1496,12 @@ async fn get_port_settings_id(
 }
 
 async fn current_port_settings(
-    ctx: &Context,
+    client: &Client,
     rack_id: &Uuid,
     switch: &Switch,
     port: &Port,
 ) -> Result<SwitchPortSettingsCreate> {
-    let id = get_port_settings_id(ctx, rack_id, switch, port).await?;
-    let settings = create_current(id, ctx).await?;
+    let id = get_port_settings_id(client, rack_id, switch, port).await?;
+    let settings = create_current(id, client).await?;
     Ok(settings)
 }
