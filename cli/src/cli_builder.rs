@@ -419,6 +419,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcSubnetDelete => Some("vpc subnet delete"),
         CliCommand::VpcSubnetListNetworkInterfaces => Some("vpc subnet nic list"),
 
+        CliCommand::VpcRouterRouteList => Some("vpc router route list"),
+        CliCommand::VpcRouterRouteCreate => Some("vpc router route create"),
+        CliCommand::VpcRouterRouteView => Some("vpc router route view"),
+        CliCommand::VpcRouterRouteUpdate => Some("vpc router route update"),
+        CliCommand::VpcRouterRouteDelete => Some("vpc router route delete"),
+        CliCommand::VpcRouterList => Some("vpc router list"),
+        CliCommand::VpcRouterCreate => Some("vpc router create"),
+        CliCommand::VpcRouterView => Some("vpc router view"),
+        CliCommand::VpcRouterUpdate => Some("vpc router update"),
+        CliCommand::VpcRouterDelete => Some("vpc router delete"),
+
         CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
         CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
         CliCommand::NetworkingAddressLotDelete => Some("system networking address-lot delete"),
@@ -465,8 +476,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp config create"),
         CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp config delete"),
         CliCommand::NetworkingBgpConfigList => Some("system networking bgp config list"),
-        CliCommand::NetworkingBgpAnnounceSetCreate => {
-            Some("system networking bgp announce-set create")
+        CliCommand::NetworkingBgpAnnounceSetUpdate => {
+            Some("system networking bgp announce-set update")
         }
         CliCommand::NetworkingBgpAnnounceSetDelete => {
             Some("system networking bgp announce-set delete")

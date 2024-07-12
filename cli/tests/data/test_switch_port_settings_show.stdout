@@ -1,0 +1,26 @@
+switch0/qsfp0
+=============
+Autoneg  Fec   Speed
+false    None  Speed100G
+
+Address          Lot            VLAN
+169.254.10.2/30  initial-infra  None
+169.254.30.2/30  initial-infra  Some(300)
+
+BGP Peer      Config   Export             Import          Communities  Connect Retry  Delay Open  Enforce First AS  Hold Time  Idle Hold Time  Keepalive  Local Pref  Md5 Auth  Min TTL  MED   Remote ASN  VLAN
+169.254.10.1  as65547  [198.51.100.0/24]  [no filtering]  []           3              3           false             6          3               2          None        None      None     None  None        None
+169.254.30.1  as65547  [203.0.113.0/24]   [no filtering]  []           0              0           false             6          0               2          None        None      None     None  None        Some(300)
+
+switch1/qsfp0
+=============
+Autoneg  Fec   Speed
+false    None  Speed100G
+
+Address          Lot            VLAN
+169.254.20.2/30  initial-infra  None
+169.254.40.2/30  initial-infra  Some(400)
+
+BGP Peer      Config   Export             Import          Communities  Connect Retry  Delay Open  Enforce First AS  Hold Time  Idle Hold Time  Keepalive  Local Pref  Md5 Auth  Min TTL  MED   Remote ASN  VLAN
+169.254.20.1  as65547  [198.51.100.0/24]  [no filtering]  []           3              3           false             6          3               2          None        None      None     None  None        None
+169.254.40.1  as65547  [203.0.113.0/24]   [no filtering]  []           0              0           false             6          0               2          None        None      None     None  None        Some(400)
+

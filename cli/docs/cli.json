@@ -94,7 +94,7 @@
             {
               "long": "host",
               "short": "H",
-              "help": "The host of the Oxide instance to authenticate with. This assumes http; specify an `http://` prefix if needed"
+              "help": "The host of the Oxide instance to authenticate with. This assumes https; specify an `http://` prefix if needed"
             },
             {
               "long": "no-browser",
@@ -2964,6 +2964,10 @@
                   ]
                 },
                 {
+                  "name": "show-status",
+                  "about": "Get the status of switch ports."
+                },
+                {
                   "name": "status",
                   "about": "Get switch port status",
                   "args": [
@@ -2988,6 +2992,140 @@
         {
           "name": "networking",
           "subcommands": [
+            {
+              "name": "addr",
+              "about": "Manage switch port addresses.",
+              "subcommands": [
+                {
+                  "name": "add",
+                  "about": "Add an address to a port configuration",
+                  "args": [
+                    {
+                      "long": "addr",
+                      "help": "Address to add"
+                    },
+                    {
+                      "long": "lot",
+                      "help": "Address lot to allocate from"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the port to"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the address to"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the address to"
+                    },
+                    {
+                      "long": "vlan",
+                      "help": "Optional VLAN to assign to the address"
+                    }
+                  ]
+                },
+                {
+                  "name": "del",
+                  "about": "Remove an address from a port configuration",
+                  "args": [
+                    {
+                      "long": "addr",
+                      "help": "Address to remove"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to remove the address from"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to remove the address from"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to remove the address from"
+                    }
+                  ]
+                }
+              ]
+            },
             {
               "name": "address-lot",
               "subcommands": [
@@ -3180,28 +3318,30 @@
               "name": "bgp",
               "subcommands": [
                 {
+                  "name": "announce",
+                  "about": "Announce a prefix over BGP.",
+                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the specified address lot.",
+                  "args": [
+                    {
+                      "long": "address-lot",
+                      "help": "The address lot to draw from"
+                    },
+                    {
+                      "long": "announce-set",
+                      "help": "The announce set to announce from"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "prefix",
+                      "help": "The prefix to announce"
+                    }
+                  ]
+                },
+                {
                   "name": "announce-set",
                   "subcommands": [
-                    {
-                      "name": "create",
-                      "about": "Create new BGP announce set",
-                      "args": [
-                        {
-                          "long": "description"
-                        },
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "name"
-                        }
-                      ]
-                    },
                     {
                       "name": "delete",
                       "about": "Delete BGP announce set",
@@ -3219,6 +3359,27 @@
                         {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP port settings"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update",
+                      "about": "Update BGP announce set",
+                      "long_about": "If the announce set exists, this endpoint replaces the existing announce set with the one specified.",
+                      "args": [
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "name"
                         }
                       ]
                     }
@@ -3293,6 +3454,83 @@
                   ]
                 },
                 {
+                  "name": "filter",
+                  "about": "Add a filtering requirement to a BGP session.",
+                  "long_about": "Add a filtering requirement to a BGP session.\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
+                  "args": [
+                    {
+                      "long": "allowed",
+                      "help": "Prefixes to allow for the peer"
+                    },
+                    {
+                      "long": "direction",
+                      "values": [
+                        "import",
+                        "export"
+                      ],
+                      "help": "Whether to apply the filter to imported or exported prefixes"
+                    },
+                    {
+                      "long": "no-filtering",
+                      "help": "Do not filter"
+                    },
+                    {
+                      "long": "peer",
+                      "help": "Peer to apply allow list to"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the port to"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the address to"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the address to"
+                    }
+                  ]
+                },
+                {
                   "name": "history",
                   "about": "Get BGP router message history",
                   "args": [
@@ -3318,8 +3556,354 @@
                   ]
                 },
                 {
+                  "name": "peer",
+                  "about": "Manage BGP peers.",
+                  "long_about": "Manage BGP peers.\n\nThis command provides add and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer add and remove subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
+                  "subcommands": [
+                    {
+                      "name": "add",
+                      "about": "Add a BGP peer to a port configuration",
+                      "args": [
+                        {
+                          "long": "addr",
+                          "help": "Address of the peer to add"
+                        },
+                        {
+                          "long": "allowed-exports",
+                          "help": "Prefixes that may be exported to the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "allowed-imports",
+                          "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "bgp-config",
+                          "help": "BGP configuration this peer is associated with"
+                        },
+                        {
+                          "long": "communities",
+                          "help": "Include the provided communities in updates sent to the peer"
+                        },
+                        {
+                          "long": "connect-retry",
+                          "help": "How long to to wait between TCP connection retries (seconds)"
+                        },
+                        {
+                          "long": "delay-open",
+                          "help": "How long to delay sending an open request after establishing a TCP session (seconds)"
+                        },
+                        {
+                          "long": "enforce-first-as",
+                          "help": "Enforce that the first AS in paths received from this peer is the peer's AS"
+                        },
+                        {
+                          "long": "hold-time",
+                          "help": "How long to hold peer connections between keepalives (seconds)"
+                        },
+                        {
+                          "long": "idle-hold-time",
+                          "help": "How long to hold a peer in idle before attempting a new session (seconds)"
+                        },
+                        {
+                          "long": "keepalive",
+                          "help": "How often to send keepalive requests (seconds)"
+                        },
+                        {
+                          "long": "local-pref",
+                          "help": "Apply a local preference to routes received from this peer"
+                        },
+                        {
+                          "long": "md5-auth-key",
+                          "help": "Use the given key for TCP-MD5 authentication with the peer"
+                        },
+                        {
+                          "long": "min-ttl",
+                          "help": "Require messages from a peer have a minimum IP time to live field"
+                        },
+                        {
+                          "long": "multi-exit-discriminator",
+                          "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer"
+                        },
+                        {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to add the peer to"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to add the peer to"
+                        },
+                        {
+                          "long": "remote-asn",
+                          "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to add the peer to"
+                        },
+                        {
+                          "long": "vlan-id",
+                          "help": "Associate a VLAN ID with a peer"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "del",
+                      "about": "Remove a BGP from a port configuration",
+                      "args": [
+                        {
+                          "long": "addr",
+                          "help": "Address of the peer to remove"
+                        },
+                        {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to remove the peer from"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to remove the peer from"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to remove the peer from"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "show-status",
+                  "about": "Get the status of BGP on the rack.",
+                  "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches."
+                },
+                {
                   "name": "status",
                   "about": "Get BGP peer status"
+                },
+                {
+                  "name": "withdraw",
+                  "about": "Withdraw a prefix over BGP.",
+                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix to the specified announce set.\nThe remove is performed as a read-modify-write on the specified address lot.",
+                  "args": [
+                    {
+                      "long": "announce-set",
+                      "help": "The announce set to withdraw from"
+                    },
+                    {
+                      "long": "prefix",
+                      "help": "The prefix to withdraw"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "link",
+              "about": "Manage switch port links.",
+              "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
+              "subcommands": [
+                {
+                  "name": "add",
+                  "about": "Add a link to a port",
+                  "args": [
+                    {
+                      "long": "autoneg",
+                      "help": "Whether or not to set auto-negotiation"
+                    },
+                    {
+                      "long": "fec",
+                      "help": "The forward error correction mode of the link"
+                    },
+                    {
+                      "long": "mtu",
+                      "help": "Maximum transmission unit for the link"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the link to"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the link to"
+                    },
+                    {
+                      "long": "speed",
+                      "help": "The speed of the link"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the link to"
+                    }
+                  ]
+                },
+                {
+                  "name": "del",
+                  "about": "Remove a link from a port",
+                  "args": [
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to remove the link from"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to remove the link from"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to remove the link from"
+                    }
+                  ]
                 }
               ]
             },
@@ -3462,6 +4046,10 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "name": "show",
+                  "about": "Get the configuration of switch ports."
                 },
                 {
                   "name": "view",
@@ -3646,12 +4234,291 @@
           ]
         },
         {
+          "name": "router",
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Create VPC router",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Delete router",
+              "args": [
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "router",
+                  "help": "Name or ID of the router"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List routers",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
+                }
+              ]
+            },
+            {
+              "name": "route",
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create route",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                    },
+                    {
+                      "long": "router",
+                      "help": "Name or ID of the router"
+                    },
+                    {
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC, only required if `router` is provided as a `Name`"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete route",
+                  "args": [
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                    },
+                    {
+                      "long": "route",
+                      "help": "Name or ID of the route"
+                    },
+                    {
+                      "long": "router",
+                      "help": "Name or ID of the router"
+                    },
+                    {
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC, only required if `router` is provided as a `Name`"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List routes",
+                  "long_about": "List the routes associated with a router in a particular VPC.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                    },
+                    {
+                      "long": "router",
+                      "help": "Name or ID of the router"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    },
+                    {
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC, only required if `router` is provided as a `Name`"
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update route",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                    },
+                    {
+                      "long": "route",
+                      "help": "Name or ID of the route"
+                    },
+                    {
+                      "long": "router",
+                      "help": "Name or ID of the router"
+                    },
+                    {
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC, only required if `router` is provided as a `Name`"
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch route",
+                  "args": [
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                    },
+                    {
+                      "long": "route",
+                      "help": "Name or ID of the route"
+                    },
+                    {
+                      "long": "router",
+                      "help": "Name or ID of the router"
+                    },
+                    {
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC, only required if `router` is provided as a `Name`"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "update",
+              "about": "Update router",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "router",
+                  "help": "Name or ID of the router"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch router",
+              "args": [
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "router",
+                  "help": "Name or ID of the router"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "subnet",
           "subcommands": [
             {
               "name": "create",
               "about": "Create subnet",
               "args": [
+                {
+                  "long": "custom-router",
+                  "help": "An optional router, used to direct packets sent from hosts in this subnet to any destination address.\n\nCustom routers apply in addition to the VPC-wide *system* router, and have higher priority than the system router for an otherwise equal-prefix-length match."
+                },
                 {
                   "long": "description"
                 },
@@ -3767,6 +4634,10 @@
               "name": "update",
               "about": "Update subnet",
               "args": [
+                {
+                  "long": "custom-router",
+                  "help": "An optional router, used to direct packets sent from hosts in this subnet to any destination address."
+                },
                 {
                   "long": "description"
                 },

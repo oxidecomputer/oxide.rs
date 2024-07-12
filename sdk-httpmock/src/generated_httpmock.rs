@@ -10747,11 +10747,11 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingBgpAnnounceSetCreateWhen(httpmock::When);
-    impl NetworkingBgpAnnounceSetCreateWhen {
+    pub struct NetworkingBgpAnnounceSetUpdateWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetUpdateWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
-                inner.method(httpmock::Method::POST).path_matches(
+                inner.method(httpmock::Method::PUT).path_matches(
                     regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
                 ),
             )
@@ -10766,8 +10766,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingBgpAnnounceSetCreateThen(httpmock::Then);
-    impl NetworkingBgpAnnounceSetCreateThen {
+    pub struct NetworkingBgpAnnounceSetUpdateThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetUpdateThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -13574,6 +13574,1058 @@ pub mod operations {
         }
     }
 
+    pub struct VpcRouterRouteListWhen(httpmock::When);
+    impl VpcRouterRouteListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterRouteListThen(httpmock::Then);
+    impl VpcRouterRouteListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRouteResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterRouteCreateWhen(httpmock::When);
+    impl VpcRouterRouteCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::RouterRouteCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteCreateThen(httpmock::Then);
+    impl VpcRouterRouteCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::RouterRoute) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterRouteViewWhen(httpmock::When);
+    impl VpcRouterRouteViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterRouteViewThen(httpmock::Then);
+    impl VpcRouterRouteViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterRouteUpdateWhen(httpmock::When);
+    impl VpcRouterRouteUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::RouterRouteUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteUpdateThen(httpmock::Then);
+    impl VpcRouterRouteUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterRouteDeleteWhen(httpmock::When);
+    impl VpcRouterRouteDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterRouteDeleteThen(httpmock::Then);
+    impl VpcRouterRouteDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterListWhen(httpmock::When);
+    impl VpcRouterListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterListThen(httpmock::Then);
+    impl VpcRouterListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouterResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterCreateWhen(httpmock::When);
+    impl VpcRouterCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcRouterCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterCreateThen(httpmock::Then);
+    impl VpcRouterCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::VpcRouter) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterViewWhen(httpmock::When);
+    impl VpcRouterViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterViewThen(httpmock::Then);
+    impl VpcRouterViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterUpdateWhen(httpmock::When);
+    impl VpcRouterUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::VpcRouterUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterUpdateThen(httpmock::Then);
+    impl VpcRouterUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct VpcRouterDeleteWhen(httpmock::When);
+    impl VpcRouterDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct VpcRouterDeleteThen(httpmock::Then);
+    impl VpcRouterDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct VpcSubnetListWhen(httpmock::When);
     impl VpcSubnetListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -15111,11 +16163,11 @@ pub trait MockServerExt {
             operations::NetworkingBgpAnnounceSetListWhen,
             operations::NetworkingBgpAnnounceSetListThen,
         );
-    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingBgpAnnounceSetCreateWhen,
-            operations::NetworkingBgpAnnounceSetCreateThen,
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
         );
     fn networking_bgp_announce_set_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
@@ -15258,6 +16310,36 @@ pub trait MockServerExt {
     fn vpc_firewall_rules_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::VpcFirewallRulesUpdateWhen, operations::VpcFirewallRulesUpdateThen);
+    fn vpc_router_route_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteListWhen, operations::VpcRouterRouteListThen);
+    fn vpc_router_route_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteCreateWhen, operations::VpcRouterRouteCreateThen);
+    fn vpc_router_route_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteViewWhen, operations::VpcRouterRouteViewThen);
+    fn vpc_router_route_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteUpdateWhen, operations::VpcRouterRouteUpdateThen);
+    fn vpc_router_route_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteDeleteWhen, operations::VpcRouterRouteDeleteThen);
+    fn vpc_router_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterListWhen, operations::VpcRouterListThen);
+    fn vpc_router_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterCreateWhen, operations::VpcRouterCreateThen);
+    fn vpc_router_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterViewWhen, operations::VpcRouterViewThen);
+    fn vpc_router_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterUpdateWhen, operations::VpcRouterUpdateThen);
+    fn vpc_router_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterDeleteWhen, operations::VpcRouterDeleteThen);
     fn vpc_subnet_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::VpcSubnetListWhen, operations::VpcSubnetListThen);
@@ -17019,17 +18101,17 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_bgp_announce_set_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingBgpAnnounceSetCreateWhen,
-            operations::NetworkingBgpAnnounceSetCreateThen,
+            operations::NetworkingBgpAnnounceSetUpdateWhen,
+            operations::NetworkingBgpAnnounceSetUpdateThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingBgpAnnounceSetCreateWhen::new(when),
-                operations::NetworkingBgpAnnounceSetCreateThen::new(then),
+                operations::NetworkingBgpAnnounceSetUpdateWhen::new(when),
+                operations::NetworkingBgpAnnounceSetUpdateThen::new(then),
             )
         })
     }
@@ -17504,6 +18586,126 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::VpcFirewallRulesUpdateWhen::new(when),
                 operations::VpcFirewallRulesUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_route_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteListWhen, operations::VpcRouterRouteListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterRouteListWhen::new(when),
+                operations::VpcRouterRouteListThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_route_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteCreateWhen, operations::VpcRouterRouteCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterRouteCreateWhen::new(when),
+                operations::VpcRouterRouteCreateThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_route_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteViewWhen, operations::VpcRouterRouteViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterRouteViewWhen::new(when),
+                operations::VpcRouterRouteViewThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_route_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteUpdateWhen, operations::VpcRouterRouteUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterRouteUpdateWhen::new(when),
+                operations::VpcRouterRouteUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_route_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteDeleteWhen, operations::VpcRouterRouteDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterRouteDeleteWhen::new(when),
+                operations::VpcRouterRouteDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterListWhen, operations::VpcRouterListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterListWhen::new(when),
+                operations::VpcRouterListThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterCreateWhen, operations::VpcRouterCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterCreateWhen::new(when),
+                operations::VpcRouterCreateThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterViewWhen, operations::VpcRouterViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterViewWhen::new(when),
+                operations::VpcRouterViewThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterUpdateWhen, operations::VpcRouterUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterUpdateWhen::new(when),
+                operations::VpcRouterUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn vpc_router_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterDeleteWhen, operations::VpcRouterDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterDeleteWhen::new(when),
+                operations::VpcRouterDeleteThen::new(then),
             )
         })
     }
