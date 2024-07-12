@@ -12350,92 +12350,6 @@ pub mod types {
         }
     }
 
-    /// IpKind
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "snat",
-    ///    "floating",
-    ///    "ephemeral"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum IpKind {
-        #[serde(rename = "snat")]
-        Snat,
-        #[serde(rename = "floating")]
-        Floating,
-        #[serde(rename = "ephemeral")]
-        Ephemeral,
-    }
-
-    impl From<&IpKind> for IpKind {
-        fn from(value: &IpKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for IpKind {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Snat => "snat".to_string(),
-                Self::Floating => "floating".to_string(),
-                Self::Ephemeral => "ephemeral".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for IpKind {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
-            match value {
-                "snat" => Ok(Self::Snat),
-                "floating" => Ok(Self::Floating),
-                "ephemeral" => Ok(Self::Ephemeral),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     /// IpNet
     ///
     /// <details><summary>JSON schema</summary>
@@ -16279,7 +16193,7 @@ pub mod types {
     ///      "format": "ip"
     ///    },
     ///    "kind": {
-    ///      "$ref": "#/components/schemas/IpKind"
+    ///      "$ref": "#/components/schemas/ProbeExternalIpKind"
     ///    },
     ///    "last_port": {
     ///      "type": "integer",
@@ -16294,7 +16208,7 @@ pub mod types {
     pub struct ProbeExternalIp {
         pub first_port: u16,
         pub ip: std::net::IpAddr,
-        pub kind: IpKind,
+        pub kind: ProbeExternalIpKind,
         pub last_port: u16,
     }
 
@@ -16307,6 +16221,92 @@ pub mod types {
     impl ProbeExternalIp {
         pub fn builder() -> builder::ProbeExternalIp {
             Default::default()
+        }
+    }
+
+    /// ProbeExternalIpKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "snat",
+    ///    "floating",
+    ///    "ephemeral"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum ProbeExternalIpKind {
+        #[serde(rename = "snat")]
+        Snat,
+        #[serde(rename = "floating")]
+        Floating,
+        #[serde(rename = "ephemeral")]
+        Ephemeral,
+    }
+
+    impl From<&ProbeExternalIpKind> for ProbeExternalIpKind {
+        fn from(value: &ProbeExternalIpKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for ProbeExternalIpKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Snat => "snat".to_string(),
+                Self::Floating => "floating".to_string(),
+                Self::Ephemeral => "ephemeral".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for ProbeExternalIpKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "snat" => Ok(Self::Snat),
+                "floating" => Ok(Self::Floating),
+                "ephemeral" => Ok(Self::Ephemeral),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for ProbeExternalIpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for ProbeExternalIpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for ProbeExternalIpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -37183,7 +37183,7 @@ pub mod types {
         pub struct ProbeExternalIp {
             first_port: Result<u16, String>,
             ip: Result<std::net::IpAddr, String>,
-            kind: Result<super::IpKind, String>,
+            kind: Result<super::ProbeExternalIpKind, String>,
             last_port: Result<u16, String>,
         }
 
@@ -37221,7 +37221,7 @@ pub mod types {
             }
             pub fn kind<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::IpKind>,
+                T: std::convert::TryInto<super::ProbeExternalIpKind>,
                 T::Error: std::fmt::Display,
             {
                 self.kind = value
