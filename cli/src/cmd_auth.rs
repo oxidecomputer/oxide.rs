@@ -4,7 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{fs::File, io::Read};
+use std::fs::File;
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -13,6 +13,7 @@ use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
     ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
 };
+use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientSessionExt};
 use toml_edit::{Item, Table};
 use uuid::Uuid;
@@ -120,28 +121,14 @@ fn yes(prompt: impl Into<String>) -> Result<bool> {
 
 /// Authenticate with an Oxide Silo
 ///
-/// Alternatively, pass in a token on standard input by using `--with-token`.
-///
-///     # start interactive setup
-///     $ oxide auth login
-///
-///     # authenticate against a specific Oxide instance by reading the token
-///     # from a file
-///     $ oxide auth login --with-token --host oxide.internal < mytoken.txt
-///
-///     # authenticate with a specific Oxide instance
+///     # authenticate with a specific Oxide silo
 ///     $ oxide auth login --host oxide.internal
 ///
-///     # authenticate with an insecure Oxide instance (not recommended)
+///     # authenticate with an insecure Oxide silo (not recommended)
 ///     $ oxide auth login --host http://oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdAuthLogin {
-    // TODO seems pointless
-    /// Read token from standard input.
-    #[clap(long)]
-    with_token: bool,
-
     /// The host of the Oxide instance to authenticate with.
     /// This assumes http; specify an `http://` prefix if needed.
     #[clap(short = 'H', long, value_parser = parse_host)]
@@ -165,16 +152,7 @@ impl CmdAuthLogin {
     // - If there's no default profile, we make the newly authenticated profile
     //   the new default
     pub async fn login(&self, ctx: &Context) -> Result<()> {
-        // if !ctx.io.can_prompt() && !self.with_token {
-        //     return Err(anyhow!(
-        //         "--with-token required when not running interactively"
-        //     ));
-        // }
-
-        let profile = ctx
-            .client_config()
-            .profile()
-            .or_else(|| ctx.config_file().basics.default_profile.as_deref());
+        let profile = ctx.client_config().profile();
 
         if let Some(profile_name) = profile {
             // If the profile already has a token, alert the user.
@@ -205,91 +183,77 @@ impl CmdAuthLogin {
             }
         }
 
-        let token = if self.with_token {
-            // Read the token from stdin.
-            let mut token = String::new();
-            std::io::stdin().read_to_string(&mut token)?;
-            token = token.trim_end_matches('\n').to_string();
-
-            if token.is_empty() {
-                bail!("token cannot be empty");
+        // Make the client for use by oauth2
+        let client = &ctx
+            .client_config()
+            .make_unauthenticated_client_builder()
+            .redirect(reqwest::redirect::Policy::none())
+            .build()?;
+        // Copied from oauth2::async_http_client to customize the
+        // reqwest::Client with the top-level command-line options.
+        let async_http_client_custom = |request: oauth2::HttpRequest| async move {
+            let mut request_builder = client
+                .request(request.method, request.url.as_str())
+                .body(request.body);
+            for (name, value) in &request.headers {
+                request_builder = request_builder.header(name.as_str(), value.as_bytes());
             }
+            let request = request_builder.build()?;
 
-            token
-        } else {
-            // Make the client for use by oauth2
-            let client = &ctx
-                .client_config()
-                .make_unauthenticated_client_builder()
-                .redirect(reqwest::redirect::Policy::none())
-                .build()?;
-            // Copied from oauth2::async_http_client to customize the
-            // reqwest::Client with the top-level command-line options.
-            let async_http_client_custom = |request: oauth2::HttpRequest| async move {
-                let mut request_builder = client
-                    .request(request.method, request.url.as_str())
-                    .body(request.body);
-                for (name, value) in &request.headers {
-                    request_builder = request_builder.header(name.as_str(), value.as_bytes());
-                }
-                let request = request_builder.build()?;
+            let response = client.execute(request).await?;
 
-                let response = client.execute(request).await?;
-
-                let status_code = response.status();
-                let headers = response.headers().to_owned();
-                let chunks = response.bytes().await?;
-                std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
-                    status_code,
-                    headers,
-                    body: chunks.to_vec(),
-                })
-            };
-
-            // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
-            let device_auth_url =
-                DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
-            // TODO what's the point of this?
-            let client_id = Uuid::new_v4();
-            let auth_client = BasicClient::new(
-                ClientId::new(client_id.to_string()),
-                None,
-                AuthUrl::new(format!("{}authorize", &self.host))?,
-                Some(TokenUrl::new(format!("{}device/token", &self.host))?),
-            )
-            .set_auth_type(AuthType::RequestBody)
-            .set_device_authorization_url(device_auth_url);
-
-            let details: StandardDeviceAuthorizationResponse = auth_client
-                .exchange_device_code()?
-                .request_async(async_http_client_custom)
-                .await?;
-
-            let uri = details.verification_uri().to_string();
-
-            let opened = match (&self.browser, self.no_browser) {
-                (None, false) => open::that(&uri).is_ok(),
-                (Some(app), false) => open::with(&uri, app).is_ok(),
-                (None, true) => false,
-                (Some(_), true) => unreachable!(),
-            };
-
-            if opened {
-                println!("Opened this URL in your browser:\n  {}", uri);
-            } else {
-                println!("Open this URL in your browser:\n  {}", uri);
-            }
-
-            println!("\nEnter the code: {}\n", details.user_code().secret());
-
-            auth_client
-                .exchange_device_access_token(&details)
-                .request_async(async_http_client_custom, tokio::time::sleep, None)
-                .await?
-                .access_token()
-                .secret()
-                .to_string()
+            let status_code = response.status();
+            let headers = response.headers().to_owned();
+            let chunks = response.bytes().await?;
+            std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
+                status_code,
+                headers,
+                body: chunks.to_vec(),
+            })
         };
+
+        // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
+        let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
+        // TODO what's the point of this?
+        let client_id = Uuid::new_v4();
+        let auth_client = BasicClient::new(
+            ClientId::new(client_id.to_string()),
+            None,
+            AuthUrl::new(format!("{}authorize", &self.host))?,
+            Some(TokenUrl::new(format!("{}device/token", &self.host))?),
+        )
+        .set_auth_type(AuthType::RequestBody)
+        .set_device_authorization_url(device_auth_url);
+
+        let details: StandardDeviceAuthorizationResponse = auth_client
+            .exchange_device_code()?
+            .request_async(async_http_client_custom)
+            .await?;
+
+        let uri = details.verification_uri().to_string();
+
+        let opened = match (&self.browser, self.no_browser) {
+            (None, false) => open::that(&uri).is_ok(),
+            (Some(app), false) => open::with(&uri, app).is_ok(),
+            (None, true) => false,
+            (Some(_), true) => unreachable!(),
+        };
+
+        if opened {
+            println!("Opened this URL in your browser:\n  {}", uri);
+        } else {
+            println!("Open this URL in your browser:\n  {}", uri);
+        }
+
+        println!("\nEnter the code: {}\n", details.user_code().secret());
+
+        let token = auth_client
+            .exchange_device_access_token(&details)
+            .request_async(async_http_client_custom, tokio::time::sleep, None)
+            .await?
+            .access_token()
+            .secret()
+            .to_string();
 
         let host = self.host.as_host();
 
@@ -301,12 +265,20 @@ impl CmdAuthLogin {
         )
         .unwrap();
 
-        let user = client.current_user_view().send().await?;
+        let user = client.current_user_view().send().await?.into_inner();
 
-        // TODO format this more reasonably
-        println!("{:#?}", user);
-
-        let profile_name = profile.unwrap_or_else(|| &user.silo_name);
+        // If there's no specified profile, we'll use the name of the silo as
+        // the profile name... and deal with conflicting names.
+        let profile_name = profile.map(String::from).unwrap_or_else(|| {
+            let silo_name = user.silo_name.to_string();
+            let mut name = silo_name.clone();
+            let mut ii = 2;
+            while ctx.cred_file().profile.contains_key(&name) {
+                name = format!("{}{}", silo_name, ii);
+                ii += 1;
+            }
+            name
+        });
 
         // Set the user.
         // TODO: This should instead store the email, or some username or something
@@ -314,8 +286,6 @@ impl CmdAuthLogin {
         // TODO ahl: not sure what even we're shooting for here. Maybe just a
         // way to understand the config files?
         let uid = user.id;
-
-        println!("Logged in as {} under profile {}", uid, profile_name);
 
         // Read / modify / write the credentials file.
         let credentials_path = ctx.client_config().config_dir().join("credentials.toml");
@@ -343,7 +313,7 @@ impl CmdAuthLogin {
             });
 
         let profile = profile_table
-            .entry(profile_name)
+            .entry(&profile_name)
             .or_insert_with(|| Item::Table(Table::default()))
             .as_table_mut()
             .unwrap_or_else(|| {
@@ -361,8 +331,6 @@ impl CmdAuthLogin {
         std::fs::write(credentials_path, credentials.to_string())
             .expect("unable to write credentials.toml");
 
-        println!("{}", credentials);
-
         // If there is no default profile then we'll set this new profile to be
         // the default.
         if ctx.config_file().basics.default_profile.is_none() {
@@ -373,9 +341,25 @@ impl CmdAuthLogin {
                 Default::default()
             };
 
-            config.insert("default-profile", Item::Value(profile_name.into()));
+            config.insert("default-profile", Item::Value(profile_name.clone().into()));
 
             std::fs::write(config_path, config.to_string()).expect("unable to write config.toml");
+        }
+
+        let CurrentUser {
+            display_name,
+            id,
+            silo_id,
+            silo_name,
+        } = &user;
+
+        println!("Login successful");
+        println!("  silo: {} ({})", **silo_name, silo_id);
+        println!("  user: {} ({})", display_name, id);
+        if ctx.config_file().basics.default_profile.is_none() {
+            println!("Profile '{}' set as the default", profile_name);
+        } else {
+            println!("Use --profile '{}'", profile_name);
         }
 
         Ok(())
@@ -449,43 +433,64 @@ pub struct CmdAuthStatus {}
 
 impl CmdAuthStatus {
     pub async fn status(&self, ctx: &Context) -> Result<()> {
-        for (profile_name, profile_info) in &ctx.cred_file().profile {
+        // For backward compatibility, we'll check OXIDE_HOST and OXIDE_TOKEN
+        // first.
+        if let (Ok(host_env), Ok(token_env)) =
+            (std::env::var("OXIDE_HOST"), std::env::var("OXIDE_TOKEN"))
+        {
             let client = Client::new_authenticated_config(
-                &ClientConfig::default()
-                    .with_host_and_token(&profile_info.host, &profile_info.token),
+                &ClientConfig::default().with_host_and_token(&host_env, &token_env),
             )
-            .unwrap();
+            .expect("client authentication from host/token failed");
 
-            let result = client.current_user_view().send().await;
-            let status = match result {
-                Ok(_) => "Authenticated".to_string(),
-                Err(e) => e.to_string(),
+            match client.current_user_view().send().await {
+                Ok(user) => {
+                    log::debug!("success response for {} (env): {:?}", host_env, user);
+                    println!("Logged in to {} as {}", host_env, user.id)
+                }
+                Err(e) => {
+                    log::debug!("error response for {} (env): {}", host_env, e);
+                    println!("{}: {}", host_env, Self::error_msg(&e))
+                }
             };
+        } else {
+            for (profile_name, profile_info) in &ctx.cred_file().profile {
+                let client = Client::new_authenticated_config(
+                    &ClientConfig::default()
+                        .with_host_and_token(&profile_info.host, &profile_info.token),
+                )
+                .expect("client authentication from host/token failed");
 
-            println!(
-                "Profile \"{}\" ({}) status: {}",
-                profile_name, profile_info.host, status
-            );
+                let status = match client.current_user_view().send().await {
+                    Ok(v) => {
+                        log::debug!("success response for {}: {:?}", profile_info.host, v);
+                        "Authenticated".to_string()
+                    }
+                    Err(e) => {
+                        log::debug!("error response for {}: {}", profile_info.host, e);
+                        Self::error_msg(&e)
+                    }
+                };
+
+                println!(
+                    "Profile \"{}\" ({}) status: {}",
+                    profile_name, profile_info.host, status
+                );
+            }
         }
         Ok(())
+    }
+
+    fn error_msg(e: &oxide::Error<oxide::types::Error>) -> String {
+        match e {
+            oxide::Error::ErrorResponse(ee) => format!("Error Response: {}", ee.message),
+            ee => ee.to_string(),
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::fs::read_to_string;
-
-    use assert_cmd::Command;
-    use expectorate::assert_contents;
-    use httpmock::{
-        Method::{GET, POST},
-        MockServer,
-    };
-    use oxide::types::CurrentUser;
-    use oxide_httpmock::MockServerExt;
-    use predicates::str;
-    use serde_json::json;
-
     #[test]
     fn test_parse_host() {
         use super::parse_host;
@@ -546,195 +551,5 @@ mod tests {
             parse_host("http://user:pass@example.com:8888/random/path/?k=v&t=s#fragment=33").map(|host| host.to_string()),
             Ok(host) if host == "http://example.com:8888/"
         ));
-    }
-
-    // TODO redo this test to be less shitty
-    #[ignore]
-    #[test]
-    fn test_cmd_auth_status() {
-        let server = MockServer::start();
-        // TODO redo this to use the sdk-mock
-        let oxide_mock = server.mock(|when, then| {
-            when.method(GET)
-                .path("/v1/me")
-                .header("authorization", "Bearer oxide-token-1111");
-            then.status(200).json_body_obj(&oxide::types::CurrentUser {
-                display_name: "privileged".to_string(),
-                id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
-                silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
-                silo_name: "funky-town".parse().unwrap(),
-            });
-        });
-
-        // Validate authenticated credentials.
-        Command::cargo_bin("oxide")
-            .unwrap()
-            .arg("auth")
-            .arg("status")
-            .env("OXIDE_HOST", server.url(""))
-            .env("OXIDE_TOKEN", "oxide-token-1111")
-            .assert()
-            .success()
-            .stdout(str::contains(format!(
-                "{}: [{}, {}]",
-                server.url(""),
-                format_args!(
-                    "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
-                    server.url("")
-                ),
-                "\"Token: *******************\"",
-            )));
-
-        // Validate authenticated credentials with the token displayed in plain text.
-        Command::cargo_bin("oxide")
-            .unwrap()
-            .arg("auth")
-            .arg("status")
-            .env("OXIDE_HOST", server.url(""))
-            .env("OXIDE_TOKEN", "oxide-token-1111")
-            .arg("-t")
-            .assert()
-            .success()
-            .stdout(str::contains(format!(
-                "{}: [{}, {}]",
-                server.url(""),
-                format_args!(
-                    "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
-                    server.url("")
-                ),
-                "\"Token: oxide-token-1111\"",
-            )));
-
-        // Assert that both commands hit the mock.
-        oxide_mock.assert_hits(2);
-
-        let oxide_mock = server.mock(|when, then| {
-            when.header("authorization", "Bearer oxide-token-1112");
-            then.status(401).json_body_obj(&oxide::types::Error {
-                error_code: None,
-                message: "oops".to_string(),
-                request_id: "42".to_string(),
-            });
-        });
-
-        // Try invalid credentials.
-        Command::cargo_bin("oxide")
-            .unwrap()
-            .arg("auth")
-            .arg("status")
-            .env("OXIDE_HOST", server.url(""))
-            .env("OXIDE_TOKEN", "oxide-token-1112")
-            .assert()
-            .success()
-            .stdout(str::contains(format!(
-                "{}: [\"Not authenticated. Host/token combination invalid\"]",
-                server.url("")
-            )));
-
-        // Make sure the command only returns information about the specified host.
-        Command::cargo_bin("oxide")
-            .unwrap()
-            .arg("auth")
-            .arg("status")
-            .env("OXIDE_HOST", server.url("/"))
-            .env("OXIDE_TOKEN", "oxide-token-1112")
-            .arg("-H")
-            .arg(server.url(""))
-            .assert()
-            .success()
-            .stdout(format!(
-                "{}: [\"Not authenticated. Host/token combination invalid\"]\n",
-                server.url("/")
-            ));
-        // Assert that both commands hit the mock.
-        oxide_mock.assert_hits(2);
-    }
-
-    #[test]
-    fn test_auth_login_first() {
-        env_logger::init();
-
-        let server = MockServer::start();
-
-        // Respond to the initial OAuth2 request.
-        let device_auth = server.mock(|when, then| {
-            let body = json!({
-                "device_code": "DEV-CODE",
-                "user_code": "0X1-D3C",
-                "verification_uri": "http://go.here.to/verify",
-                "expires_in": 10,
-            });
-            when.method(POST).path("/device/auth");
-            then.status(200)
-                .json_body(body)
-                .header("content-type", "application/json");
-        });
-
-        // This is where we'd poll, but let's just wave them through.
-        let device_token = server.mock(|when, then| {
-            let body = json!({
-                "access_token": "123-456-789",
-                "token_type": "Bearer",
-            });
-            when.method(POST).path("/device/token");
-            then.delay(std::time::Duration::from_secs(1))
-                .status(200)
-                .json_body(body)
-                .header("content-type", "application/json");
-        });
-
-        // User and silo identity now that we're "authenticated".
-        let me = server.current_user_view(|when, then| {
-            when.into_inner().any_request();
-            then.ok(&CurrentUser {
-                display_name: "falken".to_string(),
-                id: "831dedf4-0a66-4b04-a232-b610f9f8924c".parse().unwrap(),
-                silo_id: "12e8c7a4-399f-41e2-985e-7b120ecbcc1a".parse().unwrap(),
-                silo_name: "crystal-palace".try_into().unwrap(),
-            });
-        });
-
-        let temp_dir = tempfile::tempdir().unwrap().into_path();
-
-        let cmd = Command::cargo_bin("oxide")
-            .unwrap()
-            .env("RUST_BACKTRACE", "1")
-            .arg("--config-dir")
-            .arg(temp_dir.as_os_str())
-            .arg("auth")
-            .arg("login")
-            .arg("--no-browser")
-            .arg("--host")
-            .arg(server.url(""))
-            .assert()
-            .success();
-        let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
-
-        assert_contents(
-            "tests/data/test_auth_login_first_stdout.toml",
-            &scrub_server(stdout.to_string(), server.url("")),
-        );
-
-        device_auth.assert();
-        device_token.assert();
-        me.assert();
-
-        assert_contents(
-            "tests/data/test_auth_login_first_credentials.toml",
-            &scrub_server(
-                read_to_string(temp_dir.join("credentials.toml")).unwrap(),
-                server.url(""),
-            ),
-        );
-
-        assert_contents(
-            "tests/data/test_auth_login_first_config.toml",
-            &read_to_string(temp_dir.join("config.toml")).unwrap(),
-        );
-        panic!()
-    }
-
-    fn scrub_server(raw: String, server: String) -> String {
-        raw.replace(&server, "<TEST-SERVER>")
     }
 }

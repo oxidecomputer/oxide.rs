@@ -6,16 +6,14 @@
 
 use std::path::PathBuf;
 
-use oxide::{BasicConfigFile, ClientConfig, CredentialsFile, OxideError};
+use anyhow::Result;
+use oxide::{BasicConfigFile, ClientConfig, CredentialsFile};
 use serde::{de::DeserializeOwned, Deserialize};
 
-// TODO
-// I think we're going to want a few things here:
-// The parameters necessary for creating the client. Most of that is going to
-// be in ClientConfig.
-// The other big chunk is going to be more customization: output format (text,
-// json), ... other shit? default project? I don't know.
-
+/// The Context is what we use to carry globally relevant information around
+/// to subcommands. This includes configuration information and top-level
+/// command-line options. This may be used to construct an authenticated
+/// client if the subcommand requires it.
 pub struct Context {
     client_config: ClientConfig,
     cred_file: CredentialsFile,
@@ -29,18 +27,19 @@ pub struct ConfigFile {
     pub basics: BasicConfigFile,
 }
 
-fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> T {
-    std::fs::read_to_string(path)
-        .ok()
-        .and_then(|contents| toml::from_str(&contents).ok())
-        .unwrap_or_default()
+fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> Result<T> {
+    match std::fs::read_to_string(path) {
+        Ok(contents) => Ok(toml::from_str(&contents)?),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(T::default()),
+        Err(e) => Err(e.into()),
+    }
 }
 
 impl Context {
-    pub fn new(client_config: ClientConfig) -> Result<Self, OxideError> {
+    pub fn new(client_config: ClientConfig) -> Result<Self> {
         let config_dir = client_config.config_dir();
-        let cred_file = read_or_default(config_dir.join("credentials.toml"));
-        let config_file = read_or_default(config_dir.join("config.toml"));
+        let cred_file = read_or_default(config_dir.join("credentials.toml"))?;
+        let config_file = read_or_default(config_dir.join("config.toml"))?;
 
         Ok(Self {
             client_config,

@@ -237,10 +237,10 @@ impl<'a> NewCli<'a> {
 
         if let Some(profile_name) = profile {
             client_config = client_config.with_profile(profile_name);
-        } else if let Some(config_dir) = config_dir {
+        }
+        if let Some(config_dir) = config_dir {
             client_config = client_config.with_config_dir(config_dir);
         }
-
         if let Some(resolve) = resolve {
             client_config = client_config.with_resolve(resolve.host, resolve.addr);
         }
