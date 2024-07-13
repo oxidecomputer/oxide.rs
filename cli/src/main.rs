@@ -72,7 +72,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_docs::CmdDocs>("docs")
         .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_version::CmdVersion>("version")
-        // Custom, often compound, client commands
+        // Custom--often compound--client commands
         .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")

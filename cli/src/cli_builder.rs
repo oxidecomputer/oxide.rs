@@ -262,8 +262,6 @@ impl<'a> NewCli<'a> {
             client_config = client_config.with_timeout(timeout);
         }
 
-        // TODO I think we should try to avoid creating an authenticated client
-        // until we know we're going to need one.
         let ctx = Context::new(client_config)?;
 
         let mut node = &runner;
@@ -271,7 +269,6 @@ impl<'a> NewCli<'a> {
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
             node = node.children.get(sub_name).unwrap();
             sm = sub_matches;
-            // TODO I don't see how we can hit this
             if node.terminal {
                 break;
             }

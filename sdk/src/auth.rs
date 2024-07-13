@@ -4,28 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-//! TODO
-//! What do we need to do in here?
-//! - create an authenticated client based on a profile
-//!
-//! What do we want to keep in the CLI
-//! - the new / refresh authentication workflow
-//!
-//! Does this imply that the config.toml is purely the domain of the CLI? I
-//! think so.
-//!
-//! Do we want a ClientBuilder type to let users do customization? It would
-//! probably have a fn map() that takes a reqwest::ClientBuilder
-//!
-//! How do we want to deal with the concept of a "default" profile?
-//! 1. configuration within the creds file--don't love it because now config
-//!    is split between config and creds
-//! 2. have the SDK load up a config file--kind of lousy because now we always
-//!    need two files. Maybe that's fine... and
-//!
-//! Also... what if the user specifies a profile explicitly? Then we don't need
-//! a config file. Maybe an enum that's like "profile-name-or-config-file"?
-
 use std::{
     collections::BTreeMap,
     net::{IpAddr, SocketAddr},
@@ -50,7 +28,7 @@ struct ResolveValue {
     pub addr: IpAddr,
 }
 
-/// Configuration for creating a [Client]
+/// Configuration for creating an authenticated [Client]
 pub struct ClientConfig {
     config_dir: PathBuf,
     auth_method: AuthMethod,

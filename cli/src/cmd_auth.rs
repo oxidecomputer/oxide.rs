@@ -144,13 +144,6 @@ pub struct CmdAuthLogin {
 }
 
 impl CmdAuthLogin {
-    // TODO There are a few cases to consider
-    // - If the user specifies a profile, we use that profile name and prompt
-    //   if there's already a token/user
-    // - If there is no profile, we use the silo name to make a new profile
-    //   (if there's a conflict I guess we prompt: overwrite / new name)
-    // - If there's no default profile, we make the newly authenticated profile
-    //   the new default
     pub async fn login(&self, ctx: &Context) -> Result<()> {
         let profile = ctx.client_config().profile();
 
@@ -214,7 +207,9 @@ impl CmdAuthLogin {
 
         // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
         let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
-        // TODO what's the point of this?
+        // The client ID is intended to be an identifier issued to clients;
+        // since we're not doing that and this ID would be public if it were
+        // static, we just generate a random one each time we authenticate.
         let client_id = Uuid::new_v4();
         let auth_client = BasicClient::new(
             ClientId::new(client_id.to_string()),
