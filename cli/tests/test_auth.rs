@@ -358,6 +358,12 @@ fn test_cmd_auth_status() {
         .success();
     let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
 
+    // DNS failure output can vary by platform
+    let stdout = match stdout.find("failed to lookup address") {
+        Some(ii) => &stdout[..ii],
+        None => &stdout,
+    };
+
     assert_contents(
         "tests/data/test_auth_status.stdout",
         &scrub_server(stdout.to_string(), server.url("")),
