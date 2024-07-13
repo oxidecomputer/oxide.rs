@@ -2,12 +2,23 @@
 
 ## Installation
 
-Build with `cargo build --bin oxide` and add the executable in `target/debug` to your `PATH`.
+You can find pre-built binaries for various platforms
+[here](https://github.com/oxidecomputer/oxide.rs/releases). Look for the most
+recent release whose version suffix matches the version of Oxide software
+currently deployed. For example, if you're running the `20240502.0` release,
+use `0.5.0+20240502.0`.
+
+You can build the CLI yourself using `cargo build --bin oxide`; then add the
+executable in `target/debug` to your `PATH` or copy it to another location.
 
 ## Authentication
 
-There are two ways to authenticate against the Oxide rack using the CLI:
+To authenticate, use `oxide auth login --host my.oxide.host`. This will add a
+new profile to `$HOME/.config/oxide/credentials.toml` (and create the file if
+necessary). The profile will derive its name from the name of the Oxide Silo.
 
-- Environment variables: You can set the `OXIDE_HOST` and `OXIDE_TOKEN` environment variables. This method is useful for service accounts.
+The first time you authenticate, the `default-profile` will be set in
+`$HOME/.config/oxide/config.toml`. Edit that file to change the default later.
 
-- Configuration file: When running the `oxide auth login` command, a `$HOME/.config/oxide/hosts.toml` file is generated. This file contains sensitive information like your token and user ID.
+If you have a token value, you may set the `OXIDE_HOST` and `OXIDE_TOKEN`
+environment variables. This method can be useful for service accounts.

@@ -17,7 +17,7 @@ $ cargo add tokio
 To connect to the Oxide API, the SDK needs a host URL and a token. There are
 several ways to specify these:
 
-* Configuration files: When you run oxide auth login in the CLI, `config.toml`
+* Configuration files: When you use the CLI's `oxide auth login`, `config.toml`
   and `credentials.toml` files are generated in `$HOME/.config/oxide/`. The
   credentials file contains sensitive information such as your token and user
   ID.
