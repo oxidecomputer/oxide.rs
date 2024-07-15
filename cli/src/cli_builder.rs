@@ -4,7 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{collections::BTreeMap, marker::PhantomData, path::PathBuf};
+use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -12,20 +12,23 @@ use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
+    context::Context,
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
 };
-use oxide::{
-    config::{Config, ResolveValue},
-    context::Context,
-};
+use oxide::ClientConfig;
 
+/// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
-#[command(name = "oxide")]
+#[command(name = "oxide", verbatim_doc_comment)]
 struct OxideCli {
     /// Enable debug output
     #[clap(long)]
     pub debug: bool,
+
+    /// Configuration profile to use for commands
+    #[clap(long)]
+    pub profile: Option<String>,
 
     /// Directory to use for configuration
     #[clap(long, value_name = "DIR")]
@@ -46,6 +49,41 @@ struct OxideCli {
     /// Timeout value for individual API invocations
     #[clap(long, value_name = "SECONDS")]
     pub timeout: Option<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ResolveValue {
+    pub host: String,
+    pub port: u16,
+    pub addr: IpAddr,
+}
+
+impl std::str::FromStr for ResolveValue {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        let values = s.splitn(3, ':').collect::<Vec<_>>();
+        let [host, port, addr] = values.as_slice() else {
+            return Err(r#"value must be "host:port:addr"#.to_string());
+        };
+
+        let host = host.to_string();
+        let port = port
+            .parse()
+            .map_err(|_| format!("error parsing port '{}'", port))?;
+
+        // `IpAddr::parse()` does not accept enclosing brackets on IPv6
+        // addresses; strip them off if they exist.
+        let addr = addr
+            .strip_prefix('[')
+            .and_then(|s| s.strip_suffix(']'))
+            .unwrap_or(addr);
+        let addr = addr
+            .parse()
+            .map_err(|_| format!("error parsing address '{}'", addr))?;
+
+        Ok(Self { host, port, addr })
+    }
 }
 
 #[async_trait]
@@ -182,6 +220,7 @@ impl<'a> NewCli<'a> {
         let matches = parser.get_matches();
 
         let OxideCli {
+            profile,
             debug,
             config_dir,
             resolve,
@@ -194,42 +233,36 @@ impl<'a> NewCli<'a> {
             env_logger::builder().filter_level(LevelFilter::Debug);
         }
 
-        let mut config = if let Some(dir) = config_dir {
-            Config::new_with_config_dir(dir)
-        } else {
-            Config::default()
-        };
+        let mut client_config = ClientConfig::default();
+
+        if let Some(profile_name) = profile {
+            client_config = client_config.with_profile(profile_name);
+        }
+        if let Some(config_dir) = config_dir {
+            client_config = client_config.with_config_dir(config_dir);
+        }
         if let Some(resolve) = resolve {
-            config = config.with_resolve(resolve);
+            client_config = client_config.with_resolve(resolve.host, resolve.addr);
         }
         if let Some(cacert_path) = cacert {
-            enum CertType {
-                Pem,
-                Der,
-            }
-
             let extension = cacert_path
                 .extension()
                 .map(std::ffi::OsStr::to_ascii_lowercase);
-            let ct = match extension.as_ref().and_then(|ex| ex.to_str()) {
-                Some("pem") => CertType::Pem,
-                Some("der") => CertType::Der,
-                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
-            };
-
             let contents = std::fs::read(cacert_path)?;
-
-            let cert = match ct {
-                CertType::Pem => reqwest::tls::Certificate::from_pem(&contents),
-                CertType::Der => reqwest::tls::Certificate::from_der(&contents),
+            let cert = match extension.as_ref().and_then(|ex| ex.to_str()) {
+                Some("pem") => reqwest::tls::Certificate::from_pem(&contents),
+                Some("der") => reqwest::tls::Certificate::from_der(&contents),
+                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
             }?;
-            config = config.with_cert(cert);
+
+            client_config = client_config.with_cert(cert);
         }
-        config = config.with_insecure(insecure);
+        client_config = client_config.with_insecure(insecure);
         if let Some(timeout) = timeout {
-            config = config.with_timeout(timeout);
+            client_config = client_config.with_timeout(timeout);
         }
-        let ctx = Context::new(config)?;
+
+        let ctx = Context::new(client_config)?;
 
         let mut node = &runner;
         let mut sm = &matches;
@@ -267,7 +300,8 @@ struct GeneratedCmd(CliCommand);
 #[async_trait]
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
-        let cli = Cli::new(ctx.client()?.clone(), OxideOverride::default());
+        let client = oxide::Client::new_authenticated_config(ctx.client_config())?;
+        let cli = Cli::new(client, OxideOverride::default());
         cli.execute(self.0, matches).await
     }
 

@@ -1,6 +1,7 @@
 {
   "name": "oxide",
   "version": "0.6.0+20240710.0",
+  "about": "Control an Oxide environment",
   "args": [
     {
       "long": "cacert",
@@ -17,6 +18,10 @@
     {
       "long": "insecure",
       "help": "Disable certificate validation and hostname verification"
+    },
+    {
+      "long": "profile",
+      "help": "Configuration profile to use for commands"
     },
     {
       "long": "resolve",
@@ -79,8 +84,8 @@
       "subcommands": [
         {
           "name": "login",
-          "about": "Authenticate with an Oxide host.",
-          "long_about": "Authenticate with an Oxide host.\n\nAlternatively, pass in a token on standard input by using `--with-token`.\n\n    # start interactive setup\n    $ oxide auth login\n\n    # authenticate against a specific Oxide instance by reading the token\n    # from a file\n    $ oxide auth login --with-token --host oxide.internal < mytoken.txt\n\n    # authenticate with a specific Oxide instance\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide instance (not recommended)\n    $ oxide auth login --host http://oxide.internal",
+          "about": "Authenticate with an Oxide Silo",
+          "long_about": "Authenticate with an Oxide Silo\n\n    # authenticate with a specific Oxide silo\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide silo (not recommended)\n    $ oxide auth login --host http://oxide.internal",
           "args": [
             {
               "long": "browser",
@@ -94,51 +99,30 @@
             {
               "long": "no-browser",
               "help": "Print the authentication URL rather than opening a browser window"
-            },
-            {
-              "long": "with-token",
-              "help": "Read token from standard input"
             }
           ]
         },
         {
           "name": "logout",
-          "about": "Removes saved authentication information.",
-          "long_about": "Removes saved authentication information.\n\nThis command does not invalidate any tokens from the hosts.",
+          "about": "Removes saved authentication information from profiles.",
+          "long_about": "Removes saved authentication information from profiles.\n\nThis command does not invalidate any tokens.",
           "args": [
             {
               "long": "all",
               "short": "a",
-              "help": "If set, all known hosts and authentication information will be deleted"
+              "help": "If set, authentication information from all profiles will be deleted"
             },
             {
               "long": "force",
               "short": "f",
               "help": "Skip confirmation prompt"
-            },
-            {
-              "long": "host",
-              "short": "H",
-              "help": "Remove authentication information for a single host"
             }
           ]
         },
         {
           "name": "status",
           "about": "Verifies and displays information about your authentication state.",
-          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each Oxide environment\nin the current configuration. These hosts may be from your hosts.toml file\nand/or $OXIDE_HOST environment variable.",
-          "args": [
-            {
-              "long": "host",
-              "short": "H",
-              "help": "Specific hostname to validate"
-            },
-            {
-              "long": "show-token",
-              "short": "t",
-              "help": "Display the auth token"
-            }
-          ]
+          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration."
         }
       ]
     },

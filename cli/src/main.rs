@@ -12,9 +12,13 @@ use std::sync::atomic::AtomicBool;
 use anyhow::Result;
 use async_trait::async_trait;
 use cli_builder::NewCli;
+use context::Context;
 use generated_cli::CliConfig;
-use oxide::context::Context;
-use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::{
+    types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range},
+    Client,
+};
+use url::Url;
 
 mod cli_builder;
 mod cmd_api;
@@ -25,6 +29,7 @@ mod cmd_docs;
 mod cmd_instance;
 mod cmd_net;
 mod cmd_timeseries;
+mod context;
 
 mod cmd_version;
 #[allow(unused_mut)]
@@ -41,16 +46,37 @@ pub trait RunnableCmd: Send + Sync {
     }
 }
 
+#[async_trait]
+pub trait AuthenticatedCmd: Send + Sync {
+    async fn run(&self, client: &Client) -> Result<()>;
+    fn is_subtree() -> bool {
+        true
+    }
+}
+
+#[async_trait]
+impl<T: AuthenticatedCmd> RunnableCmd for T {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let client = Client::new_authenticated_config(ctx.client_config())?;
+        self.run(&client).await
+    }
+    fn is_subtree() -> bool {
+        <T as AuthenticatedCmd>::is_subtree()
+    }
+}
+
 pub fn make_cli() -> NewCli<'static> {
     NewCli::default()
         .add_custom::<cmd_auth::CmdAuth>("auth")
-        .add_custom::<cmd_api::CmdApi>("api")
+        // Informational commands that don't require server access
         .add_custom::<cmd_docs::CmdDocs>("docs")
+        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_version::CmdVersion>("version")
+        // Custom--often compound--client commands
+        .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
-        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
         .add_custom::<cmd_net::CmdAddr>("system networking addr")
         .add_custom::<cmd_net::CmdLink>("system networking link")
@@ -402,5 +428,17 @@ impl IpOrNet {
             IpOrNet::Ip(std::net::IpAddr::V6(v6)) => format!("{}/128", v6).parse().unwrap(),
             IpOrNet::Net(net) => net,
         }
+    }
+}
+
+pub(crate) trait AsHost {
+    fn as_host(&self) -> &str;
+}
+
+impl AsHost for Url {
+    fn as_host(&self) -> &str {
+        assert_eq!(self.path(), "/");
+        let s = self.as_str();
+        &s[..s.len() - 1]
     }
 }

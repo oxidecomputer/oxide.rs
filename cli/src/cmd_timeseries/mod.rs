@@ -18,11 +18,10 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use oxide::context::Context;
+use oxide::Client;
 use ratatui::{prelude::CrosstermBackend, Terminal};
 
 use self::dashboard::Dashboard;
-use crate::RunnableCmd;
 
 /// Graph the results of an OxQL timeseries query.
 #[derive(Parser, Debug, Clone)]
@@ -40,14 +39,14 @@ pub struct CmdTimeseriesDashboard {
 type Tui = Terminal<CrosstermBackend<Stdout>>;
 
 #[async_trait]
-impl RunnableCmd for CmdTimeseriesDashboard {
-    async fn run(&self, ctx: &Context) -> Result<()> {
+impl crate::AuthenticatedCmd for CmdTimeseriesDashboard {
+    async fn run(&self, client: &Client) -> Result<()> {
         anyhow::ensure!(
             self.interval > 0 && self.interval < 1_000,
             "Please provide a reasonable update interval"
         );
         let interval = Duration::from_secs(self.interval);
-        let client = ctx.client()?.clone();
+        let client = client.clone();
         let mut terminal = init_tui()?;
         let res = Dashboard::new(&self.query, interval)
             .run(&mut terminal, client)
