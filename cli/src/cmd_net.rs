@@ -28,6 +28,8 @@ use std::io::Write;
 use tabwriter::TabWriter;
 use uuid::Uuid;
 
+use crate::println_nopipe;
+
 // We do not yet support port breakouts, but the API is phrased in terms of
 // ports that can be broken out. The constant phy0 represents the first port
 // in a breakout.
@@ -875,14 +877,14 @@ impl AuthenticatedCmd for CmdPortConfig {
                     .map(|x| (x.id, x.name))
                     .collect();
 
-                println!(
+                println_nopipe!(
                     "{}{}{}",
                     p.switch_location.to_string().blue(),
                     "/".dimmed(),
                     p.port_name.blue(),
                 );
 
-                println!(
+                println_nopipe!(
                     "{}",
                     "=".repeat(p.port_name.len() + p.switch_location.to_string().len() + 1)
                         .dimmed()
@@ -900,7 +902,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                     writeln!(&mut tw, "{:?}\t{:?}\t{:?}", l.autoneg, l.fec, l.speed,)?;
                 }
                 tw.flush()?;
-                println!();
+                println_nopipe!();
 
                 writeln!(
                     &mut tw,
@@ -923,7 +925,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                     writeln!(&mut tw, "{}\t{}\t{:?}", addr, *alb.0.name, a.vlan_id)?;
                 }
                 tw.flush()?;
-                println!();
+                println_nopipe!();
 
                 writeln!(
                     &mut tw,
@@ -987,7 +989,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                     )?;
                 }
                 tw.flush()?;
-                println!();
+                println_nopipe!();
 
                 // Uncomment to see full payload
                 //println!("");
@@ -1017,13 +1019,13 @@ impl AuthenticatedCmd for CmdBgpStatus {
             .iter()
             .partition(|x| x.switch == SwitchLocation::Switch0);
 
-        println!("{}", "switch0".dimmed());
-        println!("{}", "=======".dimmed());
+        println_nopipe!("{}", "switch0".dimmed());
+        println_nopipe!("{}", "=======".dimmed());
         show_status(&sw0)?;
-        println!();
+        println_nopipe!();
 
-        println!("{}", "switch1".dimmed());
-        println!("{}", "=======".dimmed());
+        println_nopipe!("{}", "switch1".dimmed());
+        println_nopipe!("{}", "=======".dimmed());
         show_status(&sw1)?;
 
         Ok(())
@@ -1078,12 +1080,12 @@ impl AuthenticatedCmd for CmdPortStatus {
         sw0.sort_by_key(|x| x.port_name.as_str());
         sw1.sort_by_key(|x| x.port_name.as_str());
 
-        println!("{}", "switch0".dimmed());
-        println!("{}", "=======".dimmed());
+        println_nopipe!("{}", "switch0".dimmed());
+        println_nopipe!("{}", "=======".dimmed());
         self.show_switch(client, "switch0", &sw0).await?;
 
-        println!("{}", "switch1".dimmed());
-        println!("{}", "=======".dimmed());
+        println_nopipe!("{}", "switch1".dimmed());
+        println_nopipe!("{}", "=======".dimmed());
         self.show_switch(client, "switch1", &sw1).await?;
 
         Ok(())
@@ -1228,9 +1230,9 @@ impl CmdPortStatus {
         }
 
         ltw.flush()?;
-        println!();
+        println_nopipe!();
         mtw.flush()?;
-        println!();
+        println_nopipe!();
 
         Ok(())
     }
