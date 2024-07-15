@@ -59,7 +59,7 @@ tokio = { version = "1.38.0", features = ["full"] }
 toml = "0.8.14"
 toml_edit = "0.22.15"
 url = "2.5.2"
-uuid = { version = "1.9.1", features = ["serde", "v4"] }
+uuid = { version = "1.10.0", features = ["serde", "v4"] }
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
