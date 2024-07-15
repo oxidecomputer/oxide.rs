@@ -32,8 +32,8 @@ log = "0.4.22"
 newline-converter = "0.3.0"
 oauth2 = "4.4.2"
 open = "4.2.0"
-oxide = { path = "sdk", version = "0.5.0" }
-oxide-httpmock = { path = "sdk-httpmock", version = "0.5.0" }
+oxide = { path = "sdk", version = "0.6.0" }
+oxide-httpmock = { path = "sdk-httpmock", version = "0.6.0" }
 oxnet = { git = "https://github.com/oxidecomputer/oxnet" }
 predicates = "3.1.0"
 pretty_assertions = "1.4.0"
