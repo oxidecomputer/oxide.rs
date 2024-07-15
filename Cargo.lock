@@ -599,9 +599,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.7"
+version = "4.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d598e88f6874d4b888ed40c71efbcbf4076f1dfbae128a08a8c9e45f710605d"
+checksum = "5b4be9c4c4b1f30b78d8a750e0822b6a6102d97e62061c583a6c1dea2dfb33ae"
 dependencies = [
  "clap",
 ]
@@ -893,7 +893,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#6a3f84ca5fd8d0c5c010cfe837efbe6b5d117d9d"
+source = "git+https://github.com/oxidecomputer/dropshot#fb254ad92bbbc29d249fa514486a9217d027f4a5"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -938,7 +938,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#6a3f84ca5fd8d0c5c010cfe837efbe6b5d117d9d"
+source = "git+https://github.com/oxidecomputer/dropshot#fb254ad92bbbc29d249fa514486a9217d027f4a5"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -2174,6 +2174,8 @@ dependencies = [
  "test-common",
  "thouart",
  "tokio",
+ "toml",
+ "toml_edit",
  "url",
  "uuid",
 ]
@@ -3858,9 +3860,9 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "uuid"
-version = "1.9.1"
+version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5de17fd2f7da591098415cff336e12965a28061ddace43b59cb3c430179c9439"
+checksum = "81dfa00651efa65069b0b6b651f4aaa31ba9e3c3ce0137aaad053604ee7e0314"
 dependencies = [
  "getrandom",
  "serde",
