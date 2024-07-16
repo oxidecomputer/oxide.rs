@@ -9,12 +9,13 @@ use std::{
     io::{Read, Write},
 };
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
 use oxide::Client;
 use serde::Deserialize;
+use serde_json::Value;
 
 use crate::{print_nopipe, println_nopipe};
 
@@ -159,7 +160,15 @@ impl crate::AuthenticatedCmd for CmdApi {
                 if !query_string.is_empty() {
                     query_string.push('&');
                 }
-                query_string.push_str(&format!("{}={}", key, value));
+                match &value {
+                    Value::String(s) => query_string.push_str(&format!("{key}={s}")),
+                    Value::Bool(b) => query_string.push_str(&format!("{key}={b}")),
+                    Value::Number(n) => query_string.push_str(&format!("{key}={n}")),
+                    Value::Null => query_string.push_str(&format!("{key}=null")),
+                    Value::Array(_) | Value::Object(_) => {
+                        bail!("invalid query parameter value {}", value)
+                    }
+                }
             }
 
             endpoint_with_query = add_query_string(&endpoint_with_query, &query_string);
