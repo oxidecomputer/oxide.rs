@@ -1033,7 +1033,8 @@ pub mod types {
     ///    },
     ///    "revision": {
     ///      "type": "integer",
-    ///      "format": "int64"
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
     ///    },
     ///    "serial": {
     ///      "type": "string"
@@ -1045,7 +1046,7 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Baseboard {
         pub part: String,
-        pub revision: i64,
+        pub revision: u32,
         pub serial: String,
     }
 
@@ -27065,7 +27066,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Baseboard {
             part: Result<String, String>,
-            revision: Result<i64, String>,
+            revision: Result<u32, String>,
             serial: Result<String, String>,
         }
 
@@ -27092,7 +27093,7 @@ pub mod types {
             }
             pub fn revision<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<i64>,
+                T: std::convert::TryInto<u32>,
                 T::Error: std::fmt::Display,
             {
                 self.revision = value
