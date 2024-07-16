@@ -150,19 +150,19 @@ impl crate::AuthenticatedCmd for CmdApi {
 
             // Set this as our body.
             bytes = buf.clone();
+        }
 
-            // Set our params to the query string.
-            if !params.is_empty() {
-                let mut query_string = String::new();
-                for (key, value) in params {
-                    if !query_string.is_empty() {
-                        query_string.push('&');
-                    }
-                    query_string.push_str(&format!("{}={}", key, value));
+        // Set our params to the query string.
+        if !params.is_empty() {
+            let mut query_string = String::new();
+            for (key, value) in params {
+                if !query_string.is_empty() {
+                    query_string.push('&');
                 }
-
-                endpoint_with_query = add_query_string(&endpoint_with_query, &query_string);
+                query_string.push_str(&format!("{}={}", key, value));
             }
+
+            endpoint_with_query = add_query_string(&endpoint_with_query, &query_string);
         }
 
         let rclient = client.client();
