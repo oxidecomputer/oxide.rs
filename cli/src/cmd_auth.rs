@@ -487,6 +487,27 @@ impl CmdAuthStatus {
 #[cfg(test)]
 mod tests {
     #[test]
+    fn test_cmd_auth_login() {
+        use assert_cmd::Command;
+        use predicates::str;
+
+        let bad_url = "sys.oxide.invalid";
+
+        // Validate connection error details are printed
+        Command::cargo_bin("oxide")
+            .unwrap()
+            .arg("auth")
+            .arg("login")
+            .arg("--host")
+            .arg(bad_url)
+            .assert()
+            .failure()
+            .stderr(str::starts_with(format!(
+                "Request failed: error sending request for url (https://{bad_url}/device/auth):"
+            )));
+    }
+
+    #[test]
     fn test_parse_host() {
         use super::parse_host;
 

@@ -101,7 +101,8 @@ async fn main() {
         .await
         .unwrap();
     if let Err(e) = result {
-        eprintln!("{e}");
+        let src = e.source().map(|s| format!(": {s}")).unwrap_or_default();
+        eprintln!("{e}{src}");
         std::process::exit(1)
     }
 }
