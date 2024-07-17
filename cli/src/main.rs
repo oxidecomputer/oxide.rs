@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+use std::io;
 use std::net::IpAddr;
 use std::sync::atomic::AtomicBool;
 
@@ -37,6 +38,8 @@ mod cmd_version;
 #[allow(unused_must_use)] // TODO
 #[allow(clippy::clone_on_copy)]
 mod generated_cli;
+#[macro_use]
+mod print;
 
 #[async_trait]
 pub trait RunnableCmd: Send + Sync {
@@ -101,8 +104,16 @@ async fn main() {
         .await
         .unwrap();
     if let Err(e) = result {
+        if let Some(io_err) = e.downcast_ref::<io::Error>() {
+            if io_err.kind() == io::ErrorKind::BrokenPipe {
+                return;
+            }
+        }
+
         let src = e.source().map(|s| format!(": {s}")).unwrap_or_default();
-        eprintln!("{e}{src}");
+        eprintln_nopipe!("{e}{src}");
+
+        eprintln_nopipe!("{e}");
         std::process::exit(1)
     }
 }
@@ -140,7 +151,7 @@ impl CliConfig for OxideOverride {
     {
         let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
             .expect("failed to serialize return to json");
-        println!("{}", s);
+        println_nopipe!("{}", s);
     }
 
     fn success_no_item(&self, _: &oxide::ResponseValue<()>) {}
@@ -149,7 +160,7 @@ impl CliConfig for OxideOverride {
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        eprintln!("error");
+        eprintln_nopipe!("error");
     }
 
     fn list_start<T>(&self)
@@ -158,7 +169,7 @@ impl CliConfig for OxideOverride {
     {
         self.needs_comma
             .store(false, std::sync::atomic::Ordering::Relaxed);
-        print!("[");
+        print_nopipe!("[");
     }
 
     fn list_item<T>(&self, value: &T)
@@ -167,9 +178,9 @@ impl CliConfig for OxideOverride {
     {
         let s = serde_json::to_string_pretty(&[value]).expect("failed to serialize result to json");
         if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            print!(", {}", &s[4..s.len() - 2]);
+            print_nopipe!(", {}", &s[4..s.len() - 2]);
         } else {
-            print!("\n{}", &s[2..s.len() - 2]);
+            print_nopipe!("\n{}", &s[2..s.len() - 2]);
         };
         self.needs_comma
             .store(true, std::sync::atomic::Ordering::Relaxed);
@@ -180,9 +191,9 @@ impl CliConfig for OxideOverride {
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
         if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            println!("\n]");
+            println_nopipe!("\n]");
         } else {
-            println!("]");
+            println_nopipe!("]");
         }
     }
 

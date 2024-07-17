@@ -19,7 +19,7 @@ use toml_edit::{Item, Table};
 use uuid::Uuid;
 
 use crate::context::Context;
-use crate::{AsHost, RunnableCmd};
+use crate::{println_nopipe, AsHost, RunnableCmd};
 
 /// Login, logout, and get the status of your authentication.
 ///
@@ -441,11 +441,11 @@ impl CmdAuthStatus {
             match client.current_user_view().send().await {
                 Ok(user) => {
                     log::debug!("success response for {} (env): {:?}", host_env, user);
-                    println!("Logged in to {} as {}", host_env, user.id)
+                    println_nopipe!("Logged in to {} as {}", host_env, user.id)
                 }
                 Err(e) => {
                     log::debug!("error response for {} (env): {}", host_env, e);
-                    println!("{}: {}", host_env, Self::error_msg(&e))
+                    println_nopipe!("{}: {}", host_env, Self::error_msg(&e))
                 }
             };
         } else {
@@ -467,9 +467,11 @@ impl CmdAuthStatus {
                     }
                 };
 
-                println!(
+                println_nopipe!(
                     "Profile \"{}\" ({}) status: {}",
-                    profile_name, profile_info.host, status
+                    profile_name,
+                    profile_info.host,
+                    status
                 );
             }
         }

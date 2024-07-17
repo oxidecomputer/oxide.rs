@@ -16,6 +16,8 @@ use futures::{StreamExt, TryStreamExt};
 use oxide::Client;
 use serde::Deserialize;
 
+use crate::{print_nopipe, println_nopipe};
+
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
 /// The endpoint argument should be a path of a Oxide API endpoint.
@@ -183,18 +185,18 @@ impl crate::AuthenticatedCmd for CmdApi {
         if !resp.status().is_success() {
             let status = resp.status();
             let v = resp.json::<serde_json::Value>().await?;
-            println!(
+            println_nopipe!(
                 "error; status code: {} {}",
                 status.as_u16(),
                 status.canonical_reason().unwrap_or_default()
             );
-            println!("{}", serde_json::to_string_pretty(&v).unwrap());
+            println_nopipe!("{}", serde_json::to_string_pretty(&v).unwrap());
             return Err(anyhow!("error"));
         }
 
         // Print the response headers if requested.
         if self.include {
-            println!("{:?} {}", resp.version(), resp.status());
+            println_nopipe!("{:?} {}", resp.version(), resp.status());
             print_headers(resp.headers())?;
         }
 
@@ -205,7 +207,7 @@ impl crate::AuthenticatedCmd for CmdApi {
         if !self.paginate {
             // Print the response body.
             let result = resp.json::<serde_json::Value>().await?;
-            println!("{}", serde_json::to_string_pretty(&result)?);
+            println_nopipe!("{}", serde_json::to_string_pretty(&result)?);
 
             Ok(())
         } else {
@@ -239,7 +241,7 @@ impl crate::AuthenticatedCmd for CmdApi {
                 Result::Ok(Some((items, next_page)))
             });
 
-            print!("[");
+            print_nopipe!("[");
 
             let result = first
                 .chain(rest)
@@ -252,19 +254,19 @@ impl crate::AuthenticatedCmd for CmdApi {
                         let items_core = &value_out[2..len - 2];
 
                         if comma_needed {
-                            print!(",");
+                            print_nopipe!(",");
                         }
-                        println!();
-                        print!("{}", items_core);
+                        println_nopipe!();
+                        print_nopipe!("{}", items_core);
                     }
                     Ok(true)
                 })
                 .await;
-            println!();
-            println!("]");
+            println_nopipe!();
+            println_nopipe!("]");
 
             if let Err(e) = &result {
-                println!("An error occurred during a paginated query:\n{}", e);
+                println_nopipe!("An error occurred during a paginated query:\n{}", e);
             }
             result.map(|_| ())
         }
@@ -387,7 +389,7 @@ fn print_headers(headers: &reqwest::header::HeaderMap) -> Result<()> {
     tw.flush()?;
 
     let table = String::from_utf8(tw.into_inner()?)?;
-    println!("{}", table);
+    println_nopipe!("{}", table);
 
     Ok(())
 }

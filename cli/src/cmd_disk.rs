@@ -4,6 +4,8 @@
 
 // Copyright 2024 Oxide Computer Company
 
+use crate::{eprintln_nopipe, println_nopipe};
+
 use anyhow::bail;
 use anyhow::Result;
 use async_trait::async_trait;
@@ -190,9 +192,10 @@ impl CmdDiskImport {
             .await;
 
         if let Err(e) = response {
-            eprintln!(
+            eprintln_nopipe!(
                 "trying to unwind, deleting {:?} failed with {:?}",
-                self.disk, e
+                self.disk,
+                e
             );
             return Err(e.into());
         }
@@ -210,9 +213,10 @@ impl CmdDiskImport {
 
         // If this fails, then the disk will remain in state "import-ready"
         if let Err(e) = response {
-            eprintln!(
+            eprintln_nopipe!(
                 "trying to unwind, finalizing {:?} failed with {:?}",
-                self.disk, e
+                self.disk,
+                e
             );
             return Err(e.into());
         }
@@ -231,9 +235,10 @@ impl CmdDiskImport {
         // If this fails, then the disk will remain in state
         // "importing-from-bulk-writes"
         if let Err(e) = response {
-            eprintln!(
+            eprintln_nopipe!(
                 "trying to unwind, stopping the bulk write process for {:?} failed with {:?}",
-                self.disk, e
+                self.disk,
+                e
             );
             return Err(e.into());
         }
@@ -334,7 +339,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             .await;
 
         if let Err(e) = start_bulk_write_response {
-            eprintln!("starting the bulk write process failed with {:?}", e);
+            eprintln_nopipe!("starting the bulk write process failed with {:?}", e);
 
             // If this fails, the disk is in state import-ready. Finalize it so
             // it can be deleted.
@@ -402,7 +407,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             let n = match file.by_ref().take(CHUNK_SIZE).read_to_end(&mut chunk) {
                 Ok(n) => n,
                 Err(e) => {
-                    eprintln!(
+                    eprintln_nopipe!(
                         "reading from {} failed with {:?}",
                         self.path.to_string_lossy(),
                         e,
@@ -420,7 +425,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
                 let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
 
                 if let Err(e) = senders[i % UPLOAD_TASKS].send((offset, encoded, n)).await {
-                    eprintln!("sending chunk to thread failed with {:?}", e);
+                    eprintln_nopipe!("sending chunk to thread failed with {:?}", e);
                     break Err(e.into());
                 }
             } else {
@@ -456,7 +461,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
 
         if results.iter().any(|x| x.is_err()) {
             // If any of the upload threads returned an error, unwind the disk.
-            eprintln!("one of the upload threads failed");
+            eprintln_nopipe!("one of the upload threads failed");
             self.unwind_disk_bulk_write_stop(client).await?;
             self.unwind_disk_finalize(client).await?;
             self.unwind_disk_delete(client).await?;
@@ -475,7 +480,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             .await;
 
         if let Err(e) = stop_bulk_write_response {
-            eprintln!("stopping the bulk write process failed with {:?}", e);
+            eprintln_nopipe!("stopping the bulk write process failed with {:?}", e);
 
             // Attempt to unwind the disk, although it will probably fail - the
             // first step is to stop the bulk write process!
@@ -498,7 +503,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         let finalize_response = request.send().await;
 
         if let Err(e) = finalize_response {
-            eprintln!("finalizing the disk failed with {:?}", e);
+            eprintln_nopipe!("finalizing the disk failed with {:?}", e);
 
             // Attempt to unwind the disk, although it will probably fail - the
             // first step is to finalize the disk!
@@ -541,7 +546,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
                 .await?;
         }
 
-        println!("done!");
+        println_nopipe!("done!");
 
         Ok(())
     }
