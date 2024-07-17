@@ -6,7 +6,7 @@ published to crates.io. All are derived from the Oxide API OpenAPI spec.
 
 ## Generation
 
-Generation of the CLI, SDK, and mocking library
+Generation of the CLI, SDK, and mocking library use
 https://github.com/oxidecomputer/progenitor[`progenitor`] for code generation
 from the OpenAPI description of the Oxide API. Typically `progenitor` is used
 via a macro or `build.rs`, here we use an

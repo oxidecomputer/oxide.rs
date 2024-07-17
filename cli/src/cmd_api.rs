@@ -13,9 +13,10 @@ use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
+use oxide::Client;
 use serde::Deserialize;
 
-use crate::RunnableCmd;
+use crate::{print_nopipe, println_nopipe};
 
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
@@ -97,8 +98,8 @@ pub struct PaginatedResponse {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdApi {
-    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+impl crate::AuthenticatedCmd for CmdApi {
+    async fn run(&self, client: &Client) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()
@@ -107,7 +108,7 @@ impl RunnableCmd for CmdApi {
         };
 
         // Parse the fields.
-        let params = self.parse_fields(ctx)?;
+        let params = self.parse_fields()?;
 
         // Set them as our body if they exist.
         let mut b = String::new();
@@ -164,7 +165,6 @@ impl RunnableCmd for CmdApi {
             }
         }
 
-        let client = ctx.client()?;
         let rclient = client.client();
         let uri = format!("{}{}", client.baseurl(), endpoint_with_query);
 
@@ -185,19 +185,19 @@ impl RunnableCmd for CmdApi {
         if !resp.status().is_success() {
             let status = resp.status();
             let v = resp.json::<serde_json::Value>().await?;
-            println!(
+            println_nopipe!(
                 "error; status code: {} {}",
                 status.as_u16(),
                 status.canonical_reason().unwrap_or_default()
             );
-            println!("{}", serde_json::to_string_pretty(&v).unwrap());
+            println_nopipe!("{}", serde_json::to_string_pretty(&v).unwrap());
             return Err(anyhow!("error"));
         }
 
         // Print the response headers if requested.
         if self.include {
-            println!("{:?} {}", resp.version(), resp.status());
-            print_headers(ctx, resp.headers())?;
+            println_nopipe!("{:?} {}", resp.version(), resp.status());
+            print_headers(resp.headers())?;
         }
 
         if resp.status() == reqwest::StatusCode::NO_CONTENT {
@@ -207,7 +207,7 @@ impl RunnableCmd for CmdApi {
         if !self.paginate {
             // Print the response body.
             let result = resp.json::<serde_json::Value>().await?;
-            println!("{}", serde_json::to_string_pretty(&result)?);
+            println_nopipe!("{}", serde_json::to_string_pretty(&result)?);
 
             Ok(())
         } else {
@@ -241,7 +241,7 @@ impl RunnableCmd for CmdApi {
                 Result::Ok(Some((items, next_page)))
             });
 
-            print!("[");
+            print_nopipe!("[");
 
             let result = first
                 .chain(rest)
@@ -254,19 +254,19 @@ impl RunnableCmd for CmdApi {
                         let items_core = &value_out[2..len - 2];
 
                         if comma_needed {
-                            print!(",");
+                            print_nopipe!(",");
                         }
-                        println!();
-                        print!("{}", items_core);
+                        println_nopipe!();
+                        print_nopipe!("{}", items_core);
                     }
                     Ok(true)
                 })
                 .await;
-            println!();
-            println!("]");
+            println_nopipe!();
+            println_nopipe!("]");
 
             if let Err(e) = &result {
-                println!("An error occurred during a paginated query:\n{}", e);
+                println_nopipe!("An error occurred during a paginated query:\n{}", e);
             }
             result.map(|_| ())
         }
@@ -292,10 +292,7 @@ impl CmdApi {
         Ok(headers)
     }
 
-    fn parse_fields(
-        &self,
-        _ctx: &oxide::context::Context,
-    ) -> Result<HashMap<String, serde_json::Value>> {
+    fn parse_fields(&self) -> Result<HashMap<String, serde_json::Value>> {
         let mut params: HashMap<String, serde_json::Value> = HashMap::new();
 
         // Parse the raw fields.
@@ -371,10 +368,7 @@ impl CmdApi {
     }
 }
 
-fn print_headers(
-    _ctx: &oxide::context::Context,
-    headers: &reqwest::header::HeaderMap,
-) -> Result<()> {
+fn print_headers(headers: &reqwest::header::HeaderMap) -> Result<()> {
     let mut names: Vec<String> = headers.keys().map(|k| k.as_str().to_string()).collect();
     names.sort_by_key(|a| a.to_lowercase());
 
@@ -395,7 +389,7 @@ fn print_headers(
     tw.flush()?;
 
     let table = String::from_utf8(tw.into_inner()?)?;
-    println!("{}", table);
+    println_nopipe!("{}", table);
 
     Ok(())
 }

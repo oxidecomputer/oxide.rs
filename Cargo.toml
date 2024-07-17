@@ -11,12 +11,13 @@ resolver = "2"
 [workspace.dependencies]
 anyhow = "1.0.86"
 assert_cmd = "2.0.14"
-async-trait = "0.1.80"
+async-trait = "0.1.81"
 base64 = "0.22.1"
-built = { version = "0.7.3", features = ["git2"] }
+built = { version = "0.7.4", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
-clap = { version = "4.5.7", features = ["derive", "string", "env"] }
-clap_complete = "4.5.6"
+clap = { version = "4.5.9", features = ["derive", "string", "env"] }
+clap_complete = "4.5.8"
+colored = "2.1.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
@@ -25,13 +26,15 @@ env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.30"
 httpmock = "0.6.8"
+humantime = "2"
 indicatif = "0.17"
-log = "0.4.21"
+log = "0.4.22"
 newline-converter = "0.3.0"
 oauth2 = "4.4.2"
 open = "4.2.0"
-oxide = { path = "sdk", version = "0.5.0" }
-oxide-httpmock = { path = "sdk-httpmock", version = "0.5.0" }
+oxide = { path = "sdk", version = "0.6.0" }
+oxide-httpmock = { path = "sdk-httpmock", version = "0.6.0" }
+oxnet = { git = "https://github.com/oxidecomputer/oxnet" }
 predicates = "3.1.0"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
@@ -45,7 +48,7 @@ reqwest = "0.11.27"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.116"
+serde_json = "1.0.120"
 similar = "2.4.0"
 tabwriter = "1.4.0"
 thiserror = { version = "1", default-features = false }
@@ -54,26 +57,20 @@ test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.38.0", features = ["full"] }
 toml = "0.8.14"
-toml_edit = "0.22.14"
+toml_edit = "0.22.15"
 url = "2.5.2"
 uuid = { version = "1.9.1", features = ["serde", "v4"] }
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
 # The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.6.2"
+cargo-dist-version = "0.19.1"
 # CI backends to support
-ci = ["github"]
+ci = "github"
 # The installers to generate for each app
 installers = []
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = [
-	"x86_64-unknown-linux-gnu",
-	"aarch64-apple-darwin",
-	"x86_64-apple-darwin",
-	"x86_64-unknown-linux-musl",
-	"x86_64-pc-windows-msvc",
-]
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
 # Publish jobs to run in CI
 pr-run-mode = "plan"
 

@@ -7,29 +7,37 @@
 #![forbid(unsafe_code)]
 #![doc = include_str!("../README.md")]
 
+use std::path::PathBuf;
+
 use thiserror::Error;
+
+mod auth;
 mod generated_sdk;
 
 #[cfg(feature = "clap")]
 mod clap_feature;
 
-pub mod config;
-pub mod context;
-
+pub use auth::*;
 pub use generated_sdk::*;
 
+/// Errors for interfaces related to authentication
 #[derive(Error, Debug)]
-/// Errors for interfaces related to configuration and authentication
-pub enum OxideError {
+pub enum OxideAuthError {
+    #[error(r"$OXIDE_TOKEN is set but $OXIDE_HOST is not")]
+    MissingHost,
     #[error(
         r"$OXIDE_HOST is set, but {0} has no corresponding token.\n
                 Login without $OXIDE_HOST set or set $OXIDE_TOKEN."
     )]
     MissingToken(String),
-    #[error("no authenticated hosts")]
-    NoAuthenticatedHosts,
-    #[error("TomlError: {0}")]
-    TomlError(toml_edit::TomlError),
+    #[error("Parse error for {0}: {1}")]
+    TomlError(PathBuf, toml::de::Error),
     #[error("IO Error: {0}")]
     IoError(std::io::Error),
+    #[error("No profile specified and no default profile")]
+    NoDefaultProfile,
+    #[error("Profile information not present in {0} for {1}")]
+    NoProfile(PathBuf, String),
+    #[error("no authenticated hosts; use oxide auth login to authenticate")]
+    NoAuthenticatedHosts,
 }

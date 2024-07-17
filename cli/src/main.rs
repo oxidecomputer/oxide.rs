@@ -6,15 +6,20 @@
 
 #![forbid(unsafe_code)]
 
+use std::io;
 use std::net::IpAddr;
 use std::sync::atomic::AtomicBool;
 
 use anyhow::Result;
 use async_trait::async_trait;
 use cli_builder::NewCli;
+use context::Context;
 use generated_cli::CliConfig;
-use oxide::context::Context;
-use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::{
+    types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range},
+    Client,
+};
+use url::Url;
 
 mod cli_builder;
 mod cmd_api;
@@ -23,7 +28,9 @@ mod cmd_completion;
 mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
+mod cmd_net;
 mod cmd_timeseries;
+mod context;
 
 mod cmd_version;
 #[allow(unused_mut)]
@@ -31,6 +38,8 @@ mod cmd_version;
 #[allow(unused_must_use)] // TODO
 #[allow(clippy::clone_on_copy)]
 mod generated_cli;
+#[macro_use]
+mod print;
 
 #[async_trait]
 pub trait RunnableCmd: Send + Sync {
@@ -40,17 +49,47 @@ pub trait RunnableCmd: Send + Sync {
     }
 }
 
+#[async_trait]
+pub trait AuthenticatedCmd: Send + Sync {
+    async fn run(&self, client: &Client) -> Result<()>;
+    fn is_subtree() -> bool {
+        true
+    }
+}
+
+#[async_trait]
+impl<T: AuthenticatedCmd> RunnableCmd for T {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let client = Client::new_authenticated_config(ctx.client_config())?;
+        self.run(&client).await
+    }
+    fn is_subtree() -> bool {
+        <T as AuthenticatedCmd>::is_subtree()
+    }
+}
+
 pub fn make_cli() -> NewCli<'static> {
     NewCli::default()
         .add_custom::<cmd_auth::CmdAuth>("auth")
-        .add_custom::<cmd_api::CmdApi>("api")
+        // Informational commands that don't require server access
         .add_custom::<cmd_docs::CmdDocs>("docs")
+        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_version::CmdVersion>("version")
+        // Custom--often compound--client commands
+        .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
-        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
+        .add_custom::<cmd_net::CmdAddr>("system networking addr")
+        .add_custom::<cmd_net::CmdLink>("system networking link")
+        .add_custom::<cmd_net::CmdPortConfig>("system networking switch-port-settings show")
+        .add_custom::<cmd_net::CmdPortStatus>("system hardware switch-port show-status")
+        .add_custom::<cmd_net::CmdBgpStatus>("system networking bgp show-status")
+        .add_custom::<cmd_net::CmdBgpPeer>("system networking bgp peer")
+        .add_custom::<cmd_net::CmdBgpAnnounce>("system networking bgp announce")
+        .add_custom::<cmd_net::CmdBgpWithdraw>("system networking bgp withdraw")
+        .add_custom::<cmd_net::CmdBgpFilter>("system networking bgp filter")
 }
 
 #[tokio::main]
@@ -65,7 +104,16 @@ async fn main() {
         .await
         .unwrap();
     if let Err(e) = result {
-        eprintln!("{e}");
+        if let Some(io_err) = e.downcast_ref::<io::Error>() {
+            if io_err.kind() == io::ErrorKind::BrokenPipe {
+                return;
+            }
+        }
+
+        let src = e.source().map(|s| format!(": {s}")).unwrap_or_default();
+        eprintln_nopipe!("{e}{src}");
+
+        eprintln_nopipe!("{e}");
         std::process::exit(1)
     }
 }
@@ -103,7 +151,7 @@ impl CliConfig for OxideOverride {
     {
         let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
             .expect("failed to serialize return to json");
-        println!("{}", s);
+        println_nopipe!("{}", s);
     }
 
     fn success_no_item(&self, _: &oxide::ResponseValue<()>) {}
@@ -112,7 +160,7 @@ impl CliConfig for OxideOverride {
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        eprintln!("error");
+        eprintln_nopipe!("error");
     }
 
     fn list_start<T>(&self)
@@ -121,7 +169,7 @@ impl CliConfig for OxideOverride {
     {
         self.needs_comma
             .store(false, std::sync::atomic::Ordering::Relaxed);
-        print!("[");
+        print_nopipe!("[");
     }
 
     fn list_item<T>(&self, value: &T)
@@ -130,9 +178,9 @@ impl CliConfig for OxideOverride {
     {
         let s = serde_json::to_string_pretty(&[value]).expect("failed to serialize result to json");
         if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            print!(", {}", &s[4..s.len() - 2]);
+            print_nopipe!(", {}", &s[4..s.len() - 2]);
         } else {
-            print!("\n{}", &s[2..s.len() - 2]);
+            print_nopipe!("\n{}", &s[2..s.len() - 2]);
         };
         self.needs_comma
             .store(true, std::sync::atomic::Ordering::Relaxed);
@@ -143,9 +191,9 @@ impl CliConfig for OxideOverride {
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
         if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            println!("\n]");
+            println_nopipe!("\n]");
         } else {
-            println!("]");
+            println_nopipe!("]");
         }
     }
 
@@ -392,5 +440,17 @@ impl IpOrNet {
             IpOrNet::Ip(std::net::IpAddr::V6(v6)) => format!("{}/128", v6).parse().unwrap(),
             IpOrNet::Net(net) => net,
         }
+    }
+}
+
+pub(crate) trait AsHost {
+    fn as_host(&self) -> &str;
+}
+
+impl AsHost for Url {
+    fn as_host(&self) -> &str {
+        assert_eq!(self.path(), "/");
+        let s = self.as_str();
+        &s[..s.len() - 1]
     }
 }

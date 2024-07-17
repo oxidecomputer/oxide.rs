@@ -4,8 +4,8 @@
 
 // Copyright 2024 Oxide Computer Company
 
+use crate::context::Context;
 use crate::RunnableCmd;
-use oxide::context::Context;
 
 use super::cmd_version::built_info;
 use anyhow::Result;
