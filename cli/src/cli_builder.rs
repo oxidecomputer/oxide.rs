@@ -215,7 +215,27 @@ impl<'a> NewCli<'a> {
         self
     }
 
-    pub async fn run(self) -> Result<()> {
+    fn sort_commands(&mut self) {
+        let subcommands: BTreeMap<_, _> = self
+            .parser
+            .get_subcommands()
+            .map(|subcmd| (subcmd.get_name(), subcmd.clone()))
+            .collect();
+
+        let sorted_subcommands: Vec<_> = subcommands
+            .into_values()
+            .enumerate()
+            .map(|(i, subcmd)| subcmd.display_order(i))
+            .collect();
+
+        for (orig, sorted) in self.parser.get_subcommands_mut().zip(sorted_subcommands) {
+            *orig = sorted;
+        }
+    }
+
+    pub async fn run(mut self) -> Result<()> {
+        self.sort_commands();
+
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
