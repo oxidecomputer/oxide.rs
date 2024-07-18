@@ -5,7 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 use crate::context::Context;
-use crate::RunnableCmd;
+use crate::{println_nopipe, RunnableCmd};
 
 use super::cmd_version::built_info;
 use anyhow::Result;
@@ -97,7 +97,7 @@ impl RunnableCmd for CmdDocs {
         app.build();
         let json_doc = to_json(&app);
         let pretty_json = serde_json::to_string_pretty(&json_doc)?;
-        println!("{}", pretty_json);
+        println_nopipe!("{}", pretty_json);
         Ok(())
     }
 }

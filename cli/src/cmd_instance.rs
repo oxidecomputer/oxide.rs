@@ -14,6 +14,7 @@ use oxide::types::{
 
 use oxide::ClientInstancesExt;
 use oxide::{Client, ClientImagesExt};
+use std::io::{self, Write};
 use std::path::PathBuf;
 
 /// Connect to or retrieve data from the instance's serial console.
@@ -196,7 +197,7 @@ impl CmdInstanceSerialHistory {
         let data = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
 
         if self.json {
-            println!("{}", serde_json::to_string(&data)?);
+            writeln!(io::stdout(), "{}", serde_json::to_string(&data)?)?;
         } else {
             let mut tty = thouart::Console::new_stdio(None).await?;
             tty.write_stdout(&data.data).await?;
