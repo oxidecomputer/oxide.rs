@@ -9,12 +9,14 @@ use std::fs::File;
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
+use indicatif::{ProgressBar, ProgressStyle};
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
     ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
 };
 use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientSessionExt};
+use std::time::Duration;
 use toml_edit::{Item, Table};
 use uuid::Uuid;
 
@@ -428,6 +430,13 @@ pub struct CmdAuthStatus {}
 
 impl CmdAuthStatus {
     pub async fn status(&self, ctx: &Context) -> Result<()> {
+        let spinner = ProgressBar::new_spinner();
+        spinner.set_style(
+            ProgressStyle::default_spinner()
+                .template("{spinner} {msg}")
+                .expect("Failed to set spinner template"),
+        );
+
         // For backward compatibility, we'll check OXIDE_HOST and OXIDE_TOKEN
         // first.
         if let (Ok(host_env), Ok(token_env)) =
@@ -438,7 +447,13 @@ impl CmdAuthStatus {
             )
             .expect("client authentication from host/token failed");
 
-            match client.current_user_view().send().await {
+            spinner.set_message(format!("Checking {}...", host_env));
+            spinner.enable_steady_tick(Duration::from_millis(100));
+
+            let result = client.current_user_view().send().await;
+            spinner.finish();
+
+            match result {
                 Ok(user) => {
                     log::debug!("success response for {} (env): {:?}", host_env, user);
                     println_nopipe!("Logged in to {} as {}", host_env, user.id)
@@ -456,7 +471,14 @@ impl CmdAuthStatus {
                 )
                 .expect("client authentication from host/token failed");
 
-                let status = match client.current_user_view().send().await {
+                spinner.reset();
+                spinner.set_message(format!("Checking {}...", &profile_info.host));
+                spinner.enable_steady_tick(Duration::from_millis(100));
+
+                let result = client.current_user_view().send().await;
+                spinner.finish();
+
+                let status = match result {
                     Ok(v) => {
                         log::debug!("success response for {}: {:?}", profile_info.host, v);
                         "Authenticated".to_string()
