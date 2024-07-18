@@ -598,11 +598,12 @@ impl CommandExt for Command {
                 self.subcommand(
                     Command::new(first.to_owned())
                         .subcommand_required(true)
+                        .display_order(0)
                         .add_subcommand(rest, subcmd),
                 )
             }
         } else {
-            let new_subcmd = subcmd.into().name(path.to_owned());
+            let new_subcmd = subcmd.into().name(path.to_owned()).display_order(0);
             let has_subcommand = self.find_subcommand(path).is_some();
             if has_subcommand {
                 self.mut_subcommand(path, |cmd| {
