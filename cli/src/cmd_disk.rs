@@ -116,41 +116,6 @@ fn get_disk_size(path: &PathBuf, size: Option<u64>) -> Result<u64> {
     Ok(disk_size)
 }
 
-#[test]
-fn test_get_disk_size() {
-    let path = PathBuf::from("not relevant because we're supplying a size");
-
-    // test rounding up
-    assert_eq!(get_disk_size(&path, Some(1)).unwrap(), 1024 * 1024 * 1024,);
-
-    assert_eq!(
-        get_disk_size(&path, Some(1024 * 1024 * 1024 - 1)).unwrap(),
-        1024 * 1024 * 1024,
-    );
-
-    // test even multiples of GB
-    assert_eq!(
-        get_disk_size(&path, Some(1024 * 1024 * 1024)).unwrap(),
-        1024 * 1024 * 1024,
-    );
-
-    assert_eq!(
-        get_disk_size(&path, Some(2 * 1024 * 1024 * 1024)).unwrap(),
-        2 * 1024 * 1024 * 1024,
-    );
-
-    // test non-even multiples of GB
-    assert_eq!(
-        get_disk_size(&path, Some(2 * 1024 * 1024 * 1024 + 1)).unwrap(),
-        3 * 1024 * 1024 * 1024,
-    );
-
-    assert_eq!(
-        get_disk_size(&path, Some(3 * 1024 * 1024 * 1024 - 1)).unwrap(),
-        3 * 1024 * 1024 * 1024,
-    );
-}
-
 fn err_if_object_exists<T>(
     error_msg: String,
     send_response: Result<ResponseValue<T>, oxide::Error<oxide::types::Error>>,
@@ -549,5 +514,45 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         println_nopipe!("done!");
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_disk_size() {
+        let path = PathBuf::from("not relevant because we're supplying a size");
+
+        // test rounding up
+        assert_eq!(get_disk_size(&path, Some(1)).unwrap(), 1024 * 1024 * 1024,);
+
+        assert_eq!(
+            get_disk_size(&path, Some(1024 * 1024 * 1024 - 1)).unwrap(),
+            1024 * 1024 * 1024,
+        );
+
+        // test even multiples of GB
+        assert_eq!(
+            get_disk_size(&path, Some(1024 * 1024 * 1024)).unwrap(),
+            1024 * 1024 * 1024,
+        );
+
+        assert_eq!(
+            get_disk_size(&path, Some(2 * 1024 * 1024 * 1024)).unwrap(),
+            2 * 1024 * 1024 * 1024,
+        );
+
+        // test non-even multiples of GB
+        assert_eq!(
+            get_disk_size(&path, Some(2 * 1024 * 1024 * 1024 + 1)).unwrap(),
+            3 * 1024 * 1024 * 1024,
+        );
+
+        assert_eq!(
+            get_disk_size(&path, Some(3 * 1024 * 1024 * 1024 - 1)).unwrap(),
+            3 * 1024 * 1024 * 1024,
+        );
     }
 }
