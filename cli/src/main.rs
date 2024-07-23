@@ -110,10 +110,7 @@ async fn main() {
             }
         }
 
-        let src = e.source().map(|s| format!(": {s}")).unwrap_or_default();
-        eprintln_nopipe!("{e}{src}");
-
-        eprintln_nopipe!("{e}");
+        eprintln_nopipe!("{e:#}");
         std::process::exit(1)
     }
 }
