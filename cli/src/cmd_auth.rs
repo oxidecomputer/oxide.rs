@@ -325,6 +325,8 @@ impl CmdAuthLogin {
         profile.insert("token", toml_edit::value(token));
         profile.insert("user", toml_edit::value(uid.to_string()));
 
+        std::fs::create_dir_all(ctx.client_config().config_dir())
+            .expect("unable to create config directory");
         std::fs::write(credentials_path, credentials.to_string())
             .expect("unable to write credentials.toml");
 
@@ -408,6 +410,8 @@ impl CmdAuthLogout {
                 let profiles = profiles.as_table_mut().unwrap();
                 profiles.remove(profile_name);
             }
+            std::fs::create_dir_all(ctx.client_config().config_dir())
+                .expect("unable to create config directory");
             std::fs::write(credentials_path, credentials.to_string())
                 .expect("unable to write credentials.toml");
             println!(

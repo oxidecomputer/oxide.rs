@@ -90,6 +90,8 @@ fn test_auth_login_first() {
     let mock = MockOAuth::new(&server);
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
+
+    // Make sure we know how to make non-existent directories.
     let config_dir = temp_dir.join(".config").join("oxide");
 
     let cmd = Command::cargo_bin("oxide")
@@ -116,14 +118,14 @@ fn test_auth_login_first() {
     assert_contents(
         "tests/data/test_auth_login_first_credentials.toml",
         &scrub_server(
-            read_to_string(temp_dir.join("credentials.toml")).unwrap(),
+            read_to_string(config_dir.join("credentials.toml")).unwrap(),
             server.url(""),
         ),
     );
 
     assert_contents(
         "tests/data/test_auth_login_first_config.toml",
-        &read_to_string(temp_dir.join("config.toml")).unwrap(),
+        &read_to_string(config_dir.join("config.toml")).unwrap(),
     );
 }
 
