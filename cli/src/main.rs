@@ -31,6 +31,7 @@ mod cmd_instance;
 mod cmd_net;
 mod cmd_timeseries;
 mod context;
+mod shutdown;
 
 mod cmd_version;
 #[allow(unused_mut)]
