@@ -29,6 +29,6 @@ uuid = { workspace = true }
 tokio = { workspace = true }
 
 [features]
-# TODO disable clap by default:
-default = ["clap"]
+default = []
 clap = ["dep:clap"]
+extras = []

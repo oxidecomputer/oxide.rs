@@ -35,7 +35,7 @@ indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
-oxide = { workspace = true }
+oxide = { workspace = true, features = ["clap"] }
 oxnet = { workspace = true }
 predicates = { workspace = true }
 ratatui = { workspace = true }
