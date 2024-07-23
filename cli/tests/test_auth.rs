@@ -90,12 +90,13 @@ fn test_auth_login_first() {
     let mock = MockOAuth::new(&server);
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let config_dir = temp_dir.join(".config").join("oxide");
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(config_dir.as_os_str())
         .arg("auth")
         .arg("login")
         .arg("--no-browser")
