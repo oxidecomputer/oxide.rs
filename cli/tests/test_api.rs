@@ -10,7 +10,8 @@ use predicates::prelude::*;
 use serde::Serialize;
 use serde_json::json;
 
-/// Validate `oxide api` for a simple GET with parameters.
+/// Validate `oxide api` for a simple GET with parameters embedded in URI
+/// and via the `--raw-field` option.
 #[test]
 fn test_simple_api_call() {
     let server = MockServer::start();
@@ -37,7 +38,23 @@ fn test_simple_api_call() {
         .success()
         .stdout(predicate::str::diff("{\n  \"a\": \"b\"\n}\n"));
 
-    mock.assert();
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("api")
+        .arg("-X")
+        .arg("GET")
+        .arg("/simple/test/call")
+        .arg("--raw-field")
+        .arg("param1=value1")
+        .arg("-f")
+        .arg("param2=value2")
+        .assert()
+        .success()
+        .stdout(predicate::str::diff("{\n  \"a\": \"b\"\n}\n"));
+
+    mock.assert_hits(2);
 }
 
 #[derive(Serialize)]
