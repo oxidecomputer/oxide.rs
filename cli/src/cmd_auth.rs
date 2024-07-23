@@ -285,7 +285,8 @@ impl CmdAuthLogin {
         let uid = user.id;
 
         // Read / modify / write the credentials file.
-        let credentials_path = ctx.client_config().config_dir().join("credentials.toml");
+        let config_dir = ctx.client_config().config_dir();
+        let credentials_path = config_dir.join("credentials.toml");
         let mut credentials =
             if let Ok(contents) = std::fs::read_to_string(credentials_path.clone()) {
                 contents.parse::<toml_edit::DocumentMut>().unwrap()
@@ -325,8 +326,12 @@ impl CmdAuthLogin {
         profile.insert("token", toml_edit::value(token));
         profile.insert("user", toml_edit::value(uid.to_string()));
 
-        std::fs::create_dir_all(ctx.client_config().config_dir())
-            .expect("unable to create config directory");
+        std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
+            panic!(
+                "unable to create config directory '{}'",
+                config_dir.to_string_lossy()
+            )
+        });
         std::fs::write(credentials_path, credentials.to_string())
             .expect("unable to write credentials.toml");
 
@@ -385,7 +390,8 @@ impl CmdAuthLogout {
             return Ok(());
         }
 
-        let credentials_path = ctx.client_config().config_dir().join("credentials.toml");
+        let config_dir = ctx.client_config().config_dir();
+        let credentials_path = config_dir.join("credentials.toml");
 
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.
@@ -410,8 +416,12 @@ impl CmdAuthLogout {
                 let profiles = profiles.as_table_mut().unwrap();
                 profiles.remove(profile_name);
             }
-            std::fs::create_dir_all(ctx.client_config().config_dir())
-                .expect("unable to create config directory");
+            std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
+                panic!(
+                    "unable to create config directory '{}'",
+                    config_dir.to_string_lossy()
+                )
+            });
             std::fs::write(credentials_path, credentials.to_string())
                 .expect("unable to write credentials.toml");
             println!(
