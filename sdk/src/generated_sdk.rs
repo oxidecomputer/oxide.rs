@@ -23258,12 +23258,24 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Measurement units for timeseries samples.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "count",
-    ///    "bytes",
-    ///    "seconds",
-    ///    "nanoseconds"
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "count",
+    ///        "bytes",
+    ///        "seconds",
+    ///        "nanoseconds"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "No meaningful units, e.g. a dimensionless
+    /// quanity.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "none"
+    ///      ]
+    ///    }
     ///  ]
     /// }
     /// ```
@@ -23290,6 +23302,9 @@ pub mod types {
         Seconds,
         #[serde(rename = "nanoseconds")]
         Nanoseconds,
+        /// No meaningful units, e.g. a dimensionless quanity.
+        #[serde(rename = "none")]
+        None,
     }
 
     impl From<&Units> for Units {
@@ -23305,6 +23320,7 @@ pub mod types {
                 Self::Bytes => "bytes".to_string(),
                 Self::Seconds => "seconds".to_string(),
                 Self::Nanoseconds => "nanoseconds".to_string(),
+                Self::None => "none".to_string(),
             }
         }
     }
@@ -23317,6 +23333,7 @@ pub mod types {
                 "bytes" => Ok(Self::Bytes),
                 "seconds" => Ok(Self::Seconds),
                 "nanoseconds" => Ok(Self::Nanoseconds),
+                "none" => Ok(Self::None),
                 _ => Err("invalid value".into()),
             }
         }
