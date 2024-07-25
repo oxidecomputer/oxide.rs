@@ -13507,7 +13507,7 @@ pub mod types {
     }
 
     /// An inclusive-inclusive range of IP ports. The second port may be omitted
-    /// to represent a single port
+    /// to represent a single port.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -13515,7 +13515,7 @@ pub mod types {
     /// {
     ///  "title": "A range of IP ports",
     ///  "description": "An inclusive-inclusive range of IP ports. The second
-    /// port may be omitted to represent a single port",
+    /// port may be omitted to represent a single port.",
     ///  "examples": [
     ///    "22"
     ///  ],
@@ -24521,7 +24521,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "action": {
-    ///      "description": "whether traffic matching the rule should be allowed
+    ///      "description": "Whether traffic matching the rule should be allowed
     /// or dropped",
     ///      "allOf": [
     ///        {
@@ -24534,7 +24534,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "direction": {
-    ///      "description": "whether this rule is for incoming or outgoing
+    ///      "description": "Whether this rule is for incoming or outgoing
     /// traffic",
     ///      "allOf": [
     ///        {
@@ -24543,7 +24543,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "filters": {
-    ///      "description": "reductions on the scope of the rule",
+    ///      "description": "Reductions on the scope of the rule",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
@@ -24566,13 +24566,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "priority": {
-    ///      "description": "the relative priority of this rule",
+    ///      "description": "The relative priority of this rule",
     ///      "type": "integer",
     ///      "format": "uint16",
     ///      "minimum": 0.0
     ///    },
     ///    "status": {
-    ///      "description": "whether this rule is in effect",
+    ///      "description": "Whether this rule is in effect",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
@@ -24580,8 +24580,8 @@ pub mod types {
     ///      ]
     ///    },
     ///    "targets": {
-    ///      "description": "list of sets of instances that the rule applies
-    /// to",
+    ///      "description": "Determine the set of instances that the rule
+    /// applies to",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
@@ -24598,7 +24598,7 @@ pub mod types {
     ///      "format": "date-time"
     ///    },
     ///    "vpc_id": {
-    ///      "description": "the VPC to which this rule belongs",
+    ///      "description": "The VPC to which this rule belongs",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
@@ -24608,29 +24608,29 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRule {
-        /// whether traffic matching the rule should be allowed or dropped
+        /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
         /// human-readable free-form text about a resource
         pub description: String,
-        /// whether this rule is for incoming or outgoing traffic
+        /// Whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
-        /// reductions on the scope of the rule
+        /// Reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// the relative priority of this rule
+        /// The relative priority of this rule
         pub priority: u16,
-        /// whether this rule is in effect
+        /// Whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
-        /// list of sets of instances that the rule applies to
+        /// Determine the set of instances that the rule applies to
         pub targets: Vec<VpcFirewallRuleTarget>,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        /// the VPC to which this rule belongs
+        /// The VPC to which this rule belongs
         pub vpc_id: uuid::Uuid,
     }
 
@@ -24808,40 +24808,47 @@ pub mod types {
         }
     }
 
-    /// Filter for a firewall rule. A given packet must match every field that
-    /// is present for the rule to apply to it. A packet matches a field if any
-    /// entry in that field matches the packet.
+    /// Filters reduce the scope of a firewall rule. Without filters, the rule
+    /// applies to all packets to the targets (or from the targets, if it's an
+    /// outbound rule). With multiple filters, the rule applies only to packets
+    /// matching ALL filters. The maximum number of each type of filter is 256.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Filter for a firewall rule. A given packet must match
-    /// every field that is present for the rule to apply to it. A packet
-    /// matches a field if any entry in that field matches the packet.",
+    ///  "description": "Filters reduce the scope of a firewall rule. Without
+    /// filters, the rule applies to all packets to the targets (or from the
+    /// targets, if it's an outbound rule). With multiple filters, the rule
+    /// applies only to packets matching ALL filters. The maximum number of each
+    /// type of filter is 256.",
     ///  "type": "object",
     ///  "properties": {
     ///    "hosts": {
-    ///      "description": "If present, the sources (if incoming) or
-    /// destinations (if outgoing) this rule applies to.",
+    ///      "description": "If present, host filters match the \"other end\" of
+    /// traffic from the target’s perspective: for an inbound rule, they match
+    /// the source of traffic. For an outbound rule, they match the
+    /// destination.",
     ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleHostFilter"
-    ///      }
+    ///      },
+    ///      "maxItems": 256
     ///    },
     ///    "ports": {
-    ///      "description": "If present, the destination ports this rule applies
-    /// to.",
+    ///      "description": "If present, the destination ports or port ranges
+    /// this rule applies to.",
     ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
     ///      "items": {
     ///        "$ref": "#/components/schemas/L4PortRange"
-    ///      }
+    ///      },
+    ///      "maxItems": 256
     ///    },
     ///    "protocols": {
     ///      "description": "If present, the networking protocols this rule
@@ -24852,7 +24859,8 @@ pub mod types {
     ///      ],
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleProtocol"
-    ///      }
+    ///      },
+    ///      "maxItems": 256
     ///    }
     ///  }
     /// }
@@ -24860,11 +24868,13 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleFilter {
-        /// If present, the sources (if incoming) or destinations (if outgoing)
-        /// this rule applies to.
+        /// If present, host filters match the "other end" of traffic from the
+        /// target’s perspective: for an inbound rule, they match the source of
+        /// traffic. For an outbound rule, they match the destination.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub hosts: Option<Vec<VpcFirewallRuleHostFilter>>,
-        /// If present, the destination ports this rule applies to.
+        /// If present, the destination ports or port ranges this rule applies
+        /// to.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ports: Option<Vec<L4PortRange>>,
         /// If present, the networking protocols this rule applies to.
@@ -25206,15 +25216,21 @@ pub mod types {
         }
     }
 
-    /// A `VpcFirewallRuleTarget` is used to specify the set of `Instance`s to
-    /// which a firewall rule applies.
+    /// A `VpcFirewallRuleTarget` is used to specify the set of instances to
+    /// which a firewall rule applies. You can target instances directly by
+    /// name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply
+    /// the rule to traffic going to all matching instances. Targets are
+    /// additive: the rule applies to instances matching ANY target.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "A `VpcFirewallRuleTarget` is used to specify the set of
-    /// `Instance`s to which a firewall rule applies.",
+    /// instances to which a firewall rule applies. You can target instances
+    /// directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which
+    /// will apply the rule to traffic going to all matching instances. Targets
+    /// are additive: the rule applies to instances matching ANY target.",
     ///  "oneOf": [
     ///    {
     ///      "description": "The rule applies to all instances in the VPC",
@@ -25375,7 +25391,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "action": {
-    ///      "description": "whether traffic matching the rule should be allowed
+    ///      "description": "Whether traffic matching the rule should be allowed
     /// or dropped",
     ///      "allOf": [
     ///        {
@@ -25384,11 +25400,11 @@ pub mod types {
     ///      ]
     ///    },
     ///    "description": {
-    ///      "description": "human-readable free-form text about a resource",
+    ///      "description": "Human-readable free-form text about a resource",
     ///      "type": "string"
     ///    },
     ///    "direction": {
-    ///      "description": "whether this rule is for incoming or outgoing
+    ///      "description": "Whether this rule is for incoming or outgoing
     /// traffic",
     ///      "allOf": [
     ///        {
@@ -25397,7 +25413,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "filters": {
-    ///      "description": "reductions on the scope of the rule",
+    ///      "description": "Reductions on the scope of the rule",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
@@ -25405,7 +25421,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "description": "name of the rule, unique to this VPC",
+    ///      "description": "Name of the rule, unique to this VPC",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -25413,13 +25429,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "priority": {
-    ///      "description": "the relative priority of this rule",
+    ///      "description": "The relative priority of this rule",
     ///      "type": "integer",
     ///      "format": "uint16",
     ///      "minimum": 0.0
     ///    },
     ///    "status": {
-    ///      "description": "whether this rule is in effect",
+    ///      "description": "Whether this rule is in effect",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
@@ -25427,12 +25443,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    "targets": {
-    ///      "description": "list of sets of instances that the rule applies
-    /// to",
+    ///      "description": "Determine the set of instances that the rule
+    /// applies to",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
-    ///      }
+    ///      },
+    ///      "maxItems": 256
     ///    }
     ///  }
     /// }
@@ -25440,21 +25457,21 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleUpdate {
-        /// whether traffic matching the rule should be allowed or dropped
+        /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
-        /// human-readable free-form text about a resource
+        /// Human-readable free-form text about a resource
         pub description: String,
-        /// whether this rule is for incoming or outgoing traffic
+        /// Whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
-        /// reductions on the scope of the rule
+        /// Reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
-        /// name of the rule, unique to this VPC
+        /// Name of the rule, unique to this VPC
         pub name: Name,
-        /// the relative priority of this rule
+        /// The relative priority of this rule
         pub priority: u16,
-        /// whether this rule is in effect
+        /// Whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
-        /// list of sets of instances that the rule applies to
+        /// Determine the set of instances that the rule applies to
         pub targets: Vec<VpcFirewallRuleTarget>,
     }
 
@@ -25470,17 +25487,14 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a `Vpc`'s firewall Note that VpcFirewallRules
-    /// are implicitly created along with a Vpc, so there is no explicit
-    /// creation.
+    /// Updated list of firewall rules. Will replace all existing rules.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Updateable properties of a `Vpc`'s firewall Note that
-    /// VpcFirewallRules are implicitly created along with a Vpc, so there is no
-    /// explicit creation.",
+    ///  "description": "Updated list of firewall rules. Will replace all
+    /// existing rules.",
     ///  "type": "object",
     ///  "required": [
     ///    "rules"
@@ -25490,7 +25504,8 @@ pub mod types {
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleUpdate"
-    ///      }
+    ///      },
+    ///      "maxItems": 1024
     ///    }
     ///  }
     /// }
@@ -49380,6 +49395,17 @@ pub trait ClientVpcsExt {
     /// ```
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
     /// Replace firewall rules
+    ///
+    /// The maximum number of rules per VPC is 1024.
+    /// Targets are used to specify the set of instances to which a firewall
+    /// rule applies. You can target instances directly by name, or specify a
+    /// VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic
+    /// going to all matching instances. Targets are additive: the rule applies
+    /// to instances matching ANY target. The maximum number of targets is 256.
+    /// Filters reduce the scope of a firewall rule. Without filters, the rule
+    /// applies to all packets to the targets (or from the targets, if it's an
+    /// outbound rule). With multiple filters, the rule applies only to packets
+    /// matching ALL filters. The maximum number of each type of filter is 256.
     ///
     /// Sends a `PUT` request to `/v1/vpc-firewall-rules`
     ///
