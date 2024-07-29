@@ -49397,11 +49397,13 @@ pub trait ClientVpcsExt {
     /// Replace firewall rules
     ///
     /// The maximum number of rules per VPC is 1024.
+    ///
     /// Targets are used to specify the set of instances to which a firewall
     /// rule applies. You can target instances directly by name, or specify a
     /// VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic
     /// going to all matching instances. Targets are additive: the rule applies
     /// to instances matching ANY target. The maximum number of targets is 256.
+    ///
     /// Filters reduce the scope of a firewall rule. Without filters, the rule
     /// applies to all packets to the targets (or from the targets, if it's an
     /// outbound rule). With multiple filters, the rule applies only to packets
