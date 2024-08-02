@@ -9,6 +9,7 @@ use async_trait::async_trait;
 use clap::Parser;
 use oxide::Client;
 
+use crate::println_nopipe;
 use crate::{context::Context, RunnableCmd};
 
 pub mod built_info {
@@ -27,9 +28,9 @@ impl RunnableCmd for CmdVersion {
         let cli_version = built_info::PKG_VERSION;
         let api_version = Client::new("").api_version();
 
-        println!("Oxide CLI {}", cli_version);
+        println_nopipe!("Oxide CLI {}", cli_version);
 
-        println!(
+        println_nopipe!(
             "Built from commit: {} {}",
             built_info::GIT_COMMIT_HASH.unwrap(),
             if matches!(built_info::GIT_DIRTY, Some(true)) {
@@ -39,7 +40,7 @@ impl RunnableCmd for CmdVersion {
             }
         );
 
-        println!("Oxide API: {}", api_version);
+        println_nopipe!("Oxide API: {}", api_version);
 
         Ok(())
     }
