@@ -52,7 +52,7 @@ serde_json = "1.0.120"
 similar = "2.6.0"
 tabwriter = "1.4.0"
 thiserror = { version = "1", default-features = false }
-tempfile = "3.10.1"
+tempfile = "3.11.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.38.0", features = ["full"] }
