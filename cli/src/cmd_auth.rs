@@ -5,6 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 use std::fs::File;
+use std::io::{self, Write};
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -237,12 +238,16 @@ impl CmdAuthLogin {
         };
 
         if opened {
-            println!("Opened this URL in your browser:\n  {}", uri);
+            writeln!(io::stdout(), "Opened this URL in your browser:\n  {}", uri)?;
         } else {
-            println!("Open this URL in your browser:\n  {}", uri);
+            writeln!(io::stdout(), "Open this URL in your browser:\n  {}", uri)?;
         }
 
-        println!("\nEnter the code: {}\n", details.user_code().secret());
+        writeln!(
+            io::stdout(),
+            "\nEnter the code: {}\n",
+            details.user_code().secret()
+        )?;
 
         let token = auth_client
             .exchange_device_access_token(&details)
@@ -357,13 +362,17 @@ impl CmdAuthLogin {
             silo_name,
         } = &user;
 
-        println!("Login successful");
-        println!("  silo: {} ({})", **silo_name, silo_id);
-        println!("  user: {} ({})", display_name, id);
+        writeln!(io::stdout(), "Login successful")?;
+        writeln!(io::stdout(), "  silo: {} ({})", **silo_name, silo_id)?;
+        writeln!(io::stdout(), "  user: {} ({})", display_name, id)?;
         if ctx.config_file().basics.default_profile.is_none() {
-            println!("Profile '{}' set as the default", profile_name);
+            writeln!(
+                io::stdout(),
+                "Profile '{}' set as the default",
+                profile_name
+            )?;
         } else {
-            println!("Use --profile '{}'", profile_name);
+            writeln!(io::stdout(), "Use --profile '{}'", profile_name)?;
         }
 
         Ok(())
@@ -396,7 +405,7 @@ impl CmdAuthLogout {
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.
             let _ = File::create(credentials_path)?;
-            println!("Removed all authentication information");
+            writeln!(io::stdout(), "Removed all authentication information")?;
         } else {
             let profile = ctx
                 .client_config()
@@ -424,10 +433,11 @@ impl CmdAuthLogout {
             });
             std::fs::write(credentials_path, credentials.to_string())
                 .expect("unable to write credentials.toml");
-            println!(
+            writeln!(
+                io::stdout(),
                 "Removed authentication information for profile \"{}\"",
                 profile_name,
-            );
+            )?;
         }
 
         Ok(())

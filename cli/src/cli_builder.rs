@@ -27,7 +27,7 @@ struct OxideCli {
     pub debug: bool,
 
     /// Configuration profile to use for commands
-    #[clap(long)]
+    #[clap(long, global = true)]
     pub profile: Option<String>,
 
     /// Directory to use for configuration
