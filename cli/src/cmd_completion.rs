@@ -27,26 +27,20 @@ use std::io;
 ///
 /// ### Zsh
 ///
-/// Generate an `_oxide` completion script and put it somewhere in your
-/// `$fpath`, for example:
-///
-/// ```sh
-/// oxide completion -s zsh > ~/.zfunc/_oxide
-/// ```
-///
-/// and check that you have the following lines in your `~/.zshrc`:
+/// Add this to your `~/.zshrc`:
 ///
 /// ```sh
 /// autoload -U compinit
 /// compinit -i
+/// eval "$(oxide completion -s zsh)"
 /// ```
 ///
 /// ### Fish
 ///
-/// Generate an `oxide.fish` completion script:
+/// Add the following to the `is-interactive` block in your `~/.config/fish/config.fish`:
 ///
 /// ```sh
-/// oxide completion -s fish > ~/.config/fish/completions/oxide.fish
+/// oxide completion -s fish | source
 /// ```
 ///
 /// ### PowerShell
@@ -66,17 +60,10 @@ use std::io;
 ///
 /// ### Elvish
 ///
-/// Generate an `oxide.elv` completion script and put it in a module search
-/// directory, for example:
+/// Add this to your `~/.config/elvish/rc.elv`
 ///
 /// ```sh
-/// oxide completion -s elvish > ~/.local/share/elvish/lib/oxide.elv
-/// ```
-///
-/// and import this by adding the following to `~/.config/elvish/rc.elv`
-///
-/// ```
-/// use oxide
+/// eval (oxide completion -s elvish | slurp)
 /// ```
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
