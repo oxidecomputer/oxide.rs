@@ -94,7 +94,8 @@
             {
               "long": "host",
               "short": "H",
-              "help": "The host of the Oxide instance to authenticate with. This assumes https; specify an `http://` prefix if needed"
+              "help": "The host of the Oxide instance to authenticate with. This assumes https; specify an `http://` prefix if needed",
+              "required": true
             },
             {
               "long": "no-browser",
@@ -171,7 +172,8 @@
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "required": true
             }
           ]
         },
@@ -200,7 +202,8 @@
           "long_about": "Returns the details of a specific certificate",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "required": true
             }
           ]
         }
@@ -221,7 +224,8 @@
             "powershell",
             "zsh"
           ],
-          "help": "Shell type"
+          "help": "Shell type",
+          "required": true
         }
       ]
     },
@@ -279,7 +283,8 @@
               "args": [
                 {
                   "long": "ssh-key",
-                  "help": "Name or ID of the SSH key"
+                  "help": "Name or ID of the SSH key",
+                  "required": true
                 }
               ]
             },
@@ -309,7 +314,8 @@
               "args": [
                 {
                   "long": "ssh-key",
-                  "help": "Name or ID of the SSH key"
+                  "help": "Name or ID of the SSH key",
+                  "required": true
                 }
               ]
             }
@@ -333,7 +339,8 @@
             },
             {
               "long": "json-body",
-              "help": "Path to a file that contains the full json body."
+              "help": "Path to a file that contains the full json body.",
+              "required": true
             },
             {
               "long": "json-body-template",
@@ -344,7 +351,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "size",
@@ -358,7 +366,8 @@
           "args": [
             {
               "long": "disk",
-              "help": "Name or ID of the disk"
+              "help": "Name or ID of the disk",
+              "required": true
             },
             {
               "long": "project",
@@ -372,11 +381,13 @@
           "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.\n\nThe start, write, stop, and finalize subcommands can be used for lower-\nlevel operations.",
           "args": [
             {
-              "long": "description"
+              "long": "description",
+              "required": true
             },
             {
               "long": "disk",
-              "help": "The name of the disk to create"
+              "help": "The name of the disk to create",
+              "required": true
             },
             {
               "long": "disk-block-size",
@@ -409,11 +420,13 @@
             },
             {
               "long": "path",
-              "help": "Path to the file to import"
+              "help": "Path to the file to import",
+              "required": true
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "snapshot",
@@ -427,7 +440,8 @@
               "args": [
                 {
                   "long": "disk",
-                  "help": "Name or ID of the disk"
+                  "help": "Name or ID of the disk",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -454,7 +468,8 @@
               "args": [
                 {
                   "long": "disk",
-                  "help": "Name or ID of the disk"
+                  "help": "Name or ID of the disk",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -469,7 +484,8 @@
               "args": [
                 {
                   "long": "disk",
-                  "help": "Name or ID of the disk"
+                  "help": "Name or ID of the disk",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -486,7 +502,8 @@
                 },
                 {
                   "long": "disk",
-                  "help": "Name or ID of the disk"
+                  "help": "Name or ID of the disk",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -517,7 +534,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "sort-by",
@@ -537,11 +555,13 @@
               "about": "Fetch disk metrics",
               "args": [
                 {
-                  "long": "disk"
+                  "long": "disk",
+                  "required": true
                 },
                 {
                   "long": "end-time",
-                  "help": "An exclusive end time of metrics."
+                  "help": "An exclusive end time of metrics.",
+                  "required": true
                 },
                 {
                   "long": "limit",
@@ -556,7 +576,8 @@
                     "read_bytes",
                     "write",
                     "write_bytes"
-                  ]
+                  ],
+                  "required": true
                 },
                 {
                   "long": "order",
@@ -572,7 +593,8 @@
                 },
                 {
                   "long": "start-time",
-                  "help": "An inclusive start time of metrics."
+                  "help": "An inclusive start time of metrics.",
+                  "required": true
                 }
               ]
             }
@@ -584,7 +606,8 @@
           "args": [
             {
               "long": "disk",
-              "help": "Name or ID of the disk"
+              "help": "Name or ID of the disk",
+              "required": true
             },
             {
               "long": "project",
@@ -627,7 +650,8 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 },
                 {
                   "long": "sled"
@@ -640,11 +664,13 @@
               "args": [
                 {
                   "long": "probe",
-                  "help": "Name or ID of the probe"
+                  "help": "Name or ID of the probe",
+                  "required": true
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 }
               ]
             },
@@ -658,7 +684,8 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 },
                 {
                   "long": "sort-by",
@@ -676,11 +703,13 @@
               "args": [
                 {
                   "long": "probe",
-                  "help": "Name or ID of the probe"
+                  "help": "Name or ID of the probe",
+                  "required": true
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 }
               ]
             }
@@ -748,7 +777,8 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the floating IP"
+              "help": "Name or ID of the floating IP",
+              "required": true
             },
             {
               "long": "json-body",
@@ -803,7 +833,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -813,7 +844,8 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the floating IP"
+              "help": "Name or ID of the floating IP",
+              "required": true
             },
             {
               "long": "project",
@@ -827,7 +859,8 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the floating IP"
+              "help": "Name or ID of the floating IP",
+              "required": true
             },
             {
               "long": "project",
@@ -845,7 +878,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "sort-by",
@@ -866,7 +900,8 @@
             },
             {
               "long": "floating-ip",
-              "help": "Name or ID of the floating IP"
+              "help": "Name or ID of the floating IP",
+              "required": true
             },
             {
               "long": "json-body",
@@ -891,7 +926,8 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the floating IP"
+              "help": "Name or ID of the floating IP",
+              "required": true
             },
             {
               "long": "project",
@@ -935,7 +971,8 @@
             },
             {
               "long": "json-body",
-              "help": "Path to a file that contains the full json body."
+              "help": "Path to a file that contains the full json body.",
+              "required": true
             },
             {
               "long": "json-body-template",
@@ -965,7 +1002,8 @@
           "args": [
             {
               "long": "image",
-              "help": "Name or ID of the image"
+              "help": "Name or ID of the image",
+              "required": true
             },
             {
               "long": "project",
@@ -980,11 +1018,13 @@
           "args": [
             {
               "long": "image",
-              "help": "Name or ID of the image"
+              "help": "Name or ID of the image",
+              "required": true
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -1018,7 +1058,8 @@
           "args": [
             {
               "long": "image",
-              "help": "Name or ID of the image"
+              "help": "Name or ID of the image",
+              "required": true
             },
             {
               "long": "project",
@@ -1033,7 +1074,8 @@
           "args": [
             {
               "long": "image",
-              "help": "Name or ID of the image"
+              "help": "Name or ID of the image",
+              "required": true
             },
             {
               "long": "project",
@@ -1075,7 +1117,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "start",
@@ -1097,7 +1140,8 @@
           "args": [
             {
               "long": "instance",
-              "help": "Name or ID of the instance"
+              "help": "Name or ID of the instance",
+              "required": true
             },
             {
               "long": "project",
@@ -1118,7 +1162,8 @@
                 },
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1144,7 +1189,8 @@
                 },
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1166,7 +1212,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "limit",
@@ -1197,7 +1244,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1223,7 +1271,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -1237,7 +1286,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -1253,35 +1303,43 @@
           "args": [
             {
               "long": "description",
-              "help": "Description of the instance to create"
+              "help": "Description of the instance to create",
+              "required": true
             },
             {
               "long": "hostname",
-              "help": "Hostname of the instance to create"
+              "help": "Hostname of the instance to create",
+              "required": true
             },
             {
               "long": "image",
-              "help": "Source image"
+              "help": "Source image",
+              "required": true
             },
             {
               "long": "memory",
-              "help": "Instance memory e.g 32M. Suffix can be k,m,g,t"
+              "help": "Instance memory e.g 32M. Suffix can be k,m,g,t",
+              "required": true
             },
             {
               "long": "name",
-              "help": "Name of the instance to create"
+              "help": "Name of the instance to create",
+              "required": true
             },
             {
               "long": "ncpus",
-              "help": "Instance CPU count"
+              "help": "Instance CPU count",
+              "required": true
             },
             {
               "long": "project",
-              "help": "Project for image and instance"
+              "help": "Project for image and instance",
+              "required": true
             },
             {
               "long": "size",
-              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t"
+              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t",
+              "required": true
             },
             {
               "long": "start",
@@ -1299,7 +1357,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "sort-by",
@@ -1323,7 +1382,8 @@
                 },
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "ip",
@@ -1365,7 +1425,8 @@
                 },
                 {
                   "long": "interface",
-                  "help": "Name or ID of the network interface"
+                  "help": "Name or ID of the network interface",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -1379,7 +1440,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "limit",
@@ -1412,7 +1474,8 @@
                 },
                 {
                   "long": "interface",
-                  "help": "Name or ID of the network interface"
+                  "help": "Name or ID of the network interface",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1449,7 +1512,8 @@
                 },
                 {
                   "long": "interface",
-                  "help": "Name or ID of the network interface"
+                  "help": "Name or ID of the network interface",
+                  "required": true
                 },
                 {
                   "long": "project",
@@ -1465,7 +1529,8 @@
           "args": [
             {
               "long": "instance",
-              "help": "Name or ID of the instance"
+              "help": "Name or ID of the instance",
+              "required": true
             },
             {
               "long": "project",
@@ -1494,7 +1559,8 @@
                 {
                   "long": "instance",
                   "short": "i",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "most-recent",
@@ -1526,7 +1592,8 @@
                 {
                   "long": "instance",
                   "short": "i",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "json",
@@ -1557,7 +1624,8 @@
               "args": [
                 {
                   "long": "instance",
-                  "help": "Name or ID of the instance"
+                  "help": "Name or ID of the instance",
+                  "required": true
                 },
                 {
                   "long": "limit",
@@ -1585,7 +1653,8 @@
           "args": [
             {
               "long": "instance",
-              "help": "Name or ID of the instance"
+              "help": "Name or ID of the instance",
+              "required": true
             },
             {
               "long": "project",
@@ -1599,7 +1668,8 @@
           "args": [
             {
               "long": "instance",
-              "help": "Name or ID of the instance"
+              "help": "Name or ID of the instance",
+              "required": true
             },
             {
               "long": "project",
@@ -1613,7 +1683,8 @@
           "args": [
             {
               "long": "instance",
-              "help": "Name or ID of the instance"
+              "help": "Name or ID of the instance",
+              "required": true
             },
             {
               "long": "project",
@@ -1652,7 +1723,8 @@
           "args": [
             {
               "long": "pool",
-              "help": "Name or ID of the IP pool"
+              "help": "Name or ID of the IP pool",
+              "required": true
             }
           ]
         },
@@ -1683,7 +1755,8 @@
               "long_about": "IPv6 ranges are not allowed yet.",
               "args": [
                 {
-                  "long": "first"
+                  "long": "first",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1694,11 +1767,13 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "last"
+                  "long": "last",
+                  "required": true
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 }
               ]
             },
@@ -1713,7 +1788,8 @@
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 }
               ]
             },
@@ -1722,7 +1798,8 @@
               "about": "Remove range from IP pool",
               "args": [
                 {
-                  "long": "first"
+                  "long": "first",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1733,11 +1810,13 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "last"
+                  "long": "last",
+                  "required": true
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 }
               ]
             }
@@ -1755,7 +1834,8 @@
                   "long_about": "IPv6 ranges are not allowed yet.",
                   "args": [
                     {
-                      "long": "first"
+                      "long": "first",
+                      "required": true
                     },
                     {
                       "long": "json-body",
@@ -1766,7 +1846,8 @@
                       "help": "XXX"
                     },
                     {
-                      "long": "last"
+                      "long": "last",
+                      "required": true
                     }
                   ]
                 },
@@ -1788,7 +1869,8 @@
               "about": "Remove IP range from Oxide service pool",
               "args": [
                 {
-                  "long": "first"
+                  "long": "first",
+                  "required": true
                 },
                 {
                   "long": "json-body",
@@ -1799,7 +1881,8 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "last"
+                  "long": "last",
+                  "required": true
                 }
               ]
             },
@@ -1835,7 +1918,8 @@
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 },
                 {
                   "long": "silo"
@@ -1852,7 +1936,8 @@
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 },
                 {
                   "long": "sort-by",
@@ -1868,10 +1953,12 @@
               "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
               "args": [
                 {
-                  "long": "pool"
+                  "long": "pool",
+                  "required": true
                 },
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "required": true
                 }
               ]
             },
@@ -1897,10 +1984,12 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "pool"
+                  "long": "pool",
+                  "required": true
                 },
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "required": true
                 }
               ]
             }
@@ -1926,7 +2015,8 @@
             },
             {
               "long": "pool",
-              "help": "Name or ID of the IP pool"
+              "help": "Name or ID of the IP pool",
+              "required": true
             }
           ]
         },
@@ -1936,7 +2026,8 @@
           "args": [
             {
               "long": "pool",
-              "help": "Name or ID of the IP pool"
+              "help": "Name or ID of the IP pool",
+              "required": true
             }
           ]
         },
@@ -1946,7 +2037,8 @@
           "args": [
             {
               "long": "pool",
-              "help": "Name or ID of the IP pool"
+              "help": "Name or ID of the IP pool",
+              "required": true
             }
           ]
         }
@@ -1966,7 +2058,8 @@
           "args": [
             {
               "long": "json-body",
-              "help": "Path to a file that contains the full json body."
+              "help": "Path to a file that contains the full json body.",
+              "required": true
             },
             {
               "long": "json-body-template",
@@ -2009,7 +2102,8 @@
           "args": [
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -2040,7 +2134,8 @@
               "args": [
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool"
+                  "help": "Name or ID of the IP pool",
+                  "required": true
                 }
               ]
             }
@@ -2073,7 +2168,8 @@
               "args": [
                 {
                   "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
+                  "help": "Path to a file that contains the full json body.",
+                  "required": true
                 },
                 {
                   "long": "json-body-template",
@@ -2081,7 +2177,8 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 }
               ]
             },
@@ -2091,7 +2188,8 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project",
+                  "required": true
                 }
               ]
             }
@@ -2117,7 +2215,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -2127,7 +2226,8 @@
           "args": [
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         }
@@ -2163,7 +2263,8 @@
             },
             {
               "long": "json-body",
-              "help": "Path to a file that contains the full json body."
+              "help": "Path to a file that contains the full json body.",
+              "required": true
             },
             {
               "long": "json-body-template",
@@ -2181,7 +2282,8 @@
           "args": [
             {
               "long": "silo",
-              "help": "Name or ID of the silo"
+              "help": "Name or ID of the silo",
+              "required": true
             }
           ]
         },
@@ -2198,7 +2300,8 @@
                 },
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 },
                 {
                   "long": "sort-by",
@@ -2227,7 +2330,8 @@
                         },
                         {
                           "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
+                          "help": "Path to a file that contains the full json body.",
+                          "required": true
                         },
                         {
                           "long": "json-body-template",
@@ -2235,7 +2339,8 @@
                         },
                         {
                           "long": "silo",
-                          "help": "Name or ID of the silo"
+                          "help": "Name or ID of the silo",
+                          "required": true
                         }
                       ]
                     },
@@ -2245,11 +2350,13 @@
                       "args": [
                         {
                           "long": "silo",
-                          "help": "Name or ID of the silo"
+                          "help": "Name or ID of the silo",
+                          "required": true
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal id",
+                          "required": true
                         }
                       ]
                     },
@@ -2260,7 +2367,8 @@
                       "args": [
                         {
                           "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
+                          "help": "Path to a file that contains the full json body.",
+                          "required": true
                         },
                         {
                           "long": "json-body-template",
@@ -2268,11 +2376,13 @@
                         },
                         {
                           "long": "silo",
-                          "help": "Name or ID of the silo"
+                          "help": "Name or ID of the silo",
+                          "required": true
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal id",
+                          "required": true
                         }
                       ]
                     }
@@ -2321,7 +2431,8 @@
                     },
                     {
                       "long": "silo",
-                      "help": "Name or ID of the silo"
+                      "help": "Name or ID of the silo",
+                      "required": true
                     },
                     {
                       "long": "slo-url",
@@ -2343,11 +2454,13 @@
                   "args": [
                     {
                       "long": "provider",
-                      "help": "Name or ID of the SAML identity provider"
+                      "help": "Name or ID of the SAML identity provider",
+                      "required": true
                     },
                     {
                       "long": "silo",
-                      "help": "Name or ID of the silo"
+                      "help": "Name or ID of the silo",
+                      "required": true
                     }
                   ]
                 }
@@ -2369,7 +2482,8 @@
                 },
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 },
                 {
                   "long": "sort-by",
@@ -2411,7 +2525,8 @@
               "args": [
                 {
                   "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
+                  "help": "Path to a file that contains the full json body.",
+                  "required": true
                 },
                 {
                   "long": "json-body-template",
@@ -2419,7 +2534,8 @@
                 },
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 }
               ]
             },
@@ -2429,7 +2545,8 @@
               "args": [
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 }
               ]
             }
@@ -2477,7 +2594,8 @@
                 },
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 },
                 {
                   "long": "storage",
@@ -2491,7 +2609,8 @@
               "args": [
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 }
               ]
             }
@@ -2510,7 +2629,8 @@
                 },
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 },
                 {
                   "long": "sort-by",
@@ -2526,11 +2646,13 @@
               "args": [
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 },
                 {
                   "long": "user-id",
-                  "help": "The user's internal id"
+                  "help": "The user's internal id",
+                  "required": true
                 }
               ]
             }
@@ -2563,7 +2685,8 @@
               "args": [
                 {
                   "long": "silo",
-                  "help": "Name or ID of the silo"
+                  "help": "Name or ID of the silo",
+                  "required": true
                 }
               ]
             }
@@ -2576,7 +2699,8 @@
           "args": [
             {
               "long": "silo",
-              "help": "Name or ID of the silo"
+              "help": "Name or ID of the silo",
+              "required": true
             }
           ]
         }
@@ -2610,7 +2734,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -2624,7 +2749,8 @@
             },
             {
               "long": "snapshot",
-              "help": "Name or ID of the snapshot"
+              "help": "Name or ID of the snapshot",
+              "required": true
             }
           ]
         },
@@ -2638,7 +2764,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "sort-by",
@@ -2660,7 +2787,8 @@
             },
             {
               "long": "snapshot",
-              "help": "Name or ID of the snapshot"
+              "help": "Name or ID of the snapshot",
+              "required": true
             }
           ]
         }
@@ -2697,7 +2825,8 @@
                   "args": [
                     {
                       "long": "disk-id",
-                      "help": "ID of the physical disk"
+                      "help": "ID of the physical disk",
+                      "required": true
                     }
                   ]
                 }
@@ -2728,7 +2857,8 @@
                   "args": [
                     {
                       "long": "rack-id",
-                      "help": "The rack's unique ID."
+                      "help": "The rack's unique ID.",
+                      "required": true
                     }
                   ]
                 }
@@ -2767,7 +2897,8 @@
                     },
                     {
                       "long": "sled-id",
-                      "help": "ID of the sled"
+                      "help": "ID of the sled",
+                      "required": true
                     },
                     {
                       "long": "sort-by",
@@ -2787,7 +2918,8 @@
                     },
                     {
                       "long": "sled-id",
-                      "help": "ID of the sled"
+                      "help": "ID of the sled",
+                      "required": true
                     },
                     {
                       "long": "sort-by",
@@ -2837,7 +2969,8 @@
                     },
                     {
                       "long": "sled-id",
-                      "help": "ID of the sled"
+                      "help": "ID of the sled",
+                      "required": true
                     },
                     {
                       "long": "state",
@@ -2855,7 +2988,8 @@
                   "args": [
                     {
                       "long": "sled-id",
-                      "help": "ID of the sled"
+                      "help": "ID of the sled",
+                      "required": true
                     }
                   ]
                 }
@@ -2886,7 +3020,8 @@
                   "args": [
                     {
                       "long": "switch-id",
-                      "help": "ID of the switch"
+                      "help": "ID of the switch",
+                      "required": true
                     }
                   ]
                 }
@@ -2909,7 +3044,8 @@
                     },
                     {
                       "long": "port",
-                      "help": "A name to use when selecting switch ports."
+                      "help": "A name to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "port-settings",
@@ -2917,11 +3053,13 @@
                     },
                     {
                       "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
+                      "help": "A rack id to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "help": "A switch location to use when selecting switch ports.",
+                      "required": true
                     }
                   ]
                 },
@@ -2931,15 +3069,18 @@
                   "args": [
                     {
                       "long": "port",
-                      "help": "A name to use when selecting switch ports."
+                      "help": "A name to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
+                      "help": "A rack id to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "help": "A switch location to use when selecting switch ports.",
+                      "required": true
                     }
                   ]
                 },
@@ -2973,15 +3114,18 @@
                   "args": [
                     {
                       "long": "port",
-                      "help": "A name to use when selecting switch ports."
+                      "help": "A name to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
+                      "help": "A rack id to use when selecting switch ports.",
+                      "required": true
                     },
                     {
                       "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "help": "A switch location to use when selecting switch ports.",
+                      "required": true
                     }
                   ]
                 }
@@ -3002,11 +3146,13 @@
                   "args": [
                     {
                       "long": "addr",
-                      "help": "Address to add"
+                      "help": "Address to add",
+                      "required": true
                     },
                     {
                       "long": "lot",
-                      "help": "Address lot to allocate from"
+                      "help": "Address lot to allocate from",
+                      "required": true
                     },
                     {
                       "long": "port",
@@ -3044,11 +3190,13 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the port to",
+                      "required": true
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the address to"
+                      "help": "Id of the rack to add the address to",
+                      "required": true
                     },
                     {
                       "long": "switch",
@@ -3056,7 +3204,8 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the address to"
+                      "help": "Switch to add the address to",
+                      "required": true
                     },
                     {
                       "long": "vlan",
@@ -3070,7 +3219,8 @@
                   "args": [
                     {
                       "long": "addr",
-                      "help": "Address to remove"
+                      "help": "Address to remove",
+                      "required": true
                     },
                     {
                       "long": "port",
@@ -3108,11 +3258,13 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to remove the address from"
+                      "help": "Port to remove the address from",
+                      "required": true
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to remove the address from"
+                      "help": "Id of the rack to remove the address from",
+                      "required": true
                     },
                     {
                       "long": "switch",
@@ -3120,7 +3272,8 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to remove the address from"
+                      "help": "Switch to remove the address from",
+                      "required": true
                     }
                   ]
                 }
@@ -3138,7 +3291,8 @@
                       "args": [
                         {
                           "long": "address-lot",
-                          "help": "Name or ID of the address lot"
+                          "help": "Name or ID of the address lot",
+                          "required": true
                         },
                         {
                           "long": "limit",
@@ -3163,7 +3317,8 @@
                     },
                     {
                       "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "help": "Path to a file that contains the full json body.",
+                      "required": true
                     },
                     {
                       "long": "json-body-template",
@@ -3188,7 +3343,8 @@
                   "args": [
                     {
                       "long": "address-lot",
-                      "help": "Name or ID of the address lot"
+                      "help": "Name or ID of the address lot",
+                      "required": true
                     }
                   ]
                 },
@@ -3324,18 +3480,21 @@
                   "args": [
                     {
                       "long": "address-lot",
-                      "help": "The address lot to draw from"
+                      "help": "The address lot to draw from",
+                      "required": true
                     },
                     {
                       "long": "announce-set",
-                      "help": "The announce set to announce from"
+                      "help": "The announce set to announce from",
+                      "required": true
                     },
                     {
                       "long": "description"
                     },
                     {
                       "long": "prefix",
-                      "help": "The prefix to announce"
+                      "help": "The prefix to announce",
+                      "required": true
                     }
                   ]
                 },
@@ -3348,7 +3507,8 @@
                       "args": [
                         {
                           "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "help": "A name or id to use when selecting BGP port settings",
+                          "required": true
                         }
                       ]
                     },
@@ -3358,7 +3518,8 @@
                       "args": [
                         {
                           "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "help": "A name or id to use when selecting BGP port settings",
+                          "required": true
                         }
                       ]
                     },
@@ -3372,7 +3533,8 @@
                         },
                         {
                           "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
+                          "help": "Path to a file that contains the full json body.",
+                          "required": true
                         },
                         {
                           "long": "json-body-template",
@@ -3425,7 +3587,8 @@
                       "args": [
                         {
                           "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP config."
+                          "help": "A name or id to use when selecting BGP config.",
+                          "required": true
                         }
                       ]
                     },
@@ -3468,7 +3631,8 @@
                         "import",
                         "export"
                       ],
-                      "help": "Whether to apply the filter to imported or exported prefixes"
+                      "help": "Whether to apply the filter to imported or exported prefixes",
+                      "required": true
                     },
                     {
                       "long": "no-filtering",
@@ -3476,7 +3640,8 @@
                     },
                     {
                       "long": "peer",
-                      "help": "Peer to apply allow list to"
+                      "help": "Peer to apply allow list to",
+                      "required": true
                     },
                     {
                       "long": "port",
@@ -3514,11 +3679,13 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the port to",
+                      "required": true
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the address to"
+                      "help": "Id of the rack to add the address to",
+                      "required": true
                     },
                     {
                       "long": "switch",
@@ -3526,7 +3693,8 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the address to"
+                      "help": "Switch to add the address to",
+                      "required": true
                     }
                   ]
                 },
@@ -3536,7 +3704,8 @@
                   "args": [
                     {
                       "long": "asn",
-                      "help": "The ASN to filter on. Required."
+                      "help": "The ASN to filter on. Required.",
+                      "required": true
                     }
                   ]
                 },
@@ -3549,7 +3718,8 @@
                       "args": [
                         {
                           "long": "asn",
-                          "help": "The ASN to filter on. Required."
+                          "help": "The ASN to filter on. Required.",
+                          "required": true
                         }
                       ]
                     }
@@ -3566,7 +3736,8 @@
                       "args": [
                         {
                           "long": "addr",
-                          "help": "Address of the peer to add"
+                          "help": "Address of the peer to add",
+                          "required": true
                         },
                         {
                           "long": "allowed-exports",
@@ -3578,7 +3749,8 @@
                         },
                         {
                           "long": "bgp-config",
-                          "help": "BGP configuration this peer is associated with"
+                          "help": "BGP configuration this peer is associated with",
+                          "required": true
                         },
                         {
                           "long": "communities",
@@ -3660,11 +3832,13 @@
                             "qsfp30",
                             "qsfp31"
                           ],
-                          "help": "Port to add the peer to"
+                          "help": "Port to add the peer to",
+                          "required": true
                         },
                         {
                           "long": "rack",
-                          "help": "Id of the rack to add the peer to"
+                          "help": "Id of the rack to add the peer to",
+                          "required": true
                         },
                         {
                           "long": "remote-asn",
@@ -3676,7 +3850,8 @@
                             "switch0",
                             "switch1"
                           ],
-                          "help": "Switch to add the peer to"
+                          "help": "Switch to add the peer to",
+                          "required": true
                         },
                         {
                           "long": "vlan-id",
@@ -3690,7 +3865,8 @@
                       "args": [
                         {
                           "long": "addr",
-                          "help": "Address of the peer to remove"
+                          "help": "Address of the peer to remove",
+                          "required": true
                         },
                         {
                           "long": "port",
@@ -3728,11 +3904,13 @@
                             "qsfp30",
                             "qsfp31"
                           ],
-                          "help": "Port to remove the peer from"
+                          "help": "Port to remove the peer from",
+                          "required": true
                         },
                         {
                           "long": "rack",
-                          "help": "Id of the rack to remove the peer from"
+                          "help": "Id of the rack to remove the peer from",
+                          "required": true
                         },
                         {
                           "long": "switch",
@@ -3740,7 +3918,8 @@
                             "switch0",
                             "switch1"
                           ],
-                          "help": "Switch to remove the peer from"
+                          "help": "Switch to remove the peer from",
+                          "required": true
                         }
                       ]
                     }
@@ -3762,11 +3941,13 @@
                   "args": [
                     {
                       "long": "announce-set",
-                      "help": "The announce set to withdraw from"
+                      "help": "The announce set to withdraw from",
+                      "required": true
                     },
                     {
                       "long": "prefix",
-                      "help": "The prefix to withdraw"
+                      "help": "The prefix to withdraw",
+                      "required": true
                     }
                   ]
                 }
@@ -3787,7 +3968,8 @@
                     },
                     {
                       "long": "fec",
-                      "help": "The forward error correction mode of the link"
+                      "help": "The forward error correction mode of the link",
+                      "required": true
                     },
                     {
                       "long": "mtu",
@@ -3829,15 +4011,18 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the link to"
+                      "help": "Port to add the link to",
+                      "required": true
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the link to"
+                      "help": "Id of the rack to add the link to",
+                      "required": true
                     },
                     {
                       "long": "speed",
-                      "help": "The speed of the link"
+                      "help": "The speed of the link",
+                      "required": true
                     },
                     {
                       "long": "switch",
@@ -3845,7 +4030,8 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the link to"
+                      "help": "Switch to add the link to",
+                      "required": true
                     }
                   ]
                 },
@@ -3889,11 +4075,13 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to remove the link from"
+                      "help": "Port to remove the link from",
+                      "required": true
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to remove the link from"
+                      "help": "Id of the rack to remove the link from",
+                      "required": true
                     },
                     {
                       "long": "switch",
@@ -3901,7 +4089,8 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to remove the link from"
+                      "help": "Switch to remove the link from",
+                      "required": true
                     }
                   ]
                 }
@@ -3958,19 +4147,23 @@
                   "args": [
                     {
                       "long": "address",
-                      "help": "The IP address and subnet mask to use when selecting the loopback address."
+                      "help": "The IP address and subnet mask to use when selecting the loopback address.",
+                      "required": true
                     },
                     {
                       "long": "rack-id",
-                      "help": "The rack to use when selecting the loopback address."
+                      "help": "The rack to use when selecting the loopback address.",
+                      "required": true
                     },
                     {
                       "long": "subnet-mask",
-                      "help": "The IP address and subnet mask to use when selecting the loopback address."
+                      "help": "The IP address and subnet mask to use when selecting the loopback address.",
+                      "required": true
                     },
                     {
                       "long": "switch-location",
-                      "help": "The switch location to use when selecting the loopback address."
+                      "help": "The switch location to use when selecting the loopback address.",
+                      "required": true
                     }
                   ]
                 },
@@ -4004,7 +4197,8 @@
                     },
                     {
                       "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "help": "Path to a file that contains the full json body.",
+                      "required": true
                     },
                     {
                       "long": "json-body-template",
@@ -4057,7 +4251,8 @@
                   "args": [
                     {
                       "long": "port",
-                      "help": "A name or id to use when selecting switch port settings info objects."
+                      "help": "A name or id to use when selecting switch port settings info objects.",
+                      "required": true
                     }
                   ]
                 }
@@ -4074,7 +4269,8 @@
               "args": [
                 {
                   "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
+                  "help": "Path to a file that contains the full json body.",
+                  "required": true
                 },
                 {
                   "long": "json-body-template",
@@ -4152,7 +4348,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             }
           ]
         },
@@ -4166,7 +4363,8 @@
             },
             {
               "long": "vpc",
-              "help": "Name or ID of the VPC"
+              "help": "Name or ID of the VPC",
+              "required": true
             }
           ]
         },
@@ -4180,7 +4378,8 @@
               "args": [
                 {
                   "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
+                  "help": "Path to a file that contains the full json body.",
+                  "required": true
                 },
                 {
                   "long": "json-body-template",
@@ -4192,7 +4391,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             },
@@ -4206,7 +4406,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             }
@@ -4222,7 +4423,8 @@
             },
             {
               "long": "project",
-              "help": "Name or ID of the project"
+              "help": "Name or ID of the project",
+              "required": true
             },
             {
               "long": "sort-by",
@@ -4261,7 +4463,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             },
@@ -4275,7 +4478,8 @@
                 },
                 {
                   "long": "router",
-                  "help": "Name or ID of the router"
+                  "help": "Name or ID of the router",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4305,7 +4509,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             },
@@ -4321,7 +4526,8 @@
                     },
                     {
                       "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "help": "Path to a file that contains the full json body.",
+                      "required": true
                     },
                     {
                       "long": "json-body-template",
@@ -4336,7 +4542,8 @@
                     },
                     {
                       "long": "router",
-                      "help": "Name or ID of the router"
+                      "help": "Name or ID of the router",
+                      "required": true
                     },
                     {
                       "long": "vpc",
@@ -4354,7 +4561,8 @@
                     },
                     {
                       "long": "route",
-                      "help": "Name or ID of the route"
+                      "help": "Name or ID of the route",
+                      "required": true
                     },
                     {
                       "long": "router",
@@ -4381,7 +4589,8 @@
                     },
                     {
                       "long": "router",
-                      "help": "Name or ID of the router"
+                      "help": "Name or ID of the router",
+                      "required": true
                     },
                     {
                       "long": "sort-by",
@@ -4406,7 +4615,8 @@
                     },
                     {
                       "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "help": "Path to a file that contains the full json body.",
+                      "required": true
                     },
                     {
                       "long": "json-body-template",
@@ -4421,7 +4631,8 @@
                     },
                     {
                       "long": "route",
-                      "help": "Name or ID of the route"
+                      "help": "Name or ID of the route",
+                      "required": true
                     },
                     {
                       "long": "router",
@@ -4443,11 +4654,13 @@
                     },
                     {
                       "long": "route",
-                      "help": "Name or ID of the route"
+                      "help": "Name or ID of the route",
+                      "required": true
                     },
                     {
                       "long": "router",
-                      "help": "Name or ID of the router"
+                      "help": "Name or ID of the router",
+                      "required": true
                     },
                     {
                       "long": "vpc",
@@ -4481,7 +4694,8 @@
                 },
                 {
                   "long": "router",
-                  "help": "Name or ID of the router"
+                  "help": "Name or ID of the router",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4499,7 +4713,8 @@
                 },
                 {
                   "long": "router",
-                  "help": "Name or ID of the router"
+                  "help": "Name or ID of the router",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4548,7 +4763,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             },
@@ -4562,7 +4778,8 @@
                 },
                 {
                   "long": "subnet",
-                  "help": "Name or ID of the subnet"
+                  "help": "Name or ID of the subnet",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4592,7 +4809,8 @@
                 },
                 {
                   "long": "vpc",
-                  "help": "Name or ID of the VPC"
+                  "help": "Name or ID of the VPC",
+                  "required": true
                 }
               ]
             },
@@ -4621,7 +4839,8 @@
                     },
                     {
                       "long": "subnet",
-                      "help": "Name or ID of the subnet"
+                      "help": "Name or ID of the subnet",
+                      "required": true
                     },
                     {
                       "long": "vpc",
@@ -4659,7 +4878,8 @@
                 },
                 {
                   "long": "subnet",
-                  "help": "Name or ID of the subnet"
+                  "help": "Name or ID of the subnet",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4677,7 +4897,8 @@
                 },
                 {
                   "long": "subnet",
-                  "help": "Name or ID of the subnet"
+                  "help": "Name or ID of the subnet",
+                  "required": true
                 },
                 {
                   "long": "vpc",
@@ -4714,7 +4935,8 @@
             },
             {
               "long": "vpc",
-              "help": "Name or ID of the VPC"
+              "help": "Name or ID of the VPC",
+              "required": true
             }
           ]
         },
@@ -4728,7 +4950,8 @@
             },
             {
               "long": "vpc",
-              "help": "Name or ID of the VPC"
+              "help": "Name or ID of the VPC",
+              "required": true
             }
           ]
         }
