@@ -17,6 +17,8 @@ use oxide::{Client, ClientImagesExt};
 use std::io::{self, Write};
 use std::path::PathBuf;
 
+use crate::println_nopipe;
+
 /// Connect to or retrieve data from the instance's serial console.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -284,7 +286,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
             .send()
             .await?;
 
-        println!("instance {} created", instance.id);
+        println_nopipe!("instance {} created", instance.id);
 
         Ok(())
     }
