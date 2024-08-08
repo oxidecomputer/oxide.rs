@@ -5,6 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 #![forbid(unsafe_code)]
+#![cfg_attr(not(test), deny(clippy::print_stdout, clippy::print_stderr))]
 
 use std::io;
 use std::net::IpAddr;
