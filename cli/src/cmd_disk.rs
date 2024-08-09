@@ -95,6 +95,12 @@ pub struct CmdDiskImport {
     image_version: Option<String>,
 }
 
+struct DiskInfo {
+    file_size: u64,
+    disk_size: u64,
+    block_size: BlockSize,
+}
+
 /// Return a disk size that Nexus will accept for the path and size arguments
 fn get_disk_size(path: &PathBuf, size: Option<u64>) -> Result<u64> {
     const ONE_GB: u64 = 1024 * 1024 * 1024;
@@ -256,68 +262,13 @@ impl CmdDiskImport {
         self.unwind_disk_finalize(client).await?;
         self.unwind_disk_delete(client).await
     }
-}
 
-#[async_trait]
-impl crate::AuthenticatedCmd for CmdDiskImport {
-    fn is_subtree() -> bool {
-        false
-    }
-    async fn run(&self, client: &Client) -> Result<()> {
-        if !Path::new(&self.path).exists() {
-            bail!("path {} does not exist", self.path.to_string_lossy());
-        }
-
-        // validate that objects don't exist already
-        err_if_object_exists(
-            format!("disk {:?} exists already", &self.disk),
-            client
-                .disk_view()
-                .project(&self.project)
-                .disk(NameOrId::Name(self.disk.clone()))
-                .send()
-                .await,
-        )?;
-
-        // snapshot
-        if let Some(snapshot_name) = &self.snapshot {
-            err_if_object_exists(
-                format!("snapshot {:?} exists already", &snapshot_name),
-                client
-                    .snapshot_view()
-                    .project(&self.project)
-                    .snapshot(NameOrId::Name(snapshot_name.clone()))
-                    .send()
-                    .await,
-            )?;
-        }
-
-        // image
-        if let Some(image_name) = &self.image {
-            err_if_object_exists(
-                format!("image {:?} exists already", &image_name),
-                client
-                    .image_view()
-                    .project(&self.project)
-                    .image(NameOrId::Name(image_name.clone()))
-                    .send()
-                    .await,
-            )?;
-        }
-
-        let file_size = std::fs::metadata(&self.path)?.len();
-        let disk_size = get_disk_size(&self.path, self.disk_size.as_ref().map(|x| **x))?;
-
-        let disk_block_size = match &self.disk_block_size {
-            Some(v) => v.clone(),
-            None => BlockSize::try_from(512).unwrap(),
-        };
-
-        if (file_size % *disk_block_size as u64) != 0 {
+    async fn upload_disk(&self, client: &Client, disk_info: DiskInfo) -> Result<()> {
+        if (disk_info.file_size % *disk_info.block_size as u64) != 0 {
             bail!(
                 "file size {} is not divisible by block size{}!",
-                file_size,
-                *disk_block_size
+                disk_info.file_size,
+                *disk_info.block_size
             );
         }
 
@@ -326,46 +277,27 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         // to the above check.
         const UPLOAD_TASKS: usize = 8;
 
-        let mut shutdown = GracefulShutdown::new(
-            "Cleaning up partially imported disk",
-            "See https://docs.oxide.computer/guides/troubleshooting#_cant_delete_disk_after_canceled_image_import for instructions on removing the disk",
-            );
-
         // Create the disk in state "importing blocks"
-        shutdown
-            .run_with_cleanup(
-                client
-                    .disk_create()
-                    .project(&self.project)
-                    .body(DiskCreate {
-                        name: self.disk.clone(),
-                        description: self.description.clone(),
-                        disk_source: DiskSource::ImportingBlocks {
-                            block_size: disk_block_size.clone(),
-                        },
-                        size: disk_size.into(),
-                    })
-                    .send(),
-                Cleanup {
-                    future: self.remove_failed_disk(client),
-                    context: "creating new disk failed",
+        client
+            .disk_create()
+            .project(&self.project)
+            .body(DiskCreate {
+                name: self.disk.clone(),
+                description: self.description.clone(),
+                disk_source: DiskSource::ImportingBlocks {
+                    block_size: disk_info.block_size.clone(),
                 },
-            )
+                size: disk_info.disk_size.into(),
+            })
+            .send()
             .await?;
 
         // Start the bulk write process
-        shutdown
-            .run_with_cleanup(
-                client
-                    .disk_bulk_write_import_start()
-                    .project(&self.project)
-                    .disk(self.disk.clone())
-                    .send(),
-                Cleanup {
-                    future: self.remove_failed_disk(client),
-                    context: "starting the bulk write process failed",
-                },
-            )
+        client
+            .disk_bulk_write_import_start()
+            .project(&self.project)
+            .disk(self.disk.clone())
+            .send()
             .await?;
 
         // Create one tokio task for each thread that will upload file chunks
@@ -373,7 +305,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             Vec::with_capacity(UPLOAD_TASKS);
         let mut senders = Vec::with_capacity(UPLOAD_TASKS);
 
-        let pb = Arc::new(ProgressBar::new(file_size));
+        let pb = Arc::new(ProgressBar::new(disk_info.file_size));
         pb.set_style(ProgressStyle::default_bar()
             .template("[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta})")?
         );
@@ -450,26 +382,12 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
 
             offset += CHUNK_SIZE;
             i += 1;
-
-            if shutdown.shutdown_requested()? {
-                self.remove_failed_disk(client).await?;
-                bail!("user canceled request");
-            }
         };
 
         for tx in senders {
             drop(tx);
         }
-
-        if let Err(e) = read_result {
-            // some part of reading from the disk and sending to the upload
-            // threads failed, so unwind. stop the bulk write process, finalize
-            // the disk, then delete it.
-            self.remove_failed_disk(client).await?;
-
-            // return the original error
-            return Err(e);
-        }
+        read_result?;
 
         let mut results = Vec::with_capacity(handles.len());
         for handle in handles {
@@ -480,7 +398,6 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         if results.iter().any(|x| x.is_err()) {
             // If any of the upload threads returned an error, unwind the disk.
             eprintln_nopipe!("one of the upload threads failed");
-            self.remove_failed_disk(client).await?;
             bail!("one of the upload threads failed");
         }
 
@@ -488,72 +405,152 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         pb.finish();
 
         // Stop the bulk write process
-        shutdown
-            .run_with_cleanup(
-                client
-                    .disk_bulk_write_import_stop()
-                    .project(&self.project)
-                    .disk(self.disk.clone())
-                    .send(),
-                Cleanup {
-                    // Attempt to unwind the disk, although it will probably fail - the
-                    // first step is to stop the bulk write process!
-                    future: self.remove_failed_disk(client),
-                    context: "stopping the bulk write process failed",
-                },
-            )
+        client
+            .disk_bulk_write_import_stop()
+            .project(&self.project)
+            .disk(self.disk.clone())
+            .send()
             .await?;
+
+        client
+            .disk_finalize_import()
+            .project(&self.project)
+            .disk(self.disk.clone())
+            .body(FinalizeDisk {
+                snapshot_name: self.snapshot.clone(),
+            })
+            .send()
+            .await?;
+
+        Ok(())
+    }
+
+    async fn precheck(&self, client: &Client) -> Result<DiskInfo> {
+        if !Path::new(&self.path).exists() {
+            bail!("path {} does not exist", self.path.to_string_lossy());
+        }
+
+        // validate that objects don't exist already
+        err_if_object_exists(
+            format!("disk {:?} exists already", &self.disk),
+            client
+                .disk_view()
+                .project(&self.project)
+                .disk(NameOrId::Name(self.disk.clone()))
+                .send()
+                .await,
+        )?;
+
+        // snapshot
+        if let Some(snapshot_name) = &self.snapshot {
+            err_if_object_exists(
+                format!("snapshot {:?} exists already", &snapshot_name),
+                client
+                    .snapshot_view()
+                    .project(&self.project)
+                    .snapshot(NameOrId::Name(snapshot_name.clone()))
+                    .send()
+                    .await,
+            )?;
+        }
+
+        // image
+        if let Some(image_name) = &self.image {
+            err_if_object_exists(
+                format!("image {:?} exists already", &image_name),
+                client
+                    .image_view()
+                    .project(&self.project)
+                    .image(NameOrId::Name(image_name.clone()))
+                    .send()
+                    .await,
+            )?;
+        }
+
+        let file_size = std::fs::metadata(&self.path)?.len();
+        let disk_size = get_disk_size(&self.path, self.disk_size.as_ref().map(|x| **x))?;
+
+        let disk_block_size = match &self.disk_block_size {
+            Some(v) => v.clone(),
+            None => BlockSize::try_from(512).unwrap(),
+        };
+
+        if (file_size % *disk_block_size as u64) != 0 {
+            bail!(
+                "file size {} is not divisible by block size{}!",
+                file_size,
+                *disk_block_size
+            );
+        }
+
+        Ok(DiskInfo {
+            file_size,
+            disk_size,
+            block_size: disk_block_size,
+        })
+    }
+
+    async fn create_image(&self, client: &Client, image_name: &Name) -> Result<()> {
+        let snapshot_name = self.snapshot.as_ref().unwrap();
+        let image_description = self.image_description.as_ref().unwrap();
+        let image_os = self.image_os.as_ref().unwrap();
+        let image_version = self.image_version.as_ref().unwrap();
+
+        // at this point, unwinding is not as important as before. the user
+        // has uploaded their file to a disk and finalized that disk, making
+        // a snapshot out of it. if this step fails, they can always
+        // manually make an image out of the snapshot later and be sure that
+        // the snapshot's contents are the same.
+        let snapshot = client
+            .snapshot_view()
+            .project(&self.project)
+            .snapshot(NameOrId::Name(snapshot_name.clone()))
+            .send()
+            .await?;
+
+        client
+            .image_create()
+            .project(&self.project)
+            .body(ImageCreate {
+                name: image_name.clone(),
+                description: image_description.clone(),
+                os: image_os.clone(),
+                version: image_version.clone(),
+                source: ImageSource::Snapshot(snapshot.id),
+            })
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+#[async_trait]
+impl crate::AuthenticatedCmd for CmdDiskImport {
+    fn is_subtree() -> bool {
+        false
+    }
+
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut shutdown = GracefulShutdown::new(
+            "Cleaning up partially imported disk",
+            "See https://docs.oxide.computer/guides/troubleshooting#_cant_delete_disk_after_canceled_image_import for instructions on removing the disk",
+            );
+
+        let disk_info = self.precheck(client).await?;
 
         shutdown
             .run_with_cleanup(
-                client
-                    .disk_finalize_import()
-                    .project(&self.project)
-                    .disk(self.disk.clone())
-                    .body(FinalizeDisk {
-                        snapshot_name: self.snapshot.clone(),
-                    })
-                    .send(),
+                self.upload_disk(client, disk_info),
                 Cleanup {
-                    // Attempt to unwind the disk, although it will probably fail.
-                    // first step is to finalize the disk!
                     future: self.remove_failed_disk(client),
-                    context: "finalizing the disk failed",
+                    context: "disk import failed",
                 },
             )
             .await?;
 
         // optionally, make an image out of that snapshot
         if let Some(image_name) = &self.image {
-            let snapshot_name = self.snapshot.as_ref().unwrap();
-            let image_description = self.image_description.as_ref().unwrap();
-            let image_os = self.image_os.as_ref().unwrap();
-            let image_version = self.image_version.as_ref().unwrap();
-
-            // at this point, unwinding is not as important as before. the user
-            // has uploaded their file to a disk and finalized that disk, making
-            // a snapshot out of it. if this step fails, they can always
-            // manually make an image out of the snapshot later and be sure that
-            // the snapshot's contents are the same.
-            let snapshot = client
-                .snapshot_view()
-                .project(&self.project)
-                .snapshot(NameOrId::Name(snapshot_name.clone()))
-                .send()
-                .await?;
-
-            client
-                .image_create()
-                .project(&self.project)
-                .body(ImageCreate {
-                    name: image_name.clone(),
-                    description: image_description.clone(),
-                    os: image_os.clone(),
-                    version: image_version.clone(),
-                    source: ImageSource::Snapshot(snapshot.id),
-                })
-                .send()
-                .await?;
+            self.create_image(client, image_name).await?;
         }
 
         println_nopipe!("done!");

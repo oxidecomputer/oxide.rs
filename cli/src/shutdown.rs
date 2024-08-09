@@ -73,11 +73,6 @@ impl GracefulShutdown {
             }
         }
     }
-
-    /// Whether the caller should start to unwind the command being executed.
-    pub fn shutdown_requested(&self) -> Result<bool> {
-        self.rx.has_changed().map_err(|e| e.into())
-    }
 }
 
 /// A `Future` to be run on interrupt or failure.
@@ -210,16 +205,5 @@ mod tests {
             "failed to frobnicate: cleanup failed: user canceled request",
             err
         );
-    }
-
-    #[tokio::test]
-    async fn test_shutdown_requested() {
-        let mut gs = GracefulShutdown::new("foo", "bar");
-
-        assert!(!gs.shutdown_requested().unwrap());
-
-        gs.rx.mark_changed();
-
-        assert!(gs.shutdown_requested().unwrap());
     }
 }
