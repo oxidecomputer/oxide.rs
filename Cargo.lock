@@ -894,7 +894,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#52d900a470b8f08eddf021813470b2a9194f2cc0"
+source = "git+https://github.com/oxidecomputer/dropshot#f943c9f7e64da9fa9d131ad189dbbabf53e55705"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -939,7 +939,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#52d900a470b8f08eddf021813470b2a9194f2cc0"
+source = "git+https://github.com/oxidecomputer/dropshot#f943c9f7e64da9fa9d131ad189dbbabf53e55705"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -1490,7 +1490,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
