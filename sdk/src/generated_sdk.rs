@@ -12,17 +12,17 @@ pub mod types {
     /// Error types.
     pub mod error {
         /// Error from a TryFrom or FromStr implementation.
-        pub struct ConversionError(std::borrow::Cow<'static, str>);
-        impl std::error::Error for ConversionError {}
-        impl std::fmt::Display for ConversionError {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-                std::fmt::Display::fmt(&self.0, f)
+        pub struct ConversionError(::std::borrow::Cow<'static, str>);
+        impl ::std::error::Error for ConversionError {}
+        impl ::std::fmt::Display for ConversionError {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+                ::std::fmt::Display::fmt(&self.0, f)
             }
         }
 
-        impl std::fmt::Debug for ConversionError {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-                std::fmt::Debug::fmt(&self.0, f)
+        impl ::std::fmt::Debug for ConversionError {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+                ::std::fmt::Debug::fmt(&self.0, f)
             }
         }
 
@@ -81,7 +81,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Address {
         /// The address and prefix length of this address.
         pub address: IpNet,
@@ -129,7 +131,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressConfig {
         /// The set of addresses assigned to the port configuration.
         pub addresses: Vec<Address>,
@@ -207,7 +211,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLot {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -270,7 +276,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotBlock {
         /// The first address of the block (inclusive).
         pub first_address: std::net::IpAddr,
@@ -321,7 +329,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotBlockCreate {
         /// The first address in the lot (inclusive).
         pub first_address: std::net::IpAddr,
@@ -372,7 +382,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotBlockResultsPage {
         /// list of items on this page of results
         pub items: Vec<AddressLotBlock>,
@@ -433,7 +445,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotCreate {
         /// The blocks to add along with the new address lot.
         pub blocks: Vec<AddressLotBlockCreate>,
@@ -489,7 +503,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotCreateResponse {
         /// The address lot blocks that were created.
         pub blocks: Vec<AddressLotBlock>,
@@ -537,6 +553,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -546,8 +564,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum AddressLotKind {
         /// Infrastructure address lots are used for network infrastructure like
@@ -637,7 +653,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AddressLotResultsPage {
         /// list of items on this page of results
         pub items: Vec<AddressLot>,
@@ -681,7 +699,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AggregateBgpMessageHistory {
         /// BGP history organized by switch.
         pub switch_histories: Vec<SwitchBgpHistory>,
@@ -737,7 +757,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AllowList {
         /// The allowlist of IPs or subnets.
         pub allowed_ips: AllowedSourceIps,
@@ -783,7 +805,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct AllowListUpdate {
         /// The new list of allowed source IPs.
         pub allowed_ips: AllowedSourceIps,
@@ -853,7 +877,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "allow", content = "ips")]
     pub enum AllowedSourceIps {
         #[serde(rename = "any")]
@@ -932,6 +958,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -941,8 +969,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum AuthzScope {
         /// Timeseries data is limited to fleet readers.
@@ -1040,7 +1066,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Baseboard {
         pub part: String,
         pub revision: u32,
@@ -1075,6 +1103,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -1084,8 +1114,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum BfdMode {
         #[serde(rename = "single_hop")]
@@ -1173,7 +1201,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BfdSessionDisable {
         /// Address of the remote peer to disable a BFD session for.
         pub remote: std::net::IpAddr,
@@ -1264,7 +1294,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BfdSessionEnable {
         /// The negotiated Control packet transmission interval, multiplied by
         /// this variable, will be the Detection Time for this session (as seen
@@ -1341,6 +1373,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -1350,8 +1384,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum BfdState {
         /// A stable down state. Non-responsive to incoming messages.
@@ -1470,7 +1502,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BfdStatus {
         pub detection_threshold: u8,
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1545,7 +1579,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpAnnounceSet {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -1603,7 +1639,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpAnnounceSetCreate {
         /// The announcements in this set.
         pub announcement: Vec<BgpAnnouncementCreate>,
@@ -1660,7 +1698,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpAnnouncement {
         /// The address block the IP network being announced is drawn from.
         pub address_lot_block_id: uuid::Uuid,
@@ -1716,7 +1756,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpAnnouncementCreate {
         /// Address lot this announcement is drawn from.
         pub address_lot_block: NameOrId,
@@ -1801,7 +1843,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpConfig {
         /// The autonomous system number of this BGP configuration.
         pub asn: u32,
@@ -1881,7 +1925,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpConfigCreate {
         /// The autonomous system number of this BGP configuration.
         pub asn: u32,
@@ -1937,7 +1983,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpConfigResultsPage {
         /// list of items on this page of results
         pub items: Vec<BgpConfig>,
@@ -2004,7 +2052,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpImportedRouteIpv4 {
         /// BGP identifier of the originating router.
         pub id: u32,
@@ -2036,16 +2086,18 @@ pub mod types {
     /// {}
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
-    pub struct BgpMessageHistory(pub serde_json::Value);
-    impl std::ops::Deref for BgpMessageHistory {
-        type Target = serde_json::Value;
-        fn deref(&self) -> &serde_json::Value {
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BgpMessageHistory(pub ::serde_json::Value);
+    impl ::std::ops::Deref for BgpMessageHistory {
+        type Target = ::serde_json::Value;
+        fn deref(&self) -> &::serde_json::Value {
             &self.0
         }
     }
 
-    impl From<BgpMessageHistory> for serde_json::Value {
+    impl From<BgpMessageHistory> for ::serde_json::Value {
         fn from(value: BgpMessageHistory) -> Self {
             value.0
         }
@@ -2057,8 +2109,8 @@ pub mod types {
         }
     }
 
-    impl From<serde_json::Value> for BgpMessageHistory {
-        fn from(value: serde_json::Value) -> Self {
+    impl From<::serde_json::Value> for BgpMessageHistory {
+        fn from(value: ::serde_json::Value) -> Self {
             Self(value)
         }
     }
@@ -2240,7 +2292,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpPeer {
         /// The address of the host to peer with.
         pub addr: std::net::IpAddr,
@@ -2327,7 +2381,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpPeerConfig {
         pub peers: Vec<BgpPeer>,
     }
@@ -2409,6 +2465,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -2418,8 +2476,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum BgpPeerState {
         /// Initial state. Refuse all incoming BGP connections. No resources
@@ -2565,7 +2621,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct BgpPeerStatus {
         /// IP address of the peer.
         pub addr: std::net::IpAddr,
@@ -2680,7 +2738,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangedouble {
         /// A range unbounded below and exclusively above, `..end`.
@@ -2788,7 +2848,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangefloat {
         /// A range unbounded below and exclusively above, `..end`.
@@ -2896,7 +2958,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeint16 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3004,7 +3068,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeint32 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3112,7 +3178,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeint64 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3220,7 +3288,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeint8 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3332,7 +3402,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeuint16 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3444,7 +3516,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeuint32 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3556,7 +3630,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeuint64 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3668,7 +3744,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum BinRangeuint8 {
         /// A range unbounded below and exclusively above, `..end`.
@@ -3721,7 +3799,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Bindouble {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -3773,7 +3853,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binfloat {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -3825,7 +3907,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binint16 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -3877,7 +3961,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binint32 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -3929,7 +4015,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binint64 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -3981,7 +4069,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binint8 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -4033,7 +4123,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binuint16 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -4085,7 +4177,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binuint32 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -4137,7 +4231,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binuint64 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -4189,7 +4285,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Binuint8 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -4225,9 +4323,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Serialize)]
+    #[derive(:: serde :: Serialize, Clone, Debug, schemars :: JsonSchema)]
     pub struct BlockSize(i64);
-    impl std::ops::Deref for BlockSize {
+    impl ::std::ops::Deref for BlockSize {
         type Target = i64;
         fn deref(&self) -> &i64 {
             &self.0
@@ -4257,13 +4355,13 @@ pub mod types {
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for BlockSize {
+    impl<'de> ::serde::Deserialize<'de> for BlockSize {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             Self::try_from(<i64>::deserialize(deserializer)?)
-                .map_err(|e| <D::Error as serde::de::Error>::custom(e.to_string()))
+                .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -4280,9 +4378,11 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ByteCount(pub u64);
-    impl std::ops::Deref for ByteCount {
+    impl ::std::ops::Deref for ByteCount {
         type Target = u64;
         fn deref(&self) -> &u64 {
             &self.0
@@ -4405,7 +4505,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Certificate {
         /// PEM-formatted string containing public certificate chain
         pub cert: String,
@@ -4478,7 +4580,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct CertificateCreate {
         /// PEM-formatted string containing public certificate chain
         pub cert: String,
@@ -4533,7 +4637,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct CertificateResultsPage {
         /// list of items on this page of results
         pub items: Vec<Certificate>,
@@ -4579,7 +4685,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Cumulativedouble {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
         pub value: f64,
@@ -4622,7 +4730,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Cumulativefloat {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
         pub value: f32,
@@ -4665,7 +4775,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Cumulativeint64 {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
         pub value: i64,
@@ -4709,7 +4821,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Cumulativeuint64 {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
         pub value: u64,
@@ -4767,7 +4881,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct CurrentUser {
         /// Human-readable name that can identify the user
         pub display_name: String,
@@ -5326,7 +5442,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "datum")]
     pub enum Datum {
         #[serde(rename = "bool")]
@@ -5596,6 +5714,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -5605,8 +5725,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum DatumType {
         #[serde(rename = "bool")]
@@ -5788,7 +5906,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DerEncodedKeyPair {
         /// request signing private key (base64 encoded der file)
         pub private_key: String,
@@ -5835,7 +5955,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DeviceAccessTokenRequest {
         pub client_id: uuid::Uuid,
         pub device_code: String,
@@ -5873,7 +5995,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DeviceAuthRequest {
         pub client_id: uuid::Uuid,
     }
@@ -5908,7 +6032,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DeviceAuthVerify {
         pub user_code: String,
     }
@@ -5954,7 +6080,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum Digest {
         #[serde(rename = "sha256")]
@@ -6054,7 +6182,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Disk {
         pub block_size: ByteCount,
         /// human-readable free-form text about a resource
@@ -6132,7 +6262,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DiskCreate {
         pub description: String,
         /// initial source for this disk
@@ -6173,6 +6305,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -6182,8 +6316,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum DiskMetricName {
         #[serde(rename = "activated")]
@@ -6278,7 +6410,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DiskPath {
         /// Name or ID of the disk
         pub disk: NameOrId,
@@ -6327,7 +6461,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct DiskResultsPage {
         /// list of items on this page of results
         pub items: Vec<Disk>,
@@ -6445,7 +6581,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum DiskSource {
         /// Create a blank disk
@@ -6681,7 +6819,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "state", content = "instance")]
     pub enum DiskState {
         #[serde(rename = "creating")]
@@ -6805,7 +6945,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Distributiondouble {
         pub bins: Vec<f64>,
         pub counts: Vec<u64>,
@@ -6921,7 +7063,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Distributionint64 {
         pub bins: Vec<i64>,
         pub counts: Vec<u64>,
@@ -6974,7 +7118,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct EphemeralIpCreate {
         /// Name or ID of the IP pool used to allocate an address
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -7019,7 +7165,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Error {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub error_code: Option<String>,
@@ -7149,7 +7297,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "kind")]
     pub enum ExternalIp {
         #[serde(rename = "ephemeral")]
@@ -7247,7 +7397,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
         /// An IP address providing both inbound and outbound access. The
@@ -7304,7 +7456,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ExternalIpResultsPage {
         /// list of items on this page of results
         pub items: Vec<ExternalIp>,
@@ -7357,7 +7511,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FieldSchema {
         pub description: String,
         pub field_type: FieldType,
@@ -7394,6 +7550,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -7403,8 +7561,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum FieldSource {
         #[serde(rename = "target")]
@@ -7487,6 +7643,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -7496,8 +7654,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum FieldType {
         #[serde(rename = "string")]
@@ -7836,7 +7992,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum FieldValue {
         #[serde(rename = "string")]
@@ -7961,7 +8119,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FinalizeDisk {
         /// If specified a snapshot of the disk will be created with the given
         /// name during finalization. If not specified, a snapshot for the disk
@@ -7999,6 +8159,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -8008,8 +8170,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum FleetRole {
         #[serde(rename = "admin")]
@@ -8099,7 +8259,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FleetRolePolicy {
         /// Roles directly assigned on this resource
         pub role_assignments: Vec<FleetRoleRoleAssignment>,
@@ -8154,7 +8316,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FleetRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
         pub identity_type: IdentityType,
@@ -8251,7 +8415,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FloatingIp {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -8322,7 +8488,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FloatingIpAttach {
         /// The type of `parent`'s resource
         pub kind: FloatingIpParentKind,
@@ -8387,7 +8555,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FloatingIpCreate {
         pub description: String,
         /// An IP address to reserve for use as a floating IP. This field is
@@ -8431,6 +8601,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -8440,8 +8612,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum FloatingIpParentKind {
         #[serde(rename = "instance")]
@@ -8524,7 +8694,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FloatingIpResultsPage {
         /// list of items on this page of results
         pub items: Vec<FloatingIp>,
@@ -8571,7 +8743,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct FloatingIpUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -8622,7 +8796,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Group {
         /// Human-readable name that can identify the group
         pub display_name: String,
@@ -8674,7 +8850,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct GroupResultsPage {
         /// list of items on this page of results
         pub items: Vec<Group>,
@@ -8799,7 +8977,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramdouble {
         /// The bins of the histogram.
         pub bins: Vec<Bindouble>,
@@ -8935,7 +9115,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramfloat {
         /// The bins of the histogram.
         pub bins: Vec<Binfloat>,
@@ -9071,7 +9253,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramint16 {
         /// The bins of the histogram.
         pub bins: Vec<Binint16>,
@@ -9210,7 +9394,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramint32 {
         /// The bins of the histogram.
         pub bins: Vec<Binint32>,
@@ -9349,7 +9535,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramint64 {
         /// The bins of the histogram.
         pub bins: Vec<Binint64>,
@@ -9488,7 +9676,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramint8 {
         /// The bins of the histogram.
         pub bins: Vec<Binint8>,
@@ -9629,7 +9819,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramuint16 {
         /// The bins of the histogram.
         pub bins: Vec<Binuint16>,
@@ -9770,7 +9962,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramuint32 {
         /// The bins of the histogram.
         pub bins: Vec<Binuint32>,
@@ -9911,7 +10105,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramuint64 {
         /// The bins of the histogram.
         pub bins: Vec<Binuint64>,
@@ -10052,7 +10248,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Histogramuint8 {
         /// The bins of the histogram.
         pub bins: Vec<Binuint8>,
@@ -10110,6 +10308,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -10118,10 +10317,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct Hostname(String);
-    impl std::ops::Deref for Hostname {
+    impl ::std::ops::Deref for Hostname {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -10140,7 +10338,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for Hostname {
+    impl ::std::str::FromStr for Hostname {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 253usize {
@@ -10165,36 +10363,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for Hostname {
+    impl ::std::convert::TryFrom<&str> for Hostname {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Hostname {
+    impl ::std::convert::TryFrom<&String> for Hostname {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Hostname {
+    impl ::std::convert::TryFrom<String> for Hostname {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for Hostname {
+    impl<'de> ::serde::Deserialize<'de> for Hostname {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -10222,6 +10420,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -10231,8 +10431,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum IdSortMode {
         /// sort in increasing order of "id"
@@ -10343,7 +10541,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IdentityProvider {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -10402,7 +10602,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IdentityProviderResultsPage {
         /// list of items on this page of results
         pub items: Vec<IdentityProvider>,
@@ -10442,6 +10644,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -10451,8 +10655,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum IdentityProviderType {
         /// SAML identity provider
@@ -10521,6 +10723,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -10530,8 +10734,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum IdentityType {
         #[serde(rename = "silo_user")]
@@ -10634,7 +10836,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum IdpMetadataSource {
         #[serde(rename = "url")]
@@ -10750,7 +10954,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Image {
         /// size of blocks in bytes
         pub block_size: ByteCount,
@@ -10834,7 +11040,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ImageCreate {
         pub description: String,
         pub name: Name,
@@ -10889,7 +11097,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ImageResultsPage {
         /// list of items on this page of results
         pub items: Vec<Image>,
@@ -10957,7 +11167,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "id")]
     pub enum ImageSource {
         #[serde(rename = "snapshot")]
@@ -11003,7 +11215,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ImportBlocksBulkWrite {
         pub base64_encoded_data: String,
         pub offset: u64,
@@ -11071,7 +11285,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum ImportExportPolicy {
         #[serde(rename = "no_filtering")]
@@ -11179,7 +11395,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Instance {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -11228,9 +11446,11 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceCpuCount(pub u16);
-    impl std::ops::Deref for InstanceCpuCount {
+    impl ::std::ops::Deref for InstanceCpuCount {
         type Target = u16;
         fn deref(&self) -> &u16 {
             &self.0
@@ -11387,7 +11607,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceCreate {
         pub description: String,
         /// The disks to be created or attached for this instance.
@@ -11515,7 +11737,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type")]
     pub enum InstanceDiskAttachment {
         /// During instance creation, create and attach disks
@@ -11562,7 +11786,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceMigrate {
         pub dst_sled_id: uuid::Uuid,
     }
@@ -11678,7 +11904,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceNetworkInterface {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -11794,7 +12022,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "params")]
     pub enum InstanceNetworkInterfaceAttachment {
         /// Create one or more `InstanceNetworkInterface`s for the `Instance`.
@@ -11872,7 +12102,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceNetworkInterfaceCreate {
         pub description: String,
         /// The IP address for the interface. One will be auto-assigned if not
@@ -11929,7 +12161,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceNetworkInterfaceResultsPage {
         /// list of items on this page of results
         pub items: Vec<InstanceNetworkInterface>,
@@ -12003,7 +12237,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceNetworkInterfaceUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -12071,7 +12307,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceResultsPage {
         /// list of items on this page of results
         pub items: Vec<Instance>,
@@ -12128,7 +12366,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct InstanceSerialConsoleData {
         /// The bytes starting from the requested offset up to either the end of
         /// the buffer or the request's `max_bytes`. Provided as a u8 array
@@ -12244,6 +12484,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -12253,8 +12495,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum InstanceState {
         /// The instance is being created.
@@ -12388,7 +12628,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(untagged)]
     pub enum IpNet {
         V4(Ipv4Net),
@@ -12507,7 +12749,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPool {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -12556,7 +12800,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolCreate {
         pub description: String,
         pub name: Name,
@@ -12599,7 +12845,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolLinkSilo {
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
@@ -12653,7 +12901,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolRange {
         pub id: uuid::Uuid,
         pub ip_pool_id: uuid::Uuid,
@@ -12704,7 +12954,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolRangeResultsPage {
         /// list of items on this page of results
         pub items: Vec<IpPoolRange>,
@@ -12756,7 +13008,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolResultsPage {
         /// list of items on this page of results
         pub items: Vec<IpPool>,
@@ -12811,7 +13065,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolSiloLink {
         pub ip_pool_id: uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
@@ -12864,7 +13120,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolSiloLinkResultsPage {
         /// list of items on this page of results
         pub items: Vec<IpPoolSiloLink>,
@@ -12908,7 +13166,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolSiloUpdate {
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
@@ -12956,7 +13216,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -13010,7 +13272,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct IpPoolUtilization {
         /// Number of allocated and total available IPv4 addresses in pool
         pub ipv4: Ipv4Utilization,
@@ -13057,7 +13321,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(untagged)]
     pub enum IpRange {
         V4(Ipv4Range),
@@ -13107,6 +13373,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -13115,10 +13382,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct Ipv4Net(String);
-    impl std::ops::Deref for Ipv4Net {
+    impl ::std::ops::Deref for Ipv4Net {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -13137,7 +13403,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for Ipv4Net {
+    impl ::std::str::FromStr for Ipv4Net {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
@@ -13159,36 +13425,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for Ipv4Net {
+    impl ::std::convert::TryFrom<&str> for Ipv4Net {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Ipv4Net {
+    impl ::std::convert::TryFrom<&String> for Ipv4Net {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Ipv4Net {
+    impl ::std::convert::TryFrom<String> for Ipv4Net {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for Ipv4Net {
+    impl<'de> ::serde::Deserialize<'de> for Ipv4Net {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -13222,7 +13488,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Ipv4Range {
         pub first: std::net::Ipv4Addr,
         pub last: std::net::Ipv4Addr,
@@ -13269,7 +13537,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Ipv4Utilization {
         /// The number of IPv4 addresses allocated from this pool
         pub allocated: u32,
@@ -13324,6 +13594,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -13332,10 +13603,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct Ipv6Net(String);
-    impl std::ops::Deref for Ipv6Net {
+    impl ::std::ops::Deref for Ipv6Net {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -13354,7 +13624,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for Ipv6Net {
+    impl ::std::str::FromStr for Ipv6Net {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
@@ -13392,36 +13662,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for Ipv6Net {
+    impl ::std::convert::TryFrom<&str> for Ipv6Net {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Ipv6Net {
+    impl ::std::convert::TryFrom<&String> for Ipv6Net {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Ipv6Net {
+    impl ::std::convert::TryFrom<String> for Ipv6Net {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for Ipv6Net {
+    impl<'de> ::serde::Deserialize<'de> for Ipv6Net {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -13455,7 +13725,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Ipv6Range {
         pub first: std::net::Ipv6Addr,
         pub last: std::net::Ipv6Addr,
@@ -13503,7 +13775,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Ipv6Utilization {
         /// The number of IPv6 addresses allocated from this pool. A 128-bit
         /// integer string to match the capacity field.
@@ -13548,6 +13822,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -13556,10 +13831,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct L4PortRange(String);
-    impl std::ops::Deref for L4PortRange {
+    impl ::std::ops::Deref for L4PortRange {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -13578,7 +13852,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for L4PortRange {
+    impl ::std::str::FromStr for L4PortRange {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 11usize {
@@ -13598,36 +13872,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for L4PortRange {
+    impl ::std::convert::TryFrom<&str> for L4PortRange {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for L4PortRange {
+    impl ::std::convert::TryFrom<&String> for L4PortRange {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for L4PortRange {
+    impl ::std::convert::TryFrom<String> for L4PortRange {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for L4PortRange {
+    impl<'de> ::serde::Deserialize<'de> for L4PortRange {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -13687,7 +13961,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LinkConfigCreate {
         /// Whether or not to set autonegotiation
         pub autoneg: bool,
@@ -13747,6 +14023,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -13756,8 +14034,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum LinkFec {
         /// Firecode forward error correction.
@@ -13896,6 +14172,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -13905,8 +14183,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum LinkSpeed {
         /// Zero gigabits per second.
@@ -14035,7 +14311,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LldpServiceConfig {
         /// Whether or not the LLDP service is enabled.
         pub enabled: bool,
@@ -14091,7 +14369,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LldpServiceConfigCreate {
         /// Whether or not LLDP is enabled.
         pub enabled: bool,
@@ -14164,7 +14444,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LoopbackAddress {
         /// The loopback IP address and prefix length.
         pub address: IpNet,
@@ -14252,7 +14534,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LoopbackAddressCreate {
         /// The address to create.
         pub address: std::net::IpAddr,
@@ -14315,7 +14599,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct LoopbackAddressResultsPage {
         /// list of items on this page of results
         pub items: Vec<LoopbackAddress>,
@@ -14355,6 +14641,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -14363,10 +14650,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct MacAddr(String);
-    impl std::ops::Deref for MacAddr {
+    impl ::std::ops::Deref for MacAddr {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -14385,7 +14671,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for MacAddr {
+    impl ::std::str::FromStr for MacAddr {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 17usize {
@@ -14407,36 +14693,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for MacAddr {
+    impl ::std::convert::TryFrom<&str> for MacAddr {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for MacAddr {
+    impl ::std::convert::TryFrom<&String> for MacAddr {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for MacAddr {
+    impl ::std::convert::TryFrom<String> for MacAddr {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for MacAddr {
+    impl<'de> ::serde::Deserialize<'de> for MacAddr {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -14466,7 +14752,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Measurement {
         pub datum: Datum,
         pub timestamp: chrono::DateTime<chrono::offset::Utc>,
@@ -14515,7 +14803,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct MeasurementResultsPage {
         /// list of items on this page of results
         pub items: Vec<Measurement>,
@@ -14574,6 +14864,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -14583,8 +14875,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum MetricType {
         /// The value represents an instantaneous measurement in time.
@@ -14672,7 +14962,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct MissingDatum {
         pub datum_type: DatumType,
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -14715,6 +15007,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -14723,10 +15016,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct Name(String);
-    impl std::ops::Deref for Name {
+    impl ::std::ops::Deref for Name {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -14745,7 +15037,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for Name {
+    impl ::std::str::FromStr for Name {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
@@ -14759,36 +15051,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for Name {
+    impl ::std::convert::TryFrom<&str> for Name {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Name {
+    impl ::std::convert::TryFrom<&String> for Name {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Name {
+    impl ::std::convert::TryFrom<String> for Name {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for Name {
+    impl<'de> ::serde::Deserialize<'de> for Name {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -14821,7 +15113,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(untagged)]
     pub enum NameOrId {
         Id(uuid::Uuid),
@@ -14924,6 +15218,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -14933,8 +15229,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum NameOrIdSortMode {
         /// sort in increasing order of "name"
@@ -15020,6 +15314,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15029,8 +15325,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum NameSortMode {
         /// sort in increasing order of "name"
@@ -15146,7 +15440,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct NetworkInterface {
         pub id: uuid::Uuid,
         pub ip: std::net::IpAddr,
@@ -15245,7 +15541,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "id")]
     pub enum NetworkInterfaceKind {
         /// A vNIC attached to a guest instance
@@ -15283,6 +15581,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15292,8 +15592,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum PaginationOrder {
         #[serde(rename = "ascending")]
@@ -15363,6 +15661,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -15371,10 +15670,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct Password(String);
-    impl std::ops::Deref for Password {
+    impl ::std::ops::Deref for Password {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -15393,7 +15691,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for Password {
+    impl ::std::str::FromStr for Password {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 512usize {
@@ -15403,36 +15701,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for Password {
+    impl ::std::convert::TryFrom<&str> for Password {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Password {
+    impl ::std::convert::TryFrom<&String> for Password {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Password {
+    impl ::std::convert::TryFrom<String> for Password {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for Password {
+    impl<'de> ::serde::Deserialize<'de> for Password {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -15519,7 +15817,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct PhysicalDisk {
         pub form_factor: PhysicalDiskKind,
         /// unique, immutable, system-controlled identifier for each resource
@@ -15568,6 +15868,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15577,8 +15879,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum PhysicalDiskKind {
         #[serde(rename = "m2")]
@@ -15682,6 +15982,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15691,8 +15993,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     #[serde(tag = "kind")]
     pub enum PhysicalDiskPolicy {
@@ -15780,7 +16080,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct PhysicalDiskResultsPage {
         /// list of items on this page of results
         pub items: Vec<PhysicalDisk>,
@@ -15833,6 +16135,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15842,8 +16146,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum PhysicalDiskState {
         /// The disk is currently active, and has resources allocated on it.
@@ -15929,7 +16231,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Ping {
         /// Whether the external API is reachable. Will always be Ok if the
         /// endpoint returns anything at all.
@@ -15962,6 +16266,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -15971,8 +16277,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum PingStatus {
         #[serde(rename = "ok")]
@@ -16064,7 +16368,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Points {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub start_times: Option<Vec<chrono::DateTime<chrono::offset::Utc>>>,
@@ -16140,7 +16446,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Probe {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -16202,7 +16510,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProbeCreate {
         pub description: String,
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -16258,7 +16568,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProbeExternalIp {
         pub first_port: u16,
         pub ip: std::net::IpAddr,
@@ -16294,6 +16606,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -16303,8 +16617,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum ProbeExternalIpKind {
         #[serde(rename = "snat")]
@@ -16403,7 +16715,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProbeInfo {
         pub external_ips: Vec<ProbeExternalIp>,
         pub id: uuid::Uuid,
@@ -16455,7 +16769,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProbeInfoResultsPage {
         /// list of items on this page of results
         pub items: Vec<ProbeInfo>,
@@ -16525,7 +16841,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Project {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -16574,7 +16892,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProjectCreate {
         pub description: String,
         pub name: Name,
@@ -16623,7 +16943,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProjectResultsPage {
         /// list of items on this page of results
         pub items: Vec<Project>,
@@ -16660,6 +16982,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -16669,8 +16993,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum ProjectRole {
         #[serde(rename = "admin")]
@@ -16760,7 +17082,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProjectRolePolicy {
         /// Roles directly assigned on this resource
         pub role_assignments: Vec<ProjectRoleRoleAssignment>,
@@ -16815,7 +17139,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProjectRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
         pub identity_type: IdentityType,
@@ -16860,7 +17186,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct ProjectUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -16949,7 +17277,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Quantile {
         /// The desired marker positions.
         pub desired_marker_positions: [f64; 5usize],
@@ -17011,7 +17341,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Rack {
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
@@ -17064,7 +17396,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RackResultsPage {
         /// list of items on this page of results
         pub items: Vec<Rack>,
@@ -17108,7 +17442,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Role {
         pub description: String,
         pub name: RoleName,
@@ -17142,6 +17478,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -17150,10 +17487,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct RoleName(String);
-    impl std::ops::Deref for RoleName {
+    impl ::std::ops::Deref for RoleName {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -17172,7 +17508,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for RoleName {
+    impl ::std::str::FromStr for RoleName {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
@@ -17189,36 +17525,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for RoleName {
+    impl ::std::convert::TryFrom<&str> for RoleName {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for RoleName {
+    impl ::std::convert::TryFrom<&String> for RoleName {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for RoleName {
+    impl ::std::convert::TryFrom<String> for RoleName {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for RoleName {
+    impl<'de> ::serde::Deserialize<'de> for RoleName {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -17254,7 +17590,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RoleResultsPage {
         /// list of items on this page of results
         pub items: Vec<Role>,
@@ -17315,7 +17653,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Route {
         /// The route destination.
         pub dst: IpNet,
@@ -17362,7 +17702,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RouteConfig {
         /// The set of routes assigned to a switch port.
         pub routes: Vec<Route>,
@@ -17481,7 +17823,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
         /// Route applies to traffic destined for a specific IP address
@@ -17641,7 +17985,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum RouteTarget {
         /// Forward traffic to a particular IP address.
@@ -17763,7 +18109,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RouterRoute {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -17840,7 +18188,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RouterRouteCreate {
         pub description: String,
         /// Selects which traffic this routing rule will apply to.
@@ -17913,6 +18263,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -17922,8 +18274,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum RouterRouteKind {
         /// Determines the default destination of traffic, such as whether it
@@ -18031,7 +18381,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RouterRouteResultsPage {
         /// list of items on this page of results
         pub items: Vec<RouterRoute>,
@@ -18100,7 +18452,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct RouterRouteUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -18220,7 +18574,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SamlIdentityProvider {
         /// Service provider endpoint where the response will be sent
         pub acs_url: String,
@@ -18342,7 +18698,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SamlIdentityProviderCreate {
         /// service provider endpoint where the response will be sent
         pub acs_url: String,
@@ -18401,6 +18759,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -18410,8 +18770,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum ServiceUsingCertificate {
         /// This certificate is intended for access to the external API.
@@ -18544,7 +18902,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Silo {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -18559,7 +18919,7 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
+        pub mapped_fleet_roles: ::std::collections::HashMap<String, Vec<FleetRole>>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -18660,7 +19020,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloCreate {
         /// If set, this group will be created during Silo creation and granted
         /// the "Silo Admin" role. Identity providers can assert that users
@@ -18679,8 +19041,8 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        #[serde(default, skip_serializing_if = "std::collections::HashMap::is_empty")]
-        pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
+        #[serde(default, skip_serializing_if = "::std::collections::HashMap::is_empty")]
+        pub mapped_fleet_roles: ::std::collections::HashMap<String, Vec<FleetRole>>,
         pub name: Name,
         /// Limits the amount of provisionable CPU, memory, and storage in the
         /// Silo. CPU and memory are only consumed by running instances, while
@@ -18738,6 +19100,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -18747,8 +19111,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SiloIdentityMode {
         /// Users are authenticated with SAML using an external authentication
@@ -18866,7 +19228,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloIpPool {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -18927,7 +19291,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloIpPoolResultsPage {
         /// list of items on this page of results
         pub items: Vec<SiloIpPool>,
@@ -18994,7 +19360,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloQuotas {
         /// Number of virtual CPUs
         pub cpus: i64,
@@ -19059,7 +19427,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloQuotasCreate {
         /// The amount of virtual CPUs available for running instances in the
         /// Silo
@@ -19114,7 +19484,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloQuotasResultsPage {
         /// list of items on this page of results
         pub items: Vec<SiloQuotas>,
@@ -19177,7 +19549,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloQuotasUpdate {
         /// The amount of virtual CPUs available for running instances in the
         /// Silo
@@ -19235,7 +19609,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloResultsPage {
         /// list of items on this page of results
         pub items: Vec<Silo>,
@@ -19272,6 +19648,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -19281,8 +19659,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SiloRole {
         #[serde(rename = "admin")]
@@ -19372,7 +19748,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloRolePolicy {
         /// Roles directly assigned on this resource
         pub role_assignments: Vec<SiloRoleRoleAssignment>,
@@ -19427,7 +19805,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
         pub identity_type: IdentityType,
@@ -19492,7 +19872,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloUtilization {
         /// Accounts for the total amount of resources reserved for silos via
         /// their quotas
@@ -19549,7 +19931,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SiloUtilizationResultsPage {
         /// list of items on this page of results
         pub items: Vec<SiloUtilization>,
@@ -19650,7 +20034,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Sled {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
@@ -19703,7 +20089,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledId {
         pub id: uuid::Uuid,
     }
@@ -19793,7 +20181,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledInstance {
         pub active_sled_id: uuid::Uuid,
         /// unique, immutable, system-controlled identifier for each resource
@@ -19855,7 +20245,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledInstanceResultsPage {
         /// list of items on this page of results
         pub items: Vec<SledInstance>,
@@ -19933,7 +20325,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "kind", content = "provision_policy")]
     pub enum SledPolicy {
         /// The operator has indicated that the sled is in-service.
@@ -19989,6 +20383,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -19998,8 +20394,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SledProvisionPolicy {
         /// New resources will be provisioned on this sled.
@@ -20083,7 +20477,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledProvisionPolicyParams {
         /// The provision state.
         pub state: SledProvisionPolicy,
@@ -20134,7 +20530,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledProvisionPolicyResponse {
         /// The new provision state.
         pub new_state: SledProvisionPolicy,
@@ -20185,7 +20583,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SledResultsPage {
         /// list of items on this page of results
         pub items: Vec<Sled>,
@@ -20238,6 +20638,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -20247,8 +20649,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SledState {
         /// The sled is currently active, and has resources allocated on it.
@@ -20377,7 +20777,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Snapshot {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -20439,7 +20841,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SnapshotCreate {
         pub description: String,
         /// The disk to be snapshotted
@@ -20490,7 +20894,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SnapshotResultsPage {
         /// list of items on this page of results
         pub items: Vec<Snapshot>,
@@ -20528,6 +20934,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -20537,8 +20945,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SnapshotState {
         #[serde(rename = "creating")]
@@ -20663,7 +21069,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SshKey {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -20722,7 +21130,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SshKeyCreate {
         pub description: String,
         pub name: Name,
@@ -20773,7 +21183,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SshKeyResultsPage {
         /// list of items on this page of results
         pub items: Vec<SshKey>,
@@ -20839,7 +21251,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Switch {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
@@ -20896,10 +21310,12 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchBgpHistory {
         /// Message history indexed by peer address.
-        pub history: std::collections::HashMap<String, BgpMessageHistory>,
+        pub history: ::std::collections::HashMap<String, BgpMessageHistory>,
         /// Switch this message history is associated with.
         pub switch: SwitchLocation,
     }
@@ -20964,7 +21380,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchInterfaceConfig {
         /// A unique identifier for this switch interface.
         pub id: uuid::Uuid,
@@ -21023,7 +21441,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchInterfaceConfigCreate {
         /// What kind of switch interface this configuration represents.
         pub kind: SwitchInterfaceKind,
@@ -21114,7 +21534,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "vid")]
     pub enum SwitchInterfaceKind {
         #[serde(rename = "primary")]
@@ -21178,6 +21600,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -21187,8 +21611,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SwitchInterfaceKind2 {
         /// Primary interfaces are associated with physical links. There is
@@ -21263,16 +21685,18 @@ pub mod types {
     /// {}
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
-    pub struct SwitchLinkState(pub serde_json::Value);
-    impl std::ops::Deref for SwitchLinkState {
-        type Target = serde_json::Value;
-        fn deref(&self) -> &serde_json::Value {
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SwitchLinkState(pub ::serde_json::Value);
+    impl ::std::ops::Deref for SwitchLinkState {
+        type Target = ::serde_json::Value;
+        fn deref(&self) -> &::serde_json::Value {
             &self.0
         }
     }
 
-    impl From<SwitchLinkState> for serde_json::Value {
+    impl From<SwitchLinkState> for ::serde_json::Value {
         fn from(value: SwitchLinkState) -> Self {
             value.0
         }
@@ -21284,8 +21708,8 @@ pub mod types {
         }
     }
 
-    impl From<serde_json::Value> for SwitchLinkState {
-        fn from(value: serde_json::Value) -> Self {
+    impl From<::serde_json::Value> for SwitchLinkState {
+        fn from(value: ::serde_json::Value) -> Self {
             Self(value)
         }
     }
@@ -21317,6 +21741,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -21326,8 +21752,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SwitchLocation {
         /// Switch in upper slot
@@ -21432,7 +21856,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPort {
         /// The id of the switch port.
         pub id: uuid::Uuid,
@@ -21513,7 +21939,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortAddressConfig {
         /// The IP address and prefix.
         pub address: IpNet,
@@ -21565,7 +21993,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortApplySettings {
         /// A name or id to use when applying switch port settings.
         pub port_settings: NameOrId,
@@ -21615,7 +22045,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortConfig {
         /// The physical link geometry of the port.
         pub geometry: SwitchPortGeometry2,
@@ -21659,7 +22091,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortConfigCreate {
         /// Link geometry for the switch port.
         pub geometry: SwitchPortGeometry,
@@ -21714,6 +22148,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -21723,8 +22159,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SwitchPortGeometry {
         /// The port contains a single QSFP28 link with four lanes.
@@ -21824,6 +22258,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -21833,8 +22269,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SwitchPortGeometry2 {
         /// The port contains a single QSFP28 link with four lanes.
@@ -21962,7 +22396,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortLinkConfig {
         /// Whether or not the link has autonegotiation enabled.
         pub autoneg: bool,
@@ -22024,7 +22460,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortResultsPage {
         /// list of items on this page of results
         pub items: Vec<SwitchPort>,
@@ -22101,7 +22539,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortRouteConfig {
         /// The route's destination network.
         pub dst: IpNet,
@@ -22180,7 +22620,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortSettings {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -22288,24 +22730,26 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortSettingsCreate {
         /// Addresses indexed by interface name.
-        pub addresses: std::collections::HashMap<String, AddressConfig>,
+        pub addresses: ::std::collections::HashMap<String, AddressConfig>,
         /// BGP peers indexed by interface name.
-        pub bgp_peers: std::collections::HashMap<String, BgpPeerConfig>,
+        pub bgp_peers: ::std::collections::HashMap<String, BgpPeerConfig>,
         pub description: String,
         pub groups: Vec<NameOrId>,
         /// Interfaces indexed by link name.
-        pub interfaces: std::collections::HashMap<String, SwitchInterfaceConfigCreate>,
+        pub interfaces: ::std::collections::HashMap<String, SwitchInterfaceConfigCreate>,
         /// Links indexed by phy name. On ports that are not broken out, this is
         /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
         /// phy0-phy3, etc.
-        pub links: std::collections::HashMap<String, LinkConfigCreate>,
+        pub links: ::std::collections::HashMap<String, LinkConfigCreate>,
         pub name: Name,
         pub port_config: SwitchPortConfigCreate,
         /// Routes indexed by interface name.
-        pub routes: std::collections::HashMap<String, RouteConfig>,
+        pub routes: ::std::collections::HashMap<String, RouteConfig>,
     }
 
     impl From<&SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
@@ -22355,7 +22799,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortSettingsGroups {
         /// The id of a port settings group being referenced by a port settings
         /// object.
@@ -22407,7 +22853,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortSettingsResultsPage {
         /// list of items on this page of results
         pub items: Vec<SwitchPortSettings>,
@@ -22530,7 +22978,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchPortSettingsView {
         /// Layer 3 IP address settings.
         pub addresses: Vec<SwitchPortAddressConfig>,
@@ -22598,7 +23048,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchResultsPage {
         /// list of items on this page of results
         pub items: Vec<Switch>,
@@ -22651,7 +23103,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct SwitchVlanInterfaceConfig {
         /// The switch interface configuration this VLAN interface configuration
         /// belongs to.
@@ -22690,6 +23144,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -22699,8 +23155,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum SystemMetricName {
         #[serde(rename = "virtual_disk_space_provisioned")]
@@ -22790,10 +23244,12 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Table {
         pub name: String,
-        pub timeseries: std::collections::HashMap<String, Timeseries>,
+        pub timeseries: ::std::collections::HashMap<String, Timeseries>,
     }
 
     impl From<&Table> for Table {
@@ -22839,9 +23295,11 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Timeseries {
-        pub fields: std::collections::HashMap<String, FieldValue>,
+        pub fields: ::std::collections::HashMap<String, FieldValue>,
         pub points: Points,
     }
 
@@ -22881,7 +23339,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct TimeseriesDescription {
         pub metric: String,
         pub target: String,
@@ -22919,6 +23379,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -22927,10 +23388,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct TimeseriesName(String);
-    impl std::ops::Deref for TimeseriesName {
+    impl ::std::ops::Deref for TimeseriesName {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -22949,7 +23409,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for TimeseriesName {
+    impl ::std::str::FromStr for TimeseriesName {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
@@ -22968,36 +23428,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for TimeseriesName {
+    impl ::std::convert::TryFrom<&str> for TimeseriesName {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for TimeseriesName {
+    impl ::std::convert::TryFrom<&String> for TimeseriesName {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for TimeseriesName {
+    impl ::std::convert::TryFrom<String> for TimeseriesName {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for TimeseriesName {
+    impl<'de> ::serde::Deserialize<'de> for TimeseriesName {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -23024,7 +23484,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct TimeseriesQuery {
         /// A timeseries query string, written in the Oximeter query language.
         pub query: String,
@@ -23101,7 +23563,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct TimeseriesSchema {
         pub authz_scope: AuthzScope,
         pub created: chrono::DateTime<chrono::offset::Utc>,
@@ -23156,7 +23620,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct TimeseriesSchemaResultsPage {
         /// list of items on this page of results
         pub items: Vec<TimeseriesSchema>,
@@ -23208,7 +23674,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UninitializedSled {
         pub baseboard: Baseboard,
         pub cubby: u16,
@@ -23250,7 +23718,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UninitializedSledId {
         pub part: String,
         pub serial: String,
@@ -23299,7 +23769,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UninitializedSledResultsPage {
         /// list of items on this page of results
         pub items: Vec<UninitializedSled>,
@@ -23350,6 +23822,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -23359,8 +23833,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum Units {
         #[serde(rename = "count")]
@@ -23460,7 +23932,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct User {
         /// Human-readable name that can identify the user
         pub display_name: String,
@@ -23535,7 +24009,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UserBuiltin {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -23592,7 +24068,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UserBuiltinResultsPage {
         /// list of items on this page of results
         pub items: Vec<UserBuiltin>,
@@ -23646,7 +24124,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UserCreate {
         /// username used to log in
         pub external_id: UserId,
@@ -23690,6 +24170,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Serialize,
         Clone,
         Debug,
         Eq,
@@ -23698,10 +24179,9 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Serialize,
     )]
     pub struct UserId(String);
-    impl std::ops::Deref for UserId {
+    impl ::std::ops::Deref for UserId {
         type Target = String;
         fn deref(&self) -> &String {
             &self.0
@@ -23720,7 +24200,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for UserId {
+    impl ::std::str::FromStr for UserId {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
@@ -23734,36 +24214,36 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for UserId {
+    impl ::std::convert::TryFrom<&str> for UserId {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for UserId {
+    impl ::std::convert::TryFrom<&String> for UserId {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for UserId {
+    impl ::std::convert::TryFrom<String> for UserId {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl<'de> serde::Deserialize<'de> for UserId {
+    impl<'de> ::serde::Deserialize<'de> for UserId {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: ::serde::Deserializer<'de>,
         {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
-                    <D::Error as serde::de::Error>::custom(e.to_string())
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
         }
     }
@@ -23815,7 +24295,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "mode", content = "value")]
     pub enum UserPassword {
         /// Sets the user's password to the provided value
@@ -23868,7 +24350,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UserResultsPage {
         /// list of items on this page of results
         pub items: Vec<User>,
@@ -23912,7 +24396,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct UsernamePasswordCredentials {
         pub password: Password,
         pub username: UserId,
@@ -23969,7 +24455,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Utilization {
         /// The total amount of resources that can be provisioned in this silo
         /// Actions that would exceed this limit will fail
@@ -24156,7 +24644,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "values")]
     pub enum ValueArray {
         #[serde(rename = "integer")]
@@ -24239,7 +24729,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Values {
         pub metric_type: MetricType,
         pub values: ValueArray,
@@ -24298,7 +24790,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VirtualResourceCounts {
         /// Number of virtual CPUs
         pub cpus: i64,
@@ -24333,9 +24827,11 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Vni(pub u32);
-    impl std::ops::Deref for Vni {
+    impl ::std::ops::Deref for Vni {
         type Target = u32;
         fn deref(&self) -> &u32 {
             &self.0
@@ -24475,7 +24971,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct Vpc {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -24547,7 +25045,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcCreate {
         pub description: String,
         pub dns_name: Name,
@@ -24683,7 +25183,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcFirewallRule {
         /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
@@ -24738,6 +25240,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -24747,8 +25251,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum VpcFirewallRuleAction {
         #[serde(rename = "allow")]
@@ -24819,6 +25321,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -24828,8 +25332,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum VpcFirewallRuleDirection {
         #[serde(rename = "inbound")]
@@ -24943,7 +25445,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcFirewallRuleFilter {
         /// If present, host filters match the "other end" of traffic from the
         /// target’s perspective: for an inbound rule, they match the source of
@@ -25086,7 +25590,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleHostFilter {
         /// The rule applies to traffic from/to all instances in the VPC
@@ -25142,6 +25648,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -25151,8 +25659,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum VpcFirewallRuleProtocol {
         #[serde(rename = "TCP")]
@@ -25227,6 +25733,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -25236,8 +25744,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum VpcFirewallRuleStatus {
         #[serde(rename = "disabled")]
@@ -25410,7 +25916,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleTarget {
         /// The rule applies to all instances in the VPC
@@ -25532,7 +26040,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcFirewallRuleUpdate {
         /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
@@ -25588,7 +26098,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcFirewallRuleUpdateParams {
         pub rules: Vec<VpcFirewallRuleUpdate>,
     }
@@ -25627,7 +26139,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcFirewallRules {
         pub rules: Vec<VpcFirewallRule>,
     }
@@ -25675,7 +26189,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcResultsPage {
         /// list of items on this page of results
         pub items: Vec<Vpc>,
@@ -25757,7 +26273,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcRouter {
         /// human-readable free-form text about a resource
         pub description: String,
@@ -25809,7 +26327,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcRouterCreate {
         pub description: String,
         pub name: Name,
@@ -25842,6 +26362,8 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
         Clone,
         Copy,
         Debug,
@@ -25851,8 +26373,6 @@ pub mod types {
         PartialEq,
         PartialOrd,
         schemars :: JsonSchema,
-        serde :: Deserialize,
-        serde :: Serialize,
     )]
     pub enum VpcRouterKind {
         #[serde(rename = "system")]
@@ -25939,7 +26459,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcRouterResultsPage {
         /// list of items on this page of results
         pub items: Vec<VpcRouter>,
@@ -25986,7 +26508,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcRouterUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -26091,7 +26615,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcSubnet {
         /// ID for an attached custom router.
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -26184,7 +26710,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcSubnetCreate {
         /// An optional router, used to direct packets sent from hosts in this
         /// subnet to any destination address.
@@ -26254,7 +26782,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcSubnetResultsPage {
         /// list of items on this page of results
         pub items: Vec<VpcSubnet>,
@@ -26310,7 +26840,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcSubnetUpdate {
         /// An optional router, used to direct packets sent from hosts in this
         /// subnet to any destination address.
@@ -26367,7 +26899,9 @@ pub mod types {
     /// }
     /// ```
     /// </details>
-    #[derive(Clone, Debug, schemars :: JsonSchema, serde :: Deserialize, serde :: Serialize)]
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
     pub struct VpcUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub description: Option<String>,
@@ -39152,7 +39686,7 @@ pub mod types {
             id: Result<uuid::Uuid, String>,
             identity_mode: Result<super::SiloIdentityMode, String>,
             mapped_fleet_roles:
-                Result<std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
+                Result<::std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
             name: Result<super::Name, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -39216,7 +39750,9 @@ pub mod types {
             }
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, Vec<super::FleetRole>>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<String, Vec<super::FleetRole>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.mapped_fleet_roles = value.try_into().map_err(|e| {
@@ -39297,7 +39833,7 @@ pub mod types {
             discoverable: Result<bool, String>,
             identity_mode: Result<super::SiloIdentityMode, String>,
             mapped_fleet_roles:
-                Result<std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
+                Result<::std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
             name: Result<super::Name, String>,
             quotas: Result<super::SiloQuotasCreate, String>,
             tls_certificates: Result<Vec<super::CertificateCreate>, String>,
@@ -39364,7 +39900,9 @@ pub mod types {
             }
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, Vec<super::FleetRole>>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<String, Vec<super::FleetRole>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.mapped_fleet_roles = value.try_into().map_err(|e| {
@@ -41465,7 +42003,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchBgpHistory {
-            history: Result<std::collections::HashMap<String, super::BgpMessageHistory>, String>,
+            history: Result<::std::collections::HashMap<String, super::BgpMessageHistory>, String>,
             switch: Result<super::SwitchLocation, String>,
         }
 
@@ -41482,7 +42020,7 @@ pub mod types {
             pub fn history<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    std::collections::HashMap<String, super::BgpMessageHistory>,
+                    ::std::collections::HashMap<String, super::BgpMessageHistory>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -42447,18 +42985,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsCreate {
-            addresses: Result<std::collections::HashMap<String, super::AddressConfig>, String>,
-            bgp_peers: Result<std::collections::HashMap<String, super::BgpPeerConfig>, String>,
+            addresses: Result<::std::collections::HashMap<String, super::AddressConfig>, String>,
+            bgp_peers: Result<::std::collections::HashMap<String, super::BgpPeerConfig>, String>,
             description: Result<String, String>,
             groups: Result<Vec<super::NameOrId>, String>,
             interfaces: Result<
-                std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
+                ::std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
                 String,
             >,
-            links: Result<std::collections::HashMap<String, super::LinkConfigCreate>, String>,
+            links: Result<::std::collections::HashMap<String, super::LinkConfigCreate>, String>,
             name: Result<super::Name, String>,
             port_config: Result<super::SwitchPortConfigCreate, String>,
-            routes: Result<std::collections::HashMap<String, super::RouteConfig>, String>,
+            routes: Result<::std::collections::HashMap<String, super::RouteConfig>, String>,
         }
 
         impl Default for SwitchPortSettingsCreate {
@@ -42480,7 +43018,7 @@ pub mod types {
         impl SwitchPortSettingsCreate {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::AddressConfig>>,
+                T: std::convert::TryInto<::std::collections::HashMap<String, super::AddressConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.addresses = value
@@ -42490,7 +43028,7 @@ pub mod types {
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::BgpPeerConfig>>,
+                T: std::convert::TryInto<::std::collections::HashMap<String, super::BgpPeerConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.bgp_peers = value
@@ -42521,7 +43059,7 @@ pub mod types {
             pub fn interfaces<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
+                    ::std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -42533,7 +43071,7 @@ pub mod types {
             pub fn links<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    std::collections::HashMap<String, super::LinkConfigCreate>,
+                    ::std::collections::HashMap<String, super::LinkConfigCreate>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -42564,7 +43102,7 @@ pub mod types {
             }
             pub fn routes<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::RouteConfig>>,
+                T: std::convert::TryInto<::std::collections::HashMap<String, super::RouteConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.routes = value
@@ -43030,7 +43568,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Table {
             name: Result<String, String>,
-            timeseries: Result<std::collections::HashMap<String, super::Timeseries>, String>,
+            timeseries: Result<::std::collections::HashMap<String, super::Timeseries>, String>,
         }
 
         impl Default for Table {
@@ -43055,7 +43593,7 @@ pub mod types {
             }
             pub fn timeseries<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::Timeseries>>,
+                T: std::convert::TryInto<::std::collections::HashMap<String, super::Timeseries>>,
                 T::Error: std::fmt::Display,
             {
                 self.timeseries = value
@@ -43086,7 +43624,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Timeseries {
-            fields: Result<std::collections::HashMap<String, super::FieldValue>, String>,
+            fields: Result<::std::collections::HashMap<String, super::FieldValue>, String>,
             points: Result<super::Points, String>,
         }
 
@@ -43102,7 +43640,7 @@ pub mod types {
         impl Timeseries {
             pub fn fields<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::FieldValue>>,
+                T: std::convert::TryInto<::std::collections::HashMap<String, super::FieldValue>>,
                 T::Error: std::fmt::Display,
             {
                 self.fields = value
