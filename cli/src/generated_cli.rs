@@ -361,7 +361,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -370,11 +370,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -392,19 +392,19 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("ip-pool")
                     .long("ip-pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -436,14 +436,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("probe")
                     .long("probe")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the probe"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -455,14 +455,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("probe")
                     .long("probe")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the probe"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -474,13 +474,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("provider-name")
                     .long("provider-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true),
             )
             .arg(
                 clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true),
             )
             .about("Authenticate a user via SAML")
@@ -500,11 +500,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -541,7 +541,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -549,9 +549,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("service")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::ServiceUsingCertificate3::ExternalApi.to_string(),
+                            types::ServiceUsingCertificate::ExternalApi.to_string(),
                         ]),
-                        |s| types::ServiceUsingCertificate3::try_from(s).unwrap(),
+                        |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The service using this certificate"),
@@ -582,7 +582,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("certificate")
                     .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Fetch certificate")
@@ -594,7 +594,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("certificate")
                     .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Delete certificate")
@@ -613,7 +613,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -622,11 +622,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -644,20 +644,20 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("size")
                     .long("size")
-                    .value_parser(clap::value_parser!(types::ByteCount3))
+                    .value_parser(clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
                     .help("total size of the Disk in bytes"),
             )
@@ -683,14 +683,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -702,14 +702,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -727,7 +727,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
@@ -740,7 +740,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -766,14 +766,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -786,14 +786,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -806,21 +806,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("snapshot-name")
                     .long("snapshot-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false)
                     .help(
                         "If specified a snapshot of the disk will be created with the given name \
@@ -851,7 +851,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
@@ -873,14 +873,14 @@ impl<T: CliConfig> Cli<T> {
                     .long("metric")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::DiskMetricName3::Activated.to_string(),
-                            types::DiskMetricName3::Flush.to_string(),
-                            types::DiskMetricName3::Read.to_string(),
-                            types::DiskMetricName3::ReadBytes.to_string(),
-                            types::DiskMetricName3::Write.to_string(),
-                            types::DiskMetricName3::WriteBytes.to_string(),
+                            types::DiskMetricName::Activated.to_string(),
+                            types::DiskMetricName::Flush.to_string(),
+                            types::DiskMetricName::Read.to_string(),
+                            types::DiskMetricName::ReadBytes.to_string(),
+                            types::DiskMetricName::Write.to_string(),
+                            types::DiskMetricName::WriteBytes.to_string(),
                         ]),
-                        |s| types::DiskMetricName3::try_from(s).unwrap(),
+                        |s| types::DiskMetricName::try_from(s).unwrap(),
                     ))
                     .required(true),
             )
@@ -889,10 +889,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("order")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::PaginationOrder3::Ascending.to_string(),
-                            types::PaginationOrder3::Descending.to_string(),
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
                         ]),
-                        |s| types::PaginationOrder3::try_from(s).unwrap(),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
                     ))
                     .required(false)
                     .help("Query result order"),
@@ -900,7 +900,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -926,7 +926,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -935,11 +935,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -968,13 +968,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "The parent IP pool that a floating IP is pulled from. If unset, the \
@@ -984,7 +984,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -1010,14 +1010,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1035,20 +1035,20 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1074,14 +1074,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1093,7 +1093,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
@@ -1102,9 +1102,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("kind")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::FloatingIpParentKind3::Instance.to_string(),
+                            types::FloatingIpParentKind::Instance.to_string(),
                         ]),
-                        |s| types::FloatingIpParentKind3::try_from(s).unwrap(),
+                        |s| types::FloatingIpParentKind::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The type of `parent`'s resource"),
@@ -1112,14 +1112,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("parent")
                     .long("parent")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the resource that this IP address should be attached to"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1146,14 +1146,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1174,9 +1174,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1207,7 +1207,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1216,11 +1216,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1242,7 +1242,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -1255,7 +1255,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1289,14 +1289,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1309,14 +1309,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1333,14 +1333,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -1353,14 +1353,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1380,7 +1380,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -1389,11 +1389,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1411,31 +1411,31 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("hostname")
                     .long("hostname")
-                    .value_parser(clap::value_parser!(types::Hostname3))
+                    .value_parser(clap::value_parser!(types::Hostname))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
-                    .value_parser(clap::value_parser!(types::ByteCount3))
+                    .value_parser(clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ncpus")
                     .long("ncpus")
-                    .value_parser(clap::value_parser!(types::InstanceCpuCount3))
+                    .value_parser(clap::value_parser!(types::InstanceCpuCount))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -1479,14 +1479,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1498,14 +1498,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1517,7 +1517,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -1531,7 +1531,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1540,11 +1540,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1556,21 +1556,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1596,21 +1596,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1636,14 +1636,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1655,21 +1655,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the IP pool used to allocate an address"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1695,14 +1695,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1720,14 +1720,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1753,14 +1753,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1784,7 +1784,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -1813,7 +1813,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -1828,7 +1828,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -1846,7 +1846,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -1861,7 +1861,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -1875,7 +1875,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1884,11 +1884,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1905,14 +1905,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1924,14 +1924,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1952,11 +1952,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1968,7 +1968,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -1980,19 +1980,19 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("password")
                     .long("password")
-                    .value_parser(clap::value_parser!(types::Password3))
+                    .value_parser(clap::value_parser!(types::Password))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true),
             )
             .arg(
                 clap::Arg::new("username")
                     .long("username")
-                    .value_parser(clap::value_parser!(types::UserId3))
+                    .value_parser(clap::value_parser!(types::UserId))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -2035,9 +2035,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2058,11 +2058,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2081,7 +2081,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -2114,7 +2114,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
@@ -2127,7 +2127,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
@@ -2158,11 +2158,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("metric-name")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SystemMetricName3::VirtualDiskSpaceProvisioned.to_string(),
-                            types::SystemMetricName3::CpusProvisioned.to_string(),
-                            types::SystemMetricName3::RamProvisioned.to_string(),
+                            types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
+                            types::SystemMetricName::CpusProvisioned.to_string(),
+                            types::SystemMetricName::RamProvisioned.to_string(),
                         ]),
-                        |s| types::SystemMetricName3::try_from(s).unwrap(),
+                        |s| types::SystemMetricName::try_from(s).unwrap(),
                     ))
                     .required(true),
             )
@@ -2171,10 +2171,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("order")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::PaginationOrder3::Ascending.to_string(),
-                            types::PaginationOrder3::Descending.to_string(),
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
                         ]),
-                        |s| types::PaginationOrder3::try_from(s).unwrap(),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
                     ))
                     .required(false)
                     .help("Query result order"),
@@ -2182,7 +2182,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -2204,7 +2204,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -2218,7 +2218,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2230,11 +2230,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2252,7 +2252,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
@@ -2269,13 +2269,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2285,14 +2285,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("subnet-name")
                     .long("subnet-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The VPC Subnet in which to create the interface."),
             )
             .arg(
                 clap::Arg::new("vpc-name")
                     .long("vpc-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The VPC in which to create the interface."),
             )
@@ -2318,21 +2318,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2353,21 +2353,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
@@ -2389,7 +2389,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2418,21 +2418,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2490,11 +2490,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2512,7 +2512,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -2537,7 +2537,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2555,13 +2555,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2587,7 +2587,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2599,7 +2599,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2611,7 +2611,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2644,7 +2644,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2653,11 +2653,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2675,20 +2675,20 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("The disk to be snapshotted"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -2715,14 +2715,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
@@ -2734,14 +2734,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
@@ -2762,9 +2762,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2797,9 +2797,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2832,9 +2832,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2905,9 +2905,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2935,9 +2935,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -2958,10 +2958,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("state")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SledProvisionPolicy3::Provisionable.to_string(),
-                            types::SledProvisionPolicy3::NonProvisionable.to_string(),
+                            types::SledProvisionPolicy::Provisionable.to_string(),
+                            types::SledProvisionPolicy::NonProvisionable.to_string(),
                         ]),
-                        |s| types::SledProvisionPolicy3::try_from(s).unwrap(),
+                        |s| types::SledProvisionPolicy::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The provision state."),
@@ -3009,9 +3009,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3030,14 +3030,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
             .arg(
                 clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("A name or id to use when applying switch port settings."),
             )
@@ -3051,7 +3051,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3077,7 +3077,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
@@ -3091,7 +3091,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3103,7 +3103,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
@@ -3117,7 +3117,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3138,9 +3138,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3171,7 +3171,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3180,11 +3180,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3196,14 +3196,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("external-id")
                     .long("external-id")
-                    .value_parser(clap::value_parser!(types::UserId3))
+                    .value_parser(clap::value_parser!(types::UserId))
                     .required_unless_present("json-body")
                     .help("username used to log in"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3234,7 +3234,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3253,7 +3253,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3320,13 +3320,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3373,14 +3373,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("provider")
                     .long("provider")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SAML identity provider"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -3401,11 +3401,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3423,7 +3423,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -3448,7 +3448,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3466,13 +3466,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3498,7 +3498,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3517,7 +3517,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3530,7 +3530,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3557,7 +3557,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3590,7 +3590,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3599,9 +3599,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3624,14 +3624,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -3674,13 +3674,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
@@ -3711,13 +3711,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Unlink IP pool from silo")
@@ -3729,7 +3729,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -3813,11 +3813,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("metric-name")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SystemMetricName3::VirtualDiskSpaceProvisioned.to_string(),
-                            types::SystemMetricName3::CpusProvisioned.to_string(),
-                            types::SystemMetricName3::RamProvisioned.to_string(),
+                            types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
+                            types::SystemMetricName::CpusProvisioned.to_string(),
+                            types::SystemMetricName::RamProvisioned.to_string(),
                         ]),
-                        |s| types::SystemMetricName3::try_from(s).unwrap(),
+                        |s| types::SystemMetricName::try_from(s).unwrap(),
                     ))
                     .required(true),
             )
@@ -3826,10 +3826,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("order")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::PaginationOrder3::Ascending.to_string(),
-                            types::PaginationOrder3::Descending.to_string(),
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
                         ]),
-                        |s| types::PaginationOrder3::try_from(s).unwrap(),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
                     ))
                     .required(false)
                     .help("Query result order"),
@@ -3837,7 +3837,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the silo"),
             )
@@ -3868,11 +3868,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -3892,10 +3892,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("kind")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::AddressLotKind3::Infra.to_string(),
-                            types::AddressLotKind3::Pool.to_string(),
+                            types::AddressLotKind::Infra.to_string(),
+                            types::AddressLotKind::Pool.to_string(),
                         ]),
-                        |s| types::AddressLotKind3::try_from(s).unwrap(),
+                        |s| types::AddressLotKind::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The kind of address lot to create."),
@@ -3903,7 +3903,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -3928,7 +3928,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
@@ -3940,7 +3940,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
@@ -3956,9 +3956,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4000,7 +4000,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch")
                     .long("switch")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
             )
@@ -4049,10 +4049,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("mode")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::BfdMode3::SingleHop.to_string(),
-                            types::BfdMode3::MultiHop.to_string(),
+                            types::BfdMode::SingleHop.to_string(),
+                            types::BfdMode::MultiHop.to_string(),
                         ]),
-                        |s| types::BfdMode3::try_from(s).unwrap(),
+                        |s| types::BfdMode::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"),
@@ -4077,7 +4077,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch")
                     .long("switch")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
             )
@@ -4114,7 +4114,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name-or-id")
                     .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("A name or id to use when selecting BGP config."),
             )
@@ -4123,11 +4123,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4146,7 +4146,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("bgp-announce-set-id")
                     .long("bgp-announce-set-id")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -4158,13 +4158,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("vrf")
                     .long("vrf")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false)
                     .help(
                         "Optional virtual routing and forwarding identifier for this BGP \
@@ -4193,7 +4193,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name-or-id")
                     .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
             )
@@ -4205,7 +4205,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name-or-id")
                     .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
@@ -4223,7 +4223,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -4252,7 +4252,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name-or-id")
                     .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
@@ -4301,9 +4301,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4322,7 +4322,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help(
                         "The name or id of the address lot this loopback address will pull an \
@@ -4356,7 +4356,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help(
                         "The location of the switch within the rack this loopback address will be \
@@ -4412,7 +4412,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(true)
                     .help("The switch location to use when selecting the loopback address."),
             )
@@ -4431,7 +4431,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("An optional name or id to use when selecting port settings."),
             )
@@ -4440,11 +4440,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4462,7 +4462,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -4487,7 +4487,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("An optional name or id to use when selecting port settings."),
             )
@@ -4499,7 +4499,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting switch port settings info objects."),
             )
@@ -4567,9 +4567,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4590,11 +4590,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4635,17 +4635,17 @@ impl<T: CliConfig> Cli<T> {
                     .long("identity-mode")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SiloIdentityMode3::SamlJit.to_string(),
-                            types::SiloIdentityMode3::LocalOnly.to_string(),
+                            types::SiloIdentityMode::SamlJit.to_string(),
+                            types::SiloIdentityMode::LocalOnly.to_string(),
                         ]),
-                        |s| types::SiloIdentityMode3::try_from(s).unwrap(),
+                        |s| types::SiloIdentityMode::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -4670,7 +4670,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4683,7 +4683,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4703,7 +4703,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4712,11 +4712,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4733,7 +4733,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4745,7 +4745,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4771,7 +4771,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4790,7 +4790,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
-                    .value_parser(clap::value_parser!(types::ByteCount3))
+                    .value_parser(clap::value_parser!(types::ByteCount))
                     .required(false)
                     .help(
                         "The amount of RAM (in bytes) available for running instances in the Silo",
@@ -4799,14 +4799,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("storage")
                     .long("storage")
-                    .value_parser(clap::value_parser!(types::ByteCount3))
+                    .value_parser(clap::value_parser!(types::ByteCount))
                     .required(false)
                     .help("The amount of storage (in bytes) available for disks or snapshots"),
             )
@@ -4840,7 +4840,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4849,9 +4849,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4863,7 +4863,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -4891,9 +4891,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameSortMode3::NameAscending.to_string(),
+                            types::NameSortMode::NameAscending.to_string(),
                         ]),
-                        |s| types::NameSortMode3::try_from(s).unwrap(),
+                        |s| types::NameSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4905,7 +4905,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("user")
                     .long("user")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Fetch built-in user")
@@ -4925,11 +4925,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -4941,7 +4941,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -5007,9 +5007,9 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode3::IdAscending.to_string()
+                            types::IdSortMode::IdAscending.to_string()
                         ]),
-                        |s| types::IdSortMode3::try_from(s).unwrap(),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -5025,7 +5025,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5034,7 +5034,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5046,7 +5046,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5055,7 +5055,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5099,7 +5099,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5108,7 +5108,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
@@ -5117,18 +5117,18 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5149,13 +5149,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5164,14 +5164,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5199,7 +5199,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5208,21 +5208,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5242,13 +5242,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5257,21 +5257,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5299,7 +5299,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5308,21 +5308,21 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5343,7 +5343,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5354,18 +5354,18 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5383,13 +5383,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5398,7 +5398,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5424,7 +5424,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5433,14 +5433,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5458,13 +5458,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5473,14 +5473,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5506,7 +5506,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5515,14 +5515,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5541,7 +5541,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5552,18 +5552,18 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5575,7 +5575,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("custom-router")
                     .long("custom-router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "An optional router, used to direct packets sent from hosts in this \
@@ -5593,7 +5593,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("ipv4-block")
                     .long("ipv4-block")
-                    .value_parser(clap::value_parser!(types::Ipv4Net3))
+                    .value_parser(clap::value_parser!(types::Ipv4Net))
                     .required_unless_present("json-body")
                     .help(
                         "The IPv4 address range for this subnet.\n\nIt must be allocated from an \
@@ -5604,7 +5604,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("ipv6-block")
                     .long("ipv6-block")
-                    .value_parser(clap::value_parser!(types::Ipv6Net3))
+                    .value_parser(clap::value_parser!(types::Ipv6Net))
                     .required(false)
                     .help(
                         "The IPv6 address range for this subnet.\n\nIt must be allocated from the \
@@ -5616,13 +5616,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5631,7 +5631,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5657,7 +5657,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5666,14 +5666,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5685,7 +5685,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("custom-router")
                     .long("custom-router")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "An optional router, used to direct packets sent from hosts in this \
@@ -5701,13 +5701,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5716,14 +5716,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5749,7 +5749,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5758,14 +5758,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5784,7 +5784,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
@@ -5795,25 +5795,25 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
@@ -5832,7 +5832,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -5841,11 +5841,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode3::NameAscending.to_string(),
-                            types::NameOrIdSortMode3::NameDescending.to_string(),
-                            types::NameOrIdSortMode3::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::NameOrIdSortMode3::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -5863,13 +5863,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ipv6-prefix")
                     .long("ipv6-prefix")
-                    .value_parser(clap::value_parser!(types::Ipv6Net3))
+                    .value_parser(clap::value_parser!(types::Ipv6Net))
                     .required(false)
                     .help(
                         "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC \
@@ -5881,13 +5881,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -5913,14 +5913,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5938,26 +5938,26 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name3))
+                    .value_parser(clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -5983,14 +5983,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId3))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
@@ -6333,7 +6333,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthRequest3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6361,7 +6361,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthVerify3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6400,7 +6400,7 @@ impl<T: CliConfig> Cli<T> {
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::DeviceAccessTokenRequest3>(&body_txt).unwrap();
+                serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6423,16 +6423,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_probe_list(matches, &mut request)?;
-        self.config.list_start::<types::ProbeInfoResultsPage3>();
+        self.config.list_start::<types::ProbeInfoResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -6447,7 +6447,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::ProbeInfoResultsPage3>();
+                        .list_end_success::<types::ProbeInfoResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -6463,15 +6463,15 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("ip-pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {
             request = request.body_map(|body| body.ip_pool(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6481,7 +6481,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProbeCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6501,11 +6501,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_probe_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("probe") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
             request = request.probe(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6525,11 +6525,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_probe_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("probe") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
             request = request.probe(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6549,11 +6549,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_login_saml(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_saml();
-        if let Some(value) = matches.get_one::<types::Name3>("provider-name") {
+        if let Some(value) = matches.get_one::<types::Name>("provider-name") {
             request = request.provider_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("silo-name") {
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
 
@@ -6576,13 +6576,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_certificate_list(matches, &mut request)?;
-        self.config.list_start::<types::CertificateResultsPage3>();
+        self.config.list_start::<types::CertificateResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -6597,7 +6597,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::CertificateResultsPage3>();
+                        .list_end_success::<types::CertificateResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -6624,17 +6624,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.key(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate3>("service") {
+        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
             request = request.body_map(|body| body.service(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::CertificateCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6655,7 +6655,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.certificate_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("certificate") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
             request = request.certificate(value.clone());
         }
 
@@ -6679,7 +6679,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("certificate") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
             request = request.certificate(value.clone());
         }
 
@@ -6704,16 +6704,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_disk_list(matches, &mut request)?;
-        self.config.list_start::<types::DiskResultsPage3>();
+        self.config.list_start::<types::DiskResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -6727,7 +6727,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::DiskResultsPage3>();
+                    self.config.list_end_success::<types::DiskResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -6743,21 +6743,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::ByteCount3>("size") {
+        if let Some(value) = matches.get_one::<types::ByteCount>("size") {
             request = request.body_map(|body| body.size(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6777,11 +6777,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6801,11 +6801,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6832,7 +6832,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.base64_encoded_data(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
@@ -6840,14 +6840,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.offset(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::ImportBlocksBulkWrite3>(&body_txt).unwrap();
+                serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6871,11 +6871,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_start();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6899,11 +6899,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_stop();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6927,21 +6927,21 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_finalize_import();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("snapshot-name") {
+        if let Some(value) = matches.get_one::<types::Name>("snapshot-name") {
             request = request.body_map(|body| body.snapshot_name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FinalizeDisk3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -6965,7 +6965,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_metrics_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
 
@@ -6977,15 +6977,15 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::DiskMetricName3>("metric") {
+        if let Some(value) = matches.get_one::<types::DiskMetricName>("metric") {
             request = request.metric(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::PaginationOrder3>("order") {
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
             request = request.order(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -6996,7 +6996,7 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_disk_metrics_list(matches, &mut request)?;
-        self.config.list_start::<types::MeasurementResultsPage3>();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7011,7 +7011,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::MeasurementResultsPage3>();
+                        .list_end_success::<types::MeasurementResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7027,17 +7027,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_floating_ip_list(matches, &mut request)?;
-        self.config.list_start::<types::FloatingIpResultsPage3>();
+        self.config.list_start::<types::FloatingIpResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7052,7 +7052,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::FloatingIpResultsPage3>();
+                        .list_end_success::<types::FloatingIpResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7075,21 +7075,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.ip(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.body_map(|body| body.pool(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7110,11 +7110,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("floating-ip") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7142,21 +7142,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("floating-ip") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7180,11 +7180,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("floating-ip") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7208,25 +7208,25 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_attach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("floating-ip") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::FloatingIpParentKind3>("kind") {
+        if let Some(value) = matches.get_one::<types::FloatingIpParentKind>("kind") {
             request = request.body_map(|body| body.kind(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("parent") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("parent") {
             request = request.body_map(|body| body.parent(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpAttach3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7250,11 +7250,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_detach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("floating-ip") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7279,12 +7279,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_group_list(matches, &mut request)?;
-        self.config.list_start::<types::GroupResultsPage3>();
+        self.config.list_start::<types::GroupResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7298,7 +7298,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::GroupResultsPage3>();
+                    self.config.list_end_success::<types::GroupResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7334,16 +7334,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_image_list(matches, &mut request)?;
-        self.config.list_start::<types::ImageResultsPage3>();
+        self.config.list_start::<types::ImageResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7357,7 +7357,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::ImageResultsPage3>();
+                    self.config.list_end_success::<types::ImageResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7373,7 +7373,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
@@ -7381,7 +7381,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.os(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7391,7 +7391,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ImageCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7411,11 +7411,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_image_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("image") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7435,11 +7435,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_image_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("image") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7459,11 +7459,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_image_demote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_demote();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("image") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7483,11 +7483,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_image_promote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_promote();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("image") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7511,16 +7511,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_instance_list(matches, &mut request)?;
-        self.config.list_start::<types::InstanceResultsPage3>();
+        self.config.list_start::<types::InstanceResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7534,8 +7534,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config
-                        .list_end_success::<types::InstanceResultsPage3>();
+                    self.config.list_end_success::<types::InstanceResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7551,23 +7550,23 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Hostname3>("hostname") {
+        if let Some(value) = matches.get_one::<types::Hostname>("hostname") {
             request = request.body_map(|body| body.hostname(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::ByteCount3>("memory") {
+        if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
             request = request.body_map(|body| body.memory(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::InstanceCpuCount3>("ncpus") {
+        if let Some(value) = matches.get_one::<types::InstanceCpuCount>("ncpus") {
             request = request.body_map(|body| body.ncpus(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7581,7 +7580,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7601,11 +7600,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7625,11 +7624,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7652,7 +7651,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -7660,17 +7659,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_instance_disk_list(matches, &mut request)?;
-        self.config.list_start::<types::DiskResultsPage3>();
+        self.config.list_start::<types::DiskResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -7684,7 +7683,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::DiskResultsPage3>();
+                    self.config.list_end_success::<types::DiskResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -7699,21 +7698,21 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_attach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7737,21 +7736,21 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_detach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7775,11 +7774,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_external_ip_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7803,21 +7802,21 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_attach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.body_map(|body| body.pool(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::EphemeralIpCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7841,11 +7840,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_detach();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7870,17 +7869,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.dst_sled_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceMigrate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceMigrate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -7901,11 +7900,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_reboot(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_reboot();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7932,7 +7931,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.from_start(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -7944,7 +7943,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.most_recent(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7968,7 +7967,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_serial_console_stream();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -7976,7 +7975,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.most_recent(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -7998,7 +7997,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ssh_public_key_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -8006,17 +8005,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_instance_ssh_public_key_list(matches, &mut request)?;
-        self.config.list_start::<types::SshKeyResultsPage3>();
+        self.config.list_start::<types::SshKeyResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8030,7 +8029,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::SshKeyResultsPage3>();
+                    self.config.list_end_success::<types::SshKeyResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8042,11 +8041,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_start(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_start();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8066,11 +8065,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_stop(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_stop();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8097,13 +8096,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_project_ip_pool_list(matches, &mut request)?;
-        self.config.list_start::<types::SiloIpPoolResultsPage3>();
+        self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8118,7 +8117,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SiloIpPoolResultsPage3>();
+                        .list_end_success::<types::SiloIpPoolResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8133,7 +8132,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
@@ -8154,22 +8153,22 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_login_local(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_local();
-        if let Some(value) = matches.get_one::<types::Password3>("password") {
+        if let Some(value) = matches.get_one::<types::Password>("password") {
             request = request.body_map(|body| body.password(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("silo-name") {
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::UserId3>("username") {
+        if let Some(value) = matches.get_one::<types::UserId>("username") {
             request = request.body_map(|body| body.username(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::UsernamePasswordCredentials3>(&body_txt).unwrap();
+                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8232,13 +8231,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_current_user_groups(matches, &mut request)?;
-        self.config.list_start::<types::GroupResultsPage3>();
+        self.config.list_start::<types::GroupResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8252,7 +8251,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::GroupResultsPage3>();
+                    self.config.list_end_success::<types::GroupResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8271,13 +8270,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_current_user_ssh_key_list(matches, &mut request)?;
-        self.config.list_start::<types::SshKeyResultsPage3>();
+        self.config.list_start::<types::SshKeyResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8291,7 +8290,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::SshKeyResultsPage3>();
+                    self.config.list_end_success::<types::SshKeyResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8310,7 +8309,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
@@ -8320,7 +8319,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SshKeyCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8344,7 +8343,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("ssh-key") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
@@ -8368,7 +8367,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("ssh-key") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
@@ -8397,15 +8396,15 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SystemMetricName3>("metric-name") {
+        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric-name") {
             request = request.metric_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::PaginationOrder3>("order") {
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
             request = request.order(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8415,7 +8414,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_silo_metric(matches, &mut request)?;
-        self.config.list_start::<types::MeasurementResultsPage3>();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8430,7 +8429,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::MeasurementResultsPage3>();
+                        .list_end_success::<types::MeasurementResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8445,7 +8444,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -8453,18 +8452,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_instance_network_interface_list(matches, &mut request)?;
         self.config
-            .list_start::<types::InstanceNetworkInterfaceResultsPage3>();
+            .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8479,7 +8478,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage3>();
+                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8498,7 +8497,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
@@ -8506,26 +8505,26 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.ip(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("subnet-name") {
+        if let Some(value) = matches.get_one::<types::Name>("subnet-name") {
             request = request.body_map(|body| body.subnet_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("vpc-name") {
+        if let Some(value) = matches.get_one::<types::Name>("vpc-name") {
             request = request.body_map(|body| body.vpc_name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceCreate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8549,15 +8548,15 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("interface") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("interface") {
             request = request.interface(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8585,15 +8584,15 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("interface") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("interface") {
             request = request.interface(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
@@ -8601,14 +8600,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.primary(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8632,15 +8631,15 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("instance") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("interface") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("interface") {
             request = request.interface(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8695,7 +8694,7 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8719,12 +8718,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_project_list(matches, &mut request)?;
-        self.config.list_start::<types::ProjectResultsPage3>();
+        self.config.list_start::<types::ProjectResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8738,7 +8737,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::ProjectResultsPage3>();
+                    self.config.list_end_success::<types::ProjectResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8754,13 +8753,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8780,7 +8779,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8804,17 +8803,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8834,7 +8833,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8857,7 +8856,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
@@ -8881,13 +8880,13 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_update();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectRolePolicy3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8912,16 +8911,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_snapshot_list(matches, &mut request)?;
-        self.config.list_start::<types::SnapshotResultsPage3>();
+        self.config.list_start::<types::SnapshotResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -8935,8 +8934,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config
-                        .list_end_success::<types::SnapshotResultsPage3>();
+                    self.config.list_end_success::<types::SnapshotResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -8952,21 +8950,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SnapshotCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8986,11 +8984,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_snapshot_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("snapshot") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("snapshot") {
             request = request.snapshot(value.clone());
         }
 
@@ -9010,11 +9008,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_snapshot_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("snapshot") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("snapshot") {
             request = request.snapshot(value.clone());
         }
 
@@ -9041,13 +9039,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_physical_disk_list(matches, &mut request)?;
-        self.config.list_start::<types::PhysicalDiskResultsPage3>();
+        self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9062,7 +9060,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::PhysicalDiskResultsPage3>();
+                        .list_end_success::<types::PhysicalDiskResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9102,12 +9100,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_rack_list(matches, &mut request)?;
-        self.config.list_start::<types::RackResultsPage3>();
+        self.config.list_start::<types::RackResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9121,7 +9119,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::RackResultsPage3>();
+                    self.config.list_end_success::<types::RackResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9157,12 +9155,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_sled_list(matches, &mut request)?;
-        self.config.list_start::<types::SledResultsPage3>();
+        self.config.list_start::<types::SledResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9176,7 +9174,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::SledResultsPage3>();
+                    self.config.list_end_success::<types::SledResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9198,8 +9196,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::UninitializedSledId3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9250,13 +9247,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_sled_physical_disk_list(matches, &mut request)?;
-        self.config.list_start::<types::PhysicalDiskResultsPage3>();
+        self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9271,7 +9268,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::PhysicalDiskResultsPage3>();
+                        .list_end_success::<types::PhysicalDiskResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9294,13 +9291,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_sled_instance_list(matches, &mut request)?;
-        self.config.list_start::<types::SledInstanceResultsPage3>();
+        self.config.list_start::<types::SledInstanceResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9315,7 +9312,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SledInstanceResultsPage3>();
+                        .list_end_success::<types::SledInstanceResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9334,14 +9331,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SledProvisionPolicy3>("state") {
+        if let Some(value) = matches.get_one::<types::SledProvisionPolicy>("state") {
             request = request.body_map(|body| body.state(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SledProvisionPolicyParams3>(&body_txt).unwrap();
+                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9372,7 +9369,7 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_sled_list_uninitialized(matches, &mut request)?;
         self.config
-            .list_start::<types::UninitializedSledResultsPage3>();
+            .list_start::<types::UninitializedSledResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9387,7 +9384,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::UninitializedSledResultsPage3>();
+                        .list_end_success::<types::UninitializedSledResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9406,7 +9403,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -9416,7 +9413,7 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_networking_switch_port_list(matches, &mut request)?;
-        self.config.list_start::<types::SwitchPortResultsPage3>();
+        self.config.list_start::<types::SwitchPortResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9431,7 +9428,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SwitchPortResultsPage3>();
+                        .list_end_success::<types::SwitchPortResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9446,11 +9443,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_apply_settings();
-        if let Some(value) = matches.get_one::<types::Name3>("port") {
+        if let Some(value) = matches.get_one::<types::Name>("port") {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("port-settings") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
             request = request.body_map(|body| body.port_settings(value.clone()))
         }
 
@@ -9458,14 +9455,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch-location") {
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SwitchPortApplySettings3>(&body_txt).unwrap();
+                serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9489,7 +9486,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_clear_settings();
-        if let Some(value) = matches.get_one::<types::Name3>("port") {
+        if let Some(value) = matches.get_one::<types::Name>("port") {
             request = request.port(value.clone());
         }
 
@@ -9497,7 +9494,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch-location") {
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -9521,7 +9518,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_status();
-        if let Some(value) = matches.get_one::<types::Name3>("port") {
+        if let Some(value) = matches.get_one::<types::Name>("port") {
             request = request.port(value.clone());
         }
 
@@ -9529,7 +9526,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch-location") {
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -9554,12 +9551,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_switch_list(matches, &mut request)?;
-        self.config.list_start::<types::SwitchResultsPage3>();
+        self.config.list_start::<types::SwitchResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9573,7 +9570,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::SwitchResultsPage3>();
+                    self.config.list_end_success::<types::SwitchResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9612,18 +9609,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_silo_identity_provider_list(matches, &mut request)?;
         self.config
-            .list_start::<types::IdentityProviderResultsPage3>();
+            .list_start::<types::IdentityProviderResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9638,7 +9635,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::IdentityProviderResultsPage3>();
+                        .list_end_success::<types::IdentityProviderResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9653,17 +9650,17 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_create();
-        if let Some(value) = matches.get_one::<types::UserId3>("external-id") {
+        if let Some(value) = matches.get_one::<types::UserId>("external-id") {
             request = request.body_map(|body| body.external_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9687,7 +9684,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -9715,7 +9712,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_set_password();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -9725,7 +9722,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserPassword3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9765,11 +9762,11 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.idp_entity_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -9788,7 +9785,7 @@ impl<T: CliConfig> Cli<T> {
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SamlIdentityProviderCreate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9812,11 +9809,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.saml_identity_provider_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("provider") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("provider") {
             request = request.provider(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -9841,12 +9838,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_ip_pool_list(matches, &mut request)?;
-        self.config.list_start::<types::IpPoolResultsPage3>();
+        self.config.list_start::<types::IpPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -9860,7 +9857,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::IpPoolResultsPage3>();
+                    self.config.list_end_success::<types::IpPoolResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -9876,13 +9873,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9902,7 +9899,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
@@ -9926,17 +9923,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9956,7 +9953,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
@@ -9983,13 +9980,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
             .execute_ip_pool_range_list(matches, &mut request)?;
-        self.config.list_start::<types::IpPoolRangeResultsPage3>();
+        self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10004,7 +10001,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::IpPoolRangeResultsPage3>();
+                        .list_end_success::<types::IpPoolRangeResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10019,13 +10016,13 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_add();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10049,13 +10046,13 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_remove();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10083,18 +10080,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_ip_pool_silo_list(matches, &mut request)?;
-        self.config
-            .list_start::<types::IpPoolSiloLinkResultsPage3>();
+        self.config.list_start::<types::IpPoolSiloLinkResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10109,7 +10105,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::IpPoolSiloLinkResultsPage3>();
+                        .list_end_success::<types::IpPoolSiloLinkResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10128,17 +10124,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.body_map(|body| body.silo(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolLinkSilo3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10166,17 +10162,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.is_default(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10200,11 +10196,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_unlink();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -10228,7 +10224,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_utilization_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("pool") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
@@ -10278,7 +10274,7 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_ip_pool_service_range_list(matches, &mut request)?;
-        self.config.list_start::<types::IpPoolRangeResultsPage3>();
+        self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10293,7 +10289,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::IpPoolRangeResultsPage3>();
+                        .list_end_success::<types::IpPoolRangeResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10310,7 +10306,7 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10336,7 +10332,7 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10365,15 +10361,15 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SystemMetricName3>("metric-name") {
+        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric-name") {
             request = request.metric_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::PaginationOrder3>("order") {
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
             request = request.order(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -10383,7 +10379,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_system_metric(matches, &mut request)?;
-        self.config.list_start::<types::MeasurementResultsPage3>();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10398,7 +10394,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::MeasurementResultsPage3>();
+                        .list_end_success::<types::MeasurementResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10417,13 +10413,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_networking_address_lot_list(matches, &mut request)?;
-        self.config.list_start::<types::AddressLotResultsPage3>();
+        self.config.list_start::<types::AddressLotResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10438,7 +10434,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::AddressLotResultsPage3>();
+                        .list_end_success::<types::AddressLotResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10457,17 +10453,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::AddressLotKind3>("kind") {
+        if let Some(value) = matches.get_one::<types::AddressLotKind>("kind") {
             request = request.body_map(|body| body.kind(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AddressLotCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10491,7 +10487,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("address-lot") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.address_lot(value.clone());
         }
 
@@ -10515,7 +10511,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_block_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("address-lot") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.address_lot(value.clone());
         }
 
@@ -10523,14 +10519,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_networking_address_lot_block_list(matches, &mut request)?;
         self.config
-            .list_start::<types::AddressLotBlockResultsPage3>();
+            .list_start::<types::AddressLotBlockResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10545,7 +10541,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::AddressLotBlockResultsPage3>();
+                        .list_end_success::<types::AddressLotBlockResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10582,7 +10578,7 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.networking_allow_list_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AllowListUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10610,13 +10606,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.remote(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch") {
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
             request = request.body_map(|body| body.switch(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionDisable3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10648,7 +10644,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.local(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::BfdMode3>("mode") {
+        if let Some(value) = matches.get_one::<types::BfdMode>("mode") {
             request = request.body_map(|body| body.mode(value.clone()))
         }
 
@@ -10660,13 +10656,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.required_rx(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch") {
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
             request = request.body_map(|body| body.switch(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionEnable3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10714,17 +10710,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("name-or-id") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_networking_bgp_config_list(matches, &mut request)?;
-        self.config.list_start::<types::BgpConfigResultsPage3>();
+        self.config.list_start::<types::BgpConfigResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -10739,7 +10735,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::BgpConfigResultsPage3>();
+                        .list_end_success::<types::BgpConfigResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -10758,7 +10754,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.asn(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("bgp-announce-set-id") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-announce-set-id") {
             request = request.body_map(|body| body.bgp_announce_set_id(value.clone()))
         }
 
@@ -10766,17 +10762,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("vrf") {
+        if let Some(value) = matches.get_one::<types::Name>("vrf") {
             request = request.body_map(|body| body.vrf(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BgpConfigCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10800,7 +10796,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("name-or-id") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
@@ -10824,7 +10820,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_list();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("name-or-id") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
@@ -10852,14 +10848,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::BgpAnnounceSetCreate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -10883,7 +10879,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("name-or-id") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
@@ -10979,14 +10975,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_networking_loopback_address_list(matches, &mut request)?;
         self.config
-            .list_start::<types::LoopbackAddressResultsPage3>();
+            .list_start::<types::LoopbackAddressResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11001,7 +10997,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::LoopbackAddressResultsPage3>();
+                        .list_end_success::<types::LoopbackAddressResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11020,7 +11016,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.address(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("address-lot") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.body_map(|body| body.address_lot(value.clone()))
         }
 
@@ -11036,14 +11032,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.rack_id(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch-location") {
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
             request = request.body_map(|body| body.switch_location(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::LoopbackAddressCreate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11079,7 +11075,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.subnet_mask(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("switch-location") {
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -11107,18 +11103,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("port-settings") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
             request = request.port_settings(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_networking_switch_port_settings_list(matches, &mut request)?;
         self.config
-            .list_start::<types::SwitchPortSettingsResultsPage3>();
+            .list_start::<types::SwitchPortSettingsResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11133,7 +11129,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SwitchPortSettingsResultsPage3>();
+                        .list_end_success::<types::SwitchPortSettingsResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11152,14 +11148,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SwitchPortSettingsCreate3>(&body_txt).unwrap();
+                serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11183,7 +11179,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("port-settings") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
             request = request.port_settings(value.clone());
         }
 
@@ -11207,7 +11203,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("port") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("port") {
             request = request.port(value.clone());
         }
 
@@ -11253,7 +11249,7 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.system_policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FleetRolePolicy3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11279,7 +11275,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_role_list(matches, &mut request)?;
-        self.config.list_start::<types::RoleResultsPage3>();
+        self.config.list_start::<types::RoleResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11293,7 +11289,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::RoleResultsPage3>();
+                    self.config.list_end_success::<types::RoleResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11332,13 +11328,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_system_quotas_list(matches, &mut request)?;
-        self.config.list_start::<types::SiloQuotasResultsPage3>();
+        self.config.list_start::<types::SiloQuotasResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11353,7 +11349,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SiloQuotasResultsPage3>();
+                        .list_end_success::<types::SiloQuotasResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11369,12 +11365,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_silo_list(matches, &mut request)?;
-        self.config.list_start::<types::SiloResultsPage3>();
+        self.config.list_start::<types::SiloResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11388,7 +11384,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::SiloResultsPage3>();
+                    self.config.list_end_success::<types::SiloResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11412,17 +11408,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.discoverable(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::SiloIdentityMode3>("identity-mode") {
+        if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity-mode") {
             request = request.body_map(|body| body.identity_mode(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11442,7 +11438,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11462,7 +11458,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11489,17 +11485,17 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_silo_ip_pool_list(matches, &mut request)?;
-        self.config.list_start::<types::SiloIpPoolResultsPage3>();
+        self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11514,7 +11510,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SiloIpPoolResultsPage3>();
+                        .list_end_success::<types::SiloIpPoolResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11526,7 +11522,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11550,13 +11546,13 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_update();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11577,7 +11573,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_quotas_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_quotas_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11605,21 +11601,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.cpus(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::ByteCount3>("memory") {
+        if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
             request = request.body_map(|body| body.memory(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::ByteCount3>("storage") {
+        if let Some(value) = matches.get_one::<types::ByteCount>("storage") {
             request = request.body_map(|body| body.storage(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloQuotasUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11644,16 +11640,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_silo_user_list(matches, &mut request)?;
-        self.config.list_start::<types::UserResultsPage3>();
+        self.config.list_start::<types::UserResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11667,7 +11663,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::UserResultsPage3>();
+                    self.config.list_end_success::<types::UserResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11679,7 +11675,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11710,13 +11706,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_user_builtin_list(matches, &mut request)?;
-        self.config.list_start::<types::UserBuiltinResultsPage3>();
+        self.config.list_start::<types::UserBuiltinResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11731,7 +11727,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::UserBuiltinResultsPage3>();
+                        .list_end_success::<types::UserBuiltinResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11746,7 +11742,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("user") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("user") {
             request = request.user(value.clone());
         }
 
@@ -11774,14 +11770,14 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config
             .execute_silo_utilization_list(matches, &mut request)?;
         self.config
-            .list_start::<types::SiloUtilizationResultsPage3>();
+            .list_start::<types::SiloUtilizationResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11796,7 +11792,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SiloUtilizationResultsPage3>();
+                        .list_end_success::<types::SiloUtilizationResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11811,7 +11807,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("silo") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
@@ -11838,7 +11834,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -11869,7 +11865,7 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_timeseries_schema_list(matches, &mut request)?;
         self.config
-            .list_start::<types::TimeseriesSchemaResultsPage3>();
+            .list_start::<types::TimeseriesSchemaResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11884,7 +11880,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::TimeseriesSchemaResultsPage3>();
+                        .list_end_success::<types::TimeseriesSchemaResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11904,12 +11900,12 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_user_list(matches, &mut request)?;
-        self.config.list_start::<types::UserResultsPage3>();
+        self.config.list_start::<types::UserResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -11923,7 +11919,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::UserResultsPage3>();
+                    self.config.list_end_success::<types::UserResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -11955,11 +11951,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -11983,18 +11979,18 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_update();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::VpcFirewallRuleUpdateParams3>(&body_txt).unwrap();
+                serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12022,25 +12018,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         self.config
             .execute_vpc_router_route_list(matches, &mut request)?;
-        self.config.list_start::<types::RouterRouteResultsPage3>();
+        self.config.list_start::<types::RouterRouteResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -12055,7 +12051,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::RouterRouteResultsPage3>();
+                        .list_end_success::<types::RouterRouteResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -12074,25 +12070,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12116,19 +12112,19 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("route") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
             request = request.route(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12156,29 +12152,29 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("route") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
             request = request.route(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12202,19 +12198,19 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("route") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("route") {
             request = request.route(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12239,20 +12235,20 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         self.config.execute_vpc_router_list(matches, &mut request)?;
-        self.config.list_start::<types::VpcRouterResultsPage3>();
+        self.config.list_start::<types::VpcRouterResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -12267,7 +12263,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::VpcRouterResultsPage3>();
+                        .list_end_success::<types::VpcRouterResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -12286,21 +12282,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12321,15 +12317,15 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12356,25 +12352,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12398,15 +12394,15 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12431,20 +12427,20 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         self.config.execute_vpc_subnet_list(matches, &mut request)?;
-        self.config.list_start::<types::VpcSubnetResultsPage3>();
+        self.config.list_start::<types::VpcSubnetResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -12459,7 +12455,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::VpcSubnetResultsPage3>();
+                        .list_end_success::<types::VpcSubnetResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -12474,7 +12470,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_create();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("custom-router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
             request = request.body_map(|body| body.custom_router(value.clone()))
         }
 
@@ -12482,29 +12478,29 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Ipv4Net3>("ipv4-block") {
+        if let Some(value) = matches.get_one::<types::Ipv4Net>("ipv4-block") {
             request = request.body_map(|body| body.ipv4_block(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Ipv6Net3>("ipv6-block") {
+        if let Some(value) = matches.get_one::<types::Ipv6Net>("ipv6-block") {
             request = request.body_map(|body| body.ipv6_block(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12525,15 +12521,15 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_subnet_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("subnet") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
             request = request.subnet(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12556,7 +12552,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_update();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("custom-router") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
             request = request.body_map(|body| body.custom_router(value.clone()))
         }
 
@@ -12564,25 +12560,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("subnet") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
             request = request.subnet(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12606,15 +12602,15 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("subnet") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
             request = request.subnet(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12642,26 +12638,26 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("subnet") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
             request = request.subnet(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         self.config
             .execute_vpc_subnet_list_network_interfaces(matches, &mut request)?;
         self.config
-            .list_start::<types::InstanceNetworkInterfaceResultsPage3>();
+            .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -12676,7 +12672,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage3>();
+                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -12692,16 +12688,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode3>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
         self.config.execute_vpc_list(matches, &mut request)?;
-        self.config.list_start::<types::VpcResultsPage3>();
+        self.config.list_start::<types::VpcResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -12715,7 +12711,7 @@ impl<T: CliConfig> Cli<T> {
                     return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
-                    self.config.list_end_success::<types::VpcResultsPage3>();
+                    self.config.list_end_success::<types::VpcResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -12731,25 +12727,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("dns-name") {
+        if let Some(value) = matches.get_one::<types::Name>("dns-name") {
             request = request.body_map(|body| body.dns_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Ipv6Net3>("ipv6-prefix") {
+        if let Some(value) = matches.get_one::<types::Ipv6Net>("ipv6-prefix") {
             request = request.body_map(|body| body.ipv6_prefix(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcCreate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12769,11 +12765,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_view();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
@@ -12797,25 +12793,25 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("dns-name") {
+        if let Some(value) = matches.get_one::<types::Name>("dns-name") {
             request = request.body_map(|body| body.dns_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name3>("name") {
+        if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcUpdate3>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12835,11 +12831,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId3>("project") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId3>("vpc") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
 

@@ -20,7 +20,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::DeviceAuthRequest2) -> Self {
+        pub fn body(self, value: &types::DeviceAuthRequest) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -59,7 +59,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::DeviceAuthVerify2) -> Self {
+        pub fn body(self, value: &types::DeviceAuthVerify) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -78,7 +78,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -88,7 +88,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -113,7 +113,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::DeviceAccessTokenRequest2) -> Self {
+        pub fn body(self, value: &types::DeviceAccessTokenRequest) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -186,7 +186,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -202,7 +202,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -227,7 +227,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ProbeInfoResultsPage2) -> Self {
+        pub fn ok(self, value: &types::ProbeInfoResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -236,7 +236,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -246,7 +246,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -271,11 +271,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::ProbeCreate2) -> Self {
+        pub fn body(self, value: &types::ProbeCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -290,7 +290,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Probe2) -> Self {
+        pub fn created(self, value: &types::Probe) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -299,7 +299,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -309,7 +309,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -334,13 +334,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn probe(self, value: &types::NameOrId2) -> Self {
+        pub fn probe(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/experimental/v1/probes/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
     }
@@ -355,7 +355,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ProbeInfo2) -> Self {
+        pub fn ok(self, value: &types::ProbeInfo) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -364,7 +364,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -374,7 +374,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -399,13 +399,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn probe(self, value: &types::NameOrId2) -> Self {
+        pub fn probe(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/experimental/v1/probes/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
     }
@@ -424,7 +424,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -434,7 +434,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -459,12 +459,12 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo_name(self, value: &types::Name2) -> Self {
+        pub fn silo_name(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!("^/login/{}/saml/.*$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn provider_name(self, value: &types::Name2) -> Self {
+        pub fn provider_name(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!("^/login/.*/saml/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -488,7 +488,7 @@ pub mod operations {
             Self(self.0.status(303u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -498,7 +498,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -567,7 +567,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -592,7 +592,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::CertificateResultsPage2) -> Self {
+        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -601,7 +601,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -611,7 +611,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -636,7 +636,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::CertificateCreate2) -> Self {
+        pub fn body(self, value: &types::CertificateCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -651,7 +651,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Certificate2) -> Self {
+        pub fn created(self, value: &types::Certificate) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -660,7 +660,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -670,7 +670,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -695,7 +695,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn certificate(self, value: &types::NameOrId2) -> Self {
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -712,7 +712,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Certificate2) -> Self {
+        pub fn ok(self, value: &types::Certificate) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -721,7 +721,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -731,7 +731,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -756,7 +756,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn certificate(self, value: &types::NameOrId2) -> Self {
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -777,7 +777,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -787,7 +787,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -846,7 +846,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -862,7 +862,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -887,7 +887,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::DiskResultsPage2) -> Self {
+        pub fn ok(self, value: &types::DiskResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -896,7 +896,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -906,7 +906,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -931,11 +931,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::DiskCreate2) -> Self {
+        pub fn body(self, value: &types::DiskCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -950,7 +950,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Disk2) -> Self {
+        pub fn created(self, value: &types::Disk) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -959,7 +959,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -969,7 +969,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -994,14 +994,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/disks/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1026,7 +1026,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Disk2) -> Self {
+        pub fn ok(self, value: &types::Disk) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -1035,7 +1035,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1045,7 +1045,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1070,14 +1070,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/disks/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1106,7 +1106,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1116,7 +1116,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1141,7 +1141,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/disks/{}/bulk-write$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -1149,7 +1149,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1163,7 +1163,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::ImportBlocksBulkWrite2) -> Self {
+        pub fn body(self, value: &types::ImportBlocksBulkWrite) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -1182,7 +1182,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1192,7 +1192,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1217,7 +1217,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/disks/{}/bulk-write-start$",
                 value.to_string()
@@ -1228,7 +1228,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1257,7 +1257,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1267,7 +1267,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1292,7 +1292,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/disks/{}/bulk-write-stop$",
                 value.to_string()
@@ -1303,7 +1303,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1332,7 +1332,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1342,7 +1342,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1367,7 +1367,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/disks/{}/finalize$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -1375,7 +1375,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1389,7 +1389,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::FinalizeDisk2) -> Self {
+        pub fn body(self, value: &types::FinalizeDisk) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -1408,7 +1408,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1418,7 +1418,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1443,13 +1443,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn disk(self, value: &types::NameOrId2) -> Self {
+        pub fn disk(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/disks/{}/metrics/.*$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn metric(self, value: types::DiskMetricName2) -> Self {
+        pub fn metric(self, value: types::DiskMetricName) -> Self {
             let re = regex::Regex::new(&format!("^/v1/disks/.*/metrics/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -1489,7 +1489,7 @@ pub mod operations {
 
         pub fn order<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::PaginationOrder2>>,
+            T: Into<Option<types::PaginationOrder>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("order", value.to_string()))
@@ -1521,7 +1521,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1562,7 +1562,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::MeasurementResultsPage2) -> Self {
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -1571,7 +1571,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1581,7 +1581,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1640,7 +1640,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1656,7 +1656,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -1681,7 +1681,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::FloatingIpResultsPage2) -> Self {
+        pub fn ok(self, value: &types::FloatingIpResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -1690,7 +1690,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1700,7 +1700,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1725,11 +1725,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::FloatingIpCreate2) -> Self {
+        pub fn body(self, value: &types::FloatingIpCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -1744,7 +1744,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::FloatingIp2) -> Self {
+        pub fn created(self, value: &types::FloatingIp) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -1753,7 +1753,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1763,7 +1763,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1788,7 +1788,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn floating_ip(self, value: &types::NameOrId2) -> Self {
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -1796,7 +1796,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1821,7 +1821,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::FloatingIp2) -> Self {
+        pub fn ok(self, value: &types::FloatingIp) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -1830,7 +1830,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1840,7 +1840,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1865,7 +1865,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn floating_ip(self, value: &types::NameOrId2) -> Self {
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -1873,7 +1873,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1887,7 +1887,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::FloatingIpUpdate2) -> Self {
+        pub fn body(self, value: &types::FloatingIpUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -1902,7 +1902,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::FloatingIp2) -> Self {
+        pub fn ok(self, value: &types::FloatingIp) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -1911,7 +1911,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1921,7 +1921,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -1946,7 +1946,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn floating_ip(self, value: &types::NameOrId2) -> Self {
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -1954,7 +1954,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -1983,7 +1983,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -1993,7 +1993,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2018,7 +2018,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn floating_ip(self, value: &types::NameOrId2) -> Self {
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/floating-ips/{}/attach$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -2026,7 +2026,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2040,7 +2040,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::FloatingIpAttach2) -> Self {
+        pub fn body(self, value: &types::FloatingIpAttach) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -2055,7 +2055,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::FloatingIp2) -> Self {
+        pub fn accepted(self, value: &types::FloatingIp) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -2064,7 +2064,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2074,7 +2074,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2099,7 +2099,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn floating_ip(self, value: &types::NameOrId2) -> Self {
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/floating-ips/{}/detach$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -2107,7 +2107,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2132,7 +2132,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::FloatingIp2) -> Self {
+        pub fn accepted(self, value: &types::FloatingIp) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -2141,7 +2141,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2151,7 +2151,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2210,7 +2210,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -2235,7 +2235,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::GroupResultsPage2) -> Self {
+        pub fn ok(self, value: &types::GroupResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -2244,7 +2244,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2254,7 +2254,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2295,7 +2295,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Group2) -> Self {
+        pub fn ok(self, value: &types::Group) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -2304,7 +2304,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2314,7 +2314,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2373,7 +2373,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2389,7 +2389,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -2414,7 +2414,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ImageResultsPage2) -> Self {
+        pub fn ok(self, value: &types::ImageResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -2423,7 +2423,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2433,7 +2433,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2460,7 +2460,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2474,7 +2474,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::ImageCreate2) -> Self {
+        pub fn body(self, value: &types::ImageCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -2489,7 +2489,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Image2) -> Self {
+        pub fn created(self, value: &types::Image) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -2498,7 +2498,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2508,7 +2508,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2533,14 +2533,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn image(self, value: &types::NameOrId2) -> Self {
+        pub fn image(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/images/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2565,7 +2565,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Image2) -> Self {
+        pub fn ok(self, value: &types::Image) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -2574,7 +2574,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2584,7 +2584,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2609,14 +2609,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn image(self, value: &types::NameOrId2) -> Self {
+        pub fn image(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/images/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2645,7 +2645,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2655,7 +2655,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2680,13 +2680,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn image(self, value: &types::NameOrId2) -> Self {
+        pub fn image(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/images/{}/demote$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
     }
@@ -2701,7 +2701,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Image2) -> Self {
+        pub fn accepted(self, value: &types::Image) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -2710,7 +2710,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2720,7 +2720,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2745,7 +2745,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn image(self, value: &types::NameOrId2) -> Self {
+        pub fn image(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/images/{}/promote$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -2753,7 +2753,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2778,7 +2778,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Image2) -> Self {
+        pub fn accepted(self, value: &types::Image) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -2787,7 +2787,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2797,7 +2797,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2856,7 +2856,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -2872,7 +2872,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -2897,7 +2897,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceResultsPage2) -> Self {
+        pub fn ok(self, value: &types::InstanceResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -2906,7 +2906,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2916,7 +2916,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -2941,11 +2941,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::InstanceCreate2) -> Self {
+        pub fn body(self, value: &types::InstanceCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -2960,7 +2960,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Instance2) -> Self {
+        pub fn created(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -2969,7 +2969,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -2979,7 +2979,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3004,14 +3004,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/instances/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3036,7 +3036,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Instance2) -> Self {
+        pub fn ok(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -3045,7 +3045,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3055,7 +3055,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3080,14 +3080,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/instances/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3116,7 +3116,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3126,7 +3126,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3151,7 +3151,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/instances/{}/disks$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -3191,7 +3191,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3207,7 +3207,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -3232,7 +3232,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::DiskResultsPage2) -> Self {
+        pub fn ok(self, value: &types::DiskResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -3241,7 +3241,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3251,7 +3251,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3276,7 +3276,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/disks/attach$",
                 value.to_string()
@@ -3287,7 +3287,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3301,7 +3301,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::DiskPath2) -> Self {
+        pub fn body(self, value: &types::DiskPath) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -3316,7 +3316,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Disk2) -> Self {
+        pub fn accepted(self, value: &types::Disk) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -3325,7 +3325,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3335,7 +3335,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3360,7 +3360,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/disks/detach$",
                 value.to_string()
@@ -3371,7 +3371,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3385,7 +3385,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::DiskPath2) -> Self {
+        pub fn body(self, value: &types::DiskPath) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -3400,7 +3400,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Disk2) -> Self {
+        pub fn accepted(self, value: &types::Disk) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -3409,7 +3409,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3419,7 +3419,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3444,7 +3444,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/external-ips$",
                 value.to_string()
@@ -3455,7 +3455,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3480,7 +3480,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ExternalIpResultsPage2) -> Self {
+        pub fn ok(self, value: &types::ExternalIpResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -3489,7 +3489,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3499,7 +3499,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3522,7 +3522,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/external-ips/ephemeral$",
                 value.to_string()
@@ -3533,7 +3533,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3547,7 +3547,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::EphemeralIpCreate2) -> Self {
+        pub fn body(self, value: &types::EphemeralIpCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -3562,7 +3562,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::ExternalIp2) -> Self {
+        pub fn accepted(self, value: &types::ExternalIp) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -3571,7 +3571,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3581,7 +3581,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3604,7 +3604,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/external-ips/ephemeral$",
                 value.to_string()
@@ -3615,7 +3615,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3644,7 +3644,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3654,7 +3654,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3679,7 +3679,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/instances/{}/migrate$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -3687,7 +3687,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3701,7 +3701,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::InstanceMigrate2) -> Self {
+        pub fn body(self, value: &types::InstanceMigrate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -3716,7 +3716,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Instance2) -> Self {
+        pub fn ok(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -3725,7 +3725,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3735,7 +3735,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3760,7 +3760,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/instances/{}/reboot$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -3768,7 +3768,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3793,7 +3793,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Instance2) -> Self {
+        pub fn accepted(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -3802,7 +3802,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3812,7 +3812,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3837,7 +3837,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/serial-console$",
                 value.to_string()
@@ -3896,7 +3896,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -3921,7 +3921,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceSerialConsoleData2) -> Self {
+        pub fn ok(self, value: &types::InstanceSerialConsoleData) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -3930,7 +3930,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -3940,7 +3940,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -3963,7 +3963,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/serial-console/stream$",
                 value.to_string()
@@ -3990,7 +3990,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -4038,7 +4038,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/instances/{}/ssh-public-keys$",
                 value.to_string()
@@ -4081,7 +4081,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -4097,7 +4097,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -4122,7 +4122,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SshKeyResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SshKeyResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4131,7 +4131,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4141,7 +4141,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4166,7 +4166,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/instances/{}/start$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -4174,7 +4174,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -4199,7 +4199,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Instance2) -> Self {
+        pub fn accepted(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -4208,7 +4208,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4218,7 +4218,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4243,7 +4243,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/instances/{}/stop$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -4251,7 +4251,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -4276,7 +4276,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn accepted(self, value: &types::Instance2) -> Self {
+        pub fn accepted(self, value: &types::Instance) -> Self {
             Self(
                 self.0
                     .status(202u16)
@@ -4285,7 +4285,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4295,7 +4295,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4354,7 +4354,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -4379,7 +4379,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloIpPoolResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SiloIpPoolResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4388,7 +4388,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4398,7 +4398,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4423,7 +4423,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/ip-pools/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -4439,7 +4439,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloIpPool2) -> Self {
+        pub fn ok(self, value: &types::SiloIpPool) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4448,7 +4448,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4458,7 +4458,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4483,13 +4483,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo_name(self, value: &types::Name2) -> Self {
+        pub fn silo_name(self, value: &types::Name) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/login/{}/local$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::UsernamePasswordCredentials2) -> Self {
+        pub fn body(self, value: &types::UsernamePasswordCredentials) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -4508,7 +4508,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4518,7 +4518,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4558,7 +4558,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4568,7 +4568,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4604,7 +4604,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::CurrentUser2) -> Self {
+        pub fn ok(self, value: &types::CurrentUser) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4613,7 +4613,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4623,7 +4623,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4682,7 +4682,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -4707,7 +4707,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::GroupResultsPage2) -> Self {
+        pub fn ok(self, value: &types::GroupResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4716,7 +4716,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4726,7 +4726,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4785,7 +4785,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -4810,7 +4810,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SshKeyResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SshKeyResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4819,7 +4819,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4829,7 +4829,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4854,7 +4854,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::SshKeyCreate2) -> Self {
+        pub fn body(self, value: &types::SshKeyCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -4869,7 +4869,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SshKey2) -> Self {
+        pub fn created(self, value: &types::SshKey) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -4878,7 +4878,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4888,7 +4888,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4913,7 +4913,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ssh_key(self, value: &types::NameOrId2) -> Self {
+        pub fn ssh_key(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/me/ssh-keys/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -4930,7 +4930,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SshKey2) -> Self {
+        pub fn ok(self, value: &types::SshKey) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4939,7 +4939,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -4949,7 +4949,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -4974,7 +4974,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ssh_key(self, value: &types::NameOrId2) -> Self {
+        pub fn ssh_key(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/me/ssh-keys/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -4995,7 +4995,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5005,7 +5005,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5030,7 +5030,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn metric_name(self, value: types::SystemMetricName2) -> Self {
+        pub fn metric_name(self, value: types::SystemMetricName) -> Self {
             let re = regex::Regex::new(&format!("^/v1/metrics/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -5069,7 +5069,7 @@ pub mod operations {
 
         pub fn order<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::PaginationOrder2>>,
+            T: Into<Option<types::PaginationOrder>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("order", value.to_string()))
@@ -5101,7 +5101,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5142,7 +5142,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::MeasurementResultsPage2) -> Self {
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5151,7 +5151,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5161,7 +5161,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5188,7 +5188,7 @@ pub mod operations {
 
         pub fn instance<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
@@ -5236,7 +5236,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5252,7 +5252,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -5277,7 +5277,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage2) -> Self {
+        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5286,7 +5286,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5296,7 +5296,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5321,13 +5321,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId2) -> Self {
+        pub fn instance(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("instance", value.to_string()))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5341,7 +5341,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::InstanceNetworkInterfaceCreate2) -> Self {
+        pub fn body(self, value: &types::InstanceNetworkInterfaceCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -5356,7 +5356,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::InstanceNetworkInterface2) -> Self {
+        pub fn created(self, value: &types::InstanceNetworkInterface) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -5365,7 +5365,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5375,7 +5375,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5400,7 +5400,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn interface(self, value: &types::NameOrId2) -> Self {
+        pub fn interface(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -5408,7 +5408,7 @@ pub mod operations {
 
         pub fn instance<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
@@ -5424,7 +5424,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5449,7 +5449,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceNetworkInterface2) -> Self {
+        pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5458,7 +5458,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5468,7 +5468,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5493,7 +5493,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn interface(self, value: &types::NameOrId2) -> Self {
+        pub fn interface(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -5501,7 +5501,7 @@ pub mod operations {
 
         pub fn instance<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
@@ -5517,7 +5517,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5531,7 +5531,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::InstanceNetworkInterfaceUpdate2) -> Self {
+        pub fn body(self, value: &types::InstanceNetworkInterfaceUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -5546,7 +5546,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceNetworkInterface2) -> Self {
+        pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5555,7 +5555,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5565,7 +5565,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5590,7 +5590,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn interface(self, value: &types::NameOrId2) -> Self {
+        pub fn interface(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -5598,7 +5598,7 @@ pub mod operations {
 
         pub fn instance<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
@@ -5614,7 +5614,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -5643,7 +5643,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5653,7 +5653,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5689,7 +5689,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Ping2) -> Self {
+        pub fn ok(self, value: &types::Ping) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5698,7 +5698,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5708,7 +5708,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5744,7 +5744,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5753,7 +5753,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5763,7 +5763,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5788,7 +5788,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn body(self, value: &types::SiloRolePolicy) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -5803,7 +5803,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5812,7 +5812,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5822,7 +5822,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5881,7 +5881,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -5906,7 +5906,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ProjectResultsPage2) -> Self {
+        pub fn ok(self, value: &types::ProjectResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -5915,7 +5915,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5925,7 +5925,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -5950,7 +5950,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::ProjectCreate2) -> Self {
+        pub fn body(self, value: &types::ProjectCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -5965,7 +5965,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Project2) -> Self {
+        pub fn created(self, value: &types::Project) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -5974,7 +5974,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -5984,7 +5984,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6009,7 +6009,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -6025,7 +6025,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Project2) -> Self {
+        pub fn ok(self, value: &types::Project) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6034,7 +6034,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6044,7 +6044,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6069,12 +6069,12 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::ProjectUpdate2) -> Self {
+        pub fn body(self, value: &types::ProjectUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -6089,7 +6089,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Project2) -> Self {
+        pub fn ok(self, value: &types::Project) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6098,7 +6098,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6108,7 +6108,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6133,7 +6133,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -6153,7 +6153,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6163,7 +6163,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6188,7 +6188,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/projects/{}/policy$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -6205,7 +6205,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ProjectRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6214,7 +6214,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6224,7 +6224,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6249,13 +6249,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/projects/{}/policy$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::ProjectRolePolicy2) -> Self {
+        pub fn body(self, value: &types::ProjectRolePolicy) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -6270,7 +6270,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::ProjectRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6279,7 +6279,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6289,7 +6289,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6348,7 +6348,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -6364,7 +6364,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -6389,7 +6389,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SnapshotResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SnapshotResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6398,7 +6398,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6408,7 +6408,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6433,11 +6433,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::SnapshotCreate2) -> Self {
+        pub fn body(self, value: &types::SnapshotCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -6452,7 +6452,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Snapshot2) -> Self {
+        pub fn created(self, value: &types::Snapshot) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -6461,7 +6461,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6471,7 +6471,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6496,14 +6496,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn snapshot(self, value: &types::NameOrId2) -> Self {
+        pub fn snapshot(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/snapshots/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -6528,7 +6528,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Snapshot2) -> Self {
+        pub fn ok(self, value: &types::Snapshot) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6537,7 +6537,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6547,7 +6547,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6572,14 +6572,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn snapshot(self, value: &types::NameOrId2) -> Self {
+        pub fn snapshot(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/snapshots/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -6608,7 +6608,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6618,7 +6618,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6677,7 +6677,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -6702,7 +6702,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::PhysicalDiskResultsPage2) -> Self {
+        pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6711,7 +6711,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6721,7 +6721,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6766,7 +6766,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::PhysicalDisk2) -> Self {
+        pub fn ok(self, value: &types::PhysicalDisk) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6775,7 +6775,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6785,7 +6785,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6844,7 +6844,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -6869,7 +6869,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RackResultsPage2) -> Self {
+        pub fn ok(self, value: &types::RackResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6878,7 +6878,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6888,7 +6888,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -6933,7 +6933,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Rack2) -> Self {
+        pub fn ok(self, value: &types::Rack) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -6942,7 +6942,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -6952,7 +6952,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7011,7 +7011,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -7036,7 +7036,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SledResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SledResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7045,7 +7045,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7055,7 +7055,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7080,7 +7080,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::UninitializedSledId2) -> Self {
+        pub fn body(self, value: &types::UninitializedSledId) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -7095,7 +7095,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SledId2) -> Self {
+        pub fn created(self, value: &types::SledId) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -7104,7 +7104,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7114,7 +7114,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7159,7 +7159,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Sled2) -> Self {
+        pub fn ok(self, value: &types::Sled) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7168,7 +7168,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7178,7 +7178,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7244,7 +7244,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -7269,7 +7269,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::PhysicalDiskResultsPage2) -> Self {
+        pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7278,7 +7278,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7288,7 +7288,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7354,7 +7354,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -7379,7 +7379,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SledInstanceResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SledInstanceResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7388,7 +7388,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7398,7 +7398,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7430,7 +7430,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::SledProvisionPolicyParams2) -> Self {
+        pub fn body(self, value: &types::SledProvisionPolicyParams) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -7445,7 +7445,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SledProvisionPolicyResponse2) -> Self {
+        pub fn ok(self, value: &types::SledProvisionPolicyResponse) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7454,7 +7454,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7464,7 +7464,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7530,7 +7530,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::UninitializedSledResultsPage2) -> Self {
+        pub fn ok(self, value: &types::UninitializedSledResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7539,7 +7539,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7549,7 +7549,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7608,7 +7608,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -7649,7 +7649,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SwitchPortResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7658,7 +7658,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7668,7 +7668,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7691,7 +7691,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn port(self, value: &types::Name2) -> Self {
+        pub fn port(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/hardware/switch-port/{}/settings$",
                 value.to_string()
@@ -7704,11 +7704,11 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name2) -> Self {
+        pub fn switch_location(self, value: &types::Name) -> Self {
             Self(self.0.query_param("switch_location", value.to_string()))
         }
 
-        pub fn body(self, value: &types::SwitchPortApplySettings2) -> Self {
+        pub fn body(self, value: &types::SwitchPortApplySettings) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -7727,7 +7727,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7737,7 +7737,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7760,7 +7760,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn port(self, value: &types::Name2) -> Self {
+        pub fn port(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/hardware/switch-port/{}/settings$",
                 value.to_string()
@@ -7773,7 +7773,7 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name2) -> Self {
+        pub fn switch_location(self, value: &types::Name) -> Self {
             Self(self.0.query_param("switch_location", value.to_string()))
         }
     }
@@ -7792,7 +7792,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7802,7 +7802,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7825,7 +7825,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn port(self, value: &types::Name2) -> Self {
+        pub fn port(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/hardware/switch-port/{}/status$",
                 value.to_string()
@@ -7838,7 +7838,7 @@ pub mod operations {
             Self(self.0.query_param("rack_id", value.to_string()))
         }
 
-        pub fn switch_location(self, value: &types::Name2) -> Self {
+        pub fn switch_location(self, value: &types::Name) -> Self {
             Self(self.0.query_param("switch_location", value.to_string()))
         }
     }
@@ -7853,7 +7853,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchLinkState2) -> Self {
+        pub fn ok(self, value: &types::SwitchLinkState) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7862,7 +7862,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7872,7 +7872,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -7931,7 +7931,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -7956,7 +7956,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SwitchResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7965,7 +7965,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -7975,7 +7975,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8020,7 +8020,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Switch2) -> Self {
+        pub fn ok(self, value: &types::Switch) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8029,7 +8029,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8039,7 +8039,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8098,7 +8098,7 @@ pub mod operations {
 
         pub fn silo<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
@@ -8114,7 +8114,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -8139,7 +8139,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IdentityProviderResultsPage2) -> Self {
+        pub fn ok(self, value: &types::IdentityProviderResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8148,7 +8148,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8158,7 +8158,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8181,11 +8181,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
 
-        pub fn body(self, value: &types::UserCreate2) -> Self {
+        pub fn body(self, value: &types::UserCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8200,7 +8200,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::User2) -> Self {
+        pub fn created(self, value: &types::User) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -8209,7 +8209,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8219,7 +8219,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8251,7 +8251,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
     }
@@ -8270,7 +8270,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8280,7 +8280,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8317,11 +8317,11 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
 
-        pub fn body(self, value: &types::UserPassword2) -> Self {
+        pub fn body(self, value: &types::UserPassword) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8340,7 +8340,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8350,7 +8350,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8375,11 +8375,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
 
-        pub fn body(self, value: &types::SamlIdentityProviderCreate2) -> Self {
+        pub fn body(self, value: &types::SamlIdentityProviderCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8394,7 +8394,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SamlIdentityProvider2) -> Self {
+        pub fn created(self, value: &types::SamlIdentityProvider) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -8403,7 +8403,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8413,7 +8413,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8436,7 +8436,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn provider(self, value: &types::NameOrId2) -> Self {
+        pub fn provider(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/identity-providers/saml/{}$",
                 value.to_string()
@@ -8445,7 +8445,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
     }
@@ -8460,7 +8460,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SamlIdentityProvider2) -> Self {
+        pub fn ok(self, value: &types::SamlIdentityProvider) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8469,7 +8469,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8479,7 +8479,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8538,7 +8538,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -8563,7 +8563,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolResultsPage2) -> Self {
+        pub fn ok(self, value: &types::IpPoolResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8572,7 +8572,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8582,7 +8582,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8607,7 +8607,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::IpPoolCreate2) -> Self {
+        pub fn body(self, value: &types::IpPoolCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8622,7 +8622,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::IpPool2) -> Self {
+        pub fn created(self, value: &types::IpPool) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -8631,7 +8631,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8641,7 +8641,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8666,7 +8666,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -8683,7 +8683,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPool2) -> Self {
+        pub fn ok(self, value: &types::IpPool) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8692,7 +8692,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8702,7 +8702,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8727,13 +8727,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::IpPoolUpdate2) -> Self {
+        pub fn body(self, value: &types::IpPoolUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8748,7 +8748,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPool2) -> Self {
+        pub fn ok(self, value: &types::IpPool) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8757,7 +8757,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8767,7 +8767,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8792,7 +8792,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -8813,7 +8813,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8823,7 +8823,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8848,7 +8848,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/ranges$",
                 value.to_string()
@@ -8900,7 +8900,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolRangeResultsPage2) -> Self {
+        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -8909,7 +8909,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8919,7 +8919,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -8944,7 +8944,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/ranges/add$",
                 value.to_string()
@@ -8953,7 +8953,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::IpRange2) -> Self {
+        pub fn body(self, value: &types::IpRange) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -8968,7 +8968,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::IpPoolRange2) -> Self {
+        pub fn created(self, value: &types::IpPoolRange) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -8977,7 +8977,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -8987,7 +8987,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9010,7 +9010,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/ranges/remove$",
                 value.to_string()
@@ -9019,7 +9019,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::IpRange2) -> Self {
+        pub fn body(self, value: &types::IpRange) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9038,7 +9038,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9048,7 +9048,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9073,7 +9073,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/silos$",
                 value.to_string()
@@ -9116,7 +9116,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -9141,7 +9141,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolSiloLinkResultsPage2) -> Self {
+        pub fn ok(self, value: &types::IpPoolSiloLinkResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9150,7 +9150,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9160,7 +9160,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9185,7 +9185,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/silos$",
                 value.to_string()
@@ -9194,7 +9194,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::IpPoolLinkSilo2) -> Self {
+        pub fn body(self, value: &types::IpPoolLinkSilo) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9209,7 +9209,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::IpPoolSiloLink2) -> Self {
+        pub fn created(self, value: &types::IpPoolSiloLink) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -9218,7 +9218,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9228,7 +9228,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9251,7 +9251,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/silos/.*$",
                 value.to_string()
@@ -9260,7 +9260,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/.*/silos/{}$",
                 value.to_string()
@@ -9269,7 +9269,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::IpPoolSiloUpdate2) -> Self {
+        pub fn body(self, value: &types::IpPoolSiloUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9284,7 +9284,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolSiloLink2) -> Self {
+        pub fn ok(self, value: &types::IpPoolSiloLink) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9293,7 +9293,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9303,7 +9303,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9326,7 +9326,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/silos/.*$",
                 value.to_string()
@@ -9335,7 +9335,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/.*/silos/{}$",
                 value.to_string()
@@ -9359,7 +9359,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9369,7 +9369,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9392,7 +9392,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn pool(self, value: &types::NameOrId2) -> Self {
+        pub fn pool(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/ip-pools/{}/utilization$",
                 value.to_string()
@@ -9412,7 +9412,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolUtilization2) -> Self {
+        pub fn ok(self, value: &types::IpPoolUtilization) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9421,7 +9421,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9431,7 +9431,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9467,7 +9467,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPool2) -> Self {
+        pub fn ok(self, value: &types::IpPool) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9476,7 +9476,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9486,7 +9486,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9554,7 +9554,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::IpPoolRangeResultsPage2) -> Self {
+        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9563,7 +9563,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9573,7 +9573,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9596,7 +9596,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::IpRange2) -> Self {
+        pub fn body(self, value: &types::IpRange) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9611,7 +9611,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::IpPoolRange2) -> Self {
+        pub fn created(self, value: &types::IpPoolRange) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -9620,7 +9620,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9630,7 +9630,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9653,7 +9653,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::IpRange2) -> Self {
+        pub fn body(self, value: &types::IpRange) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9672,7 +9672,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9682,7 +9682,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9707,7 +9707,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn metric_name(self, value: types::SystemMetricName2) -> Self {
+        pub fn metric_name(self, value: types::SystemMetricName) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/metrics/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -9747,7 +9747,7 @@ pub mod operations {
 
         pub fn order<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::PaginationOrder2>>,
+            T: Into<Option<types::PaginationOrder>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("order", value.to_string()))
@@ -9779,7 +9779,7 @@ pub mod operations {
 
         pub fn silo<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
@@ -9820,7 +9820,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::MeasurementResultsPage2) -> Self {
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9829,7 +9829,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9839,7 +9839,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9898,7 +9898,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -9923,7 +9923,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AddressLotResultsPage2) -> Self {
+        pub fn ok(self, value: &types::AddressLotResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9932,7 +9932,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -9942,7 +9942,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -9967,7 +9967,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::AddressLotCreate2) -> Self {
+        pub fn body(self, value: &types::AddressLotCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -9982,7 +9982,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::AddressLotCreateResponse2) -> Self {
+        pub fn created(self, value: &types::AddressLotCreateResponse) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -9991,7 +9991,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10001,7 +10001,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10024,7 +10024,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn address_lot(self, value: &types::NameOrId2) -> Self {
+        pub fn address_lot(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/address-lot/{}$",
                 value.to_string()
@@ -10048,7 +10048,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10058,7 +10058,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10081,7 +10081,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn address_lot(self, value: &types::NameOrId2) -> Self {
+        pub fn address_lot(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/address-lot/{}/blocks$",
                 value.to_string()
@@ -10124,7 +10124,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -10149,7 +10149,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AddressLotBlockResultsPage2) -> Self {
+        pub fn ok(self, value: &types::AddressLotBlockResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10158,7 +10158,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10168,7 +10168,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10204,7 +10204,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AllowList2) -> Self {
+        pub fn ok(self, value: &types::AllowList) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10213,7 +10213,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10223,7 +10223,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10248,7 +10248,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::AllowListUpdate2) -> Self {
+        pub fn body(self, value: &types::AllowListUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -10263,7 +10263,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AllowList2) -> Self {
+        pub fn ok(self, value: &types::AllowList) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10272,7 +10272,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10282,7 +10282,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10307,7 +10307,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::BfdSessionDisable2) -> Self {
+        pub fn body(self, value: &types::BfdSessionDisable) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -10326,7 +10326,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10336,7 +10336,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10361,7 +10361,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::BfdSessionEnable2) -> Self {
+        pub fn body(self, value: &types::BfdSessionEnable) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -10380,7 +10380,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10390,7 +10390,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10426,7 +10426,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BfdStatus2>) -> Self {
+        pub fn ok(self, value: &Vec<types::BfdStatus>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10435,7 +10435,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10445,7 +10445,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10488,7 +10488,7 @@ pub mod operations {
 
         pub fn name_or_id<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("name_or_id", value.to_string()))
@@ -10520,7 +10520,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -10545,7 +10545,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::BgpConfigResultsPage2) -> Self {
+        pub fn ok(self, value: &types::BgpConfigResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10554,7 +10554,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10564,7 +10564,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10589,7 +10589,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::BgpConfigCreate2) -> Self {
+        pub fn body(self, value: &types::BgpConfigCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -10604,7 +10604,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::BgpConfig2) -> Self {
+        pub fn created(self, value: &types::BgpConfig) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -10613,7 +10613,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10623,7 +10623,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10648,7 +10648,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn name_or_id(self, value: &types::NameOrId2) -> Self {
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("name_or_id", value.to_string()))
         }
     }
@@ -10667,7 +10667,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10677,7 +10677,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10702,7 +10702,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn name_or_id(self, value: &types::NameOrId2) -> Self {
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("name_or_id", value.to_string()))
         }
     }
@@ -10717,7 +10717,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpAnnouncement2>) -> Self {
+        pub fn ok(self, value: &Vec<types::BgpAnnouncement>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10726,7 +10726,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10736,7 +10736,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10761,7 +10761,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::BgpAnnounceSetCreate2) -> Self {
+        pub fn body(self, value: &types::BgpAnnounceSetCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -10776,7 +10776,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::BgpAnnounceSet2) -> Self {
+        pub fn created(self, value: &types::BgpAnnounceSet) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -10785,7 +10785,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10795,7 +10795,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10820,7 +10820,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn name_or_id(self, value: &types::NameOrId2) -> Self {
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("name_or_id", value.to_string()))
         }
     }
@@ -10839,7 +10839,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10849,7 +10849,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10887,7 +10887,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AggregateBgpMessageHistory2) -> Self {
+        pub fn ok(self, value: &types::AggregateBgpMessageHistory) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10896,7 +10896,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10906,7 +10906,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10944,7 +10944,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpImportedRouteIpv42>) -> Self {
+        pub fn ok(self, value: &Vec<types::BgpImportedRouteIpv4>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10953,7 +10953,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -10963,7 +10963,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -10999,7 +10999,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpPeerStatus2>) -> Self {
+        pub fn ok(self, value: &Vec<types::BgpPeerStatus>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11008,7 +11008,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11018,7 +11018,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11075,7 +11075,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -11100,7 +11100,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::LoopbackAddressResultsPage2) -> Self {
+        pub fn ok(self, value: &types::LoopbackAddressResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11109,7 +11109,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11119,7 +11119,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11142,7 +11142,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::LoopbackAddressCreate2) -> Self {
+        pub fn body(self, value: &types::LoopbackAddressCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -11157,7 +11157,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::LoopbackAddress2) -> Self {
+        pub fn created(self, value: &types::LoopbackAddress) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -11166,7 +11166,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11176,7 +11176,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11213,7 +11213,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn switch_location(self, value: &types::Name2) -> Self {
+        pub fn switch_location(self, value: &types::Name) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/loopback-address/.*/{}/.*/.*$",
                 value.to_string()
@@ -11255,7 +11255,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11265,7 +11265,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11322,7 +11322,7 @@ pub mod operations {
 
         pub fn port_settings<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("port_settings", value.to_string()))
@@ -11338,7 +11338,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -11363,7 +11363,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettingsResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11372,7 +11372,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11382,7 +11382,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11405,7 +11405,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::SwitchPortSettingsCreate2) -> Self {
+        pub fn body(self, value: &types::SwitchPortSettingsCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -11420,7 +11420,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SwitchPortSettingsView2) -> Self {
+        pub fn created(self, value: &types::SwitchPortSettingsView) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -11429,7 +11429,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11439,7 +11439,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11464,7 +11464,7 @@ pub mod operations {
 
         pub fn port_settings<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("port_settings", value.to_string()))
@@ -11493,7 +11493,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11503,7 +11503,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11526,7 +11526,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn port(self, value: &types::NameOrId2) -> Self {
+        pub fn port(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/switch-port-settings/{}$",
                 value.to_string()
@@ -11546,7 +11546,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsView2) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettingsView) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11555,7 +11555,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11565,7 +11565,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11601,7 +11601,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::FleetRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11610,7 +11610,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11620,7 +11620,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11645,7 +11645,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::FleetRolePolicy2) -> Self {
+        pub fn body(self, value: &types::FleetRolePolicy) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -11660,7 +11660,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::FleetRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11669,7 +11669,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11679,7 +11679,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11747,7 +11747,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RoleResultsPage2) -> Self {
+        pub fn ok(self, value: &types::RoleResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11756,7 +11756,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11766,7 +11766,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11808,7 +11808,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Role2) -> Self {
+        pub fn ok(self, value: &types::Role) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11817,7 +11817,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11827,7 +11827,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11886,7 +11886,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -11911,7 +11911,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloQuotasResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SiloQuotasResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11920,7 +11920,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -11930,7 +11930,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -11989,7 +11989,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -12014,7 +12014,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SiloResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12023,7 +12023,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12033,7 +12033,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12058,7 +12058,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::SiloCreate2) -> Self {
+        pub fn body(self, value: &types::SiloCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -12073,7 +12073,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Silo2) -> Self {
+        pub fn created(self, value: &types::Silo) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -12082,7 +12082,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12092,7 +12092,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12117,7 +12117,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/silos/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -12134,7 +12134,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Silo2) -> Self {
+        pub fn ok(self, value: &types::Silo) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12143,7 +12143,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12153,7 +12153,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12178,7 +12178,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/silos/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -12199,7 +12199,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12209,7 +12209,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12234,7 +12234,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/silos/{}/ip-pools$",
                 value.to_string()
@@ -12277,7 +12277,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -12302,7 +12302,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloIpPoolResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SiloIpPoolResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12311,7 +12311,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12321,7 +12321,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12346,7 +12346,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/system/silos/{}/policy$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -12363,7 +12363,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12372,7 +12372,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12382,7 +12382,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12407,13 +12407,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/system/silos/{}/policy$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn body(self, value: &types::SiloRolePolicy) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -12428,7 +12428,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloRolePolicy2) -> Self {
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12437,7 +12437,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12447,7 +12447,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12472,7 +12472,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/system/silos/{}/quotas$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -12489,7 +12489,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloQuotas2) -> Self {
+        pub fn ok(self, value: &types::SiloQuotas) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12498,7 +12498,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12508,7 +12508,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12533,13 +12533,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/system/silos/{}/quotas$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::SiloQuotasUpdate2) -> Self {
+        pub fn body(self, value: &types::SiloQuotasUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -12554,7 +12554,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloQuotas2) -> Self {
+        pub fn ok(self, value: &types::SiloQuotas) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12563,7 +12563,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12573,7 +12573,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12632,7 +12632,7 @@ pub mod operations {
 
         pub fn silo<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
@@ -12648,7 +12648,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -12673,7 +12673,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::UserResultsPage2) -> Self {
+        pub fn ok(self, value: &types::UserResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12682,7 +12682,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12692,7 +12692,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12723,7 +12723,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("silo", value.to_string()))
         }
     }
@@ -12738,7 +12738,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::User2) -> Self {
+        pub fn ok(self, value: &types::User) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12747,7 +12747,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12757,7 +12757,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12816,7 +12816,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameSortMode2>>,
+            T: Into<Option<types::NameSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -12841,7 +12841,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::UserBuiltinResultsPage2) -> Self {
+        pub fn ok(self, value: &types::UserBuiltinResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12850,7 +12850,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12860,7 +12860,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12885,7 +12885,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn user(self, value: &types::NameOrId2) -> Self {
+        pub fn user(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/system/users-builtin/{}$", value.to_string()))
                     .unwrap();
@@ -12903,7 +12903,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::UserBuiltin2) -> Self {
+        pub fn ok(self, value: &types::UserBuiltin) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12912,7 +12912,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -12922,7 +12922,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -12981,7 +12981,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -13006,7 +13006,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloUtilizationResultsPage2) -> Self {
+        pub fn ok(self, value: &types::SiloUtilizationResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13015,7 +13015,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13025,7 +13025,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13050,7 +13050,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn silo(self, value: &types::NameOrId2) -> Self {
+        pub fn silo(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/utilization/silos/{}$",
                 value.to_string()
@@ -13070,7 +13070,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SiloUtilization2) -> Self {
+        pub fn ok(self, value: &types::SiloUtilization) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13079,7 +13079,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13089,7 +13089,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13114,7 +13114,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::TimeseriesQuery2) -> Self {
+        pub fn body(self, value: &types::TimeseriesQuery) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -13129,7 +13129,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::Table2>) -> Self {
+        pub fn ok(self, value: &Vec<types::Table>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13138,7 +13138,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13148,7 +13148,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13216,7 +13216,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::TimeseriesSchemaResultsPage2) -> Self {
+        pub fn ok(self, value: &types::TimeseriesSchemaResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13225,7 +13225,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13235,7 +13235,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13310,7 +13310,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::IdSortMode2>>,
+            T: Into<Option<types::IdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -13335,7 +13335,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::UserResultsPage2) -> Self {
+        pub fn ok(self, value: &types::UserResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13344,7 +13344,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13354,7 +13354,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13390,7 +13390,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Utilization2) -> Self {
+        pub fn ok(self, value: &types::Utilization) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13399,7 +13399,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13409,7 +13409,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13436,7 +13436,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13450,7 +13450,7 @@ pub mod operations {
             }
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("vpc", value.to_string()))
         }
     }
@@ -13465,7 +13465,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcFirewallRules2) -> Self {
+        pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13474,7 +13474,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13484,7 +13484,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13511,7 +13511,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13525,11 +13525,11 @@ pub mod operations {
             }
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("vpc", value.to_string()))
         }
 
-        pub fn body(self, value: &types::VpcFirewallRuleUpdateParams2) -> Self {
+        pub fn body(self, value: &types::VpcFirewallRuleUpdateParams) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -13544,7 +13544,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcFirewallRules2) -> Self {
+        pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13553,7 +13553,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13563,7 +13563,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13622,7 +13622,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13638,7 +13638,7 @@ pub mod operations {
 
         pub fn router<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
@@ -13654,7 +13654,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -13670,7 +13670,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -13695,7 +13695,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RouterRouteResultsPage2) -> Self {
+        pub fn ok(self, value: &types::RouterRouteResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13704,7 +13704,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13714,7 +13714,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13741,7 +13741,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13755,13 +13755,13 @@ pub mod operations {
             }
         }
 
-        pub fn router(self, value: &types::NameOrId2) -> Self {
+        pub fn router(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("router", value.to_string()))
         }
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -13775,7 +13775,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::RouterRouteCreate2) -> Self {
+        pub fn body(self, value: &types::RouterRouteCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -13790,7 +13790,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::RouterRoute2) -> Self {
+        pub fn created(self, value: &types::RouterRoute) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -13799,7 +13799,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13809,7 +13809,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13834,7 +13834,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn route(self, value: &types::NameOrId2) -> Self {
+        pub fn route(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -13842,7 +13842,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13856,13 +13856,13 @@ pub mod operations {
             }
         }
 
-        pub fn router(self, value: &types::NameOrId2) -> Self {
+        pub fn router(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("router", value.to_string()))
         }
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -13887,7 +13887,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RouterRoute2) -> Self {
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13896,7 +13896,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -13906,7 +13906,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -13931,7 +13931,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn route(self, value: &types::NameOrId2) -> Self {
+        pub fn route(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -13939,7 +13939,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -13955,7 +13955,7 @@ pub mod operations {
 
         pub fn router<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
@@ -13971,7 +13971,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -13985,7 +13985,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::RouterRouteUpdate2) -> Self {
+        pub fn body(self, value: &types::RouterRouteUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -14000,7 +14000,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RouterRoute2) -> Self {
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14009,7 +14009,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14019,7 +14019,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14044,7 +14044,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn route(self, value: &types::NameOrId2) -> Self {
+        pub fn route(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
@@ -14052,7 +14052,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14068,7 +14068,7 @@ pub mod operations {
 
         pub fn router<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
@@ -14084,7 +14084,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14113,7 +14113,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14123,7 +14123,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14182,7 +14182,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14198,7 +14198,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -14214,7 +14214,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14239,7 +14239,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcRouterResultsPage2) -> Self {
+        pub fn ok(self, value: &types::VpcRouterResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14248,7 +14248,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14258,7 +14258,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14285,7 +14285,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14299,11 +14299,11 @@ pub mod operations {
             }
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("vpc", value.to_string()))
         }
 
-        pub fn body(self, value: &types::VpcRouterCreate2) -> Self {
+        pub fn body(self, value: &types::VpcRouterCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -14318,7 +14318,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::VpcRouter2) -> Self {
+        pub fn created(self, value: &types::VpcRouter) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -14327,7 +14327,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14337,7 +14337,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14362,7 +14362,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn router(self, value: &types::NameOrId2) -> Self {
+        pub fn router(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -14370,7 +14370,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14386,7 +14386,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14411,7 +14411,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcRouter2) -> Self {
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14420,7 +14420,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14430,7 +14430,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14455,7 +14455,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn router(self, value: &types::NameOrId2) -> Self {
+        pub fn router(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -14463,7 +14463,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14479,7 +14479,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14493,7 +14493,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::VpcRouterUpdate2) -> Self {
+        pub fn body(self, value: &types::VpcRouterUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -14508,7 +14508,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcRouter2) -> Self {
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14517,7 +14517,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14527,7 +14527,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14552,7 +14552,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn router(self, value: &types::NameOrId2) -> Self {
+        pub fn router(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -14560,7 +14560,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14576,7 +14576,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14605,7 +14605,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14615,7 +14615,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14674,7 +14674,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14690,7 +14690,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -14706,7 +14706,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14731,7 +14731,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcSubnetResultsPage2) -> Self {
+        pub fn ok(self, value: &types::VpcSubnetResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14740,7 +14740,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14750,7 +14750,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14777,7 +14777,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14791,11 +14791,11 @@ pub mod operations {
             }
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("vpc", value.to_string()))
         }
 
-        pub fn body(self, value: &types::VpcSubnetCreate2) -> Self {
+        pub fn body(self, value: &types::VpcSubnetCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -14810,7 +14810,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::VpcSubnet2) -> Self {
+        pub fn created(self, value: &types::VpcSubnet) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -14819,7 +14819,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14829,7 +14829,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14854,7 +14854,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn subnet(self, value: &types::NameOrId2) -> Self {
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -14862,7 +14862,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14878,7 +14878,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14903,7 +14903,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcSubnet2) -> Self {
+        pub fn ok(self, value: &types::VpcSubnet) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14912,7 +14912,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -14922,7 +14922,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -14947,7 +14947,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn subnet(self, value: &types::NameOrId2) -> Self {
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -14955,7 +14955,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -14971,7 +14971,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -14985,7 +14985,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::VpcSubnetUpdate2) -> Self {
+        pub fn body(self, value: &types::VpcSubnetUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -15000,7 +15000,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcSubnet2) -> Self {
+        pub fn ok(self, value: &types::VpcSubnet) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -15009,7 +15009,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15019,7 +15019,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15044,7 +15044,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn subnet(self, value: &types::NameOrId2) -> Self {
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
             let re =
                 regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
@@ -15052,7 +15052,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15068,7 +15068,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -15097,7 +15097,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15107,7 +15107,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15130,7 +15130,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn subnet(self, value: &types::NameOrId2) -> Self {
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/vpc-subnets/{}/network-interfaces$",
                 value.to_string()
@@ -15173,7 +15173,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15189,7 +15189,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -15205,7 +15205,7 @@ pub mod operations {
 
         pub fn vpc<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
@@ -15230,7 +15230,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage2) -> Self {
+        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -15239,7 +15239,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15249,7 +15249,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15308,7 +15308,7 @@ pub mod operations {
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15324,7 +15324,7 @@ pub mod operations {
 
         pub fn sort_by<T>(self, value: T) -> Self
         where
-            T: Into<Option<types::NameOrIdSortMode2>>,
+            T: Into<Option<types::NameOrIdSortMode>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
@@ -15349,7 +15349,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::VpcResultsPage2) -> Self {
+        pub fn ok(self, value: &types::VpcResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -15358,7 +15358,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15368,7 +15368,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15393,11 +15393,11 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId2) -> Self {
+        pub fn project(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("project", value.to_string()))
         }
 
-        pub fn body(self, value: &types::VpcCreate2) -> Self {
+        pub fn body(self, value: &types::VpcCreate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -15412,7 +15412,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Vpc2) -> Self {
+        pub fn created(self, value: &types::Vpc) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -15421,7 +15421,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15431,7 +15431,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15456,14 +15456,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15488,7 +15488,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Vpc2) -> Self {
+        pub fn ok(self, value: &types::Vpc) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -15497,7 +15497,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15507,7 +15507,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15532,14 +15532,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15553,7 +15553,7 @@ pub mod operations {
             }
         }
 
-        pub fn body(self, value: &types::VpcUpdate2) -> Self {
+        pub fn body(self, value: &types::VpcUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -15568,7 +15568,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::Vpc2) -> Self {
+        pub fn ok(self, value: &types::Vpc) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -15577,7 +15577,7 @@ pub mod operations {
             )
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15587,7 +15587,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
@@ -15612,14 +15612,14 @@ pub mod operations {
             self.0
         }
 
-        pub fn vpc(self, value: &types::NameOrId2) -> Self {
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
 
         pub fn project<'a, T>(self, value: T) -> Self
         where
-            T: Into<Option<&'a types::NameOrId2>>,
+            T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
@@ -15648,7 +15648,7 @@ pub mod operations {
             Self(self.0.status(204u16))
         }
 
-        pub fn client_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 4u16);
             Self(
                 self.0
@@ -15658,7 +15658,7 @@ pub mod operations {
             )
         }
 
-        pub fn server_error(self, status: u16, value: &types::Error2) -> Self {
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
             assert_eq!(status / 100u16, 5u16);
             Self(
                 self.0
