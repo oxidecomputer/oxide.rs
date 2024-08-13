@@ -23806,7 +23806,10 @@ pub mod types {
     ///        "count",
     ///        "bytes",
     ///        "seconds",
-    ///        "nanoseconds"
+    ///        "nanoseconds",
+    ///        "volts",
+    ///        "amps",
+    ///        "degrees_celcius"
     ///      ]
     ///    },
     ///    {
@@ -23815,6 +23818,13 @@ pub mod types {
     ///      "type": "string",
     ///      "enum": [
     ///        "none"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Rotations per minute.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "rpm"
     ///      ]
     ///    }
     ///  ]
@@ -23843,9 +23853,18 @@ pub mod types {
         Seconds,
         #[serde(rename = "nanoseconds")]
         Nanoseconds,
+        #[serde(rename = "volts")]
+        Volts,
+        #[serde(rename = "amps")]
+        Amps,
+        #[serde(rename = "degrees_celcius")]
+        DegreesCelcius,
         /// No meaningful units, e.g. a dimensionless quanity.
         #[serde(rename = "none")]
         None,
+        /// Rotations per minute.
+        #[serde(rename = "rpm")]
+        Rpm,
     }
 
     impl From<&Units> for Units {
@@ -23861,7 +23880,11 @@ pub mod types {
                 Self::Bytes => "bytes".to_string(),
                 Self::Seconds => "seconds".to_string(),
                 Self::Nanoseconds => "nanoseconds".to_string(),
+                Self::Volts => "volts".to_string(),
+                Self::Amps => "amps".to_string(),
+                Self::DegreesCelcius => "degrees_celcius".to_string(),
                 Self::None => "none".to_string(),
+                Self::Rpm => "rpm".to_string(),
             }
         }
     }
@@ -23874,7 +23897,11 @@ pub mod types {
                 "bytes" => Ok(Self::Bytes),
                 "seconds" => Ok(Self::Seconds),
                 "nanoseconds" => Ok(Self::Nanoseconds),
+                "volts" => Ok(Self::Volts),
+                "amps" => Ok(Self::Amps),
+                "degrees_celcius" => Ok(Self::DegreesCelcius),
                 "none" => Ok(Self::None),
+                "rpm" => Ok(Self::Rpm),
                 _ => Err("invalid value".into()),
             }
         }
