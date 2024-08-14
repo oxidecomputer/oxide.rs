@@ -59,7 +59,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
             CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
             CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
-            CliCommand::InstanceMigrate => Self::cli_instance_migrate(),
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
@@ -1707,45 +1706,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Detach and deallocate ephemeral IP from instance")
-    }
-
-    pub fn cli_instance_migrate() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("dst-sled-id")
-                    .long("dst-sled-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("instance")
-                    .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the instance"),
-            )
-            .arg(
-                clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Migrate an instance")
     }
 
     pub fn cli_instance_reboot() -> clap::Command {
@@ -6055,7 +6015,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceEphemeralIpDetach => {
                 self.execute_instance_ephemeral_ip_detach(matches).await
             }
-            CliCommand::InstanceMigrate => self.execute_instance_migrate(matches).await,
             CliCommand::InstanceReboot => self.execute_instance_reboot(matches).await,
             CliCommand::InstanceSerialConsole => {
                 self.execute_instance_serial_console(matches).await
@@ -7854,41 +7813,6 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_instance_migrate(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.instance_migrate();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
-            request = request.body_map(|body| body.dst_sled_id(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
-            request = request.instance(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceMigrate>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_instance_migrate(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -13242,14 +13166,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_instance_migrate(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::InstanceMigrate,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_instance_reboot(
         &self,
         matches: &clap::ArgMatches,
@@ -14491,7 +14407,6 @@ pub enum CliCommand {
     InstanceExternalIpList,
     InstanceEphemeralIpAttach,
     InstanceEphemeralIpDetach,
-    InstanceMigrate,
     InstanceReboot,
     InstanceSerialConsole,
     InstanceSerialConsoleStream,
@@ -14692,7 +14607,6 @@ impl CliCommand {
             CliCommand::InstanceExternalIpList,
             CliCommand::InstanceEphemeralIpAttach,
             CliCommand::InstanceEphemeralIpDetach,
-            CliCommand::InstanceMigrate,
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
             CliCommand::InstanceSerialConsoleStream,

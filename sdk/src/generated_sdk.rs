@@ -11766,45 +11766,6 @@ pub mod types {
         }
     }
 
-    /// Migration parameters for an `Instance`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Migration parameters for an `Instance`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "dst_sled_id"
-    ///  ],
-    ///  "properties": {
-    ///    "dst_sled_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct InstanceMigrate {
-        pub dst_sled_id: uuid::Uuid,
-    }
-
-    impl From<&InstanceMigrate> for InstanceMigrate {
-        fn from(value: &InstanceMigrate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl InstanceMigrate {
-        pub fn builder() -> builder::InstanceMigrate {
-            Default::default()
-        }
-    }
-
     /// An `InstanceNetworkInterface` represents a virtual network interface
     /// device attached to an instance.
     ///
@@ -34919,49 +34880,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct InstanceMigrate {
-            dst_sled_id: Result<uuid::Uuid, String>,
-        }
-
-        impl Default for InstanceMigrate {
-            fn default() -> Self {
-                Self {
-                    dst_sled_id: Err("no value supplied for dst_sled_id".to_string()),
-                }
-            }
-        }
-
-        impl InstanceMigrate {
-            pub fn dst_sled_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.dst_sled_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for dst_sled_id: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<InstanceMigrate> for super::InstanceMigrate {
-            type Error = super::error::ConversionError;
-            fn try_from(value: InstanceMigrate) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    dst_sled_id: value.dst_sled_id?,
-                })
-            }
-        }
-
-        impl From<super::InstanceMigrate> for InstanceMigrate {
-            fn from(value: super::InstanceMigrate) -> Self {
-                Self {
-                    dst_sled_id: Ok(value.dst_sled_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterface {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -47246,23 +47164,6 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach;
-    /// Migrate an instance
-    ///
-    /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
-    ///
-    /// Arguments:
-    /// - `instance`: Name or ID of the instance
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.instance_migrate()
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn instance_migrate(&self) -> builder::InstanceMigrate;
     /// Reboot an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
@@ -47528,10 +47429,6 @@ impl ClientInstancesExt for Client {
 
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach {
         builder::InstanceEphemeralIpDetach::new(self)
-    }
-
-    fn instance_migrate(&self) -> builder::InstanceMigrate {
-        builder::InstanceMigrate::new(self)
     }
 
     fn instance_reboot(&self) -> builder::InstanceReboot {
@@ -55305,116 +55202,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientInstancesExt::instance_migrate`]
-    ///
-    /// [`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
-    #[derive(Debug, Clone)]
-    pub struct InstanceMigrate<'a> {
-        client: &'a super::Client,
-        instance: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::InstanceMigrate, String>,
-    }
-
-    impl<'a> InstanceMigrate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                instance: Err("instance was not initialized".to_string()),
-                project: Ok(None),
-                body: Ok(types::builder::InstanceMigrate::default()),
-            }
-        }
-
-        pub fn instance<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.instance = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::InstanceMigrate>,
-            <V as std::convert::TryInto<types::InstanceMigrate>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `InstanceMigrate` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::InstanceMigrate) -> types::builder::InstanceMigrate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                instance,
-                project,
-                body,
-            } = self;
-            let instance = instance.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::InstanceMigrate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/instances/{}/migrate",
-                client.baseurl,
-                encode_path(&instance.to_string()),
-            );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
