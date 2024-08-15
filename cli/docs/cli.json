@@ -3906,7 +3906,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the address to"
                     },
                     {
                       "long": "profile",
@@ -3931,7 +3931,7 @@
                   ]
                 },
                 {
-                  "name": "del",
+                  "name": "delete",
                   "about": "Remove an address from a port configuration",
                   "args": [
                     {
@@ -4348,6 +4348,73 @@
                   ]
                 },
                 {
+                  "name": "auth",
+                  "args": [
+                    {
+                      "long": "authstring",
+                      "help": "Authorization string"
+                    },
+                    {
+                      "long": "peer",
+                      "help": "Peer to apply allow list to"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the auth config to"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the auth config to"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the auth config to"
+                    }
+                  ]
+                },
+                {
                   "name": "config",
                   "args": [
                     {
@@ -4494,7 +4561,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the filter to"
                     },
                     {
                       "long": "profile",
@@ -4502,7 +4569,7 @@
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the address to"
+                      "help": "Id of the rack to add the filter to"
                     },
                     {
                       "long": "switch",
@@ -4510,7 +4577,7 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the address to"
+                      "help": "Switch to add the filter to"
                     }
                   ]
                 },
@@ -4566,7 +4633,7 @@
                   "subcommands": [
                     {
                       "name": "add",
-                      "about": "Add a BGP peer to a port configuration",
+                      "about": "Set a BGP peer to a port configuration",
                       "args": [
                         {
                           "long": "addr",
@@ -4579,6 +4646,10 @@
                         {
                           "long": "allowed-imports",
                           "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "authstring",
+                          "help": "Use the given authorization string for TCP-MD5 authentication with the peer"
                         },
                         {
                           "long": "bgp-config",
@@ -4615,10 +4686,6 @@
                         {
                           "long": "local-pref",
                           "help": "Apply a local preference to routes received from this peer"
-                        },
-                        {
-                          "long": "md5-auth-key",
-                          "help": "Use the given key for TCP-MD5 authentication with the peer"
                         },
                         {
                           "long": "min-ttl",
@@ -4693,7 +4760,7 @@
                       ]
                     },
                     {
-                      "name": "del",
+                      "name": "delete",
                       "about": "Remove a BGP from a port configuration",
                       "args": [
                         {
@@ -4755,6 +4822,73 @@
                           "help": "Switch to remove the peer from"
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "pref",
+                  "args": [
+                    {
+                      "long": "local-pref",
+                      "help": "Authorization string"
+                    },
+                    {
+                      "long": "peer",
+                      "help": "Peer to apply allow list to"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the route preference to"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the route preference to"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the route preference to"
                     }
                   ]
                 },
@@ -4821,6 +4955,11 @@
                     },
                     {
                       "long": "fec",
+                      "values": [
+                        "firecode",
+                        "none",
+                        "rs"
+                      ],
                       "help": "The forward error correction mode of the link"
                     },
                     {
@@ -4875,6 +5014,17 @@
                     },
                     {
                       "long": "speed",
+                      "values": [
+                        "0g",
+                        "1g",
+                        "10g",
+                        "25g",
+                        "40g",
+                        "50g",
+                        "100g",
+                        "200g",
+                        "400g"
+                      ],
                       "help": "The speed of the link"
                     },
                     {
@@ -4888,7 +5038,7 @@
                   ]
                 },
                 {
-                  "name": "del",
+                  "name": "delete",
                   "about": "Remove a link from a port",
                   "args": [
                     {
@@ -5047,6 +5197,166 @@
                       "values": [
                         "id_ascending"
                       ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "route",
+              "about": "Manage static switch routes.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands"
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "delete",
+                  "about": "Delete a static route",
+                  "args": [
+                    {
+                      "long": "destination",
+                      "help": "The route destination"
+                    },
+                    {
+                      "long": "nexthop",
+                      "help": "The route nexthop"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to remove the static route from"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to remove the static route from"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to remove the static route from"
+                    },
+                    {
+                      "long": "vlan-id",
+                      "help": "The route vlan id"
+                    }
+                  ]
+                },
+                {
+                  "name": "set",
+                  "about": "Set a static route",
+                  "args": [
+                    {
+                      "long": "destination",
+                      "help": "The route destination"
+                    },
+                    {
+                      "long": "local-pref",
+                      "help": "The route local preference"
+                    },
+                    {
+                      "long": "nexthop",
+                      "help": "The route nexthop"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to configure the route on"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to configure the route on"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to configure the route on"
+                    },
+                    {
+                      "long": "vlan-id",
+                      "help": "The route vlan id"
                     }
                   ]
                 }
