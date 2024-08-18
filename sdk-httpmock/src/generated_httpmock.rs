@@ -13048,7 +13048,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::Table>) -> Self {
+        pub fn ok(self, value: &types::OxqlQueryResult) -> Self {
             Self(
                 self.0
                     .status(200u16)

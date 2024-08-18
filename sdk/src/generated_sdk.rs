@@ -15524,6 +15524,50 @@ pub mod types {
         }
     }
 
+    /// The result of a successful OxQL query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The result of a successful OxQL query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "tables"
+    ///  ],
+    ///  "properties": {
+    ///    "tables": {
+    ///      "description": "Tables resulting from the query, each containing
+    /// timeseries.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Table"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlQueryResult {
+        /// Tables resulting from the query, each containing timeseries.
+        pub tables: Vec<Table>,
+    }
+
+    impl From<&OxqlQueryResult> for OxqlQueryResult {
+        fn from(value: &OxqlQueryResult) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlQueryResult {
+        pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
+        }
+    }
+
     /// The order in which the client wants to page through the requested
     /// collection
     ///
@@ -37236,6 +37280,49 @@ pub mod types {
                     subnet: Ok(value.subnet),
                     transit_ips: Ok(value.transit_ips),
                     vni: Ok(value.vni),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlQueryResult {
+            tables: Result<Vec<super::Table>, String>,
+        }
+
+        impl Default for OxqlQueryResult {
+            fn default() -> Self {
+                Self {
+                    tables: Err("no value supplied for tables".to_string()),
+                }
+            }
+        }
+
+        impl OxqlQueryResult {
+            pub fn tables<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Table>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tables = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tables: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<OxqlQueryResult> for super::OxqlQueryResult {
+            type Error = super::error::ConversionError;
+            fn try_from(value: OxqlQueryResult) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    tables: value.tables?,
+                })
+            }
+        }
+
+        impl From<super::OxqlQueryResult> for OxqlQueryResult {
+            fn from(value: super::OxqlQueryResult) -> Self {
+                Self {
+                    tables: Ok(value.tables),
                 }
             }
         }
@@ -67201,7 +67288,9 @@ pub mod builder {
         }
 
         /// Sends a `POST` request to `/v1/timeseries/query`
-        pub async fn send(self) -> Result<ResponseValue<Vec<types::Table>>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::OxqlQueryResult>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
