@@ -1490,7 +1490,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -3730,7 +3730,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#96f03dd19b7462a00ca876966260755745a7e322"
+source = "git+https://github.com/oxidecomputer/typify#4070232ea6d8dd94e0275d56d6cc503e104c7692"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3739,7 +3739,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#96f03dd19b7462a00ca876966260755745a7e322"
+source = "git+https://github.com/oxidecomputer/typify#4070232ea6d8dd94e0275d56d6cc503e104c7692"
 dependencies = [
  "heck 0.5.0",
  "log",
@@ -3758,7 +3758,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#96f03dd19b7462a00ca876966260755745a7e322"
+source = "git+https://github.com/oxidecomputer/typify#4070232ea6d8dd94e0275d56d6cc503e104c7692"
 dependencies = [
  "proc-macro2",
  "quote",

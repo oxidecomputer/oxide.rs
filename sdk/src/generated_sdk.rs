@@ -24708,10 +24708,20 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "metric_type": {
-    ///      "$ref": "#/components/schemas/MetricType"
+    ///      "description": "The type of this metric.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/MetricType"
+    ///        }
+    ///      ]
     ///    },
     ///    "values": {
-    ///      "$ref": "#/components/schemas/ValueArray"
+    ///      "description": "The data values.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ValueArray"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -24721,7 +24731,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Values {
+        /// The type of this metric.
         pub metric_type: MetricType,
+        /// The data values.
         pub values: ValueArray,
     }
 
