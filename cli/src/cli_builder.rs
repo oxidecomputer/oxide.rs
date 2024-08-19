@@ -326,7 +326,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),
         CliCommand::InstanceDelete => Some("instance delete"),
-        CliCommand::InstanceMigrate => None, // TODO delete from API?
         CliCommand::InstanceReboot => Some("instance reboot"),
         CliCommand::InstanceSerialConsole => None, // Special-cased
         CliCommand::InstanceSerialConsoleStream => None, // Ditto

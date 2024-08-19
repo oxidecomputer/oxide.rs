@@ -222,7 +222,7 @@ async fn client_query_loop(
                     .body(TimeseriesQuery { query: query.clone() });
                 match request.send().await {
                     Ok(response) => {
-                        tx.send(Message::Table(response.into_inner()))
+                        tx.send(Message::Table(response.into_inner().tables))
                             .await
                             .expect("Failed to send response to main task");
                     }
