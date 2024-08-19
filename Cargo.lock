@@ -1490,7 +1490,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -1559,9 +1559,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.3.0"
+version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de3fc2e30ba82dd1b3911c8de1ffc143c74a914a14e99514d7637e3099df5ea0"
+checksum = "93ead53efc7ea8ed3cfb0c79fc8023fbb782a5432b52830b6518941cebe6505c"
 dependencies = [
  "equivalent",
  "hashbrown",
@@ -2443,7 +2443,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a88326e9318fb4c63744650c1edaa2f152c36a90"
+source = "git+https://github.com/oxidecomputer/progenitor#522de025b9c26dbe1cf74e6f56cb650a97f6dcb3"
 dependencies = [
  "progenitor-client 0.7.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2468,7 +2468,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a88326e9318fb4c63744650c1edaa2f152c36a90"
+source = "git+https://github.com/oxidecomputer/progenitor#522de025b9c26dbe1cf74e6f56cb650a97f6dcb3"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2482,7 +2482,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a88326e9318fb4c63744650c1edaa2f152c36a90"
+source = "git+https://github.com/oxidecomputer/progenitor#522de025b9c26dbe1cf74e6f56cb650a97f6dcb3"
 dependencies = [
  "heck 0.5.0",
  "http 0.2.12",
@@ -2503,7 +2503,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a88326e9318fb4c63744650c1edaa2f152c36a90"
+source = "git+https://github.com/oxidecomputer/progenitor#522de025b9c26dbe1cf74e6f56cb650a97f6dcb3"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -3302,9 +3302,9 @@ checksum = "81cdd64d312baedb58e21336b31bc043b77e01cc99033ce76ef539f78e965ebc"
 
 [[package]]
 name = "syn"
-version = "2.0.74"
+version = "2.0.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fceb41e3d546d0bd83421d3409b1460cc7444cd389341a4c880fe7a042cb3d7"
+checksum = "f6af063034fc1935ede7be0122941bafa9bacb949334d090b77ca98b5817c7d9"
 dependencies = [
  "proc-macro2",
  "quote",
