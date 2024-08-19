@@ -11766,45 +11766,6 @@ pub mod types {
         }
     }
 
-    /// Migration parameters for an `Instance`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Migration parameters for an `Instance`",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "dst_sled_id"
-    ///  ],
-    ///  "properties": {
-    ///    "dst_sled_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct InstanceMigrate {
-        pub dst_sled_id: uuid::Uuid,
-    }
-
-    impl From<&InstanceMigrate> for InstanceMigrate {
-        fn from(value: &InstanceMigrate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl InstanceMigrate {
-        pub fn builder() -> builder::InstanceMigrate {
-            Default::default()
-        }
-    }
-
     /// An `InstanceNetworkInterface` represents a virtual network interface
     /// device attached to an instance.
     ///
@@ -15560,6 +15521,50 @@ pub mod types {
     impl From<&NetworkInterfaceKind> for NetworkInterfaceKind {
         fn from(value: &NetworkInterfaceKind) -> Self {
             value.clone()
+        }
+    }
+
+    /// The result of a successful OxQL query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The result of a successful OxQL query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "tables"
+    ///  ],
+    ///  "properties": {
+    ///    "tables": {
+    ///      "description": "Tables resulting from the query, each containing
+    /// timeseries.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Table"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlQueryResult {
+        /// Tables resulting from the query, each containing timeseries.
+        pub tables: Vec<Table>,
+    }
+
+    impl From<&OxqlQueryResult> for OxqlQueryResult {
+        fn from(value: &OxqlQueryResult) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlQueryResult {
+        pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
         }
     }
 
@@ -23806,7 +23811,10 @@ pub mod types {
     ///        "count",
     ///        "bytes",
     ///        "seconds",
-    ///        "nanoseconds"
+    ///        "nanoseconds",
+    ///        "volts",
+    ///        "amps",
+    ///        "degrees_celcius"
     ///      ]
     ///    },
     ///    {
@@ -23815,6 +23823,13 @@ pub mod types {
     ///      "type": "string",
     ///      "enum": [
     ///        "none"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Rotations per minute.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "rpm"
     ///      ]
     ///    }
     ///  ]
@@ -23843,9 +23858,18 @@ pub mod types {
         Seconds,
         #[serde(rename = "nanoseconds")]
         Nanoseconds,
+        #[serde(rename = "volts")]
+        Volts,
+        #[serde(rename = "amps")]
+        Amps,
+        #[serde(rename = "degrees_celcius")]
+        DegreesCelcius,
         /// No meaningful units, e.g. a dimensionless quanity.
         #[serde(rename = "none")]
         None,
+        /// Rotations per minute.
+        #[serde(rename = "rpm")]
+        Rpm,
     }
 
     impl From<&Units> for Units {
@@ -23861,7 +23885,11 @@ pub mod types {
                 Self::Bytes => "bytes".to_string(),
                 Self::Seconds => "seconds".to_string(),
                 Self::Nanoseconds => "nanoseconds".to_string(),
+                Self::Volts => "volts".to_string(),
+                Self::Amps => "amps".to_string(),
+                Self::DegreesCelcius => "degrees_celcius".to_string(),
                 Self::None => "none".to_string(),
+                Self::Rpm => "rpm".to_string(),
             }
         }
     }
@@ -23874,7 +23902,11 @@ pub mod types {
                 "bytes" => Ok(Self::Bytes),
                 "seconds" => Ok(Self::Seconds),
                 "nanoseconds" => Ok(Self::Nanoseconds),
+                "volts" => Ok(Self::Volts),
+                "amps" => Ok(Self::Amps),
+                "degrees_celcius" => Ok(Self::DegreesCelcius),
                 "none" => Ok(Self::None),
+                "rpm" => Ok(Self::Rpm),
                 _ => Err("invalid value".into()),
             }
         }
@@ -24720,10 +24752,20 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "metric_type": {
-    ///      "$ref": "#/components/schemas/MetricType"
+    ///      "description": "The type of this metric.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/MetricType"
+    ///        }
+    ///      ]
     ///    },
     ///    "values": {
-    ///      "$ref": "#/components/schemas/ValueArray"
+    ///      "description": "The data values.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ValueArray"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -24733,7 +24775,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Values {
+        /// The type of this metric.
         pub metric_type: MetricType,
+        /// The data values.
         pub values: ValueArray,
     }
 
@@ -34892,49 +34936,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct InstanceMigrate {
-            dst_sled_id: Result<uuid::Uuid, String>,
-        }
-
-        impl Default for InstanceMigrate {
-            fn default() -> Self {
-                Self {
-                    dst_sled_id: Err("no value supplied for dst_sled_id".to_string()),
-                }
-            }
-        }
-
-        impl InstanceMigrate {
-            pub fn dst_sled_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.dst_sled_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for dst_sled_id: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<InstanceMigrate> for super::InstanceMigrate {
-            type Error = super::error::ConversionError;
-            fn try_from(value: InstanceMigrate) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    dst_sled_id: value.dst_sled_id?,
-                })
-            }
-        }
-
-        impl From<super::InstanceMigrate> for InstanceMigrate {
-            fn from(value: super::InstanceMigrate) -> Self {
-                Self {
-                    dst_sled_id: Ok(value.dst_sled_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterface {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -37279,6 +37280,49 @@ pub mod types {
                     subnet: Ok(value.subnet),
                     transit_ips: Ok(value.transit_ips),
                     vni: Ok(value.vni),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlQueryResult {
+            tables: Result<Vec<super::Table>, String>,
+        }
+
+        impl Default for OxqlQueryResult {
+            fn default() -> Self {
+                Self {
+                    tables: Err("no value supplied for tables".to_string()),
+                }
+            }
+        }
+
+        impl OxqlQueryResult {
+            pub fn tables<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Table>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tables = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tables: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<OxqlQueryResult> for super::OxqlQueryResult {
+            type Error = super::error::ConversionError;
+            fn try_from(value: OxqlQueryResult) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    tables: value.tables?,
+                })
+            }
+        }
+
+        impl From<super::OxqlQueryResult> for OxqlQueryResult {
+            fn from(value: super::OxqlQueryResult) -> Self {
+                Self {
+                    tables: Ok(value.tables),
                 }
             }
         }
@@ -47219,23 +47263,6 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach;
-    /// Migrate an instance
-    ///
-    /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
-    ///
-    /// Arguments:
-    /// - `instance`: Name or ID of the instance
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.instance_migrate()
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn instance_migrate(&self) -> builder::InstanceMigrate;
     /// Reboot an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
@@ -47501,10 +47528,6 @@ impl ClientInstancesExt for Client {
 
     fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach {
         builder::InstanceEphemeralIpDetach::new(self)
-    }
-
-    fn instance_migrate(&self) -> builder::InstanceMigrate {
-        builder::InstanceMigrate::new(self)
     }
 
     fn instance_reboot(&self) -> builder::InstanceReboot {
@@ -55278,116 +55301,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientInstancesExt::instance_migrate`]
-    ///
-    /// [`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
-    #[derive(Debug, Clone)]
-    pub struct InstanceMigrate<'a> {
-        client: &'a super::Client,
-        instance: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::InstanceMigrate, String>,
-    }
-
-    impl<'a> InstanceMigrate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                instance: Err("instance was not initialized".to_string()),
-                project: Ok(None),
-                body: Ok(types::builder::InstanceMigrate::default()),
-            }
-        }
-
-        pub fn instance<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.instance = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::InstanceMigrate>,
-            <V as std::convert::TryInto<types::InstanceMigrate>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `InstanceMigrate` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::InstanceMigrate) -> types::builder::InstanceMigrate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                instance,
-                project,
-                body,
-            } = self;
-            let instance = instance.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::InstanceMigrate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/instances/{}/migrate",
-                client.baseurl,
-                encode_path(&instance.to_string()),
-            );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -67375,7 +67288,9 @@ pub mod builder {
         }
 
         /// Sends a `POST` request to `/v1/timeseries/query`
-        pub async fn send(self) -> Result<ResponseValue<Vec<types::Table>>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::OxqlQueryResult>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
