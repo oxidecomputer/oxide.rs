@@ -265,7 +265,9 @@ impl CmdAuthLogin {
         // here to ensure that any command level configuration provided by the
         // user is maintained
         let client = Client::new_authenticated_config(
-            &ctx.client_config().clone().with_host_and_token(host, &token)
+            &ctx.client_config()
+                .clone()
+                .with_host_and_token(host, &token),
         )
         .unwrap();
 
