@@ -23,12 +23,14 @@ pub struct ProfileCredentials {
 
 // TODO: do we want a way to easily change the port number? It would need to be
 // shoved into the baseurl string
+#[derive(Clone)]
 struct ResolveValue {
     pub domain: String,
     pub addr: IpAddr,
 }
 
 /// Configuration for creating an authenticated [Client]
+#[derive(Clone)]
 pub struct ClientConfig {
     config_dir: PathBuf,
     auth_method: AuthMethod,
@@ -38,6 +40,7 @@ pub struct ClientConfig {
     timeout: Option<u64>,
 }
 
+#[derive(Clone)]
 enum AuthMethod {
     DefaultProfile,
     Profile(String),
