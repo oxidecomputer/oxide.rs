@@ -2006,6 +2006,52 @@ pub mod types {
         }
     }
 
+    /// The current status of a BGP peer.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The current status of a BGP peer.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "exports"
+    ///  ],
+    ///  "properties": {
+    ///    "exports": {
+    ///      "description": "Exported routes indexed by peer address.",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "type": "array",
+    ///        "items": {
+    ///          "$ref": "#/components/schemas/Ipv4Net"
+    ///        }
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BgpExported {
+        /// Exported routes indexed by peer address.
+        pub exports: ::std::collections::HashMap<String, Vec<Ipv4Net>>,
+    }
+
+    impl From<&BgpExported> for BgpExported {
+        fn from(value: &BgpExported) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpExported {
+        pub fn builder() -> builder::BgpExported {
+            Default::default()
+        }
+    }
+
     /// A route imported from a BGP peer.
     ///
     /// <details><summary>JSON schema</summary>
@@ -28756,6 +28802,49 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BgpExported {
+            exports: Result<::std::collections::HashMap<String, Vec<super::Ipv4Net>>, String>,
+        }
+
+        impl Default for BgpExported {
+            fn default() -> Self {
+                Self {
+                    exports: Err("no value supplied for exports".to_string()),
+                }
+            }
+        }
+
+        impl BgpExported {
+            pub fn exports<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<::std::collections::HashMap<String, Vec<super::Ipv4Net>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.exports = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for exports: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpExported> for super::BgpExported {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BgpExported) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    exports: value.exports?,
+                })
+            }
+        }
+
+        impl From<super::BgpExported> for BgpExported {
+            fn from(value: super::BgpExported) -> Self {
+                Self {
+                    exports: Ok(value.exports),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpImportedRouteIpv4 {
             id: Result<u32, String>,
             nexthop: Result<std::net::Ipv4Addr, String>,
@@ -49262,6 +49351,16 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete;
+    /// Get BGP exported routes
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-exported`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bgp_exported()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_exported(&self) -> builder::NetworkingBgpExported;
     /// Get BGP router message history
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
@@ -49543,6 +49642,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
         builder::NetworkingBgpAnnounceSetDelete::new(self)
+    }
+
+    fn networking_bgp_exported(&self) -> builder::NetworkingBgpExported {
+        builder::NetworkingBgpExported::new(self)
     }
 
     fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory {
@@ -64480,6 +64583,47 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_exported`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_exported`]: super::ClientSystemNetworkingExt::networking_bgp_exported
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpExported<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingBgpExported<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-exported`
+        pub async fn send(self) -> Result<ResponseValue<types::BgpExported>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/bgp-exported", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

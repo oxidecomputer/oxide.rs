@@ -169,6 +169,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 Self::cli_networking_bgp_announce_set_delete()
             }
+            CliCommand::NetworkingBgpExported => Self::cli_networking_bgp_exported(),
             CliCommand::NetworkingBgpMessageHistory => Self::cli_networking_bgp_message_history(),
             CliCommand::NetworkingBgpImportedRoutesIpv4 => {
                 Self::cli_networking_bgp_imported_routes_ipv4()
@@ -4219,6 +4220,10 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete BGP announce set")
     }
 
+    pub fn cli_networking_bgp_exported() -> clap::Command {
+        clap::Command::new("").about("Get BGP exported routes")
+    }
+
     pub fn cli_networking_bgp_message_history() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -6190,6 +6195,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 self.execute_networking_bgp_announce_set_delete(matches)
                     .await
+            }
+            CliCommand::NetworkingBgpExported => {
+                self.execute_networking_bgp_exported(matches).await
             }
             CliCommand::NetworkingBgpMessageHistory => {
                 self.execute_networking_bgp_message_history(matches).await
@@ -10822,6 +10830,26 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_bgp_exported(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_bgp_exported();
+        self.config
+            .execute_networking_bgp_exported(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_bgp_message_history(
         &self,
         matches: &clap::ArgMatches,
@@ -13902,6 +13930,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_bgp_exported(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpExported,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_bgp_message_history(
         &self,
         matches: &clap::ArgMatches,
@@ -14499,6 +14535,7 @@ pub enum CliCommand {
     NetworkingBgpAnnounceSetList,
     NetworkingBgpAnnounceSetUpdate,
     NetworkingBgpAnnounceSetDelete,
+    NetworkingBgpExported,
     NetworkingBgpMessageHistory,
     NetworkingBgpImportedRoutesIpv4,
     NetworkingBgpStatus,
@@ -14699,6 +14736,7 @@ impl CliCommand {
             CliCommand::NetworkingBgpAnnounceSetList,
             CliCommand::NetworkingBgpAnnounceSetUpdate,
             CliCommand::NetworkingBgpAnnounceSetDelete,
+            CliCommand::NetworkingBgpExported,
             CliCommand::NetworkingBgpMessageHistory,
             CliCommand::NetworkingBgpImportedRoutesIpv4,
             CliCommand::NetworkingBgpStatus,
