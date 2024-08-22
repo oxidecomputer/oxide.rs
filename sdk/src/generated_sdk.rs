@@ -13946,7 +13946,7 @@ pub mod types {
     /// configuration for the link.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/LldpServiceConfigCreate"
+    ///          "$ref": "#/components/schemas/LldpLinkConfigCreate"
     ///        }
     ///      ]
     ///    },
@@ -13977,7 +13977,7 @@ pub mod types {
         /// The forward error correction mode of the link.
         pub fec: LinkFec,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
-        pub lldp: LldpServiceConfigCreate,
+        pub lldp: LldpLinkConfigCreate,
         /// Maximum transmission unit for the link.
         pub mtu: u16,
         /// The speed of the link.
@@ -14296,6 +14296,13 @@ pub mod types {
     ///    "id"
     ///  ],
     ///  "properties": {
+    ///    "chassis_id": {
+    ///      "description": "The LLDP chassis identifier TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "enabled": {
     ///      "description": "Whether or not the LLDP service is enabled.",
     ///      "type": "boolean"
@@ -14305,71 +14312,40 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "lldp_config_id": {
-    ///      "description": "The link-layer discovery protocol configuration for
-    /// this service.",
+    ///    "link_description": {
+    ///      "description": "The LLDP link description TLV.",
     ///      "type": [
     ///        "string",
     ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct LldpServiceConfig {
-        /// Whether or not the LLDP service is enabled.
-        pub enabled: bool,
-        /// The id of this LLDP service instance.
-        pub id: uuid::Uuid,
-        /// The link-layer discovery protocol configuration for this service.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub lldp_config_id: Option<uuid::Uuid>,
-    }
-
-    impl From<&LldpServiceConfig> for LldpServiceConfig {
-        fn from(value: &LldpServiceConfig) -> Self {
-            value.clone()
-        }
-    }
-
-    impl LldpServiceConfig {
-        pub fn builder() -> builder::LldpServiceConfig {
-            Default::default()
-        }
-    }
-
-    /// The LLDP configuration associated with a port. LLDP may be either
-    /// enabled or disabled, if enabled, an LLDP configuration must be provided
-    /// by name or id.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The LLDP configuration associated with a port. LLDP may
-    /// be either enabled or disabled, if enabled, an LLDP configuration must be
-    /// provided by name or id.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "enabled"
-    ///  ],
-    ///  "properties": {
-    ///    "enabled": {
-    ///      "description": "Whether or not LLDP is enabled.",
-    ///      "type": "boolean"
+    ///      ]
     ///    },
-    ///    "lldp_config": {
-    ///      "description": "A reference to the LLDP configuration used. Must
-    /// not be `None` when `enabled` is `true`.",
+    ///    "link_name": {
+    ///      "description": "The LLDP link name TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "management_ip": {
+    ///      "description": "The LLDP management IP TLV.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "$ref": "#/components/schemas/IpNet"
     ///        }
+    ///      ]
+    ///    },
+    ///    "system_description": {
+    ///      "description": "The LLDP system description TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "system_name": {
+    ///      "description": "The LLDP system name TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
     ///      ]
     ///    }
     ///  }
@@ -14379,23 +14355,140 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct LldpServiceConfigCreate {
-        /// Whether or not LLDP is enabled.
-        pub enabled: bool,
-        /// A reference to the LLDP configuration used. Must not be `None` when
-        /// `enabled` is `true`.
+    pub struct LldpLinkConfig {
+        /// The LLDP chassis identifier TLV.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub lldp_config: Option<NameOrId>,
+        pub chassis_id: Option<String>,
+        /// Whether or not the LLDP service is enabled.
+        pub enabled: bool,
+        /// The id of this LLDP service instance.
+        pub id: uuid::Uuid,
+        /// The LLDP link description TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub link_description: Option<String>,
+        /// The LLDP link name TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub link_name: Option<String>,
+        /// The LLDP management IP TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub management_ip: Option<IpNet>,
+        /// The LLDP system description TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub system_description: Option<String>,
+        /// The LLDP system name TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub system_name: Option<String>,
     }
 
-    impl From<&LldpServiceConfigCreate> for LldpServiceConfigCreate {
-        fn from(value: &LldpServiceConfigCreate) -> Self {
+    impl From<&LldpLinkConfig> for LldpLinkConfig {
+        fn from(value: &LldpLinkConfig) -> Self {
             value.clone()
         }
     }
 
-    impl LldpServiceConfigCreate {
-        pub fn builder() -> builder::LldpServiceConfigCreate {
+    impl LldpLinkConfig {
+        pub fn builder() -> builder::LldpLinkConfig {
+            Default::default()
+        }
+    }
+
+    /// The LLDP configuration associated with a port.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The LLDP configuration associated with a port.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "enabled"
+    ///  ],
+    ///  "properties": {
+    ///    "chassis_id": {
+    ///      "description": "The LLDP chassis identifier TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "enabled": {
+    ///      "description": "Whether or not LLDP is enabled.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "link_description": {
+    ///      "description": "The LLDP link description TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "link_name": {
+    ///      "description": "The LLDP link name TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "management_ip": {
+    ///      "description": "The LLDP management IP TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "system_description": {
+    ///      "description": "The LLDP system description TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "system_name": {
+    ///      "description": "The LLDP system name TLV.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct LldpLinkConfigCreate {
+        /// The LLDP chassis identifier TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub chassis_id: Option<String>,
+        /// Whether or not LLDP is enabled.
+        pub enabled: bool,
+        /// The LLDP link description TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub link_description: Option<String>,
+        /// The LLDP link name TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub link_name: Option<String>,
+        /// The LLDP management IP TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub management_ip: Option<std::net::IpAddr>,
+        /// The LLDP system description TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub system_description: Option<String>,
+        /// The LLDP system name TLV.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub system_name: Option<String>,
+    }
+
+    impl From<&LldpLinkConfigCreate> for LldpLinkConfigCreate {
+        fn from(value: &LldpLinkConfigCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LldpLinkConfigCreate {
+        pub fn builder() -> builder::LldpLinkConfigCreate {
             Default::default()
         }
     }
@@ -22408,7 +22501,7 @@ pub mod types {
     ///    "autoneg",
     ///    "fec",
     ///    "link_name",
-    ///    "lldp_service_config_id",
+    ///    "lldp_link_config_id",
     ///    "mtu",
     ///    "port_settings_id",
     ///    "speed"
@@ -22431,7 +22524,7 @@ pub mod types {
     ///      "description": "The name of this link.",
     ///      "type": "string"
     ///    },
-    ///    "lldp_service_config_id": {
+    ///    "lldp_link_config_id": {
     ///      "description": "The link-layer discovery protocol service
     /// configuration id for this link.",
     ///      "type": "string",
@@ -22473,7 +22566,7 @@ pub mod types {
         pub link_name: String,
         /// The link-layer discovery protocol service configuration id for this
         /// link.
-        pub lldp_service_config_id: uuid::Uuid,
+        pub lldp_link_config_id: uuid::Uuid,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
@@ -23012,7 +23105,7 @@ pub mod types {
     ///      "description": "Link-layer discovery protocol (LLDP) settings.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/LldpServiceConfig"
+    ///        "$ref": "#/components/schemas/LldpLinkConfig"
     ///      }
     ///    },
     ///    "links": {
@@ -23070,7 +23163,7 @@ pub mod types {
         /// Layer 3 interface settings.
         pub interfaces: Vec<SwitchInterfaceConfig>,
         /// Link-layer discovery protocol (LLDP) settings.
-        pub link_lldp: Vec<LldpServiceConfig>,
+        pub link_lldp: Vec<LldpLinkConfig>,
         /// Layer 2 link settings.
         pub links: Vec<SwitchPortLinkConfig>,
         /// Layer 1 physical port settings.
@@ -36555,7 +36648,7 @@ pub mod types {
         pub struct LinkConfigCreate {
             autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
-            lldp: Result<super::LldpServiceConfigCreate, String>,
+            lldp: Result<super::LldpLinkConfigCreate, String>,
             mtu: Result<u16, String>,
             speed: Result<super::LinkSpeed, String>,
         }
@@ -36595,7 +36688,7 @@ pub mod types {
             }
             pub fn lldp<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::LldpServiceConfigCreate>,
+                T: std::convert::TryInto<super::LldpLinkConfigCreate>,
                 T::Error: std::fmt::Display,
             {
                 self.lldp = value
@@ -36651,23 +36744,43 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct LldpServiceConfig {
+        pub struct LldpLinkConfig {
+            chassis_id: Result<Option<String>, String>,
             enabled: Result<bool, String>,
             id: Result<uuid::Uuid, String>,
-            lldp_config_id: Result<Option<uuid::Uuid>, String>,
+            link_description: Result<Option<String>, String>,
+            link_name: Result<Option<String>, String>,
+            management_ip: Result<Option<super::IpNet>, String>,
+            system_description: Result<Option<String>, String>,
+            system_name: Result<Option<String>, String>,
         }
 
-        impl Default for LldpServiceConfig {
+        impl Default for LldpLinkConfig {
             fn default() -> Self {
                 Self {
+                    chassis_id: Ok(Default::default()),
                     enabled: Err("no value supplied for enabled".to_string()),
                     id: Err("no value supplied for id".to_string()),
-                    lldp_config_id: Ok(Default::default()),
+                    link_description: Ok(Default::default()),
+                    link_name: Ok(Default::default()),
+                    management_ip: Ok(Default::default()),
+                    system_description: Ok(Default::default()),
+                    system_name: Ok(Default::default()),
                 }
             }
         }
 
-        impl LldpServiceConfig {
+        impl LldpLinkConfig {
+            pub fn chassis_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.chassis_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
+                self
+            }
             pub fn enabled<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -36688,55 +36801,131 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn lldp_config_id<T>(mut self, value: T) -> Self
+            pub fn link_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<Option<String>>,
                 T::Error: std::fmt::Display,
             {
-                self.lldp_config_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for lldp_config_id: {}", e)
+                self.link_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
                 });
+                self
+            }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
+            pub fn management_ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::IpNet>>,
+                T::Error: std::fmt::Display,
+            {
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
+                self
+            }
+            pub fn system_description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.system_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn system_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.system_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
                 self
             }
         }
 
-        impl std::convert::TryFrom<LldpServiceConfig> for super::LldpServiceConfig {
+        impl std::convert::TryFrom<LldpLinkConfig> for super::LldpLinkConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: LldpServiceConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: LldpLinkConfig) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    chassis_id: value.chassis_id?,
                     enabled: value.enabled?,
                     id: value.id?,
-                    lldp_config_id: value.lldp_config_id?,
+                    link_description: value.link_description?,
+                    link_name: value.link_name?,
+                    management_ip: value.management_ip?,
+                    system_description: value.system_description?,
+                    system_name: value.system_name?,
                 })
             }
         }
 
-        impl From<super::LldpServiceConfig> for LldpServiceConfig {
-            fn from(value: super::LldpServiceConfig) -> Self {
+        impl From<super::LldpLinkConfig> for LldpLinkConfig {
+            fn from(value: super::LldpLinkConfig) -> Self {
                 Self {
+                    chassis_id: Ok(value.chassis_id),
                     enabled: Ok(value.enabled),
                     id: Ok(value.id),
-                    lldp_config_id: Ok(value.lldp_config_id),
+                    link_description: Ok(value.link_description),
+                    link_name: Ok(value.link_name),
+                    management_ip: Ok(value.management_ip),
+                    system_description: Ok(value.system_description),
+                    system_name: Ok(value.system_name),
                 }
             }
         }
 
         #[derive(Clone, Debug)]
-        pub struct LldpServiceConfigCreate {
+        pub struct LldpLinkConfigCreate {
+            chassis_id: Result<Option<String>, String>,
             enabled: Result<bool, String>,
-            lldp_config: Result<Option<super::NameOrId>, String>,
+            link_description: Result<Option<String>, String>,
+            link_name: Result<Option<String>, String>,
+            management_ip: Result<Option<std::net::IpAddr>, String>,
+            system_description: Result<Option<String>, String>,
+            system_name: Result<Option<String>, String>,
         }
 
-        impl Default for LldpServiceConfigCreate {
+        impl Default for LldpLinkConfigCreate {
             fn default() -> Self {
                 Self {
+                    chassis_id: Ok(Default::default()),
                     enabled: Err("no value supplied for enabled".to_string()),
-                    lldp_config: Ok(Default::default()),
+                    link_description: Ok(Default::default()),
+                    link_name: Ok(Default::default()),
+                    management_ip: Ok(Default::default()),
+                    system_description: Ok(Default::default()),
+                    system_name: Ok(Default::default()),
                 }
             }
         }
 
-        impl LldpServiceConfigCreate {
+        impl LldpLinkConfigCreate {
+            pub fn chassis_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.chassis_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
+                self
+            }
             pub fn enabled<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -36747,35 +36936,91 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for enabled: {}", e));
                 self
             }
-            pub fn lldp_config<T>(mut self, value: T) -> Self
+            pub fn link_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<Option<String>>,
                 T::Error: std::fmt::Display,
             {
-                self.lldp_config = value
+                self.link_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.link_name = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for lldp_config: {}", e));
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
+            pub fn management_ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
+                self
+            }
+            pub fn system_description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.system_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn system_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.system_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
                 self
             }
         }
 
-        impl std::convert::TryFrom<LldpServiceConfigCreate> for super::LldpServiceConfigCreate {
+        impl std::convert::TryFrom<LldpLinkConfigCreate> for super::LldpLinkConfigCreate {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: LldpServiceConfigCreate,
+                value: LldpLinkConfigCreate,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    chassis_id: value.chassis_id?,
                     enabled: value.enabled?,
-                    lldp_config: value.lldp_config?,
+                    link_description: value.link_description?,
+                    link_name: value.link_name?,
+                    management_ip: value.management_ip?,
+                    system_description: value.system_description?,
+                    system_name: value.system_name?,
                 })
             }
         }
 
-        impl From<super::LldpServiceConfigCreate> for LldpServiceConfigCreate {
-            fn from(value: super::LldpServiceConfigCreate) -> Self {
+        impl From<super::LldpLinkConfigCreate> for LldpLinkConfigCreate {
+            fn from(value: super::LldpLinkConfigCreate) -> Self {
                 Self {
+                    chassis_id: Ok(value.chassis_id),
                     enabled: Ok(value.enabled),
-                    lldp_config: Ok(value.lldp_config),
+                    link_description: Ok(value.link_description),
+                    link_name: Ok(value.link_name),
+                    management_ip: Ok(value.management_ip),
+                    system_description: Ok(value.system_description),
+                    system_name: Ok(value.system_name),
                 }
             }
         }
@@ -42763,7 +43008,7 @@ pub mod types {
             autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
             link_name: Result<String, String>,
-            lldp_service_config_id: Result<uuid::Uuid, String>,
+            lldp_link_config_id: Result<uuid::Uuid, String>,
             mtu: Result<u16, String>,
             port_settings_id: Result<uuid::Uuid, String>,
             speed: Result<super::LinkSpeed, String>,
@@ -42775,8 +43020,8 @@ pub mod types {
                     autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Err("no value supplied for fec".to_string()),
                     link_name: Err("no value supplied for link_name".to_string()),
-                    lldp_service_config_id: Err(
-                        "no value supplied for lldp_service_config_id".to_string()
+                    lldp_link_config_id: Err(
+                        "no value supplied for lldp_link_config_id".to_string()
                     ),
                     mtu: Err("no value supplied for mtu".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
@@ -42816,14 +43061,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
-            pub fn lldp_service_config_id<T>(mut self, value: T) -> Self
+            pub fn lldp_link_config_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
                 T::Error: std::fmt::Display,
             {
-                self.lldp_service_config_id = value.try_into().map_err(|e| {
+                self.lldp_link_config_id = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for lldp_service_config_id: {}",
+                        "error converting supplied value for lldp_link_config_id: {}",
                         e
                     )
                 });
@@ -42873,7 +43118,7 @@ pub mod types {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
                     link_name: value.link_name?,
-                    lldp_service_config_id: value.lldp_service_config_id?,
+                    lldp_link_config_id: value.lldp_link_config_id?,
                     mtu: value.mtu?,
                     port_settings_id: value.port_settings_id?,
                     speed: value.speed?,
@@ -42887,7 +43132,7 @@ pub mod types {
                     autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
                     link_name: Ok(value.link_name),
-                    lldp_service_config_id: Ok(value.lldp_service_config_id),
+                    lldp_link_config_id: Ok(value.lldp_link_config_id),
                     mtu: Ok(value.mtu),
                     port_settings_id: Ok(value.port_settings_id),
                     speed: Ok(value.speed),
@@ -43467,7 +43712,7 @@ pub mod types {
             bgp_peers: Result<Vec<super::BgpPeer>, String>,
             groups: Result<Vec<super::SwitchPortSettingsGroups>, String>,
             interfaces: Result<Vec<super::SwitchInterfaceConfig>, String>,
-            link_lldp: Result<Vec<super::LldpServiceConfig>, String>,
+            link_lldp: Result<Vec<super::LldpLinkConfig>, String>,
             links: Result<Vec<super::SwitchPortLinkConfig>, String>,
             port: Result<super::SwitchPortConfig, String>,
             routes: Result<Vec<super::SwitchPortRouteConfig>, String>,
@@ -43535,7 +43780,7 @@ pub mod types {
             }
             pub fn link_lldp<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::LldpServiceConfig>>,
+                T: std::convert::TryInto<Vec<super::LldpLinkConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_lldp = value
