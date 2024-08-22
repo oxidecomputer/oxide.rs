@@ -169,6 +169,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 Self::cli_networking_bgp_announce_set_delete()
             }
+            CliCommand::NetworkingBgpAnnouncementList => {
+                Self::cli_networking_bgp_announcement_list()
+            }
             CliCommand::NetworkingBgpExported => Self::cli_networking_bgp_exported(),
             CliCommand::NetworkingBgpMessageHistory => Self::cli_networking_bgp_message_history(),
             CliCommand::NetworkingBgpImportedRoutesIpv4 => {
@@ -4164,13 +4167,40 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
                 clap::Arg::new("name-or-id")
                     .long("name-or-id")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("A name or id to use when selecting BGP port settings"),
+                    .required(false)
+                    .help("A name or id to use when s electing BGP port settings"),
             )
-            .about("Get originated routes for a BGP configuration")
+            .arg(
+                clap::Arg::new("page-token")
+                    .long("page-token")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false)
+                    .help("Token returned by previous call to retrieve the subsequent page"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List BGP announce sets")
     }
 
     pub fn cli_networking_bgp_announce_set_update() -> clap::Command {
@@ -4218,6 +4248,18 @@ impl<T: CliConfig> Cli<T> {
                     .help("A name or id to use when selecting BGP port settings"),
             )
             .about("Delete BGP announce set")
+    }
+
+    pub fn cli_networking_bgp_announcement_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP port settings"),
+            )
+            .about("Get originated routes for a specified BGP announce set")
     }
 
     pub fn cli_networking_bgp_exported() -> clap::Command {
@@ -6195,6 +6237,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 self.execute_networking_bgp_announce_set_delete(matches)
                     .await
+            }
+            CliCommand::NetworkingBgpAnnouncementList => {
+                self.execute_networking_bgp_announcement_list(matches).await
             }
             CliCommand::NetworkingBgpExported => {
                 self.execute_networking_bgp_exported(matches).await
@@ -10752,8 +10797,20 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("page-token") {
+            request = request.page_token(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
         }
 
         self.config
@@ -10821,6 +10878,30 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_announcement_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_bgp_announcement_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        self.config
+            .execute_networking_bgp_announcement_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -13930,6 +14011,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_bgp_announcement_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpAnnouncementList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_bgp_exported(
         &self,
         matches: &clap::ArgMatches,
@@ -14535,6 +14624,7 @@ pub enum CliCommand {
     NetworkingBgpAnnounceSetList,
     NetworkingBgpAnnounceSetUpdate,
     NetworkingBgpAnnounceSetDelete,
+    NetworkingBgpAnnouncementList,
     NetworkingBgpExported,
     NetworkingBgpMessageHistory,
     NetworkingBgpImportedRoutesIpv4,
@@ -14736,6 +14826,7 @@ impl CliCommand {
             CliCommand::NetworkingBgpAnnounceSetList,
             CliCommand::NetworkingBgpAnnounceSetUpdate,
             CliCommand::NetworkingBgpAnnounceSetDelete,
+            CliCommand::NetworkingBgpAnnouncementList,
             CliCommand::NetworkingBgpExported,
             CliCommand::NetworkingBgpMessageHistory,
             CliCommand::NetworkingBgpImportedRoutesIpv4,

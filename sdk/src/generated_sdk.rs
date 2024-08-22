@@ -49556,15 +49556,22 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_delete(&self) -> builder::NetworkingBgpConfigDelete;
-    /// Get originated routes for a BGP configuration
+    /// List BGP announce sets
     ///
-    /// Sends a `GET` request to `/v1/system/networking/bgp-announce`
+    /// Sends a `GET` request to `/v1/system/networking/bgp-announce-set`
     ///
     /// Arguments:
-    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `name_or_id`: A name or id to use when s electing BGP port settings
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_list()
+    ///    .limit(limit)
     ///    .name_or_id(name_or_id)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
     /// ```
@@ -49574,7 +49581,7 @@ pub trait ClientSystemNetworkingExt {
     /// If the announce set exists, this endpoint replaces the existing announce
     /// set with the one specified.
     ///
-    /// Sends a `PUT` request to `/v1/system/networking/bgp-announce`
+    /// Sends a `PUT` request to `/v1/system/networking/bgp-announce-set`
     ///
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_update()
@@ -49585,7 +49592,8 @@ pub trait ClientSystemNetworkingExt {
     fn networking_bgp_announce_set_update(&self) -> builder::NetworkingBgpAnnounceSetUpdate;
     /// Delete BGP announce set
     ///
-    /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
+    /// Sends a `DELETE` request to
+    /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
     ///
     /// Arguments:
     /// - `name_or_id`: A name or id to use when selecting BGP port settings
@@ -49596,6 +49604,20 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete;
+    /// Get originated routes for a specified BGP announce set
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// ```ignore
+    /// let response = client.networking_bgp_announcement_list()
+    ///    .name_or_id(name_or_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_announcement_list(&self) -> builder::NetworkingBgpAnnouncementList;
     /// Get BGP exported routes
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-exported`
@@ -49887,6 +49909,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
         builder::NetworkingBgpAnnounceSetDelete::new(self)
+    }
+
+    fn networking_bgp_announcement_list(&self) -> builder::NetworkingBgpAnnouncementList {
+        builder::NetworkingBgpAnnouncementList::new(self)
     }
 
     fn networking_bgp_exported(&self) -> builder::NetworkingBgpExported {
@@ -64648,15 +64674,31 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetList<'a> {
         client: &'a super::Client,
-        name_or_id: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        name_or_id: Result<Option<types::NameOrId>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                name_or_id: Err("name_or_id was not initialized".to_string()),
+                limit: Ok(None),
+                name_or_id: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
             }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
         }
 
         pub fn name_or_id<V>(mut self, value: V) -> Self
@@ -64665,19 +64707,62 @@ pub mod builder {
         {
             self.name_or_id = value
                 .try_into()
+                .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
-        /// Sends a `GET` request to `/v1/system/networking/bgp-announce`
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-announce-set`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
-            let Self { client, name_or_id } = self;
+        ) -> Result<ResponseValue<Vec<types::BgpAnnounceSet>>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                name_or_id,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("name_or_id", name_or_id.to_string()));
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-announce-set", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &name_or_id {
+                query.push(("name_or_id", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64745,7 +64830,7 @@ pub mod builder {
             self
         }
 
-        /// Sends a `PUT` request to `/v1/system/networking/bgp-announce`
+        /// Sends a `PUT` request to `/v1/system/networking/bgp-announce-set`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
@@ -64753,7 +64838,7 @@ pub mod builder {
             let body = body
                 .and_then(|v| types::BgpAnnounceSetCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let url = format!("{}/v1/system/networking/bgp-announce-set", client.baseurl,);
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64807,13 +64892,16 @@ pub mod builder {
             self
         }
 
-        /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
+        /// Sends a `DELETE` request to
+        /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, name_or_id } = self;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("name_or_id", name_or_id.to_string()));
+            let url = format!(
+                "{}/v1/system/networking/bgp-announce-set/{}",
+                client.baseurl,
+                encode_path(&name_or_id.to_string()),
+            );
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64822,12 +64910,75 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_announcement_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_announcement_list`]: super::ClientSystemNetworkingExt::networking_bgp_announcement_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpAnnouncementList<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingBgpAnnouncementList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
+            let Self { client, name_or_id } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/bgp-announce-set/{}/announcement",
+                client.baseurl,
+                encode_path(&name_or_id.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
