@@ -9,9 +9,10 @@ use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
-    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, NameOrId,
-    SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
-    SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortSettings, SwitchPortSettingsView,
+    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed,
+    LldpLinkConfig, NameOrId, SwitchPort, SwitchPortAddressConfig, SwitchPortConfig,
+    SwitchPortGeometry2, SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortSettings,
+    SwitchPortSettingsView,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -161,15 +162,24 @@ fn test_port_config() {
         ],
         groups: Vec::new(),
         interfaces: Vec::new(),
-        link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: LinkFec::None,
             link_name: String::from("phy0"),
-            lldp_service_config_id: Uuid::new_v4(),
+            lldp_link_config_id: Uuid::new_v4(),
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
+        }],
+        link_lldp: vec![LldpLinkConfig {
+            id: Uuid::new_v4(),
+            enabled: false,
+            link_name: None,
+            link_description: None,
+            chassis_id: None,
+            system_name: None,
+            system_description: None,
+            management_ip: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
@@ -246,15 +256,24 @@ fn test_port_config() {
         ],
         groups: Vec::new(),
         interfaces: Vec::new(),
-        link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: LinkFec::None,
             link_name: String::from("phy0"),
-            lldp_service_config_id: Uuid::new_v4(),
+            lldp_link_config_id: Uuid::new_v4(),
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
+        }],
+        link_lldp: vec![LldpLinkConfig {
+            id: Uuid::new_v4(),
+            enabled: false,
+            link_name: None,
+            link_description: None,
+            chassis_id: None,
+            system_name: None,
+            system_description: None,
+            management_ip: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
