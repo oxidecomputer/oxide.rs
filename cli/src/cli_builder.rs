@@ -480,6 +480,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         }
         CliCommand::NetworkingBgpAnnounceSetList => Some("system networking bgp announce-set list"),
         CliCommand::NetworkingBgpImportedRoutesIpv4 => Some("system networking bgp imported ipv4"),
+        CliCommand::NetworkingBgpExported => Some("system networking bgp exported"),
 
         // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),

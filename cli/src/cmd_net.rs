@@ -16,7 +16,7 @@ use oxide::{
     types::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
-        LinkSpeed, LldpServiceConfigCreate, Name, NameOrId, Route, RouteConfig,
+        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
         SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
         SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
         SwitchPortSettingsCreate,
@@ -116,10 +116,14 @@ impl AuthenticatedCmd for CmdLinkAdd {
             fec: self.fec,
             mtu: self.mtu,
             speed: self.speed,
-            //TODO not fully plumbed on the back end yet.
-            lldp: LldpServiceConfigCreate {
+            lldp: LldpLinkConfigCreate {
                 enabled: false,
-                lldp_config: None,
+                link_name: None,
+                link_description: None,
+                chassis_id: None,
+                system_name: None,
+                system_description: None,
+                management_ip: None,
             },
         };
         match settings.links.get(PHY0) {
@@ -1351,13 +1355,17 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                 LinkConfigCreate {
                     autoneg: x.autoneg,
                     fec: x.fec,
-                    lldp: LldpServiceConfigCreate {
-                        //TODO
-                        enabled: false,
-                        lldp_config: None,
-                    },
                     mtu: x.mtu,
                     speed: x.speed,
+                    lldp: LldpLinkConfigCreate {
+                        enabled: false,
+                        link_name: None,
+                        link_description: None,
+                        chassis_id: None,
+                        system_name: None,
+                        system_description: None,
+                        management_ip: None,
+                    },
                 },
             )
         })
@@ -1379,6 +1387,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                 dst: x.dst.clone(),
                 gw: x.gw.to_string().parse().unwrap(),
                 vid: x.vlan_id,
+                local_pref: None,
             })
             .collect(),
     };
