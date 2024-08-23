@@ -23980,7 +23980,7 @@ pub mod types {
     ///        "nanoseconds",
     ///        "volts",
     ///        "amps",
-    ///        "degrees_celcius"
+    ///        "degrees_celsius"
     ///      ]
     ///    },
     ///    {
@@ -24028,8 +24028,8 @@ pub mod types {
         Volts,
         #[serde(rename = "amps")]
         Amps,
-        #[serde(rename = "degrees_celcius")]
-        DegreesCelcius,
+        #[serde(rename = "degrees_celsius")]
+        DegreesCelsius,
         /// No meaningful units, e.g. a dimensionless quanity.
         #[serde(rename = "none")]
         None,
@@ -24053,7 +24053,7 @@ pub mod types {
                 Self::Nanoseconds => "nanoseconds".to_string(),
                 Self::Volts => "volts".to_string(),
                 Self::Amps => "amps".to_string(),
-                Self::DegreesCelcius => "degrees_celcius".to_string(),
+                Self::DegreesCelsius => "degrees_celsius".to_string(),
                 Self::None => "none".to_string(),
                 Self::Rpm => "rpm".to_string(),
             }
@@ -24070,7 +24070,7 @@ pub mod types {
                 "nanoseconds" => Ok(Self::Nanoseconds),
                 "volts" => Ok(Self::Volts),
                 "amps" => Ok(Self::Amps),
-                "degrees_celcius" => Ok(Self::DegreesCelcius),
+                "degrees_celsius" => Ok(Self::DegreesCelsius),
                 "none" => Ok(Self::None),
                 "rpm" => Ok(Self::Rpm),
                 _ => Err("invalid value".into()),
