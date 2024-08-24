@@ -23980,6 +23980,7 @@ pub mod types {
     ///        "nanoseconds",
     ///        "volts",
     ///        "amps",
+    ///        "watts",
     ///        "degrees_celsius"
     ///      ]
     ///    },
@@ -24028,6 +24029,8 @@ pub mod types {
         Volts,
         #[serde(rename = "amps")]
         Amps,
+        #[serde(rename = "watts")]
+        Watts,
         #[serde(rename = "degrees_celsius")]
         DegreesCelsius,
         /// No meaningful units, e.g. a dimensionless quanity.
@@ -24053,6 +24056,7 @@ pub mod types {
                 Self::Nanoseconds => "nanoseconds".to_string(),
                 Self::Volts => "volts".to_string(),
                 Self::Amps => "amps".to_string(),
+                Self::Watts => "watts".to_string(),
                 Self::DegreesCelsius => "degrees_celsius".to_string(),
                 Self::None => "none".to_string(),
                 Self::Rpm => "rpm".to_string(),
@@ -24070,6 +24074,7 @@ pub mod types {
                 "nanoseconds" => Ok(Self::Nanoseconds),
                 "volts" => Ok(Self::Volts),
                 "amps" => Ok(Self::Amps),
+                "watts" => Ok(Self::Watts),
                 "degrees_celsius" => Ok(Self::DegreesCelsius),
                 "none" => Ok(Self::None),
                 "rpm" => Ok(Self::Rpm),
