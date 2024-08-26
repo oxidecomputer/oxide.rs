@@ -22501,7 +22501,6 @@ pub mod types {
     ///    "autoneg",
     ///    "fec",
     ///    "link_name",
-    ///    "lldp_link_config_id",
     ///    "mtu",
     ///    "port_settings_id",
     ///    "speed"
@@ -22527,7 +22526,10 @@ pub mod types {
     ///    "lldp_link_config_id": {
     ///      "description": "The link-layer discovery protocol service
     /// configuration id for this link.",
-    ///      "type": "string",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
     ///      "format": "uuid"
     ///    },
     ///    "mtu": {
@@ -22566,7 +22568,8 @@ pub mod types {
         pub link_name: String,
         /// The link-layer discovery protocol service configuration id for this
         /// link.
-        pub lldp_link_config_id: uuid::Uuid,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub lldp_link_config_id: Option<uuid::Uuid>,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
@@ -43013,7 +43016,7 @@ pub mod types {
             autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
             link_name: Result<String, String>,
-            lldp_link_config_id: Result<uuid::Uuid, String>,
+            lldp_link_config_id: Result<Option<uuid::Uuid>, String>,
             mtu: Result<u16, String>,
             port_settings_id: Result<uuid::Uuid, String>,
             speed: Result<super::LinkSpeed, String>,
@@ -43025,9 +43028,7 @@ pub mod types {
                     autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Err("no value supplied for fec".to_string()),
                     link_name: Err("no value supplied for link_name".to_string()),
-                    lldp_link_config_id: Err(
-                        "no value supplied for lldp_link_config_id".to_string()
-                    ),
+                    lldp_link_config_id: Ok(Default::default()),
                     mtu: Err("no value supplied for mtu".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
@@ -43068,7 +43069,7 @@ pub mod types {
             }
             pub fn lldp_link_config_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<uuid::Uuid>,
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.lldp_link_config_id = value.try_into().map_err(|e| {
