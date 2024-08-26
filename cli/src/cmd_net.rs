@@ -454,7 +454,7 @@ pub struct CmdBgpAuth {
     #[arg(long)]
     peer: IpAddr,
 
-    /// Authorization string.
+    /// Use the given authorization string for TCP-MD5 authentication with the peer.
     #[clap(long)]
     authstring: Option<String>,
 }

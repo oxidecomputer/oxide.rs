@@ -4352,7 +4352,7 @@
                   "args": [
                     {
                       "long": "authstring",
-                      "help": "Authorization string"
+                      "help": "Use the given authorization string for TCP-MD5 authentication with the peer"
                     },
                     {
                       "long": "peer",
