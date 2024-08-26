@@ -489,19 +489,19 @@ impl AuthenticatedCmd for CmdBgpAuth {
 #[command(verbatim_doc_comment)]
 #[command(name = "pref")]
 pub struct CmdBgpLocalPref {
-    /// Id of the rack to add the route preference to.
+    /// Id of the rack to set the route preference on.
     #[arg(long)]
     rack: Uuid,
 
-    /// Switch to add the route preference to.
+    /// Switch to set the route preference on.
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to add the route preference to.
+    /// Port to set the route preference on.
     #[arg(long, value_enum)]
     port: Port,
 
-    /// Peer to add the route preference to.
+    /// Peer to set the route preference on.
     #[arg(long)]
     peer: IpAddr,
 
@@ -646,15 +646,15 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
 #[command(verbatim_doc_comment)]
 #[command(name = "route delete")]
 pub struct CmdStaticRouteDelete {
-    /// Id of the rack to remove the static route from.
+    /// Id of the rack to remove the route from.
     #[arg(long)]
     rack: Uuid,
 
-    /// Switch to remove the static route from.
+    /// Switch to remove the route from.
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to remove the static route from.
+    /// Port to remove the route from.
     #[arg(long, value_enum)]
     port: Port,
 
@@ -877,9 +877,9 @@ enum BgpConfigSubCommand {
 
 /// Manage BGP peers.
 ///
-/// This command provides add and delete subcommands for managing BGP peers.
+/// This command provides set and delete subcommands for managing BGP peers.
 /// BGP peer configuration is a part of a switch port settings configuration.
-/// The peer add and remove subcommands perform read-modify-write operations
+/// The peer set and delete subcommands perform read-modify-write operations
 /// on switch port settings objects to manage BGP peer configurations.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -901,7 +901,7 @@ impl AuthenticatedCmd for CmdBgpPeer {
 
 #[derive(Parser, Debug, Clone)]
 enum BgpConfigPeerSubCommand {
-    /// Set a BGP peer to a port configuration.
+    /// Set a BGP peer on a port configuration.
     Set(CmdBgpPeerSet),
 
     /// Remove a BGP from a port configuration.
@@ -916,19 +916,19 @@ enum BgpConfigPeerSubCommand {
 #[command(verbatim_doc_comment)]
 #[command(name = "set")]
 pub struct CmdBgpPeerSet {
-    /// Id of the rack to add the peer to.
+    /// Id of the rack to set the peer for.
     #[arg(long)]
     rack: Uuid,
 
-    /// Switch to add the peer to.
+    /// Switch to set the peer config on.
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to add the peer to.
+    /// Port to set the peer config on.
     #[arg(long, value_enum)]
     port: Port,
 
-    /// Address of the peer to add.
+    /// Address of the peer to set the config for.
     #[arg(long)]
     addr: IpAddr,
 
@@ -936,7 +936,7 @@ pub struct CmdBgpPeerSet {
     #[arg(long)]
     bgp_config: NameOrId,
 
-    /// Prefixes that may be imported form the peer. Empty list means all prefixes
+    /// Prefixes that may be imported from the peer. Empty list means all prefixes
     /// allowed.
     #[arg(long)]
     allowed_imports: Vec<oxnet::IpNet>,
@@ -950,7 +950,7 @@ pub struct CmdBgpPeerSet {
     #[arg(long)]
     communities: Vec<u32>,
 
-    /// How long to to wait between TCP connection retries (seconds).
+    /// How long to wait between TCP connection retries (seconds).
     #[clap(long, default_value_t = 0u32)]
     pub connect_retry: u32,
 

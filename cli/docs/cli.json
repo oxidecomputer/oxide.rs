@@ -4623,7 +4623,7 @@
                 {
                   "name": "peer",
                   "about": "Manage BGP peers.",
-                  "long_about": "Manage BGP peers.\n\nThis command provides add and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer add and remove subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
+                  "long_about": "Manage BGP peers.\n\nThis command provides set and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer set and delete subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
                   "args": [
                     {
                       "long": "profile",
@@ -4697,11 +4697,11 @@
                     },
                     {
                       "name": "set",
-                      "about": "Set a BGP peer to a port configuration",
+                      "about": "Set a BGP peer on a port configuration",
                       "args": [
                         {
                           "long": "addr",
-                          "help": "Address of the peer to add"
+                          "help": "Address of the peer to set the config for"
                         },
                         {
                           "long": "allowed-exports",
@@ -4709,7 +4709,7 @@
                         },
                         {
                           "long": "allowed-imports",
-                          "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
+                          "help": "Prefixes that may be imported from the peer. Empty list means all prefixes allowed"
                         },
                         {
                           "long": "authstring",
@@ -4725,7 +4725,7 @@
                         },
                         {
                           "long": "connect-retry",
-                          "help": "How long to to wait between TCP connection retries (seconds)"
+                          "help": "How long to wait between TCP connection retries (seconds)"
                         },
                         {
                           "long": "delay-open",
@@ -4795,7 +4795,7 @@
                             "qsfp30",
                             "qsfp31"
                           ],
-                          "help": "Port to add the peer to"
+                          "help": "Port to set the peer config on"
                         },
                         {
                           "long": "profile",
@@ -4803,7 +4803,7 @@
                         },
                         {
                           "long": "rack",
-                          "help": "Id of the rack to add the peer to"
+                          "help": "Id of the rack to set the peer for"
                         },
                         {
                           "long": "remote-asn",
@@ -4815,7 +4815,7 @@
                             "switch0",
                             "switch1"
                           ],
-                          "help": "Switch to add the peer to"
+                          "help": "Switch to set the peer config on"
                         },
                         {
                           "long": "vlan-id",
@@ -4834,7 +4834,7 @@
                     },
                     {
                       "long": "peer",
-                      "help": "Peer to add the route preference to"
+                      "help": "Peer to set the route preference on"
                     },
                     {
                       "long": "port",
@@ -4872,7 +4872,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the route preference to"
+                      "help": "Port to set the route preference on"
                     },
                     {
                       "long": "profile",
@@ -4880,7 +4880,7 @@
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the route preference to"
+                      "help": "Id of the rack to set the route preference on"
                     },
                     {
                       "long": "switch",
@@ -4888,7 +4888,7 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the route preference to"
+                      "help": "Switch to set the route preference on"
                     }
                   ]
                 },
@@ -5260,7 +5260,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to remove the static route from"
+                      "help": "Port to remove the route from"
                     },
                     {
                       "long": "profile",
@@ -5268,7 +5268,7 @@
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to remove the static route from"
+                      "help": "Id of the rack to remove the route from"
                     },
                     {
                       "long": "switch",
@@ -5276,7 +5276,7 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to remove the static route from"
+                      "help": "Switch to remove the route from"
                     },
                     {
                       "long": "vlan-id",
