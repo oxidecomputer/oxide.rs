@@ -501,11 +501,11 @@ pub struct CmdBgpLocalPref {
     #[arg(long, value_enum)]
     port: Port,
 
-    /// Peer to apply allow list to.
+    /// Peer to add the route preference to.
     #[arg(long)]
     peer: IpAddr,
 
-    /// Authorization string.
+    /// Local preference.
     #[clap(long)]
     local_pref: Option<u32>,
 }

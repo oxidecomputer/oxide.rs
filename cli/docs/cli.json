@@ -4830,11 +4830,11 @@
                   "args": [
                     {
                       "long": "local-pref",
-                      "help": "Authorization string"
+                      "help": "Local preference"
                     },
                     {
                       "long": "peer",
-                      "help": "Peer to apply allow list to"
+                      "help": "Peer to add the route preference to"
                     },
                     {
                       "long": "port",
