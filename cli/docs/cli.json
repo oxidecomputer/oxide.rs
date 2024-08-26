@@ -4356,7 +4356,7 @@
                     },
                     {
                       "long": "peer",
-                      "help": "Peer to apply allow list to"
+                      "help": "Peer to add the auth config to"
                     },
                     {
                       "long": "port",

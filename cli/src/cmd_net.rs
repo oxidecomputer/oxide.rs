@@ -450,7 +450,7 @@ pub struct CmdBgpAuth {
     #[arg(long, value_enum)]
     port: Port,
 
-    /// Peer to apply allow list to.
+    /// Peer to add the auth config to.
     #[arg(long)]
     peer: IpAddr,
 
