@@ -893,7 +893,7 @@ pub struct CmdBgpPeer {
 impl AuthenticatedCmd for CmdBgpPeer {
     async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            BgpConfigPeerSubCommand::Add(cmd) => cmd.run(client).await,
+            BgpConfigPeerSubCommand::Set(cmd) => cmd.run(client).await,
             BgpConfigPeerSubCommand::Delete(cmd) => cmd.run(client).await,
         }
     }
@@ -902,7 +902,7 @@ impl AuthenticatedCmd for CmdBgpPeer {
 #[derive(Parser, Debug, Clone)]
 enum BgpConfigPeerSubCommand {
     /// Set a BGP peer to a port configuration.
-    Add(CmdBgpPeerSet),
+    Set(CmdBgpPeerSet),
 
     /// Remove a BGP from a port configuration.
     Delete(CmdBgpPeerDel),

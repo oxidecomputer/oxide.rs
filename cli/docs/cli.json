@@ -4632,7 +4632,71 @@
                   ],
                   "subcommands": [
                     {
-                      "name": "add",
+                      "name": "delete",
+                      "about": "Remove a BGP from a port configuration",
+                      "args": [
+                        {
+                          "long": "addr",
+                          "help": "Address of the peer to remove"
+                        },
+                        {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to remove the peer from"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to remove the peer from"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to remove the peer from"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "set",
                       "about": "Set a BGP peer to a port configuration",
                       "args": [
                         {
@@ -4756,70 +4820,6 @@
                         {
                           "long": "vlan-id",
                           "help": "Associate a VLAN ID with a peer"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "delete",
-                      "about": "Remove a BGP from a port configuration",
-                      "args": [
-                        {
-                          "long": "addr",
-                          "help": "Address of the peer to remove"
-                        },
-                        {
-                          "long": "port",
-                          "values": [
-                            "qsfp0",
-                            "qsfp1",
-                            "qsfp2",
-                            "qsfp3",
-                            "qsfp4",
-                            "qsfp5",
-                            "qsfp6",
-                            "qsfp7",
-                            "qsfp8",
-                            "qsfp9",
-                            "qsfp10",
-                            "qsfp11",
-                            "qsfp12",
-                            "qsfp13",
-                            "qsfp14",
-                            "qsfp15",
-                            "qsfp16",
-                            "qsfp17",
-                            "qsfp18",
-                            "qsfp19",
-                            "qsfp20",
-                            "qsfp21",
-                            "qsfp22",
-                            "qsfp23",
-                            "qsfp24",
-                            "qsfp25",
-                            "qsfp26",
-                            "qsfp27",
-                            "qsfp28",
-                            "qsfp29",
-                            "qsfp30",
-                            "qsfp31"
-                          ],
-                          "help": "Port to remove the peer from"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
-                          "long": "rack",
-                          "help": "Id of the rack to remove the peer from"
-                        },
-                        {
-                          "long": "switch",
-                          "values": [
-                            "switch0",
-                            "switch1"
-                          ],
-                          "help": "Switch to remove the peer from"
                         }
                       ]
                     }
