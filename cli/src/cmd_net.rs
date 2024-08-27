@@ -434,6 +434,12 @@ impl AuthenticatedCmd for CmdBgpFilter {
     }
 }
 
+/// Set an authentication string.
+///
+/// This command sets the authentication string that the specified BGP session
+/// will use for establishing a TCP-MD5 authenticated connection with it's peer.
+/// This command works by performing a read-modify-write on the switch port
+/// settings configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "auth")]
@@ -485,6 +491,13 @@ impl AuthenticatedCmd for CmdBgpAuth {
     }
 }
 
+/// Set a local preference for a peer.
+///
+/// This command associates a local preference for the specified peer. When
+/// routes are imported by this peer, they will be installed into the routing
+/// information base (RIB) with the specified preference. This command works
+/// by performing a read-modify-write on the switch port settings configuration
+/// identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "pref")]
@@ -563,6 +576,13 @@ enum RouteSubCommand {
     Delete(CmdStaticRouteDelete),
 }
 
+/// Set a static route.
+///
+/// This comman sets a static route. If a route with the specified destination,
+/// gateway and vlan_id already exists the route will be updated. Otherwise
+/// a new route will be created. This command works by performing a
+/// read-modify-write on the switch port settings configuration identified by
+/// the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "route set")]
@@ -642,6 +662,11 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
     }
 }
 
+/// Delete a static route.
+///
+/// This command removes a static route from a port configuration. This
+/// command works by performing a read-modify-write on the switch port settings
+/// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "route delete")]
