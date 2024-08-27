@@ -505,7 +505,7 @@ pub struct CmdBgpLocalPref {
     #[arg(long)]
     peer: IpAddr,
 
-    /// Local preference.
+    /// Apply this local preference to routes received from the peer.
     #[clap(long)]
     local_pref: Option<u32>,
 }
@@ -916,7 +916,7 @@ enum BgpConfigPeerSubCommand {
 #[command(verbatim_doc_comment)]
 #[command(name = "set")]
 pub struct CmdBgpPeerSet {
-    /// Id of the rack to set the peer for.
+    /// Id of the rack to set the peer config on.
     #[arg(long)]
     rack: Uuid,
 
@@ -977,7 +977,7 @@ pub struct CmdBgpPeerSet {
     #[clap(long, default_value_t = 0u32)]
     pub idle_hold_time: u32,
 
-    /// Apply a local preference to routes received from this peer.
+    /// Apply this local preference to routes received from the peer.
     #[arg(long)]
     pub local_pref: Option<u32>,
 

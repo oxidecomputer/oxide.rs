@@ -4749,7 +4749,7 @@
                         },
                         {
                           "long": "local-pref",
-                          "help": "Apply a local preference to routes received from this peer"
+                          "help": "Apply this local preference to routes received from the peer"
                         },
                         {
                           "long": "min-ttl",
@@ -4803,7 +4803,7 @@
                         },
                         {
                           "long": "rack",
-                          "help": "Id of the rack to set the peer for"
+                          "help": "Id of the rack to set the peer config on"
                         },
                         {
                           "long": "remote-asn",
@@ -4830,7 +4830,7 @@
                   "args": [
                     {
                       "long": "local-pref",
-                      "help": "Local preference"
+                      "help": "Apply this local preference to routes received from the peer"
                     },
                     {
                       "long": "peer",
