@@ -637,18 +637,28 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                 );
             }
             Some(config) => {
-                let exists = config.routes.iter().any(|x| {
+                let exists = config.routes.iter_mut().find(|x| {
                     x.dst.to_string() == self.destination.to_string()
                         && x.gw == self.nexthop
                         && x.vid == self.vlan_id
                 });
-                if !exists {
-                    config.routes.push(Route {
-                        dst: self.destination.clone(),
-                        gw: self.nexthop,
-                        local_pref: self.local_pref,
-                        vid: self.vlan_id,
-                    });
+                match exists {
+                    Some(route) => {
+                        *route = Route {
+                            dst: self.destination.clone(),
+                            gw: self.nexthop,
+                            local_pref: self.local_pref,
+                            vid: self.vlan_id,
+                        };
+                    }
+                    None => {
+                        config.routes.push(Route {
+                            dst: self.destination.clone(),
+                            gw: self.nexthop,
+                            local_pref: self.local_pref,
+                            vid: self.vlan_id,
+                        });
+                    }
                 }
             }
         }
