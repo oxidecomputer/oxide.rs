@@ -437,7 +437,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
 /// Set an authentication string.
 ///
 /// This command sets the authentication string that the specified BGP session
-/// will use for establishing a TCP-MD5 authenticated connection with it's peer.
+/// will use for establishing a TCP-MD5 authenticated connection with its peer.
 /// This command works by performing a read-modify-write on the switch port
 /// settings configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
@@ -578,8 +578,8 @@ enum RouteSubCommand {
 
 /// Set a static route.
 ///
-/// This comman sets a static route. If a route with the specified destination,
-/// gateway and vlan_id already exists the route will be updated. Otherwise
+/// This command sets a static route. If a route with the specified destination,
+/// nexthop, and vlan_id already exists the route will be updated. Otherwise
 /// a new route will be created. This command works by performing a
 /// read-modify-write on the switch port settings configuration identified by
 /// the specified rack/switch/port.

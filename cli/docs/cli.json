@@ -4350,7 +4350,7 @@
                 {
                   "name": "auth",
                   "about": "Set an authentication string.",
-                  "long_about": "Set an authentication string.\n\nThis command sets the authentication string that the specified BGP session\nwill use for establishing a TCP-MD5 authenticated connection with it's peer.\nThis command works by performing a read-modify-write on the switch port\nsettings configuration identified by the specified rack/switch/port.",
+                  "long_about": "Set an authentication string.\n\nThis command sets the authentication string that the specified BGP session\nwill use for establishing a TCP-MD5 authenticated connection with its peer.\nThis command works by performing a read-modify-write on the switch port\nsettings configuration identified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "authstring",
