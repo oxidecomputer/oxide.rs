@@ -268,8 +268,7 @@ impl CmdAuthLogin {
             &ctx.client_config()
                 .clone()
                 .with_host_and_token(host, &token),
-        )
-        .unwrap();
+        )?;
 
         let user = client.current_user_view().send().await?.into_inner();
 
