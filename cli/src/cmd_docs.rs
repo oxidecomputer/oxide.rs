@@ -30,6 +30,12 @@ pub struct JsonArg {
     values: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     help: Option<String>,
+    #[serde(skip_serializing_if = "is_false")]
+    global: bool,
+}
+
+fn is_false(value: &bool) -> bool {
+    !value
 }
 
 /// CLI docs in JSON format
@@ -68,6 +74,7 @@ fn to_json(cmd: &Command) -> JsonDoc {
                 .map(|value| value.get_name().to_string())
                 .collect(),
             help: arg.get_help().map(ToString::to_string),
+            global: arg.is_global_set(),
         })
         .collect::<Vec<_>>();
     args.sort_unstable();
