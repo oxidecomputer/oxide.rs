@@ -21,7 +21,8 @@
     },
     {
       "long": "profile",
-      "help": "Configuration profile to use for commands"
+      "help": "Configuration profile to use for commands",
+      "global": true
     },
     {
       "long": "resolve",
@@ -72,7 +73,8 @@
         },
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         },
         {
           "long": "raw-field",
@@ -88,7 +90,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -112,7 +115,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -133,7 +137,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -144,7 +149,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -155,7 +161,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -188,7 +195,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "service",
@@ -209,7 +217,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -224,7 +233,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -246,7 +256,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -259,7 +270,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         },
         {
           "long": "shell",
@@ -280,7 +292,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -294,7 +307,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -309,7 +323,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -334,7 +349,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "public-key",
@@ -349,7 +365,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "ssh-key",
@@ -368,7 +385,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "sort-by",
@@ -387,7 +405,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "ssh-key",
@@ -403,7 +422,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -414,7 +434,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -438,7 +459,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -460,7 +482,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -515,7 +538,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -545,7 +569,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -568,7 +593,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -587,7 +613,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -619,7 +646,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -639,7 +667,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -660,7 +689,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -700,7 +730,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -724,7 +755,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -740,7 +772,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ]
     },
@@ -749,7 +782,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -758,7 +792,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -785,7 +820,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -806,7 +842,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -824,7 +861,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -850,7 +888,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -865,7 +904,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -880,7 +920,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             },
@@ -899,7 +940,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "query",
@@ -912,7 +954,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -926,7 +969,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -941,7 +985,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -975,7 +1020,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1011,7 +1057,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1029,7 +1076,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1047,7 +1095,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1065,7 +1114,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1105,7 +1155,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1123,7 +1174,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1138,7 +1190,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -1152,7 +1205,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -1169,7 +1223,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -1198,7 +1253,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1221,7 +1277,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1240,7 +1297,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1259,7 +1317,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1286,7 +1345,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1305,7 +1365,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1320,7 +1381,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -1353,7 +1415,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1383,7 +1446,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1396,7 +1460,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -1422,7 +1487,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1452,7 +1518,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1474,7 +1541,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1497,7 +1565,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -1523,7 +1592,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1541,7 +1611,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1559,7 +1630,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1599,7 +1671,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1625,7 +1698,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1646,7 +1720,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -1678,7 +1753,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1709,7 +1785,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1731,7 +1808,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1783,7 +1861,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1805,7 +1884,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1825,7 +1905,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1839,7 +1920,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -1869,7 +1951,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1910,7 +1993,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1926,7 +2010,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -1945,7 +2030,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -1973,7 +2059,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -1991,7 +2078,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -2009,7 +2097,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -2024,7 +2113,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -2048,7 +2138,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2062,7 +2153,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2076,7 +2168,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -2093,7 +2186,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2122,7 +2216,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             },
@@ -2141,7 +2236,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             },
@@ -2169,7 +2265,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             }
@@ -2180,7 +2277,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2189,7 +2287,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -2214,7 +2313,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -2229,7 +2329,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -2255,7 +2356,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             },
@@ -2265,7 +2367,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             }
@@ -2276,7 +2379,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2307,7 +2411,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo"
@@ -2328,7 +2433,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "sort-by",
@@ -2348,7 +2454,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo"
@@ -2381,7 +2488,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo"
@@ -2414,7 +2522,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2428,7 +2537,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2442,7 +2552,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -2455,7 +2566,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ]
     },
@@ -2464,7 +2576,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -2482,7 +2595,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2492,7 +2606,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         }
@@ -2503,7 +2618,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -2527,7 +2643,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2537,7 +2654,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -2550,7 +2668,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2564,7 +2683,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "sort-by",
@@ -2586,7 +2706,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             }
@@ -2602,7 +2723,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -2619,7 +2741,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2637,7 +2760,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -2651,7 +2775,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -2681,7 +2806,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -2695,7 +2821,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -2710,7 +2837,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -2752,7 +2880,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ]
         },
@@ -2763,7 +2892,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "silo",
@@ -2776,7 +2906,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -2790,7 +2921,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -2811,7 +2943,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -2820,7 +2953,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -2843,7 +2977,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "silo",
@@ -2857,7 +2992,8 @@
                       "args": [
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "silo",
@@ -2884,7 +3020,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "silo",
@@ -2905,7 +3042,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -2947,7 +3085,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "silo",
@@ -2973,7 +3112,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "provider",
@@ -2994,7 +3134,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3009,7 +3150,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3038,7 +3180,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -3055,7 +3198,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3073,7 +3217,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3087,7 +3232,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3102,7 +3248,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3116,7 +3263,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "sort-by",
@@ -3149,7 +3297,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3167,7 +3316,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3182,7 +3332,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3196,7 +3347,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3216,7 +3368,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3235,7 +3388,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3249,7 +3403,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "sort-by",
@@ -3267,7 +3422,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "silo",
@@ -3284,7 +3440,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "silo",
@@ -3299,7 +3456,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -3328,7 +3486,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -3342,7 +3501,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -3364,7 +3524,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -3386,7 +3547,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -3405,7 +3567,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -3414,7 +3577,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3423,7 +3587,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3437,7 +3602,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -3457,7 +3623,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -3468,7 +3635,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3482,7 +3650,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -3498,7 +3667,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -3513,7 +3683,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3534,7 +3705,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "serial"
@@ -3551,7 +3723,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sled-id",
@@ -3575,7 +3748,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sled-id",
@@ -3599,7 +3773,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -3619,7 +3794,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -3637,7 +3813,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sled-id",
@@ -3659,7 +3836,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sled-id",
@@ -3674,7 +3852,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3688,7 +3867,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -3704,7 +3884,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "switch-id",
@@ -3719,7 +3900,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3745,7 +3927,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -3767,7 +3950,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -3789,7 +3973,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -3809,7 +3994,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -3823,7 +4009,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -3844,7 +4031,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -3854,7 +4042,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -3910,7 +4099,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -3978,7 +4168,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -4001,7 +4192,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -4010,7 +4202,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4028,7 +4221,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "sort-by",
@@ -4068,7 +4262,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4082,7 +4277,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4096,7 +4292,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -4115,7 +4312,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -4139,7 +4337,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4149,7 +4348,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -4160,7 +4360,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -4178,7 +4379,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "remote",
@@ -4220,7 +4422,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "remote",
@@ -4242,7 +4445,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -4253,7 +4457,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -4279,7 +4484,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4288,7 +4494,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4302,7 +4509,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     },
@@ -4324,7 +4532,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "sort-by",
@@ -4357,7 +4566,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     }
@@ -4368,7 +4578,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4382,7 +4593,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     }
@@ -4441,7 +4653,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -4462,7 +4675,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4493,7 +4707,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "vrf",
@@ -4511,7 +4726,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     },
@@ -4529,7 +4745,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "sort-by",
@@ -4549,7 +4766,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4618,7 +4836,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -4644,7 +4863,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4653,7 +4873,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4667,7 +4888,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     }
@@ -4680,7 +4902,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ],
                   "subcommands": [
@@ -4732,7 +4955,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "rack",
@@ -4852,7 +5076,8 @@
                         },
                         {
                           "long": "profile",
-                          "help": "Configuration profile to use for commands"
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         },
                         {
                           "long": "rack",
@@ -4931,7 +5156,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -4954,7 +5180,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4964,7 +5191,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -4983,7 +5211,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -4996,7 +5225,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -5061,7 +5291,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -5136,7 +5367,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -5159,7 +5391,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -5197,7 +5430,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -5219,7 +5453,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack-id",
@@ -5245,7 +5480,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -5263,7 +5499,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -5319,7 +5556,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -5395,7 +5633,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "rack",
@@ -5422,7 +5661,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -5446,7 +5686,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -5460,7 +5701,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -5478,7 +5720,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "sort-by",
@@ -5496,7 +5739,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 },
@@ -5510,7 +5754,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
@@ -5523,7 +5768,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -5541,7 +5787,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             },
@@ -5551,7 +5798,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ]
             }
@@ -5564,7 +5812,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -5581,7 +5830,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "sort-by",
@@ -5599,7 +5849,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ]
     },
@@ -5609,7 +5860,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ]
     },
@@ -5618,7 +5870,8 @@
       "args": [
         {
           "long": "profile",
-          "help": "Configuration profile to use for commands"
+          "help": "Configuration profile to use for commands",
+          "global": true
         }
       ],
       "subcommands": [
@@ -5649,7 +5902,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -5663,7 +5917,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -5680,7 +5935,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -5699,7 +5955,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -5717,7 +5974,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -5741,7 +5999,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -5762,7 +6021,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -5786,7 +6046,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -5804,7 +6065,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -5830,7 +6092,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -5855,7 +6118,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -5879,7 +6143,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -5901,7 +6166,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -5932,7 +6198,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -5976,7 +6243,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -6002,7 +6270,8 @@
                   "args": [
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -6044,7 +6313,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6066,7 +6336,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6089,7 +6360,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             }
           ],
           "subcommands": [
@@ -6125,7 +6397,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6143,7 +6416,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6169,7 +6443,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6194,7 +6469,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 }
               ],
               "subcommands": [
@@ -6208,7 +6484,8 @@
                     },
                     {
                       "long": "profile",
-                      "help": "Configuration profile to use for commands"
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     },
                     {
                       "long": "project",
@@ -6258,7 +6535,8 @@
                 },
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6280,7 +6558,8 @@
               "args": [
                 {
                   "long": "profile",
-                  "help": "Configuration profile to use for commands"
+                  "help": "Configuration profile to use for commands",
+                  "global": true
                 },
                 {
                   "long": "project",
@@ -6321,7 +6600,8 @@
             },
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
@@ -6339,7 +6619,8 @@
           "args": [
             {
               "long": "profile",
-              "help": "Configuration profile to use for commands"
+              "help": "Configuration profile to use for commands",
+              "global": true
             },
             {
               "long": "project",
