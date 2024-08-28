@@ -600,9 +600,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.13"
+version = "4.5.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa3c596da3cf0983427b0df0dba359df9182c13bd5b519b585a482b0c351f4e8"
+checksum = "531d7959c5bbb6e266cecdd0f20213639c3a5c3e4d615f97db87661745f781ff"
 dependencies = [
  "clap",
 ]
@@ -893,8 +893,8 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 
 [[package]]
 name = "dropshot"
-version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#ad5c13671b2267fd4a0061e880bf52543471fcf1"
+version = "0.11.1-dev"
+source = "git+https://github.com/oxidecomputer/dropshot#a8f3f97a2eec06765893d43ede6f811ccc7949ea"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -938,8 +938,8 @@ dependencies = [
 
 [[package]]
 name = "dropshot_endpoint"
-version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#ad5c13671b2267fd4a0061e880bf52543471fcf1"
+version = "0.11.1-dev"
+source = "git+https://github.com/oxidecomputer/dropshot#a8f3f97a2eec06765893d43ede6f811ccc7949ea"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -2985,9 +2985,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.125"
+version = "1.0.127"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83c8e735a073ccf5be70aa8066aa984eaf2fa000db6c8d0100ae605b366d31ed"
+checksum = "8043c06d9f82bd7271361ed64f415fe5e12a77fdb52e573e7f06a516dea329ad"
 dependencies = [
  "itoa",
  "memchr",
