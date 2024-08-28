@@ -16,7 +16,7 @@ use oxide::{
     types::{
         Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
-        LinkSpeed, LldpServiceConfigCreate, Name, NameOrId, Route, RouteConfig,
+        LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
         SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
         SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
         SwitchPortSettingsCreate,
@@ -116,10 +116,14 @@ impl AuthenticatedCmd for CmdLinkAdd {
             fec: self.fec.into(),
             mtu: self.mtu,
             speed: self.speed.into(),
-            //TODO not fully plumbed on the back end yet.
-            lldp: LldpServiceConfigCreate {
+            lldp: LldpLinkConfigCreate {
                 enabled: false,
-                lldp_config: None,
+                link_name: None,
+                link_description: None,
+                chassis_id: None,
+                system_name: None,
+                system_description: None,
+                management_ip: None,
             },
         };
         match settings.links.get(PHY0) {
@@ -262,8 +266,8 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
             .into_inner()
             .into_iter()
             .map(|x| BgpAnnouncementCreate {
-                address_lot_block: NameOrId::Id(x.address_lot_block_id),
-                network: x.network,
+                address_lot_block: todo!(),
+                network: todo!(),
             })
             .collect();
 
@@ -314,8 +318,8 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
             .into_inner()
             .into_iter()
             .map(|x| BgpAnnouncementCreate {
-                address_lot_block: NameOrId::Id(x.address_lot_block_id),
-                network: x.network,
+                address_lot_block: todo!(),
+                network: todo!(),
             })
             .collect();
 
@@ -1704,13 +1708,17 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                 LinkConfigCreate {
                     autoneg: x.autoneg,
                     fec: x.fec,
-                    lldp: LldpServiceConfigCreate {
-                        //TODO
-                        enabled: false,
-                        lldp_config: None,
-                    },
                     mtu: x.mtu,
                     speed: x.speed,
+                    lldp: LldpLinkConfigCreate {
+                        enabled: false,
+                        link_name: None,
+                        link_description: None,
+                        chassis_id: None,
+                        system_name: None,
+                        system_description: None,
+                        management_ip: None,
+                    },
                 },
             )
         })
