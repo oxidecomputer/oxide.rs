@@ -20,10 +20,6 @@
       "help": "Disable certificate validation and hostname verification"
     },
     {
-      "long": "profile",
-      "help": "Configuration profile to use for commands"
-    },
-    {
       "long": "resolve",
       "help": "Modify name resolution"
     },
@@ -71,10 +67,6 @@
           "help": "Make additional HTTP requests to fetch all pages of results"
         },
         {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        },
-        {
           "long": "raw-field",
           "short": "f",
           "help": "Add a string parameter in key=value format"
@@ -85,12 +77,6 @@
       "name": "auth",
       "about": "Login, logout, and get the status of your authentication.",
       "long_about": "Login, logout, and get the status of your authentication.\n\nManage `oxide`'s authentication state.",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "login",
@@ -109,10 +95,6 @@
             {
               "long": "no-browser",
               "help": "Print the authentication URL rather than opening a browser window"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -130,34 +112,18 @@
               "long": "force",
               "short": "f",
               "help": "Skip confirmation prompt"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
         {
           "name": "status",
           "about": "Verifies and displays information about your authentication state.",
-          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration.",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ]
+          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration."
         }
       ]
     },
     {
       "name": "certificate",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -187,10 +153,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "service",
               "values": [
                 "external_api"
@@ -206,10 +168,6 @@
           "args": [
             {
               "long": "certificate"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -221,10 +179,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "sort-by",
@@ -243,10 +197,6 @@
           "args": [
             {
               "long": "certificate"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         }
@@ -257,10 +207,6 @@
       "about": "Generate shell completion scripts for Oxide CLI commands.",
       "long_about": "Generate shell completion scripts for Oxide CLI commands.\n\nThis command generates scripts for various shells that can be used to\nenable completion.\n\n## Installation\n\n### Bash\n\nAdd this to your `~/.bash_profile`:\n\n```sh\neval \"$(oxide completion -s bash)\"\n```\n\n### Zsh\n\nAdd this to your `~/.zshrc`:\n\n```sh\nautoload -U compinit\ncompinit -i\neval \"$(oxide completion -s zsh)\"\n```\n\n### Fish\n\nAdd the following to the `is-interactive` block in your `~/.config/fish/config.fish`:\n\n```sh\noxide completion -s fish | source\n```\n\n### PowerShell\n\nOpen your profile script with:\n\n```sh\nmkdir -Path (Split-Path -Parent $profile)\nnotepad $profile\n```\n\nAdd the following line and save the file:\n\n```powershell\nInvoke-Expression -Command $(oxide completion -s powershell | Out-String)\n```\n\n### Elvish\n\nAdd this to your `~/.config/elvish/rc.elv`\n\n```sh\neval (oxide completion -s elvish | slurp)\n```",
       "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        },
         {
           "long": "shell",
           "short": "s",
@@ -277,12 +223,6 @@
     },
     {
       "name": "current-user",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "groups",
@@ -291,10 +231,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "sort-by",
@@ -306,12 +242,6 @@
         },
         {
           "name": "ssh-key",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "create",
@@ -333,10 +263,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "public-key",
                   "help": "SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"
                 }
@@ -347,10 +273,6 @@
               "about": "Delete SSH public key",
               "long_about": "Delete an SSH public key associated with the currently authenticated user.",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "ssh-key",
                   "help": "Name or ID of the SSH key"
@@ -365,10 +287,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "sort-by",
@@ -386,10 +304,6 @@
               "long_about": "Fetch SSH public key associated with the currently authenticated user.",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "ssh-key",
                   "help": "Name or ID of the SSH key"
                 }
@@ -399,24 +313,12 @@
         },
         {
           "name": "view",
-          "about": "Fetch user for current session",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ]
+          "about": "Fetch user for current session"
         }
       ]
     },
     {
       "name": "disk",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -437,10 +339,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -457,10 +355,6 @@
             {
               "long": "disk",
               "help": "Name or ID of the disk"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -514,10 +408,6 @@
               "help": "Path to the file to import"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -544,10 +434,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 },
@@ -567,10 +453,6 @@
                   "help": "Name or ID of the disk"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -584,10 +466,6 @@
                 {
                   "long": "disk",
                   "help": "Name or ID of the disk"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -618,10 +496,6 @@
                   "long": "offset"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -636,10 +510,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -657,12 +527,6 @@
         },
         {
           "name": "metrics",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -699,10 +563,6 @@
                   "help": "Query result order"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 },
@@ -723,10 +583,6 @@
               "help": "Name or ID of the disk"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -736,31 +592,13 @@
     },
     {
       "name": "docs",
-      "about": "Generate CLI docs in JSON format",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ]
+      "about": "Generate CLI docs in JSON format"
     },
     {
       "name": "experimental",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "probe",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "create",
@@ -784,10 +622,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 },
@@ -805,10 +639,6 @@
                   "help": "Name or ID of the probe"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -821,10 +651,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -849,10 +675,6 @@
                   "help": "Name or ID of the probe"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -862,12 +684,6 @@
         },
         {
           "name": "timeseries",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "dashboard",
@@ -877,10 +693,6 @@
                   "long": "interval",
                   "short": "i",
                   "help": "The interval on which to update the dashboard display, in seconds"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             },
@@ -898,10 +710,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "query",
                   "help": "A timeseries query string, written in the Oximeter query language."
                 }
@@ -909,12 +717,6 @@
             },
             {
               "name": "schema",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "list",
@@ -923,10 +725,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 }
@@ -938,12 +736,6 @@
     },
     {
       "name": "floating-ip",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "attach",
@@ -972,10 +764,6 @@
             {
               "long": "parent",
               "help": "Name or ID of the resource that this IP address should be attached to"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -1010,10 +798,6 @@
               "help": "The parent IP pool that a floating IP is pulled from. If unset, the default pool is selected."
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1026,10 +810,6 @@
             {
               "long": "floating-ip",
               "help": "Name or ID of the floating IP"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -1046,10 +826,6 @@
               "help": "Name or ID of the floating IP"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1062,10 +838,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -1104,10 +876,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1122,10 +890,6 @@
               "help": "Name or ID of the floating IP"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1135,12 +899,6 @@
     },
     {
       "name": "group",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "list",
@@ -1149,10 +907,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "sort-by",
@@ -1166,12 +920,6 @@
     },
     {
       "name": "image",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -1197,10 +945,6 @@
               "help": "The family of the operating system (e.g. Debian, Ubuntu, etc.)"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -1220,10 +964,6 @@
               "help": "Name or ID of the image"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1239,10 +979,6 @@
               "help": "Name or ID of the image"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1256,10 +992,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -1285,10 +1017,6 @@
               "help": "Name or ID of the image"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1304,10 +1032,6 @@
               "help": "Name or ID of the image"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1317,12 +1041,6 @@
     },
     {
       "name": "instance",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -1352,10 +1070,6 @@
               "long": "ncpus"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -1382,10 +1096,6 @@
               "help": "Name or ID of the instance"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1393,12 +1103,6 @@
         },
         {
           "name": "disk",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "attach",
@@ -1419,10 +1123,6 @@
                 {
                   "long": "json-body-template",
                   "help": "XXX"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1451,10 +1151,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -1471,10 +1167,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1494,12 +1186,6 @@
         },
         {
           "name": "external-ip",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "attach-ephemeral",
@@ -1522,10 +1208,6 @@
                   "help": "Name or ID of the IP pool used to allocate an address"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -1540,10 +1222,6 @@
                   "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -1556,10 +1234,6 @@
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1598,10 +1272,6 @@
               "help": "Instance CPU count"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Project for image and instance"
             },
@@ -1624,10 +1294,6 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -1643,12 +1309,6 @@
         },
         {
           "name": "nic",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "create",
@@ -1675,10 +1335,6 @@
                 },
                 {
                   "long": "name"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1708,10 +1364,6 @@
                   "help": "Name or ID of the network interface"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
@@ -1728,10 +1380,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1782,10 +1430,6 @@
                   "help": "Make a secondary interface the instance's primary interface.\n\nIf applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.\n\nNote that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error."
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
@@ -1804,10 +1448,6 @@
                   "help": "Name or ID of the network interface"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
@@ -1824,10 +1464,6 @@
               "help": "Name or ID of the instance"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1836,12 +1472,6 @@
         {
           "name": "serial",
           "about": "Connect to or retrieve data from the instance's serial console.",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "console",
@@ -1866,10 +1496,6 @@
                   "long": "most-recent",
                   "short": "m",
                   "help": "The number of bytes from the most recent output to retrieve as context before connecting to the interactive session directly"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1909,10 +1535,6 @@
                   "help": "Maximum number of bytes of buffered serial console contents to return. If the requested range (starting at --byte-offset) runs to the end of the available buffer, the data returned will be shorter (and if --json is provided, the actual final offset will be provided)"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "short": "p",
                   "help": "Name or ID of the project"
@@ -1923,12 +1545,6 @@
         },
         {
           "name": "ssh-key",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -1942,10 +1558,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "project",
@@ -1972,10 +1584,6 @@
               "help": "Name or ID of the instance"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -1988,10 +1596,6 @@
             {
               "long": "instance",
               "help": "Name or ID of the instance"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -2008,10 +1612,6 @@
               "help": "Name or ID of the instance"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -2021,12 +1621,6 @@
     },
     {
       "name": "ip-pool",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -2045,10 +1639,6 @@
             },
             {
               "long": "name"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2059,10 +1649,6 @@
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2073,10 +1659,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "sort-by",
@@ -2090,12 +1672,6 @@
         },
         {
           "name": "range",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "add",
@@ -2119,10 +1695,6 @@
                 {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             },
@@ -2138,10 +1710,6 @@
                 {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             },
@@ -2166,10 +1734,6 @@
                 {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             }
@@ -2177,21 +1741,9 @@
         },
         {
           "name": "service",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "range",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "add",
@@ -2211,10 +1763,6 @@
                     },
                     {
                       "long": "last"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -2226,10 +1774,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 }
@@ -2252,33 +1796,17 @@
                 },
                 {
                   "long": "last"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             },
             {
               "name": "view",
-              "about": "Fetch Oxide service IP pool",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ]
+              "about": "Fetch Oxide service IP pool"
             }
           ]
         },
         {
           "name": "silo",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "link",
@@ -2306,10 +1834,6 @@
                   "help": "Name or ID of the IP pool"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo"
                 }
               ]
@@ -2327,10 +1851,6 @@
                   "help": "Name or ID of the IP pool"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "sort-by",
                   "values": [
                     "id_ascending"
@@ -2345,10 +1865,6 @@
               "args": [
                 {
                   "long": "pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "silo"
@@ -2380,10 +1896,6 @@
                   "long": "pool"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo"
                 }
               ]
@@ -2411,10 +1923,6 @@
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2425,10 +1933,6 @@
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2439,10 +1943,6 @@
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         }
@@ -2451,22 +1951,10 @@
     {
       "name": "ping",
       "about": "Ping API",
-      "long_about": "Always responds with Ok if it responds at all.",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ]
+      "long_about": "Always responds with Ok if it responds at all."
     },
     {
       "name": "policy",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "update",
@@ -2479,33 +1967,17 @@
             {
               "long": "json-body-template",
               "help": "XXX"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
         {
           "name": "view",
-          "about": "Fetch current silo's IAM policy",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ]
+          "about": "Fetch current silo's IAM policy"
         }
       ]
     },
     {
       "name": "project",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -2524,10 +1996,6 @@
             },
             {
               "long": "name"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2536,10 +2004,6 @@
           "about": "Delete project",
           "args": [
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -2547,12 +2011,6 @@
         },
         {
           "name": "ip-pool",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -2561,10 +2019,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "sort-by",
@@ -2583,10 +2037,6 @@
                 {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             }
@@ -2601,10 +2051,6 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "sort-by",
               "values": [
                 "name_ascending",
@@ -2616,12 +2062,6 @@
         },
         {
           "name": "policy",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "update",
@@ -2636,10 +2076,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -2649,10 +2085,6 @@
               "name": "view",
               "about": "Fetch project's IAM policy",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project"
@@ -2680,10 +2112,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -2694,10 +2122,6 @@
           "about": "Fetch project",
           "args": [
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -2707,12 +2131,6 @@
     },
     {
       "name": "silo",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -2749,10 +2167,6 @@
             },
             {
               "long": "name"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             }
           ]
         },
@@ -2762,10 +2176,6 @@
           "long_about": "Delete a silo by name or ID.",
           "args": [
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "silo",
               "help": "Name or ID of the silo"
             }
@@ -2773,12 +2183,6 @@
         },
         {
           "name": "idp",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -2787,10 +2191,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "silo",
@@ -2808,21 +2208,9 @@
             },
             {
               "name": "local",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "user",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "create",
@@ -2842,10 +2230,6 @@
                           "help": "XXX"
                         },
                         {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
                           "long": "silo",
                           "help": "Name or ID of the silo"
                         }
@@ -2855,10 +2239,6 @@
                       "name": "delete",
                       "about": "Delete user",
                       "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
                         {
                           "long": "silo",
                           "help": "Name or ID of the silo"
@@ -2883,10 +2263,6 @@
                           "help": "XXX"
                         },
                         {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
                           "long": "silo",
                           "help": "Name or ID of the silo"
                         },
@@ -2902,12 +2278,6 @@
             },
             {
               "name": "saml",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "create",
@@ -2946,10 +2316,6 @@
                       "long": "name"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "silo",
                       "help": "Name or ID of the silo"
                     },
@@ -2972,10 +2338,6 @@
                   "about": "Fetch SAML IdP",
                   "args": [
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "provider",
                       "help": "Name or ID of the SAML identity provider"
                     },
@@ -2991,12 +2353,6 @@
         },
         {
           "name": "ip-pool",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -3006,10 +2362,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "silo",
@@ -3037,10 +2389,6 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "sort-by",
               "values": [
                 "name_ascending",
@@ -3052,12 +2400,6 @@
         },
         {
           "name": "policy",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "update",
@@ -3072,10 +2414,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 }
@@ -3086,10 +2424,6 @@
               "about": "Fetch silo IAM policy",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 }
@@ -3099,12 +2433,6 @@
         },
         {
           "name": "quotas",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -3113,10 +2441,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "sort-by",
@@ -3148,10 +2472,6 @@
                   "help": "The amount of RAM (in bytes) available for running instances in the Silo"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 },
@@ -3166,10 +2486,6 @@
               "about": "Fetch resource quotas for silo",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 }
@@ -3179,12 +2495,6 @@
         },
         {
           "name": "user",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -3193,10 +2503,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "silo",
@@ -3215,10 +2521,6 @@
               "about": "Fetch built-in (system) user",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 },
@@ -3232,12 +2534,6 @@
         },
         {
           "name": "utilization",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "list",
@@ -3246,10 +2542,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 },
                 {
                   "long": "sort-by",
@@ -3266,10 +2558,6 @@
               "about": "Fetch current utilization for given silo",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "silo",
                   "help": "Name or ID of the silo"
                 }
@@ -3283,10 +2571,6 @@
           "long_about": "Fetch silo by name or ID.",
           "args": [
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "silo",
               "help": "Name or ID of the silo"
             }
@@ -3296,12 +2580,6 @@
     },
     {
       "name": "snapshot",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -3327,10 +2605,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -3340,10 +2614,6 @@
           "name": "delete",
           "about": "Delete snapshot",
           "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
             {
               "long": "project",
               "help": "Name or ID of the project"
@@ -3361,10 +2631,6 @@
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
             },
             {
               "long": "project",
@@ -3385,10 +2651,6 @@
           "about": "Fetch snapshot",
           "args": [
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -3402,30 +2664,12 @@
     },
     {
       "name": "system",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "hardware",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "disk",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "list",
@@ -3434,10 +2678,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sort-by",
@@ -3454,10 +2694,6 @@
                     {
                       "long": "disk-id",
                       "help": "ID of the physical disk"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 }
@@ -3465,12 +2701,6 @@
             },
             {
               "name": "rack",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "list",
@@ -3479,10 +2709,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sort-by",
@@ -3497,10 +2723,6 @@
                   "about": "Fetch rack",
                   "args": [
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack-id",
                       "help": "The rack's unique ID."
                     }
@@ -3510,12 +2732,6 @@
             },
             {
               "name": "sled",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "add",
@@ -3533,10 +2749,6 @@
                       "long": "part"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "serial"
                     }
                   ]
@@ -3548,10 +2760,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sled-id",
@@ -3574,10 +2782,6 @@
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sled-id",
                       "help": "ID of the sled"
                     },
@@ -3598,10 +2802,6 @@
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sort-by",
                       "values": [
                         "id_ascending"
@@ -3616,10 +2816,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -3634,10 +2830,6 @@
                     {
                       "long": "json-body-template",
                       "help": "XXX"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sled-id",
@@ -3658,10 +2850,6 @@
                   "about": "Fetch sled",
                   "args": [
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sled-id",
                       "help": "ID of the sled"
                     }
@@ -3671,12 +2859,6 @@
             },
             {
               "name": "switch",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "list",
@@ -3685,10 +2867,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sort-by",
@@ -3703,10 +2881,6 @@
                   "about": "Fetch switch",
                   "args": [
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "switch-id",
                       "help": "ID of the switch"
                     }
@@ -3716,12 +2890,6 @@
             },
             {
               "name": "switch-port",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "apply-settings",
@@ -3744,10 +2912,6 @@
                       "help": "A name or id to use when applying switch port settings."
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack-id",
                       "help": "A rack id to use when selecting switch ports."
                     },
@@ -3764,10 +2928,6 @@
                     {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack-id",
@@ -3788,10 +2948,6 @@
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sort-by",
                       "values": [
                         "id_ascending"
@@ -3805,13 +2961,7 @@
                 },
                 {
                   "name": "show-status",
-                  "about": "Get the status of switch ports.",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get the status of switch ports."
                 },
                 {
                   "name": "status",
@@ -3820,10 +2970,6 @@
                     {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack-id",
@@ -3841,22 +2987,10 @@
         },
         {
           "name": "networking",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "addr",
               "about": "Manage switch port addresses.",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "add",
@@ -3907,10 +3041,6 @@
                         "qsfp31"
                       ],
                       "help": "Port to add the address to"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack",
@@ -3977,10 +3107,6 @@
                       "help": "Port to remove the address from"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to remove the address from"
                     },
@@ -3998,21 +3124,9 @@
             },
             {
               "name": "address-lot",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "block",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "list",
@@ -4025,10 +3139,6 @@
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         },
                         {
                           "long": "sort-by",
@@ -4065,10 +3175,6 @@
                     },
                     {
                       "long": "name"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -4079,10 +3185,6 @@
                     {
                       "long": "address-lot",
                       "help": "Name or ID of the address lot"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -4093,10 +3195,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "sort-by",
@@ -4112,12 +3210,6 @@
             },
             {
               "name": "allow-list",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "update",
@@ -4136,33 +3228,17 @@
                     {
                       "long": "json-body-template",
                       "help": "XXX"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
                 {
                   "name": "view",
-                  "about": "Get user-facing services IP allowlist",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get user-facing services IP allowlist"
                 }
               ]
             },
             {
               "name": "bfd",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "disable",
@@ -4175,10 +3251,6 @@
                     {
                       "long": "json-body-template",
                       "help": "XXX"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "remote",
@@ -4219,10 +3291,6 @@
                       "help": "Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "remote",
                       "help": "Address of the remote peer to establish a BFD session with."
                     },
@@ -4238,24 +3306,12 @@
                 },
                 {
                   "name": "status",
-                  "about": "Get BFD status",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get BFD status"
                 }
               ]
             },
             {
               "name": "bgp",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "announce",
@@ -4276,21 +3332,11 @@
                     {
                       "long": "prefix",
                       "help": "The prefix to announce"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
                 {
                   "name": "announce-set",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "delete",
@@ -4299,10 +3345,6 @@
                         {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP port settings"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         }
                       ]
                     },
@@ -4321,10 +3363,6 @@
                         {
                           "long": "page-token",
                           "help": "Token returned by previous call to retrieve the subsequent page"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         },
                         {
                           "long": "sort-by",
@@ -4354,10 +3392,6 @@
                         },
                         {
                           "long": "name"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         }
                       ]
                     }
@@ -4365,12 +3399,6 @@
                 },
                 {
                   "name": "announcement",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "list",
@@ -4379,10 +3407,6 @@
                         {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP port settings"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         }
                       ]
                     }
@@ -4440,10 +3464,6 @@
                       "help": "Port to add the auth config to"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to add the auth config to"
                     },
@@ -4459,12 +3479,6 @@
                 },
                 {
                   "name": "config",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "create",
@@ -4492,10 +3506,6 @@
                           "long": "name"
                         },
                         {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
                           "long": "vrf",
                           "help": "Optional virtual routing and forwarding identifier for this BGP configuration."
                         }
@@ -4508,10 +3518,6 @@
                         {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP config."
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         }
                       ]
                     },
@@ -4528,10 +3534,6 @@
                           "help": "A name or id to use when selecting BGP config."
                         },
                         {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
                           "long": "sort-by",
                           "values": [
                             "name_ascending",
@@ -4545,13 +3547,7 @@
                 },
                 {
                   "name": "exported",
-                  "about": "Get BGP exported routes",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get BGP exported routes"
                 },
                 {
                   "name": "filter",
@@ -4617,10 +3613,6 @@
                       "help": "Port to add the filter to"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to add the filter to"
                     },
@@ -4641,21 +3633,11 @@
                     {
                       "long": "asn",
                       "help": "The ASN to filter on. Required."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
                 {
                   "name": "imported",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "ipv4",
@@ -4664,10 +3646,6 @@
                         {
                           "long": "asn",
                           "help": "The ASN to filter on. Required."
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         }
                       ]
                     }
@@ -4677,12 +3655,6 @@
                   "name": "peer",
                   "about": "Manage BGP peers.",
                   "long_about": "Manage BGP peers.\n\nThis command provides set and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer set and delete subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ],
                   "subcommands": [
                     {
                       "name": "delete",
@@ -4729,10 +3701,6 @@
                             "qsfp31"
                           ],
                           "help": "Port to remove the peer from"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
                         },
                         {
                           "long": "rack",
@@ -4851,10 +3819,6 @@
                           "help": "Port to set the peer config on"
                         },
                         {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
                           "long": "rack",
                           "help": "Id of the rack to set the peer config on"
                         },
@@ -4930,10 +3894,6 @@
                       "help": "Port to set the route preference on"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to set the route preference on"
                     },
@@ -4950,23 +3910,11 @@
                 {
                   "name": "show-status",
                   "about": "Get the status of BGP on the rack.",
-                  "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches.",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches."
                 },
                 {
                   "name": "status",
-                  "about": "Get BGP peer status",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get BGP peer status"
                 },
                 {
                   "name": "withdraw",
@@ -4980,10 +3928,6 @@
                     {
                       "long": "prefix",
                       "help": "The prefix to withdraw"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 }
@@ -4993,12 +3937,6 @@
               "name": "link",
               "about": "Manage switch port links.",
               "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "add",
@@ -5058,10 +3996,6 @@
                         "qsfp31"
                       ],
                       "help": "Port to add the link to"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack",
@@ -5135,10 +4069,6 @@
                       "help": "Port to remove the link from"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to remove the link from"
                     },
@@ -5156,12 +4086,6 @@
             },
             {
               "name": "loopback-address",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "create",
@@ -5196,10 +4120,6 @@
                       "help": "The subnet mask to use for the address."
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack-id",
                       "help": "The containing the switch this loopback address will be configured on."
                     },
@@ -5216,10 +4136,6 @@
                     {
                       "long": "address",
                       "help": "The IP address and subnet mask to use when selecting the loopback address."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack-id",
@@ -5244,10 +4160,6 @@
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sort-by",
                       "values": [
                         "id_ascending"
@@ -5260,12 +4172,6 @@
             {
               "name": "route",
               "about": "Manage static switch routes.",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "delete",
@@ -5316,10 +4222,6 @@
                         "qsfp31"
                       ],
                       "help": "Port to remove the route from"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "rack",
@@ -5394,10 +4296,6 @@
                       "help": "Port to configure the route on"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "rack",
                       "help": "Id of the rack to configure the route on"
                     },
@@ -5419,12 +4317,6 @@
             },
             {
               "name": "switch-port-settings",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "create",
@@ -5443,10 +4335,6 @@
                     },
                     {
                       "long": "name"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -5457,10 +4345,6 @@
                     {
                       "long": "port-settings",
                       "help": "An optional name or id to use when selecting port settings."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
@@ -5477,10 +4361,6 @@
                       "help": "An optional name or id to use when selecting port settings."
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "sort-by",
                       "values": [
                         "name_ascending",
@@ -5492,13 +4372,7 @@
                 },
                 {
                   "name": "show",
-                  "about": "Get the configuration of switch ports.",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    }
-                  ]
+                  "about": "Get the configuration of switch ports."
                 },
                 {
                   "name": "view",
@@ -5507,10 +4381,6 @@
                     {
                       "long": "port",
                       "help": "A name or id to use when selecting switch port settings info objects."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 }
@@ -5520,12 +4390,6 @@
         },
         {
           "name": "policy",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "update",
@@ -5538,22 +4402,12 @@
                 {
                   "long": "json-body-template",
                   "help": "XXX"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
                 }
               ]
             },
             {
               "name": "view",
-              "about": "Fetch top-level IAM policy",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ]
+              "about": "Fetch top-level IAM policy"
             }
           ]
         }
@@ -5561,12 +4415,6 @@
     },
     {
       "name": "user",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "list",
@@ -5580,10 +4428,6 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "sort-by",
               "values": [
                 "id_ascending"
@@ -5595,32 +4439,14 @@
     },
     {
       "name": "utilization",
-      "about": "Fetch resource utilization for user's current silo",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ]
+      "about": "Fetch resource utilization for user's current silo"
     },
     {
       "name": "version",
-      "about": "Prints version information about the CLI.",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ]
+      "about": "Prints version information about the CLI."
     },
     {
       "name": "vpc",
-      "args": [
-        {
-          "long": "profile",
-          "help": "Configuration profile to use for commands"
-        }
-      ],
       "subcommands": [
         {
           "name": "create",
@@ -5648,10 +4474,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             }
@@ -5661,10 +4483,6 @@
           "name": "delete",
           "about": "Delete VPC",
           "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
             {
               "long": "project",
               "help": "Name or ID of the project"
@@ -5677,12 +4495,6 @@
         },
         {
           "name": "firewall-rules",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "update",
@@ -5698,10 +4510,6 @@
                   "help": "XXX"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -5715,10 +4523,6 @@
               "name": "view",
               "about": "List firewall rules",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -5740,10 +4544,6 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -5759,12 +4559,6 @@
         },
         {
           "name": "router",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "create",
@@ -5785,10 +4579,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -5802,10 +4592,6 @@
               "name": "delete",
               "about": "Delete router",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -5829,10 +4615,6 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -5852,12 +4634,6 @@
             },
             {
               "name": "route",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "create",
@@ -5878,10 +4654,6 @@
                       "long": "name"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "project",
                       "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
@@ -5899,10 +4671,6 @@
                   "name": "delete",
                   "about": "Delete route",
                   "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
                     {
                       "long": "project",
                       "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -5929,10 +4697,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "project",
@@ -5975,10 +4739,6 @@
                       "long": "name"
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
-                    {
                       "long": "project",
                       "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
@@ -6000,10 +4760,6 @@
                   "name": "view",
                   "about": "Fetch route",
                   "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
-                    },
                     {
                       "long": "project",
                       "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -6043,10 +4799,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -6065,10 +4817,6 @@
               "about": "Fetch router",
               "args": [
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -6086,12 +4834,6 @@
         },
         {
           "name": "subnet",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            }
-          ],
           "subcommands": [
             {
               "name": "create",
@@ -6124,10 +4866,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -6141,10 +4879,6 @@
               "name": "delete",
               "about": "Delete subnet",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -6168,10 +4902,6 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -6191,12 +4921,6 @@
             },
             {
               "name": "nic",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                }
-              ],
               "subcommands": [
                 {
                   "name": "list",
@@ -6205,10 +4929,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands"
                     },
                     {
                       "long": "project",
@@ -6257,10 +4977,6 @@
                   "long": "name"
                 },
                 {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
-                {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
@@ -6278,10 +4994,6 @@
               "name": "view",
               "about": "Fetch subnet",
               "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands"
-                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -6320,10 +5032,6 @@
               "long": "name"
             },
             {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
-            {
               "long": "project",
               "help": "Name or ID of the project"
             },
@@ -6337,10 +5045,6 @@
           "name": "view",
           "about": "Fetch VPC",
           "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands"
-            },
             {
               "long": "project",
               "help": "Name or ID of the project"
