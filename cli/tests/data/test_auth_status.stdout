@@ -1,4 +1,4 @@
 Profile "jennifer" (<TEST-SERVER>) status: Authenticated
 Profile "lightman" (<TEST-SERVER>) status: Authenticated
 Profile "malvin" (<TEST-SERVER>) status: Error Response: ** IMPROPER REQUEST **
-Profile "sting" (https://unresolvabledomainnameihope) status: Communication Error: error sending request for url (https://unresolvabledomainnameihope/v1/me): error trying to connect: 
+Profile "sting" (https://unresolvabledomainnameihope) status: Communication Error: error sending request for url (https://unresolvabledomainnameihope/v1/me): operation timed out

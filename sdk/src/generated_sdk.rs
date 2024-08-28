@@ -48502,6 +48502,8 @@ pub trait ClientSilosExt {
     ///
     /// Sends a `GET` request to `/v1/certificates/{certificate}`
     ///
+    /// Arguments:
+    /// - `certificate`: Name or ID of the certificate
     /// ```ignore
     /// let response = client.certificate_view()
     ///    .certificate(certificate)
@@ -48515,6 +48517,8 @@ pub trait ClientSilosExt {
     ///
     /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
     ///
+    /// Arguments:
+    /// - `certificate`: Name or ID of the certificate
     /// ```ignore
     /// let response = client.certificate_delete()
     ///    .certificate(certificate)
@@ -48795,7 +48799,7 @@ pub trait ClientSystemHardwareExt {
     /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
     /// Arguments:
-    /// - `rack_id`: The rack's unique ID.
+    /// - `rack_id`: ID of the rack
     /// ```ignore
     /// let response = client.rack_view()
     ///    .rack_id(rack_id)
@@ -50017,7 +50021,7 @@ pub trait ClientSystemSilosExt {
     /// `/v1/system/identity-providers/local/users/{user_id}`
     ///
     /// Arguments:
-    /// - `user_id`: The user's internal id
+    /// - `user_id`: The user's internal ID
     /// - `silo`: Name or ID of the silo
     /// ```ignore
     /// let response = client.local_idp_user_delete()
@@ -50036,7 +50040,7 @@ pub trait ClientSystemSilosExt {
     /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
     ///
     /// Arguments:
-    /// - `user_id`: The user's internal id
+    /// - `user_id`: The user's internal ID
     /// - `silo`: Name or ID of the silo
     /// - `body`
     /// ```ignore
@@ -50264,7 +50268,7 @@ pub trait ClientSystemSilosExt {
     /// Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
     /// Arguments:
-    /// - `user_id`: The user's internal id
+    /// - `user_id`: The user's internal ID
     /// - `silo`: Name or ID of the silo
     /// ```ignore
     /// let response = client.silo_user_view()
