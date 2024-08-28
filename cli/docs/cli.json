@@ -4308,15 +4308,31 @@
                     },
                     {
                       "name": "list",
-                      "about": "Get originated routes for a BGP configuration",
+                      "about": "List BGP announce sets",
                       "args": [
                         {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
                           "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "help": "A name or id to use when s electing BGP port settings"
+                        },
+                        {
+                          "long": "page-token",
+                          "help": "Token returned by previous call to retrieve the subsequent page"
                         },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands"
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "name_ascending",
+                            "name_descending",
+                            "id_ascending"
+                          ]
                         }
                       ]
                     },
@@ -4338,6 +4354,31 @@
                         },
                         {
                           "long": "name"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "announcement",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "list",
+                      "about": "Get originated routes for a specified BGP announce set",
+                      "args": [
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP port settings"
                         },
                         {
                           "long": "profile",
@@ -4499,6 +4540,16 @@
                           ]
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "exported",
+                  "about": "Get BGP exported routes",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
                     }
                   ]
                 },
