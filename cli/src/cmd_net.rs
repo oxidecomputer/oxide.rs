@@ -259,15 +259,15 @@ pub struct CmdBgpAnnounce {
 impl AuthenticatedCmd for CmdBgpAnnounce {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
-            .networking_bgp_announce_set_list()
+            .networking_bgp_announcement_list()
             .name_or_id(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
             .into_iter()
             .map(|x| BgpAnnouncementCreate {
-                address_lot_block: todo!(),
-                network: todo!(),
+                address_lot_block: NameOrId::Id(x.address_lot_block_id),
+                network: x.network,
             })
             .collect();
 
@@ -311,15 +311,15 @@ pub struct CmdBgpWithdraw {
 impl AuthenticatedCmd for CmdBgpWithdraw {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
-            .networking_bgp_announce_set_list()
+            .networking_bgp_announcement_list()
             .name_or_id(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
             .into_iter()
             .map(|x| BgpAnnouncementCreate {
-                address_lot_block: todo!(),
-                network: todo!(),
+                address_lot_block: NameOrId::Id(x.address_lot_block_id),
+                network: x.network,
             })
             .collect();
 
