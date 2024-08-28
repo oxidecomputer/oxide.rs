@@ -3906,7 +3906,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the address to"
                     },
                     {
                       "long": "profile",
@@ -3931,7 +3931,7 @@
                   ]
                 },
                 {
-                  "name": "del",
+                  "name": "delete",
                   "about": "Remove an address from a port configuration",
                   "args": [
                     {
@@ -4348,6 +4348,75 @@
                   ]
                 },
                 {
+                  "name": "auth",
+                  "about": "Set an authentication string.",
+                  "long_about": "Set an authentication string.\n\nThis command sets the authentication string that the specified BGP session\nwill use for establishing a TCP-MD5 authenticated connection with its peer.\nThis command works by performing a read-modify-write on the switch port\nsettings configuration identified by the specified rack/switch/port.",
+                  "args": [
+                    {
+                      "long": "authstring",
+                      "help": "Use the given authorization string for TCP-MD5 authentication with the peer"
+                    },
+                    {
+                      "long": "peer",
+                      "help": "Peer to add the auth config to"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to add the auth config to"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to add the auth config to"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to add the auth config to"
+                    }
+                  ]
+                },
+                {
                   "name": "config",
                   "args": [
                     {
@@ -4494,7 +4563,7 @@
                         "qsfp30",
                         "qsfp31"
                       ],
-                      "help": "Port to add the port to"
+                      "help": "Port to add the filter to"
                     },
                     {
                       "long": "profile",
@@ -4502,7 +4571,7 @@
                     },
                     {
                       "long": "rack",
-                      "help": "Id of the rack to add the address to"
+                      "help": "Id of the rack to add the filter to"
                     },
                     {
                       "long": "switch",
@@ -4510,7 +4579,7 @@
                         "switch0",
                         "switch1"
                       ],
-                      "help": "Switch to add the address to"
+                      "help": "Switch to add the filter to"
                     }
                   ]
                 },
@@ -4556,7 +4625,7 @@
                 {
                   "name": "peer",
                   "about": "Manage BGP peers.",
-                  "long_about": "Manage BGP peers.\n\nThis command provides add and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer add and remove subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
+                  "long_about": "Manage BGP peers.\n\nThis command provides set and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer set and delete subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
                   "args": [
                     {
                       "long": "profile",
@@ -4565,135 +4634,7 @@
                   ],
                   "subcommands": [
                     {
-                      "name": "add",
-                      "about": "Add a BGP peer to a port configuration",
-                      "args": [
-                        {
-                          "long": "addr",
-                          "help": "Address of the peer to add"
-                        },
-                        {
-                          "long": "allowed-exports",
-                          "help": "Prefixes that may be exported to the peer. Empty list means all prefixes allowed"
-                        },
-                        {
-                          "long": "allowed-imports",
-                          "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
-                        },
-                        {
-                          "long": "bgp-config",
-                          "help": "BGP configuration this peer is associated with"
-                        },
-                        {
-                          "long": "communities",
-                          "help": "Include the provided communities in updates sent to the peer"
-                        },
-                        {
-                          "long": "connect-retry",
-                          "help": "How long to to wait between TCP connection retries (seconds)"
-                        },
-                        {
-                          "long": "delay-open",
-                          "help": "How long to delay sending an open request after establishing a TCP session (seconds)"
-                        },
-                        {
-                          "long": "enforce-first-as",
-                          "help": "Enforce that the first AS in paths received from this peer is the peer's AS"
-                        },
-                        {
-                          "long": "hold-time",
-                          "help": "How long to hold peer connections between keepalives (seconds)"
-                        },
-                        {
-                          "long": "idle-hold-time",
-                          "help": "How long to hold a peer in idle before attempting a new session (seconds)"
-                        },
-                        {
-                          "long": "keepalive",
-                          "help": "How often to send keepalive requests (seconds)"
-                        },
-                        {
-                          "long": "local-pref",
-                          "help": "Apply a local preference to routes received from this peer"
-                        },
-                        {
-                          "long": "md5-auth-key",
-                          "help": "Use the given key for TCP-MD5 authentication with the peer"
-                        },
-                        {
-                          "long": "min-ttl",
-                          "help": "Require messages from a peer have a minimum IP time to live field"
-                        },
-                        {
-                          "long": "multi-exit-discriminator",
-                          "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer"
-                        },
-                        {
-                          "long": "port",
-                          "values": [
-                            "qsfp0",
-                            "qsfp1",
-                            "qsfp2",
-                            "qsfp3",
-                            "qsfp4",
-                            "qsfp5",
-                            "qsfp6",
-                            "qsfp7",
-                            "qsfp8",
-                            "qsfp9",
-                            "qsfp10",
-                            "qsfp11",
-                            "qsfp12",
-                            "qsfp13",
-                            "qsfp14",
-                            "qsfp15",
-                            "qsfp16",
-                            "qsfp17",
-                            "qsfp18",
-                            "qsfp19",
-                            "qsfp20",
-                            "qsfp21",
-                            "qsfp22",
-                            "qsfp23",
-                            "qsfp24",
-                            "qsfp25",
-                            "qsfp26",
-                            "qsfp27",
-                            "qsfp28",
-                            "qsfp29",
-                            "qsfp30",
-                            "qsfp31"
-                          ],
-                          "help": "Port to add the peer to"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands"
-                        },
-                        {
-                          "long": "rack",
-                          "help": "Id of the rack to add the peer to"
-                        },
-                        {
-                          "long": "remote-asn",
-                          "help": "Require that a peer has a specified ASN"
-                        },
-                        {
-                          "long": "switch",
-                          "values": [
-                            "switch0",
-                            "switch1"
-                          ],
-                          "help": "Switch to add the peer to"
-                        },
-                        {
-                          "long": "vlan-id",
-                          "help": "Associate a VLAN ID with a peer"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "del",
+                      "name": "delete",
                       "about": "Remove a BGP from a port configuration",
                       "args": [
                         {
@@ -4755,6 +4696,203 @@
                           "help": "Switch to remove the peer from"
                         }
                       ]
+                    },
+                    {
+                      "name": "set",
+                      "about": "Set a BGP peer on a port configuration",
+                      "args": [
+                        {
+                          "long": "addr",
+                          "help": "Address of the peer to set the config for"
+                        },
+                        {
+                          "long": "allowed-exports",
+                          "help": "Prefixes that may be exported to the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "allowed-imports",
+                          "help": "Prefixes that may be imported from the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "authstring",
+                          "help": "Use the given authorization string for TCP-MD5 authentication with the peer"
+                        },
+                        {
+                          "long": "bgp-config",
+                          "help": "BGP configuration this peer is associated with"
+                        },
+                        {
+                          "long": "communities",
+                          "help": "Include the provided communities in updates sent to the peer"
+                        },
+                        {
+                          "long": "connect-retry",
+                          "help": "How long to wait between TCP connection retries (seconds)"
+                        },
+                        {
+                          "long": "delay-open",
+                          "help": "How long to delay sending an open request after establishing a TCP session (seconds)"
+                        },
+                        {
+                          "long": "enforce-first-as",
+                          "help": "Enforce that the first AS in paths received from this peer is the peer's AS"
+                        },
+                        {
+                          "long": "hold-time",
+                          "help": "How long to hold peer connections between keepalives (seconds)"
+                        },
+                        {
+                          "long": "idle-hold-time",
+                          "help": "How long to hold a peer in idle before attempting a new session (seconds)"
+                        },
+                        {
+                          "long": "keepalive",
+                          "help": "How often to send keepalive requests (seconds)"
+                        },
+                        {
+                          "long": "local-pref",
+                          "help": "Apply this local preference to routes received from the peer"
+                        },
+                        {
+                          "long": "min-ttl",
+                          "help": "Require messages from a peer have a minimum IP time to live field"
+                        },
+                        {
+                          "long": "multi-exit-discriminator",
+                          "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer"
+                        },
+                        {
+                          "long": "port",
+                          "values": [
+                            "qsfp0",
+                            "qsfp1",
+                            "qsfp2",
+                            "qsfp3",
+                            "qsfp4",
+                            "qsfp5",
+                            "qsfp6",
+                            "qsfp7",
+                            "qsfp8",
+                            "qsfp9",
+                            "qsfp10",
+                            "qsfp11",
+                            "qsfp12",
+                            "qsfp13",
+                            "qsfp14",
+                            "qsfp15",
+                            "qsfp16",
+                            "qsfp17",
+                            "qsfp18",
+                            "qsfp19",
+                            "qsfp20",
+                            "qsfp21",
+                            "qsfp22",
+                            "qsfp23",
+                            "qsfp24",
+                            "qsfp25",
+                            "qsfp26",
+                            "qsfp27",
+                            "qsfp28",
+                            "qsfp29",
+                            "qsfp30",
+                            "qsfp31"
+                          ],
+                          "help": "Port to set the peer config on"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands"
+                        },
+                        {
+                          "long": "rack",
+                          "help": "Id of the rack to set the peer config on"
+                        },
+                        {
+                          "long": "remote-asn",
+                          "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "Switch to set the peer config on"
+                        },
+                        {
+                          "long": "vlan-id",
+                          "help": "Associate a VLAN ID with a peer"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "pref",
+                  "about": "Set a local preference for a peer.",
+                  "long_about": "Set a local preference for a peer.\n\nThis command associates a local preference for the specified peer. When\nroutes are imported by this peer, they will be installed into the routing\ninformation base (RIB) with the specified preference. This command works\nby performing a read-modify-write on the switch port settings configuration\nidentified by the specified rack/switch/port.",
+                  "args": [
+                    {
+                      "long": "local-pref",
+                      "help": "Apply this local preference to routes received from the peer"
+                    },
+                    {
+                      "long": "peer",
+                      "help": "Peer to set the route preference on"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to set the route preference on"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to set the route preference on"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to set the route preference on"
                     }
                   ]
                 },
@@ -4821,6 +4959,11 @@
                     },
                     {
                       "long": "fec",
+                      "values": [
+                        "firecode",
+                        "none",
+                        "rs"
+                      ],
                       "help": "The forward error correction mode of the link"
                     },
                     {
@@ -4875,6 +5018,17 @@
                     },
                     {
                       "long": "speed",
+                      "values": [
+                        "0g",
+                        "1g",
+                        "10g",
+                        "25g",
+                        "40g",
+                        "50g",
+                        "100g",
+                        "200g",
+                        "400g"
+                      ],
                       "help": "The speed of the link"
                     },
                     {
@@ -4888,7 +5042,7 @@
                   ]
                 },
                 {
-                  "name": "del",
+                  "name": "delete",
                   "about": "Remove a link from a port",
                   "args": [
                     {
@@ -5047,6 +5201,166 @@
                       "values": [
                         "id_ascending"
                       ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "route",
+              "about": "Manage static switch routes.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands"
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "delete",
+                  "about": "Delete a static route",
+                  "args": [
+                    {
+                      "long": "destination",
+                      "help": "The route destination"
+                    },
+                    {
+                      "long": "nexthop",
+                      "help": "The route nexthop"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to remove the route from"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to remove the route from"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to remove the route from"
+                    },
+                    {
+                      "long": "vlan-id",
+                      "help": "The route vlan id"
+                    }
+                  ]
+                },
+                {
+                  "name": "set",
+                  "about": "Set a static route",
+                  "args": [
+                    {
+                      "long": "destination",
+                      "help": "The route destination"
+                    },
+                    {
+                      "long": "local-pref",
+                      "help": "The route local preference"
+                    },
+                    {
+                      "long": "nexthop",
+                      "help": "The route nexthop"
+                    },
+                    {
+                      "long": "port",
+                      "values": [
+                        "qsfp0",
+                        "qsfp1",
+                        "qsfp2",
+                        "qsfp3",
+                        "qsfp4",
+                        "qsfp5",
+                        "qsfp6",
+                        "qsfp7",
+                        "qsfp8",
+                        "qsfp9",
+                        "qsfp10",
+                        "qsfp11",
+                        "qsfp12",
+                        "qsfp13",
+                        "qsfp14",
+                        "qsfp15",
+                        "qsfp16",
+                        "qsfp17",
+                        "qsfp18",
+                        "qsfp19",
+                        "qsfp20",
+                        "qsfp21",
+                        "qsfp22",
+                        "qsfp23",
+                        "qsfp24",
+                        "qsfp25",
+                        "qsfp26",
+                        "qsfp27",
+                        "qsfp28",
+                        "qsfp29",
+                        "qsfp30",
+                        "qsfp31"
+                      ],
+                      "help": "Port to configure the route on"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands"
+                    },
+                    {
+                      "long": "rack",
+                      "help": "Id of the rack to configure the route on"
+                    },
+                    {
+                      "long": "switch",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "Switch to configure the route on"
+                    },
+                    {
+                      "long": "vlan-id",
+                      "help": "The route vlan id"
                     }
                   ]
                 }

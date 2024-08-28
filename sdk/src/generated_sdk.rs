@@ -17645,6 +17645,16 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
+    ///    "local_pref": {
+    ///      "description": "Local preference for route. Higher preference
+    /// indictes precedence within and across protocols.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
     ///    "vid": {
     ///      "description": "VLAN id the gateway is reachable over.",
     ///      "type": [
@@ -17666,6 +17676,10 @@ pub mod types {
         pub dst: IpNet,
         /// The route gateway.
         pub gw: std::net::IpAddr,
+        /// Local preference for route. Higher preference indictes precedence
+        /// within and across protocols.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local_pref: Option<u32>,
         /// VLAN id the gateway is reachable over.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub vid: Option<u16>,
@@ -22524,6 +22538,16 @@ pub mod types {
     /// assigned to.",
     ///      "type": "string"
     ///    },
+    ///    "local_pref": {
+    ///      "description": "Local preference indicating priority within and
+    /// across protocols.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this route configuration
     /// belongs to.",
@@ -22554,6 +22578,9 @@ pub mod types {
         pub gw: IpNet,
         /// The interface name this route configuration is assigned to.
         pub interface_name: String,
+        /// Local preference indicating priority within and across protocols.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local_pref: Option<u32>,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: uuid::Uuid,
         /// The VLAN identifier for the route. Use this if the gateway is
@@ -38838,6 +38865,7 @@ pub mod types {
         pub struct Route {
             dst: Result<super::IpNet, String>,
             gw: Result<std::net::IpAddr, String>,
+            local_pref: Result<Option<u32>, String>,
             vid: Result<Option<u16>, String>,
         }
 
@@ -38846,6 +38874,7 @@ pub mod types {
                 Self {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
+                    local_pref: Ok(Default::default()),
                     vid: Ok(Default::default()),
                 }
             }
@@ -38872,6 +38901,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
+            pub fn local_pref<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local_pref = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self
+            }
             pub fn vid<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Option<u16>>,
@@ -38890,6 +38929,7 @@ pub mod types {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
+                    local_pref: value.local_pref?,
                     vid: value.vid?,
                 })
             }
@@ -38900,6 +38940,7 @@ pub mod types {
                 Self {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
+                    local_pref: Ok(value.local_pref),
                     vid: Ok(value.vid),
                 }
             }
@@ -42829,6 +42870,7 @@ pub mod types {
             dst: Result<super::IpNet, String>,
             gw: Result<super::IpNet, String>,
             interface_name: Result<String, String>,
+            local_pref: Result<Option<u32>, String>,
             port_settings_id: Result<uuid::Uuid, String>,
             vlan_id: Result<Option<u16>, String>,
         }
@@ -42839,6 +42881,7 @@ pub mod types {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
+                    local_pref: Ok(Default::default()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
                     vlan_id: Ok(Default::default()),
                 }
@@ -42876,6 +42919,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn local_pref<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local_pref = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self
+            }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -42910,6 +42963,7 @@ pub mod types {
                     dst: value.dst?,
                     gw: value.gw?,
                     interface_name: value.interface_name?,
+                    local_pref: value.local_pref?,
                     port_settings_id: value.port_settings_id?,
                     vlan_id: value.vlan_id?,
                 })
@@ -42922,6 +42976,7 @@ pub mod types {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
                     interface_name: Ok(value.interface_name),
+                    local_pref: Ok(value.local_pref),
                     port_settings_id: Ok(value.port_settings_id),
                     vlan_id: Ok(value.vlan_id),
                 }

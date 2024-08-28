@@ -91,6 +91,9 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_net::CmdBgpAnnounce>("system networking bgp announce")
         .add_custom::<cmd_net::CmdBgpWithdraw>("system networking bgp withdraw")
         .add_custom::<cmd_net::CmdBgpFilter>("system networking bgp filter")
+        .add_custom::<cmd_net::CmdBgpAuth>("system networking bgp auth")
+        .add_custom::<cmd_net::CmdBgpLocalPref>("system networking bgp pref")
+        .add_custom::<cmd_net::CmdStaticRoute>("system networking route")
 }
 
 #[tokio::main]
