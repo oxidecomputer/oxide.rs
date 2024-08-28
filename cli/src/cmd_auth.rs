@@ -261,11 +261,14 @@ impl CmdAuthLogin {
 
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
-        // identity of the authenticated user.
+        // identity of the authenticated user. We clone the existing configuration
+        // here to ensure that any command level configuration provided by the
+        // user is maintained
         let client = Client::new_authenticated_config(
-            &ClientConfig::default().with_host_and_token(host, &token),
-        )
-        .unwrap();
+            &ctx.client_config()
+                .clone()
+                .with_host_and_token(host, &token),
+        )?;
 
         let user = client.current_user_view().send().await?.into_inner();
 
