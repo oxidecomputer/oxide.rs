@@ -6,7 +6,7 @@
 
 use std::{collections::HashMap, net::IpAddr};
 
-use crate::AuthenticatedCmd;
+use crate::{eprintln_nopipe, AuthenticatedCmd};
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
@@ -54,7 +54,7 @@ impl AuthenticatedCmd for CmdLink {
     async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
             LinkSubCommand::Add(cmd) => cmd.run(client).await,
-            LinkSubCommand::Del(cmd) => cmd.run(client).await,
+            LinkSubCommand::Delete(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -65,7 +65,7 @@ enum LinkSubCommand {
     Add(CmdLinkAdd),
 
     /// Remove a link from a port.
-    Del(CmdLinkDel),
+    Delete(CmdLinkDel),
 }
 
 /// Add a link to a switch port.
@@ -95,7 +95,7 @@ pub struct CmdLinkAdd {
 
     /// The forward error correction mode of the link.
     #[arg(long, value_enum)]
-    pub fec: LinkFec,
+    pub fec: CliLinkFec,
 
     /// Maximum transmission unit for the link.
     #[arg(long, default_value_t = 1500u16)]
@@ -103,7 +103,7 @@ pub struct CmdLinkAdd {
 
     /// The speed of the link.
     #[arg(long, value_enum)]
-    pub speed: LinkSpeed,
+    pub speed: CliLinkSpeed,
 }
 
 #[async_trait]
@@ -113,9 +113,9 @@ impl AuthenticatedCmd for CmdLinkAdd {
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
-            fec: self.fec,
+            fec: self.fec.into(),
             mtu: self.mtu,
-            speed: self.speed,
+            speed: self.speed.into(),
             //TODO not fully plumbed on the back end yet.
             lldp: LldpServiceConfigCreate {
                 enabled: false,
@@ -146,7 +146,7 @@ impl AuthenticatedCmd for CmdLinkAdd {
 /// corresponding port settings.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "del")]
+#[command(name = "delete")]
 pub struct CmdLinkDel {
     /// Id of the rack to remove the link from.
     #[arg(long)]
@@ -195,6 +195,8 @@ impl AuthenticatedCmd for CmdBgp {
             BgpSubCommand::Announce(cmd) => cmd.run(client).await,
             BgpSubCommand::Withdraw(cmd) => cmd.run(client).await,
             BgpSubCommand::Filter(cmd) => cmd.run(client).await,
+            BgpSubCommand::Auth(cmd) => cmd.run(client).await,
+            BgpSubCommand::LocalPref(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -216,6 +218,12 @@ enum BgpSubCommand {
 
     /// Set a filtering specification for a peer.
     Filter(CmdBgpFilter),
+
+    /// Set an authentication string.
+    Auth(CmdBgpAuth),
+
+    /// Set a local preference for a peer.
+    LocalPref(CmdBgpLocalPref),
 }
 
 /// Announce a prefix over BGP.
@@ -311,7 +319,13 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
             })
             .collect();
 
+        let before = current.len();
         current.retain(|x| x.network.to_string() != self.prefix.to_string());
+        let after = current.len();
+        if before == after {
+            eprintln_nopipe!("no originated prefixes match the provided args");
+            return Ok(());
+        }
 
         client
             .networking_bgp_announce_set_update()
@@ -345,15 +359,15 @@ enum FilterDirection {
 #[command(verbatim_doc_comment)]
 #[command(name = "filter")]
 pub struct CmdBgpFilter {
-    /// Id of the rack to add the address to.
+    /// Id of the rack to add the filter to.
     #[arg(long)]
     rack: Uuid,
 
-    /// Switch to add the address to.
+    /// Switch to add the filter to.
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to add the port to.
+    /// Port to add the filter to.
     #[arg(long, value_enum)]
     port: Port,
 
@@ -420,6 +434,310 @@ impl AuthenticatedCmd for CmdBgpFilter {
     }
 }
 
+/// Set an authentication string.
+///
+/// This command sets the authentication string that the specified BGP session
+/// will use for establishing a TCP-MD5 authenticated connection with its peer.
+/// This command works by performing a read-modify-write on the switch port
+/// settings configuration identified by the specified rack/switch/port.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "auth")]
+pub struct CmdBgpAuth {
+    /// Id of the rack to add the auth config to.
+    #[arg(long)]
+    rack: Uuid,
+
+    /// Switch to add the auth config to.
+    #[arg(long, value_enum)]
+    switch: Switch,
+
+    /// Port to add the auth config to.
+    #[arg(long, value_enum)]
+    port: Port,
+
+    /// Peer to add the auth config to.
+    #[arg(long)]
+    peer: IpAddr,
+
+    /// Use the given authorization string for TCP-MD5 authentication with the peer.
+    #[clap(long)]
+    authstring: Option<String>,
+}
+
+#[async_trait]
+impl AuthenticatedCmd for CmdBgpAuth {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+        match settings.bgp_peers.get_mut(PHY0) {
+            None => return Err(anyhow::anyhow!("no BGP peers configured")),
+            Some(config) => {
+                let peer = config
+                    .peers
+                    .iter_mut()
+                    .find(|x| x.addr == self.peer)
+                    .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
+
+                peer.md5_auth_key = self.authstring.clone();
+            }
+        }
+        client
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+/// Set a local preference for a peer.
+///
+/// This command associates a local preference for the specified peer. When
+/// routes are imported by this peer, they will be installed into the routing
+/// information base (RIB) with the specified preference. This command works
+/// by performing a read-modify-write on the switch port settings configuration
+/// identified by the specified rack/switch/port.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "pref")]
+pub struct CmdBgpLocalPref {
+    /// Id of the rack to set the route preference on.
+    #[arg(long)]
+    rack: Uuid,
+
+    /// Switch to set the route preference on.
+    #[arg(long, value_enum)]
+    switch: Switch,
+
+    /// Port to set the route preference on.
+    #[arg(long, value_enum)]
+    port: Port,
+
+    /// Peer to set the route preference on.
+    #[arg(long)]
+    peer: IpAddr,
+
+    /// Apply this local preference to routes received from the peer.
+    #[clap(long)]
+    local_pref: Option<u32>,
+}
+
+#[async_trait]
+impl AuthenticatedCmd for CmdBgpLocalPref {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+        match settings.bgp_peers.get_mut(PHY0) {
+            None => return Err(anyhow::anyhow!("no BGP peers configured")),
+            Some(config) => {
+                let peer = config
+                    .peers
+                    .iter_mut()
+                    .find(|x| x.addr == self.peer)
+                    .ok_or(anyhow::anyhow!("specified peer does not exist"))?;
+
+                peer.local_pref = self.local_pref
+            }
+        }
+        client
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+/// Manage static switch routes.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "route")]
+pub struct CmdStaticRoute {
+    #[clap(subcommand)]
+    subcommand: RouteSubCommand,
+}
+
+#[async_trait]
+impl AuthenticatedCmd for CmdStaticRoute {
+    async fn run(&self, client: &Client) -> Result<()> {
+        match &self.subcommand {
+            RouteSubCommand::Set(cmd) => cmd.run(client).await,
+            RouteSubCommand::Delete(cmd) => cmd.run(client).await,
+        }
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+enum RouteSubCommand {
+    /// Set a static route.
+    Set(CmdStaticRouteSet),
+    /// Delete a static route.
+    Delete(CmdStaticRouteDelete),
+}
+
+/// Set a static route.
+///
+/// This command sets a static route. If a route with the specified destination,
+/// nexthop, and vlan_id already exists the route will be updated. Otherwise
+/// a new route will be created. This command works by performing a
+/// read-modify-write on the switch port settings configuration identified by
+/// the specified rack/switch/port.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "route set")]
+pub struct CmdStaticRouteSet {
+    /// Id of the rack to configure the route on.
+    #[arg(long)]
+    rack: Uuid,
+
+    /// Switch to configure the route on.
+    #[arg(long, value_enum)]
+    switch: Switch,
+
+    /// Port to configure the route on.
+    #[arg(long, value_enum)]
+    port: Port,
+
+    /// The route destination.
+    #[clap(long)]
+    destination: IpNet,
+
+    /// The route nexthop
+    #[clap(long)]
+    nexthop: IpAddr,
+
+    /// The route vlan id
+    #[clap(long)]
+    vlan_id: Option<u16>,
+
+    /// The route local preference
+    #[clap(long)]
+    local_pref: Option<u32>,
+}
+
+#[async_trait]
+impl AuthenticatedCmd for CmdStaticRouteSet {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+
+        match settings.routes.get_mut(PHY0) {
+            None => {
+                settings.routes.insert(
+                    PHY0.to_owned(),
+                    RouteConfig {
+                        routes: vec![Route {
+                            dst: self.destination.clone(),
+                            gw: self.nexthop,
+                            local_pref: self.local_pref,
+                            vid: self.vlan_id,
+                        }],
+                    },
+                );
+            }
+            Some(config) => {
+                let exists = config.routes.iter_mut().find(|x| {
+                    x.dst.to_string() == self.destination.to_string()
+                        && x.gw == self.nexthop
+                        && x.vid == self.vlan_id
+                });
+                match exists {
+                    Some(route) => {
+                        *route = Route {
+                            dst: self.destination.clone(),
+                            gw: self.nexthop,
+                            local_pref: self.local_pref,
+                            vid: self.vlan_id,
+                        };
+                    }
+                    None => {
+                        config.routes.push(Route {
+                            dst: self.destination.clone(),
+                            gw: self.nexthop,
+                            local_pref: self.local_pref,
+                            vid: self.vlan_id,
+                        });
+                    }
+                }
+            }
+        }
+
+        client
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+/// Delete a static route.
+///
+/// This command removes a static route from a port configuration. This
+/// command works by performing a read-modify-write on the switch port settings
+/// configuration identified by the specified rack/switch/port.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "route delete")]
+pub struct CmdStaticRouteDelete {
+    /// Id of the rack to remove the route from.
+    #[arg(long)]
+    rack: Uuid,
+
+    /// Switch to remove the route from.
+    #[arg(long, value_enum)]
+    switch: Switch,
+
+    /// Port to remove the route from.
+    #[arg(long, value_enum)]
+    port: Port,
+
+    /// The route destination.
+    #[clap(long)]
+    destination: IpNet,
+
+    /// The route nexthop
+    #[clap(long)]
+    nexthop: IpAddr,
+
+    /// The route vlan id
+    #[clap(long)]
+    vlan_id: Option<u16>,
+}
+
+#[async_trait]
+impl AuthenticatedCmd for CmdStaticRouteDelete {
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut settings =
+            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+
+        match settings.routes.get_mut(PHY0) {
+            None => {}
+            Some(config) => {
+                let before = config.routes.len();
+                config.routes.retain(|x| {
+                    !(x.dst.to_string() == self.destination.to_string()
+                        && x.gw == self.nexthop
+                        && x.vid == self.vlan_id)
+                });
+                let after = config.routes.len();
+                if before == after {
+                    eprintln_nopipe!("no routes match the provided args");
+                    return Ok(());
+                }
+            }
+        }
+
+        client
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
 /// Manage switch port addresses.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -434,7 +752,7 @@ impl AuthenticatedCmd for CmdAddr {
     async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
             AddrSubCommand::Add(cmd) => cmd.run(client).await,
-            AddrSubCommand::Del(cmd) => cmd.run(client).await,
+            AddrSubCommand::Delete(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -445,7 +763,7 @@ enum AddrSubCommand {
     Add(CmdAddrAdd),
 
     /// Remove an address from a port configuration.
-    Del(CmdAddrDel),
+    Delete(CmdAddrDel),
 }
 
 /// Add an address to a switch port.
@@ -465,7 +783,7 @@ pub struct CmdAddrAdd {
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to add the port to.
+    /// Port to add the address to.
     #[arg(long, value_enum)]
     port: Port,
 
@@ -521,7 +839,7 @@ impl AuthenticatedCmd for CmdAddrAdd {
 /// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "del")]
+#[command(name = "delete")]
 pub struct CmdAddrDel {
     /// Id of the rack to remove the address from.
     #[arg(long)]
@@ -546,9 +864,15 @@ impl AuthenticatedCmd for CmdAddrDel {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         if let Some(addrs) = settings.addresses.get_mut(PHY0) {
+            let before = addrs.addresses.len();
             addrs
                 .addresses
                 .retain(|x| x.address.to_string() != self.addr.to_string());
+            let after = addrs.addresses.len();
+            if before == after {
+                eprintln_nopipe!("no addresses match the provided args");
+                return Ok(());
+            }
         }
         client
             .networking_switch_port_settings_create()
@@ -588,9 +912,9 @@ enum BgpConfigSubCommand {
 
 /// Manage BGP peers.
 ///
-/// This command provides add and delete subcommands for managing BGP peers.
+/// This command provides set and delete subcommands for managing BGP peers.
 /// BGP peer configuration is a part of a switch port settings configuration.
-/// The peer add and remove subcommands perform read-modify-write operations
+/// The peer set and delete subcommands perform read-modify-write operations
 /// on switch port settings objects to manage BGP peer configurations.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -604,42 +928,42 @@ pub struct CmdBgpPeer {
 impl AuthenticatedCmd for CmdBgpPeer {
     async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            BgpConfigPeerSubCommand::Add(cmd) => cmd.run(client).await,
-            BgpConfigPeerSubCommand::Del(cmd) => cmd.run(client).await,
+            BgpConfigPeerSubCommand::Set(cmd) => cmd.run(client).await,
+            BgpConfigPeerSubCommand::Delete(cmd) => cmd.run(client).await,
         }
     }
 }
 
 #[derive(Parser, Debug, Clone)]
 enum BgpConfigPeerSubCommand {
-    /// Add a BGP peer to a port configuration.
-    Add(CmdBgpPeerAdd),
+    /// Set a BGP peer on a port configuration.
+    Set(CmdBgpPeerSet),
 
     /// Remove a BGP from a port configuration.
-    Del(CmdBgpPeerDel),
+    Delete(CmdBgpPeerDel),
 }
 
-/// Add a BGP peer to a given switch port configuration.
+/// Set a BGP peer configuration.
 ///
 /// This performs a read-modify-write on the specified switch port
 /// configuration.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "add")]
-pub struct CmdBgpPeerAdd {
-    /// Id of the rack to add the peer to.
+#[command(name = "set")]
+pub struct CmdBgpPeerSet {
+    /// Id of the rack to set the peer config on.
     #[arg(long)]
     rack: Uuid,
 
-    /// Switch to add the peer to.
+    /// Switch to set the peer config on.
     #[arg(long, value_enum)]
     switch: Switch,
 
-    /// Port to add the peer to.
+    /// Port to set the peer config on.
     #[arg(long, value_enum)]
     port: Port,
 
-    /// Address of the peer to add.
+    /// Address of the peer to set the config for.
     #[arg(long)]
     addr: IpAddr,
 
@@ -647,7 +971,7 @@ pub struct CmdBgpPeerAdd {
     #[arg(long)]
     bgp_config: NameOrId,
 
-    /// Prefixes that may be imported form the peer. Empty list means all prefixes
+    /// Prefixes that may be imported from the peer. Empty list means all prefixes
     /// allowed.
     #[arg(long)]
     allowed_imports: Vec<oxnet::IpNet>,
@@ -661,7 +985,7 @@ pub struct CmdBgpPeerAdd {
     #[arg(long)]
     communities: Vec<u32>,
 
-    /// How long to to wait between TCP connection retries (seconds).
+    /// How long to wait between TCP connection retries (seconds).
     #[clap(long, default_value_t = 0u32)]
     pub connect_retry: u32,
 
@@ -688,13 +1012,13 @@ pub struct CmdBgpPeerAdd {
     #[clap(long, default_value_t = 0u32)]
     pub idle_hold_time: u32,
 
-    /// Apply a local preference to routes received from this peer.
+    /// Apply this local preference to routes received from the peer.
     #[arg(long)]
     pub local_pref: Option<u32>,
 
-    /// Use the given key for TCP-MD5 authentication with the peer.
+    /// Use the given authorization string for TCP-MD5 authentication with the peer.
     #[arg(long)]
-    pub md5_auth_key: Option<String>,
+    pub authstring: Option<String>,
 
     /// Require messages from a peer have a minimum IP time to live field.
     #[arg(long)]
@@ -715,7 +1039,7 @@ pub struct CmdBgpPeerAdd {
 }
 
 #[async_trait]
-impl AuthenticatedCmd for CmdBgpPeerAdd {
+impl AuthenticatedCmd for CmdBgpPeerSet {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
@@ -753,16 +1077,17 @@ impl AuthenticatedCmd for CmdBgpPeerAdd {
             interface_name: PHY0.to_owned(),
             keepalive: self.keepalive,
             local_pref: self.local_pref,
-            md5_auth_key: self.md5_auth_key.clone(),
+            md5_auth_key: self.authstring.clone(),
             min_ttl: self.min_ttl,
             multi_exit_discriminator: self.multi_exit_discriminator,
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
         };
         match settings.bgp_peers.get_mut(PHY0) {
-            Some(conf) => {
-                conf.peers.push(peer);
-            }
+            Some(conf) => match conf.peers.iter_mut().find(|x| x.addr == peer.addr) {
+                Some(p) => *p = peer,
+                None => conf.peers.push(peer),
+            },
             None => {
                 settings
                     .bgp_peers
@@ -784,7 +1109,7 @@ impl AuthenticatedCmd for CmdBgpPeerAdd {
 /// configuration.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(name = "del")]
+#[command(name = "delete")]
 pub struct CmdBgpPeerDel {
     /// Id of the rack to remove the peer from.
     #[arg(long)]
@@ -809,7 +1134,13 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         if let Some(config) = settings.bgp_peers.get_mut(PHY0) {
+            let before = config.peers.len();
             config.peers.retain(|x| x.addr != self.addr);
+            let after = config.peers.len();
+            if before == after {
+                eprintln_nopipe!("no peers match the provided address");
+                return Ok(());
+            }
         }
         client
             .networking_switch_port_settings_create()
@@ -981,11 +1312,33 @@ impl AuthenticatedCmd for CmdPortConfig {
                         p.idle_hold_time,
                         p.keepalive,
                         p.local_pref,
-                        p.md5_auth_key,
+                        p.md5_auth_key.as_ref().map(|x| format!("{:x}", md5::compute(x))),
                         p.min_ttl,
                         p.multi_exit_discriminator,
                         p.remote_asn,
                         p.vlan_id,
+                    )?;
+                }
+                tw.flush()?;
+                println_nopipe!();
+
+                writeln!(
+                    &mut tw,
+                    "{}\t{}\t{}\t{}",
+                    "Destination".dimmed(),
+                    "Nexthop".dimmed(),
+                    "Vlan".dimmed(),
+                    "Preference".dimmed(),
+                )?;
+
+                for r in &config.routes {
+                    writeln!(
+                        &mut tw,
+                        "{}\t{}\t{}\t{}",
+                        r.dst.to_string(),
+                        r.gw.to_string(),
+                        r.vlan_id.unwrap_or(0),
+                        r.local_pref.unwrap_or(0),
                     )?;
                 }
                 tw.flush()?;
@@ -1375,10 +1728,14 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         routes: current
             .routes
             .iter()
-            .map(|x| Route {
-                dst: x.dst.clone(),
-                gw: x.gw.to_string().parse().unwrap(),
-                vid: x.vlan_id,
+            .map(|x| {
+                let gw: oxnet::IpNet = x.gw.to_string().parse().unwrap();
+                Route {
+                    dst: x.dst.clone(),
+                    gw: gw.addr(),
+                    vid: x.vlan_id,
+                    local_pref: x.local_pref,
+                }
             })
             .collect(),
     };
@@ -1506,4 +1863,73 @@ async fn current_port_settings(
     let id = get_port_settings_id(client, rack_id, switch, port).await?;
     let settings = create_current(id, client).await?;
     Ok(settings)
+}
+
+/// Link forward error correction setting.
+#[derive(clap::ValueEnum, Clone, Copy, Debug)]
+pub enum CliLinkFec {
+    /// Firecode forward error correction.
+    Firecode,
+    /// No forward error correction.
+    None,
+    /// Reed-Solomon forward error correction.
+    Rs,
+}
+
+impl From<CliLinkFec> for LinkFec {
+    fn from(value: CliLinkFec) -> Self {
+        match value {
+            CliLinkFec::Firecode => LinkFec::Firecode,
+            CliLinkFec::None => LinkFec::None,
+            CliLinkFec::Rs => LinkFec::Rs,
+        }
+    }
+}
+
+/// Link speed.
+#[derive(clap::ValueEnum, Clone, Copy, Debug)]
+pub enum CliLinkSpeed {
+    /// Zero gigabits per second.
+    #[clap(name = "0g")]
+    Speed0G,
+    /// 1 gigabit per second.
+    #[clap(name = "1g")]
+    Speed1G,
+    /// 10 gigabits per second.
+    #[clap(name = "10g")]
+    Speed10G,
+    /// 25 gigabits per second.
+    #[clap(name = "25g")]
+    Speed25G,
+    /// 40 gigabits per second.
+    #[clap(name = "40g")]
+    Speed40G,
+    /// 50 gigabits per second.
+    #[clap(name = "50g")]
+    Speed50G,
+    /// 100 gigabits per second.
+    #[clap(name = "100g")]
+    Speed100G,
+    /// 200 gigabits per second.
+    #[clap(name = "200g")]
+    Speed200G,
+    /// 400 gigabits per second.
+    #[clap(name = "400g")]
+    Speed400G,
+}
+
+impl From<CliLinkSpeed> for LinkSpeed {
+    fn from(value: CliLinkSpeed) -> Self {
+        match value {
+            CliLinkSpeed::Speed0G => LinkSpeed::Speed0G,
+            CliLinkSpeed::Speed1G => LinkSpeed::Speed1G,
+            CliLinkSpeed::Speed10G => LinkSpeed::Speed10G,
+            CliLinkSpeed::Speed25G => LinkSpeed::Speed25G,
+            CliLinkSpeed::Speed40G => LinkSpeed::Speed40G,
+            CliLinkSpeed::Speed50G => LinkSpeed::Speed50G,
+            CliLinkSpeed::Speed100G => LinkSpeed::Speed100G,
+            CliLinkSpeed::Speed200G => LinkSpeed::Speed200G,
+            CliLinkSpeed::Speed400G => LinkSpeed::Speed400G,
+        }
+    }
 }

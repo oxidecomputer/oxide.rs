@@ -11,7 +11,8 @@ use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
     BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, NameOrId,
     SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
-    SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortSettings, SwitchPortSettingsView,
+    SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings,
+    SwitchPortSettingsView,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -175,7 +176,14 @@ fn test_port_config() {
             geometry: SwitchPortGeometry2::Qsfp28x1,
             port_settings_id: switch1_qsfp0_settings_id,
         },
-        routes: Vec::new(),
+        routes: vec![SwitchPortRouteConfig {
+            dst: "1.2.3.0/24".parse().unwrap(),
+            gw: "1.2.3.4/32".parse().unwrap(),
+            interface_name: "qsfp0".to_owned(),
+            local_pref: Some(10),
+            port_settings_id: Uuid::new_v4(),
+            vlan_id: Some(1701),
+        }],
         settings: SwitchPortSettings {
             description: String::from("default uplink 0 switch port settings"),
             id: switch1_qsfp0_settings_id,
