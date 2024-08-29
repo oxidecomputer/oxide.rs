@@ -5,7 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 use std::{
-    fs::{read_to_string, write},
+    fs::{self, read_to_string, write},
     path::Path,
 };
 
@@ -432,4 +432,108 @@ fn test_cmd_auth_status_env() {
         .success()
         .stdout(format!("{}: Error Response: oops\n", server.url("")));
     oxide_mock.assert();
+}
+
+#[test]
+fn test_cmd_auth_rename_profile() {
+    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let cred_path = temp_dir.join("credentials.toml");
+    let creds = "\
+        [profile.old-profile]\n\
+        host = \"https://oxide.internal\"\n\
+        token = \"***-***-***\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+        \n\
+        ";
+
+    write(&cred_path, creds).unwrap();
+
+    let cfg_path = temp_dir.join("config.toml");
+    let cfg = "default-profile = \"old-profile\"";
+    write(&cfg_path, cfg).unwrap();
+
+    // Validate happy path.
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(temp_dir.clone())
+        .arg("auth")
+        .arg("rename-profile")
+        .arg("old-profile")
+        .arg("new-profile")
+        .assert()
+        .success()
+        .stdout("Renamed profile \"old-profile\" to \"new-profile\"\n");
+
+    assert_contents(
+        "tests/data/test_cmd_auth_rename_profile_renamed_credentials.toml",
+        &read_to_string(&cred_path).unwrap(),
+    );
+    assert_eq!(
+        "default-profile = \"new-profile\"\n",
+        fs::read_to_string(&cfg_path).unwrap(),
+    );
+
+    // Reset `credentials.toml` content to original value.
+    write(&cred_path, creds).unwrap();
+
+    let non_renamed_cfg = "default-profile = \"other-profile\"\n";
+    write(&cfg_path, non_renamed_cfg).unwrap();
+
+    // Validate `config.toml` is not updated if profile being renamed is not the default.
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(temp_dir.clone())
+        .arg("auth")
+        .arg("rename-profile")
+        .arg("old-profile")
+        .arg("new-profile")
+        .assert()
+        .success()
+        .stdout("Renamed profile \"old-profile\" to \"new-profile\"\n");
+
+    assert_eq!(
+        "default-profile = \"other-profile\"\n",
+        fs::read_to_string(&cfg_path).unwrap(),
+    );
+
+    // Validate failure when profile does not exist.
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(temp_dir.clone())
+        .arg("auth")
+        .arg("rename-profile")
+        .arg("non-existent-profile")
+        .arg("other-profile")
+        .assert()
+        .failure()
+        .stderr(format!(
+            "No profile named \"non-existent-profile\" found in {}/credentials.toml\n",
+            temp_dir.display()
+        ));
+
+    let cfg_only_temp_dir = tempfile::tempdir().unwrap().into_path();
+    let cfg_path = cfg_only_temp_dir.join("config.toml");
+    let cfg = "default-profile = \"old-profile\"";
+    write(&cfg_path, cfg).unwrap();
+
+    // Validate `config.toml` is rewritten when `credentials.toml` does not exist.
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(cfg_only_temp_dir.clone())
+        .arg("auth")
+        .arg("rename-profile")
+        .arg("old-profile")
+        .arg("new-profile")
+        .assert()
+        .success()
+        .stdout("Renamed profile \"old-profile\" to \"new-profile\"\n");
+
+    assert_eq!(
+        "default-profile = \"new-profile\"\n",
+        fs::read_to_string(&cfg_path).unwrap(),
+    );
 }

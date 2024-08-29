@@ -147,6 +147,26 @@
           ]
         },
         {
+          "name": "rename-profile",
+          "about": "Rename a profile.",
+          "long_about": "Rename a profile.\n\nThis command does not modify the profile credentials. If\nthe profile being renamed is your `default-profile` that\nwill be updated as well.",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "name": "current_profile_name",
+              "help": "The current name of the profile to be renamed"
+            },
+            {
+              "name": "new_profile_name",
+              "help": "The new name of the profile to be renamed"
+            }
+          ]
+        },
+        {
           "name": "status",
           "about": "Verifies and displays information about your authentication state.",
           "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration.",

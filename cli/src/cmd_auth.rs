@@ -7,7 +7,7 @@
 use std::fs::File;
 use std::io::{self, Write};
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{anyhow, bail, Context as _, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
@@ -17,6 +17,7 @@ use oauth2::{
 };
 use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientSessionExt};
+use std::path::Path;
 use std::time::Duration;
 use toml_edit::{Item, Table};
 use uuid::Uuid;
@@ -39,6 +40,7 @@ pub struct CmdAuth {
 enum SubCommand {
     Login(CmdAuthLogin),
     Logout(CmdAuthLogout),
+    RenameProfile(CmdAuthRenameProfile),
     Status(CmdAuthStatus),
 }
 
@@ -48,6 +50,7 @@ impl RunnableCmd for CmdAuth {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.login(ctx).await,
             SubCommand::Logout(cmd) => cmd.logout(ctx).await,
+            SubCommand::RenameProfile(cmd) => cmd.rename_profile(ctx).await,
             SubCommand::Status(cmd) => cmd.status(ctx).await,
         }
     }
@@ -334,14 +337,7 @@ impl CmdAuthLogin {
         profile.insert("token", toml_edit::value(token));
         profile.insert("user", toml_edit::value(uid.to_string()));
 
-        std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
-            panic!(
-                "unable to create config directory '{}'",
-                config_dir.to_string_lossy()
-            )
-        });
-        std::fs::write(credentials_path, credentials.to_string())
-            .expect("unable to write credentials.toml");
+        write_configuration_file(&credentials_path, &credentials.to_string())?;
 
         // If there is no default profile then we'll set this new profile to be
         // the default.
@@ -428,19 +424,7 @@ impl CmdAuthLogout {
                 let profiles = profiles.as_table_mut().unwrap();
                 profiles.remove(profile_name);
             }
-            std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
-                panic!(
-                    "unable to create config directory '{}'",
-                    config_dir.to_string_lossy()
-                )
-            });
-            std::fs::write(credentials_path, credentials.to_string())
-                .expect("unable to write credentials.toml");
-            writeln!(
-                io::stdout(),
-                "Removed authentication information for profile \"{}\"",
-                profile_name,
-            )?;
+            write_configuration_file(&credentials_path, &credentials.to_string())?;
         }
 
         Ok(())
@@ -533,6 +517,81 @@ impl CmdAuthStatus {
             ee => ee.to_string(),
         }
     }
+}
+
+/// Rename a profile.
+///
+/// This command does not modify the profile credentials. If
+/// the profile being renamed is your `default-profile` that
+/// will be updated as well.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+pub struct CmdAuthRenameProfile {
+    /// The current name of the profile to be renamed.
+    current_profile_name: String,
+
+    /// The new name of the profile to be renamed.
+    new_profile_name: String,
+}
+
+impl CmdAuthRenameProfile {
+    pub async fn rename_profile(&self, ctx: &Context) -> Result<()> {
+        let config_dir = ctx.client_config().config_dir();
+        let credentials_path = config_dir.join("credentials.toml");
+        if let Ok(credentials_contents) = std::fs::read_to_string(&credentials_path) {
+            let mut credentials = credentials_contents
+                .parse::<toml_edit::DocumentMut>()
+                .unwrap();
+            if let Some(profiles) = credentials.get_mut("profile") {
+                let profiles = profiles.as_table_mut().unwrap();
+                let Some(profile) = profiles.remove(&self.current_profile_name) else {
+                    bail!(
+                        "No profile named \"{}\" found in {}",
+                        self.current_profile_name,
+                        credentials_path.display()
+                    );
+                };
+                profiles.insert(&self.new_profile_name, profile);
+            }
+
+            write_configuration_file(&credentials_path, &credentials.to_string())?;
+        };
+
+        let config_path = config_dir.join("config.toml");
+        if let Ok(config_contents) = std::fs::read_to_string(&config_path) {
+            let mut config = config_contents.parse::<toml_edit::DocumentMut>()?;
+
+            if let Some(old_default) = config.remove("default-profile") {
+                if Some(self.current_profile_name.as_str()) == old_default.as_str() {
+                    config.insert(
+                        "default-profile",
+                        Item::Value(self.new_profile_name.clone().into()),
+                    );
+                    write_configuration_file(&config_path, &config.to_string())?;
+                }
+            }
+        }
+
+        writeln!(
+            io::stdout(),
+            "Renamed profile \"{}\" to \"{}\"",
+            self.current_profile_name,
+            self.new_profile_name,
+        )?;
+        Ok(())
+    }
+}
+
+fn write_configuration_file(cfg_path: &Path, contents: &str) -> Result<()> {
+    let Some(cfg_dir) = cfg_path.parent() else {
+        bail!("no parent directory for config file {}", cfg_path.display());
+    };
+
+    std::fs::create_dir_all(cfg_dir)
+        .with_context(|| format!("creating config directory \"{}\"", cfg_dir.display()))?;
+    std::fs::write(cfg_path, contents)
+        .with_context(|| format!("writing configuration to \"{}\"", cfg_path.display()))?;
+    Ok(())
 }
 
 #[cfg(test)]
