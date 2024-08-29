@@ -152,6 +152,12 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
+            CliCommand::NetworkingAddressLotBlockAdd => {
+                Self::cli_networking_address_lot_block_add()
+            }
+            CliCommand::NetworkingAddressLotBlockRemove => {
+                Self::cli_networking_address_lot_block_remove()
+            }
             CliCommand::NetworkingAllowListView => Self::cli_networking_allow_list_view(),
             CliCommand::NetworkingAllowListUpdate => Self::cli_networking_allow_list_update(),
             CliCommand::NetworkingBfdDisable => Self::cli_networking_bfd_disable(),
@@ -187,17 +193,62 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingLoopbackAddressDelete => {
                 Self::cli_networking_loopback_address_delete()
             }
-            CliCommand::NetworkingSwitchPortSettingsList => {
-                Self::cli_networking_switch_port_settings_list()
+            CliCommand::NetworkingSwitchPortConfigurationList => {
+                Self::cli_networking_switch_port_configuration_list()
             }
-            CliCommand::NetworkingSwitchPortSettingsCreate => {
-                Self::cli_networking_switch_port_settings_create()
+            CliCommand::NetworkingSwitchPortConfigurationCreate => {
+                Self::cli_networking_switch_port_configuration_create()
             }
-            CliCommand::NetworkingSwitchPortSettingsDelete => {
-                Self::cli_networking_switch_port_settings_delete()
+            CliCommand::NetworkingSwitchPortConfigurationDelete => {
+                Self::cli_networking_switch_port_configuration_delete()
             }
-            CliCommand::NetworkingSwitchPortSettingsView => {
-                Self::cli_networking_switch_port_settings_view()
+            CliCommand::NetworkingSwitchPortConfigurationView => {
+                Self::cli_networking_switch_port_configuration_view()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationGeometryView => {
+                Self::cli_networking_switch_port_configuration_geometry_view()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationGeometrySet => {
+                Self::cli_networking_switch_port_configuration_geometry_set()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressList => {
+                Self::cli_networking_switch_port_configuration_interface_address_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressAdd => {
+                Self::cli_networking_switch_port_configuration_interface_address_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressRemove => {
+                Self::cli_networking_switch_port_configuration_interface_address_remove()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerList => {
+                Self::cli_networking_switch_port_configuration_interface_bgp_peer_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd => {
+                Self::cli_networking_switch_port_configuration_interface_bgp_peer_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove => {
+                Self::cli_networking_switch_port_configuration_interface_bgp_peer_remove()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteList => {
+                Self::cli_networking_switch_port_configuration_interface_route_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteAdd => {
+                Self::cli_networking_switch_port_configuration_interface_route_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteRemove => {
+                Self::cli_networking_switch_port_configuration_interface_route_remove()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkList => {
+                Self::cli_networking_switch_port_configuration_link_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkCreate => {
+                Self::cli_networking_switch_port_configuration_link_create()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkView => {
+                Self::cli_networking_switch_port_configuration_link_view()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkDelete => {
+                Self::cli_networking_switch_port_configuration_link_delete()
             }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
@@ -586,8 +637,7 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the certificate"),
+                    .required(true),
             )
             .about("Fetch certificate")
             .long_about("Returns the details of a specific certificate")
@@ -599,8 +649,7 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the certificate"),
+                    .required(true),
             )
             .about("Delete certificate")
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
@@ -2779,7 +2828,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("rack-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("ID of the rack"),
+                    .help("The rack's unique ID."),
             )
             .about("Fetch rack")
     }
@@ -3209,7 +3258,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal ID"),
+                    .help("The user's internal id"),
             )
             .about("Delete user")
     }
@@ -3228,7 +3277,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal ID"),
+                    .help("The user's internal id"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -3876,7 +3925,7 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -3929,6 +3978,86 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .about("List blocks in address lot")
+    }
+
+    pub fn cli_networking_address_lot_block_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the address lot"),
+            )
+            .arg(
+                clap::Arg::new("first-address")
+                    .long("first-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The first address in the lot (inclusive)."),
+            )
+            .arg(
+                clap::Arg::new("last-address")
+                    .long("last-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The last address in the lot (inclusive)."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add block to address lot")
+    }
+
+    pub fn cli_networking_address_lot_block_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the address lot"),
+            )
+            .arg(
+                clap::Arg::new("first-address")
+                    .long("first-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The first address in the lot (inclusive)."),
+            )
+            .arg(
+                clap::Arg::new("last-address")
+                    .long("last-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The last address in the lot (inclusive)."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove block from address lot")
     }
 
     pub fn cli_networking_allow_list_view() -> clap::Command {
@@ -4428,21 +4557,23 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete loopback address")
     }
 
-    pub fn cli_networking_switch_port_settings_list() -> clap::Command {
+    pub fn cli_networking_switch_port_configuration_list() -> clap::Command {
         clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "An optional name or id to use when selecting a switch port configuration.",
+                    ),
+            )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("port-settings")
-                    .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("An optional name or id to use when selecting port settings."),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -4460,7 +4591,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_create() -> clap::Command {
+    pub fn cli_networking_switch_port_configuration_create() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("description")
@@ -4491,28 +4622,832 @@ impl<T: CliConfig> Cli<T> {
             .about("Create switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_delete() -> clap::Command {
+    pub fn cli_networking_switch_port_configuration_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("port-settings")
-                    .long("port-settings")
+                clap::Arg::new("configuration")
+                    .long("configuration")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("An optional name or id to use when selecting port settings."),
+                    .help(
+                        "An optional name or id to use when selecting a switch port configuration.",
+                    ),
             )
             .about("Delete switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_view() -> clap::Command {
+    pub fn cli_networking_switch_port_configuration_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("port")
-                    .long("port")
+                clap::Arg::new("configuration")
+                    .long("configuration")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("A name or id to use when selecting switch port settings info objects."),
+                    .help("A name or id to use when selecting a switch port configuration."),
             )
-            .about("Get information about switch port")
+            .about("Get information about a named set of switch-port-settings")
+    }
+
+    pub fn cli_networking_switch_port_configuration_geometry_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .about("Get switch port geometry for a provided switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_geometry_set() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("geometry")
+                    .long("geometry")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchPortGeometry::Qsfp28x1.to_string(),
+                            types::SwitchPortGeometry::Qsfp28x2.to_string(),
+                            types::SwitchPortGeometry::Sfp28x4.to_string(),
+                        ]),
+                        |s| types::SwitchPortGeometry::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Link geometry for the switch port."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set switch port geometry for a provided switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_address_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .about("List addresses assigned to a provided interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_address_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The address and prefix length of this address."),
+            )
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("The address lot this address is drawn from."),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("vlan-id")
+                    .long("vlan-id")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("Optional VLAN ID for this address"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add address to an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_address_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The address and prefix length of this address."),
+            )
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("The address lot this address is drawn from."),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("vlan-id")
+                    .long("vlan-id")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("Optional VLAN ID for this address"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove address from an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_bgp_peer_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .about("List bgp peers assigned to a provided interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_bgp_peer_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("addr")
+                    .long("addr")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The address of the host to peer with."),
+            )
+            .arg(
+                clap::Arg::new("bgp-config")
+                    .long("bgp-config")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The global BGP configuration used for establishing a session with this \
+                         peer.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("connect-retry")
+                    .long("connect-retry")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How long to to wait between TCP connection retries (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("delay-open")
+                    .long("delay-open")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "How long to delay sending an open request after establishing a TCP \
+                         session (seconds).",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("enforce-first-as")
+                    .long("enforce-first-as")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Enforce that the first AS in paths received from this peer is the peer's \
+                         AS.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("hold-time")
+                    .long("hold-time")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How long to hold peer connections between keepalives (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("idle-hold-time")
+                    .long("idle-hold-time")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "How long to hold a peer in idle before attempting a new session \
+                         (seconds).",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("interface-name")
+                    .long("interface-name")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The name of interface to peer on. This is relative to the port \
+                         configuration this BGP peer configuration is a part of. For example this \
+                         value could be phy0 to refer to a primary physical interface. Or it \
+                         could be vlan47 to refer to a VLAN interface.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("keepalive")
+                    .long("keepalive")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How often to send keepalive requests (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("local-pref")
+                    .long("local-pref")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help("Apply a local preference to routes received from this peer."),
+            )
+            .arg(
+                clap::Arg::new("md5-auth-key")
+                    .long("md5-auth-key")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false)
+                    .help("Use the given key for TCP-MD5 authentication with the peer."),
+            )
+            .arg(
+                clap::Arg::new("min-ttl")
+                    .long("min-ttl")
+                    .value_parser(clap::value_parser!(u8))
+                    .required(false)
+                    .help("Require messages from a peer have a minimum IP time to live field."),
+            )
+            .arg(
+                clap::Arg::new("multi-exit-discriminator")
+                    .long("multi-exit-discriminator")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help(
+                        "Apply the provided multi-exit discriminator (MED) updates sent to the \
+                         peer.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("remote-asn")
+                    .long("remote-asn")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help("Require that a peer has a specified ASN."),
+            )
+            .arg(
+                clap::Arg::new("vlan-id")
+                    .long("vlan-id")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("Associate a VLAN ID with a peer."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add bgp peer to an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_bgp_peer_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("addr")
+                    .long("addr")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The address of the host to peer with."),
+            )
+            .arg(
+                clap::Arg::new("bgp-config")
+                    .long("bgp-config")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The global BGP configuration used for establishing a session with this \
+                         peer.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("connect-retry")
+                    .long("connect-retry")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How long to to wait between TCP connection retries (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("delay-open")
+                    .long("delay-open")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "How long to delay sending an open request after establishing a TCP \
+                         session (seconds).",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("enforce-first-as")
+                    .long("enforce-first-as")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Enforce that the first AS in paths received from this peer is the peer's \
+                         AS.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("hold-time")
+                    .long("hold-time")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How long to hold peer connections between keepalives (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("idle-hold-time")
+                    .long("idle-hold-time")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "How long to hold a peer in idle before attempting a new session \
+                         (seconds).",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("interface-name")
+                    .long("interface-name")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The name of interface to peer on. This is relative to the port \
+                         configuration this BGP peer configuration is a part of. For example this \
+                         value could be phy0 to refer to a primary physical interface. Or it \
+                         could be vlan47 to refer to a VLAN interface.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("keepalive")
+                    .long("keepalive")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("How often to send keepalive requests (seconds)."),
+            )
+            .arg(
+                clap::Arg::new("local-pref")
+                    .long("local-pref")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help("Apply a local preference to routes received from this peer."),
+            )
+            .arg(
+                clap::Arg::new("md5-auth-key")
+                    .long("md5-auth-key")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false)
+                    .help("Use the given key for TCP-MD5 authentication with the peer."),
+            )
+            .arg(
+                clap::Arg::new("min-ttl")
+                    .long("min-ttl")
+                    .value_parser(clap::value_parser!(u8))
+                    .required(false)
+                    .help("Require messages from a peer have a minimum IP time to live field."),
+            )
+            .arg(
+                clap::Arg::new("multi-exit-discriminator")
+                    .long("multi-exit-discriminator")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help(
+                        "Apply the provided multi-exit discriminator (MED) updates sent to the \
+                         peer.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("remote-asn")
+                    .long("remote-asn")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help("Require that a peer has a specified ASN."),
+            )
+            .arg(
+                clap::Arg::new("vlan-id")
+                    .long("vlan-id")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("Associate a VLAN ID with a peer."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove bgp peer from an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_route_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .about("List routes assigned to a provided interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_route_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("dst")
+                    .long("dst")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The route destination."),
+            )
+            .arg(
+                clap::Arg::new("gw")
+                    .long("gw")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The route gateway."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("local-pref")
+                    .long("local-pref")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help(
+                        "Local preference for route. Higher preference indictes precedence within \
+                         and across protocols.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vid")
+                    .long("vid")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("VLAN id the gateway is reachable over."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add route to an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_interface_route_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("dst")
+                    .long("dst")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The route destination."),
+            )
+            .arg(
+                clap::Arg::new("gw")
+                    .long("gw")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The route gateway."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Interface name"),
+            )
+            .arg(
+                clap::Arg::new("local-pref")
+                    .long("local-pref")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(false)
+                    .help(
+                        "Local preference for route. Higher preference indictes precedence within \
+                         and across protocols.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vid")
+                    .long("vid")
+                    .value_parser(clap::value_parser!(u16))
+                    .required(false)
+                    .help("VLAN id the gateway is reachable over."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove address from an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_link_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .about("List links for a provided switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_link_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("autoneg")
+                    .long("autoneg")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help("Whether or not to set autonegotiation"),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("fec")
+                    .long("fec")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::LinkFec::Firecode.to_string(),
+                            types::LinkFec::None.to_string(),
+                            types::LinkFec::Rs.to_string(),
+                        ]),
+                        |s| types::LinkFec::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The forward error correction mode of the link."),
+            )
+            .arg(
+                clap::Arg::new("lldp-config")
+                    .long("lldp-config")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "The optional link-layer discovery protocol (LLDP) configuration for the \
+                         link.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("mtu")
+                    .long("mtu")
+                    .value_parser(clap::value_parser!(u16))
+                    .required_unless_present("json-body")
+                    .help("Maximum transmission unit for the link."),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("Name of link"),
+            )
+            .arg(
+                clap::Arg::new("speed")
+                    .long("speed")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::LinkSpeed::Speed0G.to_string(),
+                            types::LinkSpeed::Speed1G.to_string(),
+                            types::LinkSpeed::Speed10G.to_string(),
+                            types::LinkSpeed::Speed25G.to_string(),
+                            types::LinkSpeed::Speed40G.to_string(),
+                            types::LinkSpeed::Speed50G.to_string(),
+                            types::LinkSpeed::Speed100G.to_string(),
+                            types::LinkSpeed::Speed200G.to_string(),
+                            types::LinkSpeed::Speed400G.to_string(),
+                        ]),
+                        |s| types::LinkSpeed::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The speed of the link."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a link for a provided switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_link_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("link")
+                    .long("link")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Link name"),
+            )
+            .about("View a link for a provided switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_link_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("link")
+                    .long("link")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("Link name"),
+            )
+            .about("Delete a link for a provided switch port configuration")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
@@ -4881,7 +5816,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal ID"),
+                    .help("The user's internal id"),
             )
             .about("Fetch built-in (system) user")
     }
@@ -6211,6 +7146,13 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_networking_address_lot_block_list(matches)
                     .await
             }
+            CliCommand::NetworkingAddressLotBlockAdd => {
+                self.execute_networking_address_lot_block_add(matches).await
+            }
+            CliCommand::NetworkingAddressLotBlockRemove => {
+                self.execute_networking_address_lot_block_remove(matches)
+                    .await
+            }
             CliCommand::NetworkingAllowListView => {
                 self.execute_networking_allow_list_view(matches).await
             }
@@ -6265,20 +7207,80 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_networking_loopback_address_delete(matches)
                     .await
             }
-            CliCommand::NetworkingSwitchPortSettingsList => {
-                self.execute_networking_switch_port_settings_list(matches)
+            CliCommand::NetworkingSwitchPortConfigurationList => {
+                self.execute_networking_switch_port_configuration_list(matches)
                     .await
             }
-            CliCommand::NetworkingSwitchPortSettingsCreate => {
-                self.execute_networking_switch_port_settings_create(matches)
+            CliCommand::NetworkingSwitchPortConfigurationCreate => {
+                self.execute_networking_switch_port_configuration_create(matches)
                     .await
             }
-            CliCommand::NetworkingSwitchPortSettingsDelete => {
-                self.execute_networking_switch_port_settings_delete(matches)
+            CliCommand::NetworkingSwitchPortConfigurationDelete => {
+                self.execute_networking_switch_port_configuration_delete(matches)
                     .await
             }
-            CliCommand::NetworkingSwitchPortSettingsView => {
-                self.execute_networking_switch_port_settings_view(matches)
+            CliCommand::NetworkingSwitchPortConfigurationView => {
+                self.execute_networking_switch_port_configuration_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationGeometryView => {
+                self.execute_networking_switch_port_configuration_geometry_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationGeometrySet => {
+                self.execute_networking_switch_port_configuration_geometry_set(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressList => {
+                self.execute_networking_switch_port_configuration_interface_address_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressAdd => {
+                self.execute_networking_switch_port_configuration_interface_address_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressRemove => {
+                self.execute_networking_switch_port_configuration_interface_address_remove(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerList => {
+                self.execute_networking_switch_port_configuration_interface_bgp_peer_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd => {
+                self.execute_networking_switch_port_configuration_interface_bgp_peer_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove => {
+                self.execute_networking_switch_port_configuration_interface_bgp_peer_remove(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteList => {
+                self.execute_networking_switch_port_configuration_interface_route_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteAdd => {
+                self.execute_networking_switch_port_configuration_interface_route_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteRemove => {
+                self.execute_networking_switch_port_configuration_interface_route_remove(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkList => {
+                self.execute_networking_switch_port_configuration_link_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkCreate => {
+                self.execute_networking_switch_port_configuration_link_create(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkView => {
+                self.execute_networking_switch_port_configuration_link_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationLinkDelete => {
+                self.execute_networking_switch_port_configuration_link_delete(matches)
                     .await
             }
             CliCommand::SystemPolicyView => self.execute_system_policy_view(matches).await,
@@ -10530,6 +11532,84 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_address_lot_block_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_address_lot_block_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.address_lot(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("first-address") {
+            request = request.body_map(|body| body.first_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("last-address") {
+            request = request.body_map(|body| body.last_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AddressLotBlockAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_address_lot_block_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_address_lot_block_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_address_lot_block_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.address_lot(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("first-address") {
+            request = request.body_map(|body| body.first_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("last-address") {
+            request = request.body_map(|body| body.last_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AddressLotBlockAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_address_lot_block_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_allow_list_view(
         &self,
         matches: &clap::ArgMatches,
@@ -11129,17 +12209,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_list(
+    pub async fn execute_networking_switch_port_configuration_list(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_switch_port_settings_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
+        let mut request = self.client.networking_switch_port_configuration_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
-            request = request.port_settings(value.clone());
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
@@ -11147,7 +12227,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_settings_list(matches, &mut request)?;
+            .execute_networking_switch_port_configuration_list(matches, &mut request)?;
         self.config
             .list_start::<types::SwitchPortSettingsResultsPage>();
         let mut stream = futures::StreamExt::take(
@@ -11174,11 +12254,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_create(
+    pub async fn execute_networking_switch_port_configuration_create(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_switch_port_settings_create();
+        let mut request = self.client.networking_switch_port_configuration_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -11195,7 +12275,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_settings_create(matches, &mut request)?;
+            .execute_networking_switch_port_configuration_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11209,17 +12289,17 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_delete(
+    pub async fn execute_networking_switch_port_configuration_delete(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_switch_port_settings_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
-            request = request.port_settings(value.clone());
+        let mut request = self.client.networking_switch_port_configuration_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
         }
 
         self.config
-            .execute_networking_switch_port_settings_delete(matches, &mut request)?;
+            .execute_networking_switch_port_configuration_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11233,21 +12313,732 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_view(
+    pub async fn execute_networking_switch_port_configuration_view(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_switch_port_settings_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("port") {
-            request = request.port(value.clone());
+        let mut request = self.client.networking_switch_port_configuration_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
         }
 
         self.config
-            .execute_networking_switch_port_settings_view(matches, &mut request)?;
+            .execute_networking_switch_port_configuration_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_geometry_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_geometry_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_geometry_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_geometry_set(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_geometry_set();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SwitchPortGeometry>("geometry") {
+            request = request.body_map(|body| body.geometry(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SwitchPortConfigCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_geometry_set(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_address_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_address_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_address_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_address_add();
+        if let Some(value) = matches.get_one::<types::IpNet>("address") {
+            request = request.body_map(|body| body.address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.body_map(|body| body.address_lot(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vlan-id") {
+            request = request.body_map(|body| body.vlan_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::Address>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_address_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_address_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_address_remove();
+        if let Some(value) = matches.get_one::<types::IpNet>("address") {
+            request = request.body_map(|body| body.address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.body_map(|body| body.address_lot(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vlan-id") {
+            request = request.body_map(|body| body.vlan_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::Address>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_address_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_bgp_peer_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_bgp_peer_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_bgp_peer_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_bgp_peer_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_bgp_peer_add();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("addr") {
+            request = request.body_map(|body| body.addr(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-config") {
+            request = request.body_map(|body| body.bgp_config(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u32>("connect-retry") {
+            request = request.body_map(|body| body.connect_retry(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("delay-open") {
+            request = request.body_map(|body| body.delay_open(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("enforce-first-as") {
+            request = request.body_map(|body| body.enforce_first_as(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("hold-time") {
+            request = request.body_map(|body| body.hold_time(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("idle-hold-time") {
+            request = request.body_map(|body| body.idle_hold_time(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("interface-name") {
+            request = request.body_map(|body| body.interface_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("keepalive") {
+            request = request.body_map(|body| body.keepalive(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("local-pref") {
+            request = request.body_map(|body| body.local_pref(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("md5-auth-key") {
+            request = request.body_map(|body| body.md5_auth_key(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u8>("min-ttl") {
+            request = request.body_map(|body| body.min_ttl(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("multi-exit-discriminator") {
+            request = request.body_map(|body| body.multi_exit_discriminator(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("remote-asn") {
+            request = request.body_map(|body| body.remote_asn(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vlan-id") {
+            request = request.body_map(|body| body.vlan_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BgpPeer>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_bgp_peer_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_bgp_peer_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_bgp_peer_remove();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("addr") {
+            request = request.body_map(|body| body.addr(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-config") {
+            request = request.body_map(|body| body.bgp_config(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u32>("connect-retry") {
+            request = request.body_map(|body| body.connect_retry(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("delay-open") {
+            request = request.body_map(|body| body.delay_open(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("enforce-first-as") {
+            request = request.body_map(|body| body.enforce_first_as(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("hold-time") {
+            request = request.body_map(|body| body.hold_time(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("idle-hold-time") {
+            request = request.body_map(|body| body.idle_hold_time(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("interface-name") {
+            request = request.body_map(|body| body.interface_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("keepalive") {
+            request = request.body_map(|body| body.keepalive(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("local-pref") {
+            request = request.body_map(|body| body.local_pref(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("md5-auth-key") {
+            request = request.body_map(|body| body.md5_auth_key(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u8>("min-ttl") {
+            request = request.body_map(|body| body.min_ttl(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("multi-exit-discriminator") {
+            request = request.body_map(|body| body.multi_exit_discriminator(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u32>("remote-asn") {
+            request = request.body_map(|body| body.remote_asn(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vlan-id") {
+            request = request.body_map(|body| body.vlan_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BgpPeer>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_bgp_peer_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_route_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_route_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_route_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_route_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_route_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("dst") {
+            request = request.body_map(|body| body.dst(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("gw") {
+            request = request.body_map(|body| body.gw(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u32>("local-pref") {
+            request = request.body_map(|body| body.local_pref(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vid") {
+            request = request.body_map(|body| body.vid(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::Route>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_route_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_interface_route_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_interface_route_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("dst") {
+            request = request.body_map(|body| body.dst(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("gw") {
+            request = request.body_map(|body| body.gw(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.interface(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u32>("local-pref") {
+            request = request.body_map(|body| body.local_pref(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("vid") {
+            request = request.body_map(|body| body.vid(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::Route>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_interface_route_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_link_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_configuration_link_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_link_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_link_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_link_create();
+        if let Some(value) = matches.get_one::<bool>("autoneg") {
+            request = request.body_map(|body| body.autoneg(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::LinkFec>("fec") {
+            request = request.body_map(|body| body.fec(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("lldp-config") {
+            request = request.body_map(|body| body.lldp_config(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("mtu") {
+            request = request.body_map(|body| body.mtu(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::LinkSpeed>("speed") {
+            request = request.body_map(|body| body.speed(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::NamedLinkConfigCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_link_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_link_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_configuration_link_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("link") {
+            request = request.link(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_link_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_link_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_link_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("link") {
+            request = request.link(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_link_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -13925,6 +15716,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_address_lot_block_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotBlockAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_address_lot_block_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotBlockRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_allow_list_view(
         &self,
         matches: &clap::ArgMatches,
@@ -14077,34 +15884,154 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_networking_switch_port_settings_list(
+    fn execute_networking_switch_port_configuration_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortSettingsList,
+        request: &mut builder::NetworkingSwitchPortConfigurationList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_networking_switch_port_settings_create(
+    fn execute_networking_switch_port_configuration_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortSettingsCreate,
+        request: &mut builder::NetworkingSwitchPortConfigurationCreate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_networking_switch_port_settings_delete(
+    fn execute_networking_switch_port_configuration_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortSettingsDelete,
+        request: &mut builder::NetworkingSwitchPortConfigurationDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_networking_switch_port_settings_view(
+    fn execute_networking_switch_port_configuration_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortSettingsView,
+        request: &mut builder::NetworkingSwitchPortConfigurationView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_geometry_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationGeometryView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_geometry_set(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationGeometrySet,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceAddressList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_address_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceAddressAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_address_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceAddressRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_bgp_peer_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_bgp_peer_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_bgp_peer_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_route_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceRouteList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_route_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceRouteAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_interface_route_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationInterfaceRouteRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_link_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationLinkList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_link_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationLinkCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_link_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationLinkView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_link_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationLinkDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -14615,6 +16542,8 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
+    NetworkingAddressLotBlockAdd,
+    NetworkingAddressLotBlockRemove,
     NetworkingAllowListView,
     NetworkingAllowListUpdate,
     NetworkingBfdDisable,
@@ -14634,10 +16563,25 @@ pub enum CliCommand {
     NetworkingLoopbackAddressList,
     NetworkingLoopbackAddressCreate,
     NetworkingLoopbackAddressDelete,
-    NetworkingSwitchPortSettingsList,
-    NetworkingSwitchPortSettingsCreate,
-    NetworkingSwitchPortSettingsDelete,
-    NetworkingSwitchPortSettingsView,
+    NetworkingSwitchPortConfigurationList,
+    NetworkingSwitchPortConfigurationCreate,
+    NetworkingSwitchPortConfigurationDelete,
+    NetworkingSwitchPortConfigurationView,
+    NetworkingSwitchPortConfigurationGeometryView,
+    NetworkingSwitchPortConfigurationGeometrySet,
+    NetworkingSwitchPortConfigurationInterfaceAddressList,
+    NetworkingSwitchPortConfigurationInterfaceAddressAdd,
+    NetworkingSwitchPortConfigurationInterfaceAddressRemove,
+    NetworkingSwitchPortConfigurationInterfaceBgpPeerList,
+    NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd,
+    NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove,
+    NetworkingSwitchPortConfigurationInterfaceRouteList,
+    NetworkingSwitchPortConfigurationInterfaceRouteAdd,
+    NetworkingSwitchPortConfigurationInterfaceRouteRemove,
+    NetworkingSwitchPortConfigurationLinkList,
+    NetworkingSwitchPortConfigurationLinkCreate,
+    NetworkingSwitchPortConfigurationLinkView,
+    NetworkingSwitchPortConfigurationLinkDelete,
     SystemPolicyView,
     SystemPolicyUpdate,
     RoleList,
@@ -14817,6 +16761,8 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingAddressLotBlockAdd,
+            CliCommand::NetworkingAddressLotBlockRemove,
             CliCommand::NetworkingAllowListView,
             CliCommand::NetworkingAllowListUpdate,
             CliCommand::NetworkingBfdDisable,
@@ -14836,10 +16782,25 @@ impl CliCommand {
             CliCommand::NetworkingLoopbackAddressList,
             CliCommand::NetworkingLoopbackAddressCreate,
             CliCommand::NetworkingLoopbackAddressDelete,
-            CliCommand::NetworkingSwitchPortSettingsList,
-            CliCommand::NetworkingSwitchPortSettingsCreate,
-            CliCommand::NetworkingSwitchPortSettingsDelete,
-            CliCommand::NetworkingSwitchPortSettingsView,
+            CliCommand::NetworkingSwitchPortConfigurationList,
+            CliCommand::NetworkingSwitchPortConfigurationCreate,
+            CliCommand::NetworkingSwitchPortConfigurationDelete,
+            CliCommand::NetworkingSwitchPortConfigurationView,
+            CliCommand::NetworkingSwitchPortConfigurationGeometryView,
+            CliCommand::NetworkingSwitchPortConfigurationGeometrySet,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressList,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressAdd,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressRemove,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerList,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteList,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteAdd,
+            CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteRemove,
+            CliCommand::NetworkingSwitchPortConfigurationLinkList,
+            CliCommand::NetworkingSwitchPortConfigurationLinkCreate,
+            CliCommand::NetworkingSwitchPortConfigurationLinkView,
+            CliCommand::NetworkingSwitchPortConfigurationLinkDelete,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,

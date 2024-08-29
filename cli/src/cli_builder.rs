@@ -429,9 +429,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
         CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
         CliCommand::NetworkingAddressLotDelete => Some("system networking address-lot delete"),
+
         CliCommand::NetworkingAddressLotBlockList => {
             Some("system networking address-lot block list")
         }
+        CliCommand::NetworkingAddressLotBlockAdd => Some("system networking address-lot block add"),
+        CliCommand::NetworkingAddressLotBlockRemove => {
+            Some("system networking address-lot block remove")
+        }
+
         CliCommand::NetworkingLoopbackAddressList => {
             Some("system networking loopback-address list")
         }
@@ -442,25 +448,76 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system networking loopback-address delete")
         }
 
-        CliCommand::NetworkingSwitchPortApplySettings => {
-            Some("system hardware switch-port apply-settings")
-        }
-        CliCommand::NetworkingSwitchPortClearSettings => {
-            Some("system hardware switch-port clear-settings")
-        }
         CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
         CliCommand::NetworkingSwitchPortStatus => Some("system hardware switch-port status"),
-        CliCommand::NetworkingSwitchPortSettingsList => {
-            Some("system networking switch-port-settings list")
+
+        CliCommand::NetworkingSwitchPortApplySettings => {
+            Some("system hardware switch-port configuration apply")
         }
-        CliCommand::NetworkingSwitchPortSettingsCreate => {
-            Some("system networking switch-port-settings create")
+        CliCommand::NetworkingSwitchPortClearSettings => {
+            Some("system hardware switch-port configuration remove")
         }
-        CliCommand::NetworkingSwitchPortSettingsDelete => {
-            Some("system networking switch-port-settings delete")
+        CliCommand::NetworkingSwitchPortConfigurationList => {
+            Some("system networking switch-port configuration list")
         }
-        CliCommand::NetworkingSwitchPortSettingsView => {
-            Some("system networking switch-port-settings view")
+        CliCommand::NetworkingSwitchPortConfigurationCreate => {
+            Some("system networking switch-port configuration create")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationDelete => {
+            Some("system networking switch-port configuration delete")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationView => {
+            Some("system networking switch-port configuration view")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationGeometryView => {
+            Some("system networking switch-port configuration geometry view")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationGeometrySet => {
+            Some("system networking switch-port configuration geometry set")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressList => {
+            Some("system networking switch-port configuration interface address list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressAdd => {
+            Some("system networking switch-port configuration interface address add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceAddressRemove => {
+            Some("system networking switch-port configuration interface address remove")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerList => {
+            Some("system networking switch-port configuration interface bgp peer list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd => {
+            Some("system networking switch-port configuration interface bgp peer add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove => {
+            Some("system networking switch-port configuration interface bgp peer remove")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteList => {
+            Some("system networking switch-port configuration interface route list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteAdd => {
+            Some("system networking switch-port configuration interface route add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationInterfaceRouteRemove => {
+            Some("system networking switch-port configuration interface route remove")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationLinkList => {
+            Some("system networking switch-port configuration link list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationLinkCreate => {
+            Some("system networking switch-port configuration link create")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationLinkView => {
+            Some("system networking switch-port configuration link view")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationLinkDelete => {
+            Some("system networking switch-port configuration link delete")
         }
 
         CliCommand::NetworkingBfdStatus => Some("system networking bfd status"),

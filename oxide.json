@@ -468,7 +468,6 @@
           {
             "in": "path",
             "name": "certificate",
-            "description": "Name or ID of the certificate",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
@@ -505,7 +504,6 @@
           {
             "in": "path",
             "name": "certificate",
-            "description": "Name or ID of the certificate",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
@@ -4169,7 +4167,7 @@
           {
             "in": "path",
             "name": "rack_id",
-            "description": "ID of the rack",
+            "description": "The rack's unique ID.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5030,7 +5028,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal ID",
+            "description": "The user's internal id",
             "required": true,
             "schema": {
               "type": "string",
@@ -5072,7 +5070,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal ID",
+            "description": "The user's internal id",
             "required": true,
             "schema": {
               "type": "string",
@@ -6251,6 +6249,95 @@
         }
       }
     },
+    "/v1/system/networking/address-lot/{address_lot}/blocks/add": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Add block to address lot",
+        "operationId": "networking_address_lot_block_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address_lot",
+            "description": "Name or ID of the address lot",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressLotBlockAddRemove"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressLotBlock"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/address-lot/{address_lot}/blocks/remove": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Remove block from address lot",
+        "operationId": "networking_address_lot_block_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address_lot",
+            "description": "Name or ID of the address lot",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressLotBlockAddRemove"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "resource updated"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/v1/system/networking/allow-list": {
       "get": {
         "tags": [
@@ -7013,14 +7100,22 @@
         }
       }
     },
-    "/v1/system/networking/switch-port-settings": {
+    "/v1/system/networking/switch-port-configuration": {
       "get": {
         "tags": [
           "system/networking"
         ],
         "summary": "List switch port settings",
-        "operationId": "networking_switch_port_settings_list",
+        "operationId": "networking_switch_port_configuration_list",
         "parameters": [
+          {
+            "in": "query",
+            "name": "configuration",
+            "description": "An optional name or id to use when selecting a switch port configuration.",
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
           {
             "in": "query",
             "name": "limit",
@@ -7039,14 +7134,6 @@
             "schema": {
               "nullable": true,
               "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "port_settings",
-            "description": "An optional name or id to use when selecting port settings.",
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
             }
           },
           {
@@ -7084,7 +7171,7 @@
           "system/networking"
         ],
         "summary": "Create switch port settings",
-        "operationId": "networking_switch_port_settings_create",
+        "operationId": "networking_switch_port_configuration_create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -7119,12 +7206,12 @@
           "system/networking"
         ],
         "summary": "Delete switch port settings",
-        "operationId": "networking_switch_port_settings_delete",
+        "operationId": "networking_switch_port_configuration_delete",
         "parameters": [
           {
             "in": "query",
-            "name": "port_settings",
-            "description": "An optional name or id to use when selecting port settings.",
+            "name": "configuration",
+            "description": "An optional name or id to use when selecting a switch port configuration.",
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
             }
@@ -7143,18 +7230,18 @@
         }
       }
     },
-    "/v1/system/networking/switch-port-settings/{port}": {
+    "/v1/system/networking/switch-port-configuration/{configuration}": {
       "get": {
         "tags": [
           "system/networking"
         ],
-        "summary": "Get information about switch port",
-        "operationId": "networking_switch_port_settings_view",
+        "summary": "Get information about a named set of switch-port-settings",
+        "operationId": "networking_switch_port_configuration_view",
         "parameters": [
           {
             "in": "path",
-            "name": "port",
-            "description": "A name or id to use when selecting switch port settings info objects.",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
@@ -7171,6 +7258,729 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/geometry": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Get switch port geometry for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_geometry_view",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Set switch port geometry for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_geometry_set",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchPortConfigCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/address": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "List addresses assigned to a provided interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_address_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Array_of_SwitchPortAddressConfig",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SwitchPortAddressConfig"
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/address/add": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Add address to an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_address_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortAddressConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/address/remove": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Remove address from an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_address_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "successful deletion"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/bgp-peer": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "List bgp peers assigned to a provided interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_bgp_peer_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BgpPeerConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/bgp-peer/add": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Add bgp peer to an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_bgp_peer_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BgpPeer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BgpPeer"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/bgp-peer/remove": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Remove bgp peer from an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_bgp_peer_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BgpPeer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "successful deletion"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/route": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "List routes assigned to a provided interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_route_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/route/add": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Add route to an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_route_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Route"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Route"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/interface/{interface}/route/remove": {
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Remove address from an interface configuration",
+        "operationId": "networking_switch_port_configuration_interface_route_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "interface",
+            "description": "Interface name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Route"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "successful deletion"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/link": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "List links for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_link_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Array_of_SwitchPortLinkConfig",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SwitchPortLinkConfig"
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Create a link for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_link_create",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NamedLinkConfigCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortLinkConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/networking/switch-port-configuration/{configuration}/link/{link}": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "View a link for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_link_view",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "link",
+            "description": "Link name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortLinkConfig"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Delete a link for a provided switch port configuration",
+        "operationId": "networking_switch_port_configuration_link_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "link",
+            "description": "Link name",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "successful deletion"
           },
           "4XX": {
             "$ref": "#/components/responses/Error"
@@ -7874,7 +8684,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal ID",
+            "description": "The user's internal id",
             "required": true,
             "schema": {
               "type": "string",
@@ -9771,8 +10581,8 @@
           "last_address"
         ]
       },
-      "AddressLotBlockCreate": {
-        "description": "Parameters for creating an address lot block. Fist and last addresses are inclusive.",
+      "AddressLotBlockAddRemove": {
+        "description": "Parameters for adding or removing an address lot block. First and last addresses are inclusive.",
         "type": "object",
         "properties": {
           "first_address": {
@@ -9816,13 +10626,6 @@
         "description": "Parameters for creating an address lot.",
         "type": "object",
         "properties": {
-          "blocks": {
-            "description": "The blocks to add along with the new address lot.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AddressLotBlockCreate"
-            }
-          },
           "description": {
             "type": "string"
           },
@@ -9839,7 +10642,6 @@
           }
         },
         "required": [
-          "blocks",
           "description",
           "kind",
           "name"
@@ -9849,13 +10651,6 @@
         "description": "An address lot and associated blocks resulting from creating an address lot.",
         "type": "object",
         "properties": {
-          "blocks": {
-            "description": "The address lot blocks that were created.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AddressLotBlock"
-            }
-          },
           "lot": {
             "description": "The address lot that was created.",
             "allOf": [
@@ -9866,7 +10661,6 @@
           }
         },
         "required": [
-          "blocks",
           "lot"
         ]
       },
@@ -16548,6 +17342,62 @@
           }
         ]
       },
+      "NamedLinkConfigCreate": {
+        "description": "Named switch link configuration.",
+        "type": "object",
+        "properties": {
+          "autoneg": {
+            "description": "Whether or not to set autonegotiation",
+            "type": "boolean"
+          },
+          "fec": {
+            "description": "The forward error correction mode of the link.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LinkFec"
+              }
+            ]
+          },
+          "lldp_config": {
+            "nullable": true,
+            "description": "The optional link-layer discovery protocol (LLDP) configuration for the link.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrId"
+              }
+            ]
+          },
+          "mtu": {
+            "description": "Maximum transmission unit for the link.",
+            "type": "integer",
+            "format": "uint16",
+            "minimum": 0
+          },
+          "name": {
+            "description": "Name of link",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Name"
+              }
+            ]
+          },
+          "speed": {
+            "description": "The speed of the link.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LinkSpeed"
+              }
+            ]
+          }
+        },
+        "required": [
+          "autoneg",
+          "fec",
+          "mtu",
+          "name",
+          "speed"
+        ]
+      },
       "NetworkInterface": {
         "description": "Information required to construct a virtual network interface",
         "type": "object",
@@ -19337,7 +20187,6 @@
             "type": "string"
           },
           "lldp_link_config_id": {
-            "nullable": true,
             "description": "The link-layer discovery protocol service configuration id for this link.",
             "type": "string",
             "format": "uuid"
@@ -19366,6 +20215,7 @@
           "autoneg",
           "fec",
           "link_name",
+          "lldp_link_config_id",
           "mtu",
           "port_settings_id",
           "speed"
@@ -19936,8 +20786,7 @@
               "nanoseconds",
               "volts",
               "amps",
-              "watts",
-              "degrees_celsius"
+              "degrees_celcius"
             ]
           },
           {
