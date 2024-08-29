@@ -14,6 +14,7 @@ use expectorate::assert_contents;
 use httpmock::{Method::POST, Mock, MockServer};
 use oxide::types::CurrentUser;
 use oxide_httpmock::MockServerExt;
+use predicates::str;
 use serde_json::json;
 
 fn scrub_server(raw: String, server: String) -> String {
@@ -376,16 +377,15 @@ fn test_cmd_auth_status() {
     );
 
     // Validate empty `credentials.toml` does not error.
-    let empty_cmd = Command::cargo_bin("oxide")
+    Command::cargo_bin("oxide")
         .unwrap()
         .arg("--config-dir")
         .arg(empty_creds_dir.as_os_str())
         .arg("auth")
         .arg("status")
         .assert()
-        .success();
-    let empty_stdout = String::from_utf8_lossy(&empty_cmd.get_output().stdout);
-    assert!(empty_stdout.is_empty());
+        .success()
+        .stdout(str::is_empty());
 
     ok.assert_hits(2);
     bad.assert();
