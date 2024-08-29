@@ -5,7 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 use std::{
-    fs::{read_to_string, write},
+    fs::{read_to_string, write, File},
     path::Path,
 };
 
@@ -325,6 +325,9 @@ fn test_cmd_auth_status() {
     );
     write(cred_path, creds).unwrap();
 
+    let empty_creds_dir = tempfile::tempdir().unwrap().into_path();
+    File::create(empty_creds_dir.join("credentials.toml")).unwrap();
+
     let ok = server.current_user_view(|when, then| {
         when.into_inner()
             .header("authorization", "Bearer ***-***-*ok");
@@ -371,6 +374,18 @@ fn test_cmd_auth_status() {
         "tests/data/test_auth_status.stdout",
         &scrub_server(stdout.to_string(), server.url("")),
     );
+
+    // Validate empty `credentials.toml` does not error.
+    let empty_cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(empty_creds_dir.as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .success();
+    let empty_stdout = String::from_utf8_lossy(&empty_cmd.get_output().stdout);
+    assert!(empty_stdout.is_empty());
 
     ok.assert_hits(2);
     bad.assert();
