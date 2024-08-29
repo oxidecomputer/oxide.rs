@@ -213,7 +213,8 @@
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "help": "Name or ID of the certificate"
             },
             {
               "long": "profile",
@@ -252,7 +253,8 @@
           "long_about": "Returns the details of a specific certificate",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "help": "Name or ID of the certificate"
             },
             {
               "long": "profile",
@@ -3001,7 +3003,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal ID"
                         }
                       ]
                     },
@@ -3029,7 +3031,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal ID"
                         }
                       ]
                     }
@@ -3377,7 +3379,7 @@
                 },
                 {
                   "long": "user-id",
-                  "help": "The user's internal id"
+                  "help": "The user's internal ID"
                 }
               ]
             }
@@ -3672,7 +3674,7 @@
                     },
                     {
                       "long": "rack-id",
-                      "help": "The rack's unique ID."
+                      "help": "ID of the rack"
                     }
                   ]
                 }

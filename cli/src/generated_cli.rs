@@ -586,7 +586,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
+                    .required(true)
+                    .help("Name or ID of the certificate"),
             )
             .about("Fetch certificate")
             .long_about("Returns the details of a specific certificate")
@@ -598,7 +599,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
+                    .required(true)
+                    .help("Name or ID of the certificate"),
             )
             .about("Delete certificate")
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
@@ -2777,7 +2779,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("rack-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The rack's unique ID."),
+                    .help("ID of the rack"),
             )
             .about("Fetch rack")
     }
@@ -3207,7 +3209,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .about("Delete user")
     }
@@ -3226,7 +3228,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -4879,7 +4881,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .about("Fetch built-in (system) user")
     }
