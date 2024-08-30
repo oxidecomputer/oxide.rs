@@ -356,7 +356,7 @@ enum FilterDirection {
 /// The Oxide BGP implementation can filter prefixes received from peers
 /// on import and filter prefixes sent to peers on export. This command
 /// provides a way to specify import/export filtering. Filtering is a
-/// property of the BGP peering settings found in port settings configuration.
+/// property of the BGP peering settings found in the port settings configuration.
 /// This command works by performing a read-modify-write on the port settings
 /// configuration identified by the specified rack/switch/port.
 #[derive(Parser, Debug, Clone)]

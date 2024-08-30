@@ -80,6 +80,10 @@
           "long": "raw-field",
           "short": "f",
           "help": "Add a string parameter in key=value format"
+        },
+        {
+          "name": "endpoint",
+          "help": "The endpoint to request"
         }
       ]
     },
@@ -924,6 +928,10 @@
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
+                },
+                {
+                  "name": "query",
+                  "help": "The timeseries query to display in the dashboard"
                 }
               ]
             },
@@ -4764,19 +4772,31 @@
                 },
                 {
                   "name": "exported",
-                  "about": "Get BGP exported routes",
                   "args": [
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
                     }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "ipv4",
+                      "about": "Get BGP exported routes",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
                   ]
                 },
                 {
                   "name": "filter",
                   "about": "Add a filtering requirement to a BGP session.",
-                  "long_about": "Add a filtering requirement to a BGP session.\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
+                  "long_about": "Add a filtering requirement to a BGP session.\n\nThe Oxide BGP implementation can filter prefixes received from peers\non import and filter prefixes sent to peers on export. This command\nprovides a way to specify import/export filtering. Filtering is a\nproperty of the BGP peering settings found in the port settings configuration.\nThis command works by performing a read-modify-write on the port settings\nconfiguration identified by the specified rack/switch/port.",
                   "args": [
                     {
                       "long": "allowed",

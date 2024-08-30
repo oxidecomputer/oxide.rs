@@ -23,6 +23,8 @@ pub struct CmdDocs;
 #[derive(Serialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct JsonArg {
     #[serde(skip_serializing_if = "Option::is_none")]
+    name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     long: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     short: Option<String>,
@@ -64,8 +66,9 @@ fn to_json(cmd: &Command) -> JsonDoc {
     let mut args = cmd
         .get_arguments()
         .filter(|arg| arg.get_long() != Some("help"))
-        .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
         .map(|arg| JsonArg {
+            name: (arg.get_long().is_none() && arg.get_short().is_none())
+                .then_some(arg.get_id().to_string()),
             short: arg.get_short().map(|char| char.to_string()),
             long: arg.get_long().map(ToString::to_string),
             values: arg
