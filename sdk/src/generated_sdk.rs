@@ -17989,6 +17989,97 @@ pub mod types {
         }
     }
 
+    /// A route to a destination network through a gateway address to add or
+    /// remove to an interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A route to a destination network through a gateway
+    /// address to add or remove to an interface.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "dst",
+    ///    "gw",
+    ///    "interface"
+    ///  ],
+    ///  "properties": {
+    ///    "dst": {
+    ///      "description": "The route destination.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "gw": {
+    ///      "description": "The route gateway.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "interface": {
+    ///      "description": "The interface to configure the route on",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "local_pref": {
+    ///      "description": "Local preference for route. Higher preference
+    /// indictes precedence within and across protocols.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "vid": {
+    ///      "description": "VLAN id the gateway is reachable over.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct RouteAddRemove {
+        /// The route destination.
+        pub dst: IpNet,
+        /// The route gateway.
+        pub gw: std::net::IpAddr,
+        /// The interface to configure the route on
+        pub interface: Name,
+        /// Local preference for route. Higher preference indictes precedence
+        /// within and across protocols.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local_pref: Option<u32>,
+        /// VLAN id the gateway is reachable over.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vid: Option<u16>,
+    }
+
+    impl From<&RouteAddRemove> for RouteAddRemove {
+        fn from(value: &RouteAddRemove) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouteAddRemove {
+        pub fn builder() -> builder::RouteAddRemove {
+            Default::default()
+        }
+    }
+
     /// Route configuration data associated with a switch port configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39595,6 +39686,105 @@ pub mod types {
                 Self {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
+                    local_pref: Ok(value.local_pref),
+                    vid: Ok(value.vid),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouteAddRemove {
+            dst: Result<super::IpNet, String>,
+            gw: Result<std::net::IpAddr, String>,
+            interface: Result<super::Name, String>,
+            local_pref: Result<Option<u32>, String>,
+            vid: Result<Option<u16>, String>,
+        }
+
+        impl Default for RouteAddRemove {
+            fn default() -> Self {
+                Self {
+                    dst: Err("no value supplied for dst".to_string()),
+                    gw: Err("no value supplied for gw".to_string()),
+                    interface: Err("no value supplied for interface".to_string()),
+                    local_pref: Ok(Default::default()),
+                    vid: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl RouteAddRemove {
+            pub fn dst<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.dst = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dst: {}", e));
+                self
+            }
+            pub fn gw<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.gw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for gw: {}", e));
+                self
+            }
+            pub fn interface<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interface: {}", e));
+                self
+            }
+            pub fn local_pref<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local_pref = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self
+            }
+            pub fn vid<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vid = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vid: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouteAddRemove> for super::RouteAddRemove {
+            type Error = super::error::ConversionError;
+            fn try_from(value: RouteAddRemove) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    dst: value.dst?,
+                    gw: value.gw?,
+                    interface: value.interface?,
+                    local_pref: value.local_pref?,
+                    vid: value.vid?,
+                })
+            }
+        }
+
+        impl From<super::RouteAddRemove> for RouteAddRemove {
+            fn from(value: super::RouteAddRemove) -> Self {
+                Self {
+                    dst: Ok(value.dst),
+                    gw: Ok(value.gw),
+                    interface: Ok(value.interface),
                     local_pref: Ok(value.local_pref),
                     vid: Ok(value.vid),
                 }
@@ -67924,7 +68114,9 @@ pub mod builder {
         /// Sends a `GET` request to
         /// `/v1/system/networking/switch-port-configuration/{configuration}/
         /// route`
-        pub async fn send(self) -> Result<ResponseValue<types::RouteConfig>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::SwitchPortRouteConfig>>, Error<types::Error>> {
             let Self {
                 client,
                 configuration,
@@ -67967,7 +68159,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortConfigurationRouteAdd<'a> {
         client: &'a super::Client,
         configuration: Result<types::NameOrId, String>,
-        body: Result<types::builder::Route, String>,
+        body: Result<types::builder::RouteAddRemove, String>,
     }
 
     impl<'a> NetworkingSwitchPortConfigurationRouteAdd<'a> {
@@ -67975,7 +68167,7 @@ pub mod builder {
             Self {
                 client: client,
                 configuration: Err("configuration was not initialized".to_string()),
-                body: Ok(types::builder::Route::default()),
+                body: Ok(types::builder::RouteAddRemove::default()),
             }
         }
 
@@ -67991,19 +68183,19 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Route>,
-            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::RouteAddRemove>,
+            <V as std::convert::TryInto<types::RouteAddRemove>>::Error: std::fmt::Display,
         {
             self.body = value
                 .try_into()
                 .map(From::from)
-                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
+                .map_err(|s| format!("conversion to `RouteAddRemove` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
-            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
+            F: std::ops::FnOnce(types::builder::RouteAddRemove) -> types::builder::RouteAddRemove,
         {
             self.body = self.body.map(f);
             self
@@ -68012,7 +68204,9 @@ pub mod builder {
         /// Sends a `POST` request to
         /// `/v1/system/networking/switch-port-configuration/{configuration}/
         /// route/add`
-        pub async fn send(self) -> Result<ResponseValue<types::Route>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortRouteConfig>, Error<types::Error>> {
             let Self {
                 client,
                 configuration,
@@ -68020,7 +68214,7 @@ pub mod builder {
             } = self;
             let configuration = configuration.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| types::RouteAddRemove::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/switch-port-configuration/{}/route/add",
@@ -68060,7 +68254,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortConfigurationRouteRemove<'a> {
         client: &'a super::Client,
         configuration: Result<types::NameOrId, String>,
-        body: Result<types::builder::Route, String>,
+        body: Result<types::builder::RouteAddRemove, String>,
     }
 
     impl<'a> NetworkingSwitchPortConfigurationRouteRemove<'a> {
@@ -68068,7 +68262,7 @@ pub mod builder {
             Self {
                 client: client,
                 configuration: Err("configuration was not initialized".to_string()),
-                body: Ok(types::builder::Route::default()),
+                body: Ok(types::builder::RouteAddRemove::default()),
             }
         }
 
@@ -68084,19 +68278,19 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::Route>,
-            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::RouteAddRemove>,
+            <V as std::convert::TryInto<types::RouteAddRemove>>::Error: std::fmt::Display,
         {
             self.body = value
                 .try_into()
                 .map(From::from)
-                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
+                .map_err(|s| format!("conversion to `RouteAddRemove` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
-            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
+            F: std::ops::FnOnce(types::builder::RouteAddRemove) -> types::builder::RouteAddRemove,
         {
             self.body = self.body.map(f);
             self
@@ -68113,7 +68307,7 @@ pub mod builder {
             } = self;
             let configuration = configuration.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| types::RouteAddRemove::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/switch-port-configuration/{}/route/remove",

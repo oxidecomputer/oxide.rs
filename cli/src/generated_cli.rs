@@ -5311,6 +5311,13 @@ impl<T: CliConfig> Cli<T> {
                     .help("The route gateway."),
             )
             .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface to configure the route on"),
+            )
+            .arg(
                 clap::Arg::new("local-pref")
                     .long("local-pref")
                     .value_parser(clap::value_parser!(u32))
@@ -5366,6 +5373,13 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("The route gateway."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface to configure the route on"),
             )
             .arg(
                 clap::Arg::new("local-pref")
@@ -12865,6 +12879,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.gw(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<u32>("local-pref") {
             request = request.body_map(|body| body.local_pref(value.clone()))
         }
@@ -12875,7 +12893,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::Route>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::RouteAddRemove>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -12913,6 +12931,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.gw(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<u32>("local-pref") {
             request = request.body_map(|body| body.local_pref(value.clone()))
         }
@@ -12923,7 +12945,7 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::Route>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::RouteAddRemove>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 

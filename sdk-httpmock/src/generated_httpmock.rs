@@ -12677,7 +12677,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::RouteConfig) -> Self {
+        pub fn ok(self, value: &Vec<types::SwitchPortRouteConfig>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12733,7 +12733,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::Route) -> Self {
+        pub fn body(self, value: &types::RouteAddRemove) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
@@ -12748,7 +12748,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::Route) -> Self {
+        pub fn created(self, value: &types::SwitchPortRouteConfig) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -12804,7 +12804,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::Route) -> Self {
+        pub fn body(self, value: &types::RouteAddRemove) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
