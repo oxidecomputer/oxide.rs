@@ -106,6 +106,84 @@ pub mod types {
         }
     }
 
+    /// An address to be added or removed from an interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An address to be added or removed from an interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "address",
+    ///    "address_lot",
+    ///    "interface"
+    ///  ],
+    ///  "properties": {
+    ///    "address": {
+    ///      "description": "The address and prefix length of this address.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpNet"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "address_lot": {
+    ///      "description": "The address lot this address is drawn from.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "interface": {
+    ///      "description": "The name of the interface",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "vlan_id": {
+    ///      "description": "Optional VLAN ID for this address",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AddressAddRemove {
+        /// The address and prefix length of this address.
+        pub address: IpNet,
+        /// The address lot this address is drawn from.
+        pub address_lot: NameOrId,
+        /// The name of the interface
+        pub interface: Name,
+        /// Optional VLAN ID for this address
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vlan_id: Option<u16>,
+    }
+
+    impl From<&AddressAddRemove> for AddressAddRemove {
+        fn from(value: &AddressAddRemove) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressAddRemove {
+        pub fn builder() -> builder::AddressAddRemove {
+            Default::default()
+        }
+    }
+
     /// A set of addresses associated with a port configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -27282,6 +27360,91 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct AddressAddRemove {
+            address: Result<super::IpNet, String>,
+            address_lot: Result<super::NameOrId, String>,
+            interface: Result<super::Name, String>,
+            vlan_id: Result<Option<u16>, String>,
+        }
+
+        impl Default for AddressAddRemove {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    address_lot: Err("no value supplied for address_lot".to_string()),
+                    interface: Err("no value supplied for interface".to_string()),
+                    vlan_id: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AddressAddRemove {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn address_lot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
+                self
+            }
+            pub fn interface<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interface: {}", e));
+                self
+            }
+            pub fn vlan_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressAddRemove> for super::AddressAddRemove {
+            type Error = super::error::ConversionError;
+            fn try_from(value: AddressAddRemove) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    address: value.address?,
+                    address_lot: value.address_lot?,
+                    interface: value.interface?,
+                    vlan_id: value.vlan_id?,
+                })
+            }
+        }
+
+        impl From<super::AddressAddRemove> for AddressAddRemove {
+            fn from(value: super::AddressAddRemove) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    address_lot: Ok(value.address_lot),
+                    interface: Ok(value.interface),
+                    vlan_id: Ok(value.vlan_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct AddressConfig {
             addresses: Result<Vec<super::Address>, String>,
         }
@@ -49979,6 +50142,122 @@ pub trait ClientSystemNetworkingExt {
     fn networking_switch_port_configuration_view(
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationView;
+    /// List addresses assigned to a provided interface configuration
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// address`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_address_list()
+    ///    .configuration(configuration)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_address_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressList;
+    /// Add address to an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// address/add`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_address_add()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_address_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressAdd;
+    /// Remove address from an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// address/remove`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_address_remove()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_address_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressRemove;
+    /// List bgp peers assigned to a provided interface configuration
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// bgp-peer`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_bgp_peer_list()
+    ///    .configuration(configuration)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_bgp_peer_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerList;
+    /// Add bgp peer to an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// bgp-peer/add`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_bgp_peer_add()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_bgp_peer_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerAdd;
+    /// Remove bgp peer from an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/
+    /// bgp-peer/remove`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_bgp_peer_remove()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_bgp_peer_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerRemove;
     /// Get switch port geometry for a provided switch port configuration
     ///
     /// Sends a `GET` request to
@@ -50017,198 +50296,6 @@ pub trait ClientSystemNetworkingExt {
     fn networking_switch_port_configuration_geometry_set(
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationGeometrySet;
-    /// List addresses assigned to a provided interface configuration
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/address`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_address_list()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_address_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressList;
-    /// Add address to an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/address/add`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_address_add()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_address_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressAdd;
-    /// Remove address from an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/address/remove`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_address_remove()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_address_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressRemove;
-    /// List bgp peers assigned to a provided interface configuration
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/bgp-peer`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_bgp_peer_list()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_bgp_peer_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerList;
-    /// Add bgp peer to an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/bgp-peer/add`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_bgp_peer_add()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_bgp_peer_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd;
-    /// Remove bgp peer from an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/bgp-peer/remove`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_bgp_peer_remove()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_bgp_peer_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove;
-    /// List routes assigned to a provided interface configuration
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/route`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_route_list()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_route_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteList;
-    /// Add route to an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/route/add`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_route_add()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_route_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteAdd;
-    /// Remove address from an interface configuration
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/networking/switch-port-configuration/{configuration}/
-    /// interface/{interface}/route/remove`
-    ///
-    /// Arguments:
-    /// - `configuration`: A name or id to use when selecting a switch port
-    ///   configuration.
-    /// - `interface`: Interface name
-    /// - `body`
-    /// ```ignore
-    /// let response = client.networking_switch_port_configuration_interface_route_remove()
-    ///    .configuration(configuration)
-    ///    .interface(interface)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_switch_port_configuration_interface_route_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteRemove;
     /// List links for a provided switch port configuration
     ///
     /// Sends a `GET` request to
@@ -50285,6 +50372,63 @@ pub trait ClientSystemNetworkingExt {
     fn networking_switch_port_configuration_link_delete(
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationLinkDelete;
+    /// List routes assigned to a provided interface configuration
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/route`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_route_list()
+    ///    .configuration(configuration)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_route_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteList;
+    /// Add route to an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/route/
+    /// add`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_route_add()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_route_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteAdd;
+    /// Remove address from an interface configuration
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/networking/switch-port-configuration/{configuration}/route/
+    /// remove`
+    ///
+    /// Arguments:
+    /// - `configuration`: A name or id to use when selecting a switch port
+    ///   configuration.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_configuration_route_remove()
+    ///    .configuration(configuration)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_configuration_route_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteRemove;
 }
 
 impl ClientSystemNetworkingExt for Client {
@@ -50480,6 +50624,42 @@ impl ClientSystemNetworkingExt for Client {
         builder::NetworkingSwitchPortConfigurationView::new(self)
     }
 
+    fn networking_switch_port_configuration_address_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressList {
+        builder::NetworkingSwitchPortConfigurationAddressList::new(self)
+    }
+
+    fn networking_switch_port_configuration_address_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressAdd {
+        builder::NetworkingSwitchPortConfigurationAddressAdd::new(self)
+    }
+
+    fn networking_switch_port_configuration_address_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationAddressRemove {
+        builder::NetworkingSwitchPortConfigurationAddressRemove::new(self)
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerList {
+        builder::NetworkingSwitchPortConfigurationBgpPeerList::new(self)
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerAdd {
+        builder::NetworkingSwitchPortConfigurationBgpPeerAdd::new(self)
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationBgpPeerRemove {
+        builder::NetworkingSwitchPortConfigurationBgpPeerRemove::new(self)
+    }
+
     fn networking_switch_port_configuration_geometry_view(
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationGeometryView {
@@ -50490,60 +50670,6 @@ impl ClientSystemNetworkingExt for Client {
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationGeometrySet {
         builder::NetworkingSwitchPortConfigurationGeometrySet::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_address_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressList {
-        builder::NetworkingSwitchPortConfigurationInterfaceAddressList::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_address_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressAdd {
-        builder::NetworkingSwitchPortConfigurationInterfaceAddressAdd::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_address_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceAddressRemove {
-        builder::NetworkingSwitchPortConfigurationInterfaceAddressRemove::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_bgp_peer_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerList {
-        builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerList::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_bgp_peer_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd {
-        builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_bgp_peer_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove {
-        builder::NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_route_list(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteList {
-        builder::NetworkingSwitchPortConfigurationInterfaceRouteList::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_route_add(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteAdd {
-        builder::NetworkingSwitchPortConfigurationInterfaceRouteAdd::new(self)
-    }
-
-    fn networking_switch_port_configuration_interface_route_remove(
-        &self,
-    ) -> builder::NetworkingSwitchPortConfigurationInterfaceRouteRemove {
-        builder::NetworkingSwitchPortConfigurationInterfaceRouteRemove::new(self)
     }
 
     fn networking_switch_port_configuration_link_list(
@@ -50568,6 +50694,24 @@ impl ClientSystemNetworkingExt for Client {
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationLinkDelete {
         builder::NetworkingSwitchPortConfigurationLinkDelete::new(self)
+    }
+
+    fn networking_switch_port_configuration_route_list(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteList {
+        builder::NetworkingSwitchPortConfigurationRouteList::new(self)
+    }
+
+    fn networking_switch_port_configuration_route_add(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteAdd {
+        builder::NetworkingSwitchPortConfigurationRouteAdd::new(self)
+    }
+
+    fn networking_switch_port_configuration_route_remove(
+        &self,
+    ) -> builder::NetworkingSwitchPortConfigurationRouteRemove {
+        builder::NetworkingSwitchPortConfigurationRouteRemove::new(self)
     }
 }
 
@@ -66737,6 +66881,521 @@ pub mod builder {
     }
 
     /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_address_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationAddressList<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationAddressList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// address`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::SwitchPortAddressConfig>>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                configuration,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/address",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_add`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_address_add
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationAddressAdd<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::AddressAddRemove, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationAddressAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::AddressAddRemove::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AddressAddRemove>,
+            <V as std::convert::TryInto<types::AddressAddRemove>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AddressAddRemove` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AddressAddRemove,
+            ) -> types::builder::AddressAddRemove,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// address/add`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortAddressConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::AddressAddRemove::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/address/add",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_remove`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_address_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_address_remove
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationAddressRemove<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::AddressAddRemove, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationAddressRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::AddressAddRemove::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AddressAddRemove>,
+            <V as std::convert::TryInto<types::AddressAddRemove>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AddressAddRemove` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AddressAddRemove,
+            ) -> types::builder::AddressAddRemove,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// address/remove`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::AddressAddRemove::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/address/remove",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationBgpPeerList<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationBgpPeerList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// bgp-peer`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BgpPeerConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/bgp-peer",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_add`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_add
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAdd<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::BgpPeer, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationBgpPeerAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::BgpPeer::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpPeer>,
+            <V as std::convert::TryInto<types::BgpPeer>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BgpPeer` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BgpPeer) -> types::builder::BgpPeer,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// bgp-peer/add`
+        pub async fn send(self) -> Result<ResponseValue<types::BgpPeer>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::BgpPeer::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/bgp-peer/add",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_remove`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_bgp_peer_remove
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationBgpPeerRemove<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::BgpPeer, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationBgpPeerRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::BgpPeer::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpPeer>,
+            <V as std::convert::TryInto<types::BgpPeer>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BgpPeer` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BgpPeer) -> types::builder::BgpPeer,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// bgp-peer/remove`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::BgpPeer::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/bgp-peer/remove",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
     /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_geometry_view`]
     ///
     /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_geometry_view`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_geometry_view
@@ -66892,904 +67551,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_list`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_list
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceAddressList<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceAddressList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/address`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<Vec<types::SwitchPortAddressConfig>>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                configuration,
-                interface,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/address",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_add`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_add
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceAddressAdd<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::Address, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceAddressAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::Address::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Address>,
-            <V as std::convert::TryInto<types::Address>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `Address` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::Address) -> types::builder::Address,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/address/add`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SwitchPortAddressConfig>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::Address::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/address/add",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_remove`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_address_remove
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceAddressRemove<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::Address, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceAddressRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::Address::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Address>,
-            <V as std::convert::TryInto<types::Address>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `Address` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::Address) -> types::builder::Address,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/address/remove`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::Address::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/address/remove",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_list`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_list
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceBgpPeerList<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceBgpPeerList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/bgp-peer`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::BgpPeerConfig>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/bgp-peer",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_add`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_add
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::BgpPeer, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceBgpPeerAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::BgpPeer::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::BgpPeer>,
-            <V as std::convert::TryInto<types::BgpPeer>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `BgpPeer` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::BgpPeer) -> types::builder::BgpPeer,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/bgp-peer/add`
-        pub async fn send(self) -> Result<ResponseValue<types::BgpPeer>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::BgpPeer::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/bgp-peer/add",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_remove`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_bgp_peer_remove
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::BgpPeer, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceBgpPeerRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::BgpPeer::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::BgpPeer>,
-            <V as std::convert::TryInto<types::BgpPeer>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `BgpPeer` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::BgpPeer) -> types::builder::BgpPeer,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/bgp-peer/remove`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::BgpPeer::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/bgp-peer/remove",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_list`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_list
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceRouteList<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceRouteList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/route`
-        pub async fn send(self) -> Result<ResponseValue<types::RouteConfig>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/route",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_add`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_add
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceRouteAdd<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::Route, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceRouteAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::Route::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Route>,
-            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/route/add`
-        pub async fn send(self) -> Result<ResponseValue<types::Route>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/route/add",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_remove`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_interface_route_remove
-    #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortConfigurationInterfaceRouteRemove<'a> {
-        client: &'a super::Client,
-        configuration: Result<types::NameOrId, String>,
-        interface: Result<types::Name, String>,
-        body: Result<types::builder::Route, String>,
-    }
-
-    impl<'a> NetworkingSwitchPortConfigurationInterfaceRouteRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                configuration: Err("configuration was not initialized".to_string()),
-                interface: Err("interface was not initialized".to_string()),
-                body: Ok(types::builder::Route::default()),
-            }
-        }
-
-        pub fn configuration<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.configuration = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
-            self
-        }
-
-        pub fn interface<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Route>,
-            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/networking/switch-port-configuration/{configuration}/
-        /// interface/{interface}/route/remove`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                configuration,
-                interface,
-                body,
-            } = self;
-            let configuration = configuration.map_err(Error::InvalidRequest)?;
-            let interface = interface.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/switch-port-configuration/{}/interface/{}/route/remove",
-                client.baseurl,
-                encode_path(&configuration.to_string()),
-                encode_path(&interface.to_string()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -68116,6 +67877,258 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_list`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_route_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationRouteList<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationRouteList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// route`
+        pub async fn send(self) -> Result<ResponseValue<types::RouteConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/route",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_add`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_add`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_route_add
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationRouteAdd<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::Route, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationRouteAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::Route::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Route>,
+            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// route/add`
+        pub async fn send(self) -> Result<ResponseValue<types::Route>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/route/add",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_remove`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_configuration_route_remove`]: super::ClientSystemNetworkingExt::networking_switch_port_configuration_route_remove
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortConfigurationRouteRemove<'a> {
+        client: &'a super::Client,
+        configuration: Result<types::NameOrId, String>,
+        body: Result<types::builder::Route, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortConfigurationRouteRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                configuration: Err("configuration was not initialized".to_string()),
+                body: Ok(types::builder::Route::default()),
+            }
+        }
+
+        pub fn configuration<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.configuration = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for configuration failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Route>,
+            <V as std::convert::TryInto<types::Route>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `Route` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::Route) -> types::builder::Route,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-configuration/{configuration}/
+        /// route/remove`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                configuration,
+                body,
+            } = self;
+            let configuration = configuration.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::Route::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-configuration/{}/route/remove",
+                client.baseurl,
+                encode_path(&configuration.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
