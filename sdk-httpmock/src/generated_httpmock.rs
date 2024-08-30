@@ -12050,7 +12050,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::BgpPeerConfig) -> Self {
+        pub fn ok(self, value: &Vec<types::BgpPeer>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12177,7 +12177,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::BgpPeer) -> Self {
+        pub fn body(self, value: &types::BgpPeerRemove) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }

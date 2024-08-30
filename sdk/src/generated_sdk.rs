@@ -2504,6 +2504,73 @@ pub mod types {
         }
     }
 
+    /// A BGP peer configuration to remove from an interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A BGP peer configuration to remove from an interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "addr",
+    ///    "bgp_config",
+    ///    "interface_name"
+    ///  ],
+    ///  "properties": {
+    ///    "addr": {
+    ///      "description": "The address of the host to peer with.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "bgp_config": {
+    ///      "description": "The global BGP configuration used for establishing
+    /// a session with this peer.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "interface_name": {
+    ///      "description": "The name of interface to peer on. This is relative
+    /// to the port configuration this BGP peer configuration is a part of. For
+    /// example this value could be phy0 to refer to a primary physical
+    /// interface. Or it could be vlan47 to refer to a VLAN interface.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct BgpPeerRemove {
+        /// The address of the host to peer with.
+        pub addr: std::net::IpAddr,
+        /// The global BGP configuration used for establishing a session with
+        /// this peer.
+        pub bgp_config: NameOrId,
+        /// The name of interface to peer on. This is relative to the port
+        /// configuration this BGP peer configuration is a part of. For example
+        /// this value could be phy0 to refer to a primary physical interface.
+        /// Or it could be vlan47 to refer to a VLAN interface.
+        pub interface_name: String,
+    }
+
+    impl From<&BgpPeerRemove> for BgpPeerRemove {
+        fn from(value: &BgpPeerRemove) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpPeerRemove {
+        pub fn builder() -> builder::BgpPeerRemove {
+            Default::default()
+        }
+    }
+
     /// The current state of a BGP peer.
     ///
     /// <details><summary>JSON schema</summary>
@@ -29652,6 +29719,77 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BgpPeerRemove {
+            addr: Result<std::net::IpAddr, String>,
+            bgp_config: Result<super::NameOrId, String>,
+            interface_name: Result<String, String>,
+        }
+
+        impl Default for BgpPeerRemove {
+            fn default() -> Self {
+                Self {
+                    addr: Err("no value supplied for addr".to_string()),
+                    bgp_config: Err("no value supplied for bgp_config".to_string()),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                }
+            }
+        }
+
+        impl BgpPeerRemove {
+            pub fn addr<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.addr = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn bgp_config<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_config = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bgp_config: {}", e));
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpPeerRemove> for super::BgpPeerRemove {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BgpPeerRemove) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    addr: value.addr?,
+                    bgp_config: value.bgp_config?,
+                    interface_name: value.interface_name?,
+                })
+            }
+        }
+
+        impl From<super::BgpPeerRemove> for BgpPeerRemove {
+            fn from(value: super::BgpPeerRemove) -> Self {
+                Self {
+                    addr: Ok(value.addr),
+                    bgp_config: Ok(value.bgp_config),
+                    interface_name: Ok(value.interface_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpPeerStatus {
             addr: Result<std::net::IpAddr, String>,
             local_asn: Result<u32, String>,
@@ -50599,7 +50737,7 @@ pub trait ClientSystemNetworkingExt {
     fn networking_switch_port_configuration_route_add(
         &self,
     ) -> builder::NetworkingSwitchPortConfigurationRouteAdd;
-    /// Remove address from an interface configuration
+    /// Remove route from an interface configuration
     ///
     /// Sends a `POST` request to
     /// `/v1/system/networking/switch-port-configuration/{configuration}/route/
@@ -67362,9 +67500,7 @@ pub mod builder {
         /// Sends a `GET` request to
         /// `/v1/system/networking/switch-port-configuration/{configuration}/
         /// bgp-peer`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::BgpPeerConfig>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<Vec<types::BgpPeer>>, Error<types::Error>> {
             let Self {
                 client,
                 configuration,
@@ -67500,7 +67636,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortConfigurationBgpPeerRemove<'a> {
         client: &'a super::Client,
         configuration: Result<types::NameOrId, String>,
-        body: Result<types::builder::BgpPeer, String>,
+        body: Result<types::builder::BgpPeerRemove, String>,
     }
 
     impl<'a> NetworkingSwitchPortConfigurationBgpPeerRemove<'a> {
@@ -67508,7 +67644,7 @@ pub mod builder {
             Self {
                 client: client,
                 configuration: Err("configuration was not initialized".to_string()),
-                body: Ok(types::builder::BgpPeer::default()),
+                body: Ok(types::builder::BgpPeerRemove::default()),
             }
         }
 
@@ -67524,19 +67660,19 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::BgpPeer>,
-            <V as std::convert::TryInto<types::BgpPeer>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::BgpPeerRemove>,
+            <V as std::convert::TryInto<types::BgpPeerRemove>>::Error: std::fmt::Display,
         {
             self.body = value
                 .try_into()
                 .map(From::from)
-                .map_err(|s| format!("conversion to `BgpPeer` for body failed: {}", s));
+                .map_err(|s| format!("conversion to `BgpPeerRemove` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
-            F: std::ops::FnOnce(types::builder::BgpPeer) -> types::builder::BgpPeer,
+            F: std::ops::FnOnce(types::builder::BgpPeerRemove) -> types::builder::BgpPeerRemove,
         {
             self.body = self.body.map(f);
             self
@@ -67553,7 +67689,7 @@ pub mod builder {
             } = self;
             let configuration = configuration.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(|v| types::BgpPeer::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| types::BgpPeerRemove::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/switch-port-configuration/{}/bgp-peer/remove",

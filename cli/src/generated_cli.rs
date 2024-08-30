@@ -4958,50 +4958,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("A name or id to use when selecting a switch port configuration."),
             )
             .arg(
-                clap::Arg::new("connect-retry")
-                    .long("connect-retry")
-                    .value_parser(clap::value_parser!(u32))
-                    .required_unless_present("json-body")
-                    .help("How long to to wait between TCP connection retries (seconds)."),
-            )
-            .arg(
-                clap::Arg::new("delay-open")
-                    .long("delay-open")
-                    .value_parser(clap::value_parser!(u32))
-                    .required_unless_present("json-body")
-                    .help(
-                        "How long to delay sending an open request after establishing a TCP \
-                         session (seconds).",
-                    ),
-            )
-            .arg(
-                clap::Arg::new("enforce-first-as")
-                    .long("enforce-first-as")
-                    .value_parser(clap::value_parser!(bool))
-                    .required_unless_present("json-body")
-                    .help(
-                        "Enforce that the first AS in paths received from this peer is the peer's \
-                         AS.",
-                    ),
-            )
-            .arg(
-                clap::Arg::new("hold-time")
-                    .long("hold-time")
-                    .value_parser(clap::value_parser!(u32))
-                    .required_unless_present("json-body")
-                    .help("How long to hold peer connections between keepalives (seconds)."),
-            )
-            .arg(
-                clap::Arg::new("idle-hold-time")
-                    .long("idle-hold-time")
-                    .value_parser(clap::value_parser!(u32))
-                    .required_unless_present("json-body")
-                    .help(
-                        "How long to hold a peer in idle before attempting a new session \
-                         (seconds).",
-                    ),
-            )
-            .arg(
                 clap::Arg::new("interface-name")
                     .long("interface-name")
                     .value_parser(clap::value_parser!(String))
@@ -5014,62 +4970,10 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("keepalive")
-                    .long("keepalive")
-                    .value_parser(clap::value_parser!(u32))
-                    .required_unless_present("json-body")
-                    .help("How often to send keepalive requests (seconds)."),
-            )
-            .arg(
-                clap::Arg::new("local-pref")
-                    .long("local-pref")
-                    .value_parser(clap::value_parser!(u32))
-                    .required(false)
-                    .help("Apply a local preference to routes received from this peer."),
-            )
-            .arg(
-                clap::Arg::new("md5-auth-key")
-                    .long("md5-auth-key")
-                    .value_parser(clap::value_parser!(String))
-                    .required(false)
-                    .help("Use the given key for TCP-MD5 authentication with the peer."),
-            )
-            .arg(
-                clap::Arg::new("min-ttl")
-                    .long("min-ttl")
-                    .value_parser(clap::value_parser!(u8))
-                    .required(false)
-                    .help("Require messages from a peer have a minimum IP time to live field."),
-            )
-            .arg(
-                clap::Arg::new("multi-exit-discriminator")
-                    .long("multi-exit-discriminator")
-                    .value_parser(clap::value_parser!(u32))
-                    .required(false)
-                    .help(
-                        "Apply the provided multi-exit discriminator (MED) updates sent to the \
-                         peer.",
-                    ),
-            )
-            .arg(
-                clap::Arg::new("remote-asn")
-                    .long("remote-asn")
-                    .value_parser(clap::value_parser!(u32))
-                    .required(false)
-                    .help("Require that a peer has a specified ASN."),
-            )
-            .arg(
-                clap::Arg::new("vlan-id")
-                    .long("vlan-id")
-                    .value_parser(clap::value_parser!(u16))
-                    .required(false)
-                    .help("Associate a VLAN ID with a peer."),
-            )
-            .arg(
                 clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -5412,7 +5316,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove address from an interface configuration")
+            .about("Remove route from an interface configuration")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
@@ -12561,61 +12465,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.configuration(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<u32>("connect-retry") {
-            request = request.body_map(|body| body.connect_retry(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("delay-open") {
-            request = request.body_map(|body| body.delay_open(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<bool>("enforce-first-as") {
-            request = request.body_map(|body| body.enforce_first_as(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("hold-time") {
-            request = request.body_map(|body| body.hold_time(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("idle-hold-time") {
-            request = request.body_map(|body| body.idle_hold_time(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<String>("interface-name") {
             request = request.body_map(|body| body.interface_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<u32>("keepalive") {
-            request = request.body_map(|body| body.keepalive(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("local-pref") {
-            request = request.body_map(|body| body.local_pref(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<String>("md5-auth-key") {
-            request = request.body_map(|body| body.md5_auth_key(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u8>("min-ttl") {
-            request = request.body_map(|body| body.min_ttl(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("multi-exit-discriminator") {
-            request = request.body_map(|body| body.multi_exit_discriminator(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u32>("remote-asn") {
-            request = request.body_map(|body| body.remote_asn(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<u16>("vlan-id") {
-            request = request.body_map(|body| body.vlan_id(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BgpPeer>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::BgpPeerRemove>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 

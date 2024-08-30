@@ -280,14 +280,14 @@ fn test_port_config() {
     };
 
     let mock_switch0_qsfp0_settings_view =
-        server.networking_switch_port_settings_view(|when, then| {
-            when.port(&NameOrId::Id(ports.items[0].port_settings_id.unwrap()));
+        server.networking_switch_port_configuration_view(|when, then| {
+            when.configuration(&NameOrId::Id(ports.items[0].port_settings_id.unwrap()));
             then.ok(&switch0_qsfp0_view);
         });
 
     let mock_switch1_qsfp0_settings_view =
-        server.networking_switch_port_settings_view(|when, then| {
-            when.port(&NameOrId::Id(ports.items[1].port_settings_id.unwrap()));
+        server.networking_switch_port_configuration_view(|when, then| {
+            when.configuration(&NameOrId::Id(ports.items[1].port_settings_id.unwrap()));
             then.ok(&switch1_qsfp0_view);
         });
 
