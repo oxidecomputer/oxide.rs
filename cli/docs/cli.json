@@ -80,6 +80,10 @@
           "long": "raw-field",
           "short": "f",
           "help": "Add a string parameter in key=value format"
+        },
+        {
+          "name": "endpoint",
+          "help": "The endpoint to request"
         }
       ]
     },
@@ -924,6 +928,10 @@
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
+                },
+                {
+                  "name": "query",
+                  "help": "The timeseries query to display in the dashboard"
                 }
               ]
             },
