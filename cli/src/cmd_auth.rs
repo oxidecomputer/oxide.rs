@@ -528,10 +528,10 @@ impl CmdAuthStatus {
 #[command(verbatim_doc_comment)]
 pub struct CmdAuthRenameProfile {
     /// The current name of the profile to be renamed.
-    current_profile_name: String,
+    current_name: String,
 
     /// The new name of the profile to be renamed.
-    new_profile_name: String,
+    new_name: String,
 }
 
 impl CmdAuthRenameProfile {
@@ -544,14 +544,14 @@ impl CmdAuthRenameProfile {
                 .unwrap();
             if let Some(profiles) = credentials.get_mut("profile") {
                 let profiles = profiles.as_table_mut().unwrap();
-                let Some(profile) = profiles.remove(&self.current_profile_name) else {
+                let Some(profile) = profiles.remove(&self.current_name) else {
                     bail!(
                         "No profile named \"{}\" found in {}",
-                        self.current_profile_name,
+                        self.current_name,
                         credentials_path.display()
                     );
                 };
-                profiles.insert(&self.new_profile_name, profile);
+                profiles.insert(&self.new_name, profile);
             }
 
             write_configuration_file(&credentials_path, &credentials.to_string())?;
@@ -562,11 +562,8 @@ impl CmdAuthRenameProfile {
             let mut config = config_contents.parse::<toml_edit::DocumentMut>()?;
 
             if let Some(old_default) = config.remove("default-profile") {
-                if Some(self.current_profile_name.as_str()) == old_default.as_str() {
-                    config.insert(
-                        "default-profile",
-                        Item::Value(self.new_profile_name.clone().into()),
-                    );
+                if Some(self.current_name.as_str()) == old_default.as_str() {
+                    config.insert("default-profile", Item::Value(self.new_name.clone().into()));
                     write_configuration_file(&config_path, &config.to_string())?;
                 }
             }
@@ -575,8 +572,8 @@ impl CmdAuthRenameProfile {
         writeln!(
             io::stdout(),
             "Renamed profile \"{}\" to \"{}\"",
-            self.current_profile_name,
-            self.new_profile_name,
+            self.current_name,
+            self.new_name,
         )?;
         Ok(())
     }

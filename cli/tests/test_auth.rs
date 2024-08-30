@@ -510,8 +510,8 @@ fn test_cmd_auth_rename_profile() {
         .assert()
         .failure()
         .stderr(format!(
-            "No profile named \"non-existent-profile\" found in {}/credentials.toml\n",
-            temp_dir.display()
+            "No profile named \"non-existent-profile\" found in {}\n",
+            temp_dir.join("credentials.toml").display()
         ));
 
     let cfg_only_temp_dir = tempfile::tempdir().unwrap().into_path();

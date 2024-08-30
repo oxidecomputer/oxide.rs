@@ -157,11 +157,11 @@
               "global": true
             },
             {
-              "name": "current_profile_name",
+              "name": "current_name",
               "help": "The current name of the profile to be renamed"
             },
             {
-              "name": "new_profile_name",
+              "name": "new_name",
               "help": "The new name of the profile to be renamed"
             }
           ]
