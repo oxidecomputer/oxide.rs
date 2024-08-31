@@ -14,7 +14,7 @@ use colored::*;
 use futures::TryStreamExt;
 use oxide::{
     types::{
-        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
+        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeerCombined,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
         SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
@@ -1047,7 +1047,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        let peer = BgpPeer {
+        let peer = BgpPeerCombined {
             addr: self.addr,
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering

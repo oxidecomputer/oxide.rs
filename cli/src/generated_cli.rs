@@ -220,6 +220,33 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerAdd => {
                 Self::cli_networking_switch_port_configuration_bgp_peer_add()
             }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportList => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_export_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_export_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_export_remove()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportList => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_import_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_import_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_allow_import_remove()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityList => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_community_list()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityAdd => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_community_add()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityRemove => {
+                Self::cli_networking_switch_port_configuration_bgp_peer_community_remove()
+            }
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerRemove => {
                 Self::cli_networking_switch_port_configuration_bgp_peer_remove()
             }
@@ -4785,9 +4812,23 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("addr")
                     .long("addr")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(clap::value_parser!(types::IpNet))
                     .required_unless_present("json-body")
-                    .help("The address of the host to peer with."),
+                    .help("The address of th e host to peer with."),
+            )
+            .arg(
+                clap::Arg::new("allow-export-list-active")
+                    .long("allow-export-list-active")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help("Enable export policies"),
+            )
+            .arg(
+                clap::Arg::new("allow-import-list-active")
+                    .long("allow-import-list-active")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help("Enable import policies"),
             )
             .arg(
                 clap::Arg::new("bgp-config")
@@ -4918,7 +4959,7 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -4929,6 +4970,347 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Add bgp peer to an interface configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_export_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(true)
+                    .help("An address identifying a configured bgp peer."),
+            )
+            .about("List prefixes allowed to be exported by a given bgp peer")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_export_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("prefix")
+                    .long("prefix")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The allowed prefix to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add prefix to bgp peer allowed export list")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_export_remove() -> clap::Command
+    {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("prefix")
+                    .long("prefix")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The allowed prefix to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove prefix from bgp peer allowed export list")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_import_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(true)
+                    .help("An address identifying a configured bgp peer."),
+            )
+            .about("List prefixes allowed to be imported by a given bgp peer")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_import_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("prefix")
+                    .long("prefix")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The allowed prefix to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add prefix to bgp peer allowed import list")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_allow_import_remove() -> clap::Command
+    {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("prefix")
+                    .long("prefix")
+                    .value_parser(clap::value_parser!(types::IpNet))
+                    .required_unless_present("json-body")
+                    .help("The allowed prefix to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove prefix from bgp peer allowed import list")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_community_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(true)
+                    .help("An address identifying a configured bgp peer."),
+            )
+            .about("List communities assigned to a bgp peer")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_community_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("community")
+                    .long("community")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("The community to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add community to bgp peer")
+    }
+
+    pub fn cli_networking_switch_port_configuration_bgp_peer_community_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("community")
+                    .long("community")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("The community to add or remove"),
+            )
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .arg(
+                clap::Arg::new("interface")
+                    .long("interface")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The interface the peer is configured on"),
+            )
+            .arg(
+                clap::Arg::new("peer-address")
+                    .long("peer-address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("An address identifying the target bgp peer"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove community from bgp peer")
     }
 
     pub fn cli_networking_switch_port_configuration_bgp_peer_remove() -> clap::Command {
@@ -7110,6 +7492,50 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerAdd => {
                 self.execute_networking_switch_port_configuration_bgp_peer_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportList => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_export_list(
+                    matches,
+                )
+                .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_export_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_export_remove(
+                    matches,
+                )
+                .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportList => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_import_list(
+                    matches,
+                )
+                .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_import_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove => {
+                self.execute_networking_switch_port_configuration_bgp_peer_allow_import_remove(
+                    matches,
+                )
+                .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityList => {
+                self.execute_networking_switch_port_configuration_bgp_peer_community_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityAdd => {
+                self.execute_networking_switch_port_configuration_bgp_peer_community_add(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityRemove => {
+                self.execute_networking_switch_port_configuration_bgp_peer_community_remove(matches)
                     .await
             }
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerRemove => {
@@ -12361,8 +12787,16 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self
             .client
             .networking_switch_port_configuration_bgp_peer_add();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("addr") {
+        if let Some(value) = matches.get_one::<types::IpNet>("addr") {
             request = request.body_map(|body| body.addr(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("allow-export-list-active") {
+            request = request.body_map(|body| body.allow_export_list_active(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("allow-import-list-active") {
+            request = request.body_map(|body| body.allow_import_list_active(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("bgp-config") {
@@ -12437,6 +12871,393 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_export_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_export_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.peer_address(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_export_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_export_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_export_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("prefix") {
+            request = request.body_map(|body| body.prefix(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AllowedPrefixAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_export_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_export_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_export_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("prefix") {
+            request = request.body_map(|body| body.prefix(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AllowedPrefixAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_export_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_import_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_import_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.peer_address(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_import_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_import_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_import_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("prefix") {
+            request = request.body_map(|body| body.prefix(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AllowedPrefixAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_import_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_allow_import_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_allow_import_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("prefix") {
+            request = request.body_map(|body| body.prefix(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AllowedPrefixAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_allow_import_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_community_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_community_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.peer_address(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_community_list(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_community_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_community_add();
+        if let Some(value) = matches.get_one::<u32>("community") {
+            request = request.body_map(|body| body.community(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::BgpCommunityAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_community_add(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_bgp_peer_community_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_configuration_bgp_peer_community_remove();
+        if let Some(value) = matches.get_one::<u32>("community") {
+            request = request.body_map(|body| body.community(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("interface") {
+            request = request.body_map(|body| body.interface(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("peer-address") {
+            request = request.body_map(|body| body.peer_address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::BgpCommunityAddRemove>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_bgp_peer_community_remove(
+                matches,
+                &mut request,
+            )?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -15728,6 +16549,78 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_export_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowExportList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_export_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_export_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_import_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowImportList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_import_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_allow_import_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_community_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerCommunityList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_community_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerCommunityAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_bgp_peer_community_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationBgpPeerCommunityRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_configuration_bgp_peer_remove(
         &self,
         matches: &clap::ArgMatches,
@@ -16344,6 +17237,15 @@ pub enum CliCommand {
     NetworkingSwitchPortConfigurationAddressRemove,
     NetworkingSwitchPortConfigurationBgpPeerList,
     NetworkingSwitchPortConfigurationBgpPeerAdd,
+    NetworkingSwitchPortConfigurationBgpPeerAllowExportList,
+    NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd,
+    NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove,
+    NetworkingSwitchPortConfigurationBgpPeerAllowImportList,
+    NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd,
+    NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove,
+    NetworkingSwitchPortConfigurationBgpPeerCommunityList,
+    NetworkingSwitchPortConfigurationBgpPeerCommunityAdd,
+    NetworkingSwitchPortConfigurationBgpPeerCommunityRemove,
     NetworkingSwitchPortConfigurationBgpPeerRemove,
     NetworkingSwitchPortConfigurationGeometryView,
     NetworkingSwitchPortConfigurationGeometrySet,
@@ -16563,6 +17465,15 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortConfigurationAddressRemove,
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerList,
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerAdd,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportList,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportList,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityList,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityAdd,
+            CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityRemove,
             CliCommand::NetworkingSwitchPortConfigurationBgpPeerRemove,
             CliCommand::NetworkingSwitchPortConfigurationGeometryView,
             CliCommand::NetworkingSwitchPortConfigurationGeometrySet,

@@ -9,8 +9,8 @@ use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
-    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, NameOrId,
-    SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
+    BgpConfig, BgpConfigResultsPage, BgpPeerCombined, ImportExportPolicy, LinkFec, LinkSpeed,
+    NameOrId, SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
     SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings,
     SwitchPortSettingsView,
 };
@@ -119,7 +119,7 @@ fn test_port_config() {
             },
         ],
         bgp_peers: vec![
-            BgpPeer {
+            BgpPeerCombined {
                 interface_name: String::from("phy0"),
                 addr: "169.254.10.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
@@ -139,7 +139,7 @@ fn test_port_config() {
                 remote_asn: None,
                 vlan_id: None,
             },
-            BgpPeer {
+            BgpPeerCombined {
                 interface_name: String::from("phy0"),
                 addr: "169.254.30.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
@@ -167,7 +167,7 @@ fn test_port_config() {
             autoneg: false,
             fec: LinkFec::None,
             link_name: String::from("phy0"),
-            lldp_link_config_id: None,
+            lldp_link_config_id: Uuid::new_v4(),
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
@@ -211,7 +211,7 @@ fn test_port_config() {
             },
         ],
         bgp_peers: vec![
-            BgpPeer {
+            BgpPeerCombined {
                 interface_name: String::from("phy0"),
                 addr: "169.254.20.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
@@ -231,7 +231,7 @@ fn test_port_config() {
                 remote_asn: None,
                 vlan_id: None,
             },
-            BgpPeer {
+            BgpPeerCombined {
                 interface_name: String::from("phy0"),
                 addr: "169.254.40.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
@@ -259,7 +259,7 @@ fn test_port_config() {
             autoneg: false,
             fec: LinkFec::None,
             link_name: String::from("phy0"),
-            lldp_link_config_id: None,
+            lldp_link_config_id: Uuid::new_v4(),
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,

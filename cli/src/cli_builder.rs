@@ -507,6 +507,36 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system networking switch-port configuration route remove")
         }
 
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportList => {
+            Some("system networking switch-port configuration bgp peer allow import list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportAdd => {
+            Some("system networking switch-port configuration bgp peer allow import add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemove => {
+            Some("system networking switch-port configuration bgp peer allow import remove")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportList => {
+            Some("system networking switch-port configuration bgp peer allow export list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportAdd => {
+            Some("system networking switch-port configuration bgp peer allow export add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemove => {
+            Some("system networking switch-port configuration bgp peer allow export remove")
+        }
+
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityList => {
+            Some("system networking switch-port configuration bgp peer community list")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityAdd => {
+            Some("system networking switch-port configuration bgp peer community add")
+        }
+        CliCommand::NetworkingSwitchPortConfigurationBgpPeerCommunityRemove => {
+            Some("system networking switch-port configuration bgp peer community remove")
+        }
+
         CliCommand::NetworkingSwitchPortConfigurationLinkList => {
             Some("system networking switch-port configuration link list")
         }
