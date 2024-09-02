@@ -895,7 +895,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.11.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#a8f3f97a2eec06765893d43ede6f811ccc7949ea"
+source = "git+https://github.com/oxidecomputer/dropshot#2ad43f522a74c42bdb6bcaaef024801b853c1d3c"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -940,7 +940,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.11.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#a8f3f97a2eec06765893d43ede6f811ccc7949ea"
+source = "git+https://github.com/oxidecomputer/dropshot#2ad43f522a74c42bdb6bcaaef024801b853c1d3c"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -1491,7 +1491,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -3310,9 +3310,9 @@ checksum = "81cdd64d312baedb58e21336b31bc043b77e01cc99033ce76ef539f78e965ebc"
 
 [[package]]
 name = "syn"
-version = "2.0.75"
+version = "2.0.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f6af063034fc1935ede7be0122941bafa9bacb949334d090b77ca98b5817c7d9"
+checksum = "9f35bcdf61fd8e7be6caf75f429fdca8beb3ed76584befb503b1569faee373ed"
 dependencies = [
  "proc-macro2",
  "quote",
