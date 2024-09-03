@@ -55,7 +55,7 @@ tabwriter = "1.4.0"
 thiserror = { version = "1", default-features = false }
 tempfile = "3.12.0"
 test-common = { path = "test-common" }
-thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
+thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.40.0", features = ["full"] }
 toml = "0.8.19"
 toml_edit = "0.22.15"
