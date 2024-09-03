@@ -29,14 +29,7 @@ pub struct ConfigFile {
 
 fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> Result<T> {
     match std::fs::read_to_string(path) {
-        Ok(contents) => {
-            // Empty `credentials.toml` files cannot be parsed.
-            if contents.trim().is_empty() {
-                Ok(T::default())
-            } else {
-                Ok(toml::from_str(&contents)?)
-            }
-        }
+        Ok(contents) => Ok(toml::from_str(&contents)?),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(T::default()),
         Err(e) => Err(e.into()),
     }
