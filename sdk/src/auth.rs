@@ -130,6 +130,7 @@ impl ClientConfig {
 }
 
 #[derive(Deserialize, Debug, Default)]
+#[serde(default)]
 pub struct CredentialsFile {
     pub profile: BTreeMap<String, ProfileCredentials>,
 }
