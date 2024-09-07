@@ -109,8 +109,21 @@ pub struct CmdLinkAdd {
 #[async_trait]
 impl AuthenticatedCmd for CmdLinkAdd {
     async fn run(&self, client: &Client) -> Result<()> {
-        let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+        let mut settings = current_port_settings(client, &self.rack, &self.switch, &self.port)
+            .await
+            .unwrap_or(SwitchPortSettingsCreate {
+                addresses: HashMap::new(),
+                bgp_peers: HashMap::new(),
+                description: String::new(),
+                groups: Vec::new(),
+                interfaces: HashMap::new(),
+                links: HashMap::new(),
+                name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
+                port_config: SwitchPortConfigCreate {
+                    geometry: SwitchPortGeometry::Qsfp28x1,
+                },
+                routes: HashMap::new(),
+            });
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
             fec: self.fec.into(),
