@@ -49103,49 +49103,10 @@ impl ClientSystemHardwareExt for Client {
     }
 }
 
-/// Metrics provide insight into the operation of the Oxide deployment. These
-/// include telemetry on hardware and software components that can be used to
-/// understand the current state as well as to diagnose issues.
-pub trait ClientSystemMetricsExt {
-    /// View metrics
-    ///
-    /// View CPU, memory, or storage utilization metrics at the fleet or silo
-    /// level.
-    ///
-    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
-    ///
-    /// Arguments:
-    /// - `metric_name`
-    /// - `end_time`: An exclusive end time of metrics.
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `order`: Query result order
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `silo`: Name or ID of the silo
-    /// - `start_time`: An inclusive start time of metrics.
-    /// ```ignore
-    /// let response = client.system_metric()
-    ///    .metric_name(metric_name)
-    ///    .end_time(end_time)
-    ///    .limit(limit)
-    ///    .order(order)
-    ///    .page_token(page_token)
-    ///    .silo(silo)
-    ///    .start_time(start_time)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_metric(&self) -> builder::SystemMetric;
-}
-
-impl ClientSystemMetricsExt for Client {
-    fn system_metric(&self) -> builder::SystemMetric {
-        builder::SystemMetric::new(self)
-    }
-}
-
-/// This provides rack-level network configuration.
-pub trait ClientSystemNetworkingExt {
+/// IP pools are collections of external IPs that can be assigned to silos. When
+/// a pool is linked to a silo, users in that silo can allocate IPs from the
+/// pool for their instances.
+pub trait ClientSystemIpPoolsExt {
     /// List IP pools
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools`
@@ -49405,6 +49366,121 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
+}
+
+impl ClientSystemIpPoolsExt for Client {
+    fn ip_pool_list(&self) -> builder::IpPoolList {
+        builder::IpPoolList::new(self)
+    }
+
+    fn ip_pool_create(&self) -> builder::IpPoolCreate {
+        builder::IpPoolCreate::new(self)
+    }
+
+    fn ip_pool_view(&self) -> builder::IpPoolView {
+        builder::IpPoolView::new(self)
+    }
+
+    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
+        builder::IpPoolUpdate::new(self)
+    }
+
+    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
+        builder::IpPoolDelete::new(self)
+    }
+
+    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
+        builder::IpPoolRangeList::new(self)
+    }
+
+    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
+        builder::IpPoolRangeAdd::new(self)
+    }
+
+    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
+        builder::IpPoolRangeRemove::new(self)
+    }
+
+    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList {
+        builder::IpPoolSiloList::new(self)
+    }
+
+    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink {
+        builder::IpPoolSiloLink::new(self)
+    }
+
+    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate {
+        builder::IpPoolSiloUpdate::new(self)
+    }
+
+    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
+        builder::IpPoolSiloUnlink::new(self)
+    }
+
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
+        builder::IpPoolUtilizationView::new(self)
+    }
+
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
+        builder::IpPoolServiceView::new(self)
+    }
+
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
+        builder::IpPoolServiceRangeList::new(self)
+    }
+
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
+        builder::IpPoolServiceRangeAdd::new(self)
+    }
+
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
+        builder::IpPoolServiceRangeRemove::new(self)
+    }
+}
+
+/// Metrics provide insight into the operation of the Oxide deployment. These
+/// include telemetry on hardware and software components that can be used to
+/// understand the current state as well as to diagnose issues.
+pub trait ClientSystemMetricsExt {
+    /// View metrics
+    ///
+    /// View CPU, memory, or storage utilization metrics at the fleet or silo
+    /// level.
+    ///
+    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
+    ///
+    /// Arguments:
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `start_time`: An inclusive start time of metrics.
+    /// ```ignore
+    /// let response = client.system_metric()
+    ///    .metric_name(metric_name)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .order(order)
+    ///    .page_token(page_token)
+    ///    .silo(silo)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_metric(&self) -> builder::SystemMetric;
+}
+
+impl ClientSystemMetricsExt for Client {
+    fn system_metric(&self) -> builder::SystemMetric {
+        builder::SystemMetric::new(self)
+    }
+}
+
+/// This provides rack-level network configuration.
+pub trait ClientSystemNetworkingExt {
     /// List address lots
     ///
     /// Sends a `GET` request to `/v1/system/networking/address-lot`
@@ -49793,74 +49869,6 @@ pub trait ClientSystemNetworkingExt {
 }
 
 impl ClientSystemNetworkingExt for Client {
-    fn ip_pool_list(&self) -> builder::IpPoolList {
-        builder::IpPoolList::new(self)
-    }
-
-    fn ip_pool_create(&self) -> builder::IpPoolCreate {
-        builder::IpPoolCreate::new(self)
-    }
-
-    fn ip_pool_view(&self) -> builder::IpPoolView {
-        builder::IpPoolView::new(self)
-    }
-
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
-        builder::IpPoolUpdate::new(self)
-    }
-
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
-        builder::IpPoolDelete::new(self)
-    }
-
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
-        builder::IpPoolRangeList::new(self)
-    }
-
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
-        builder::IpPoolRangeAdd::new(self)
-    }
-
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
-        builder::IpPoolRangeRemove::new(self)
-    }
-
-    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList {
-        builder::IpPoolSiloList::new(self)
-    }
-
-    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink {
-        builder::IpPoolSiloLink::new(self)
-    }
-
-    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate {
-        builder::IpPoolSiloUpdate::new(self)
-    }
-
-    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
-        builder::IpPoolSiloUnlink::new(self)
-    }
-
-    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
-        builder::IpPoolUtilizationView::new(self)
-    }
-
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
-        builder::IpPoolServiceView::new(self)
-    }
-
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
-        builder::IpPoolServiceRangeList::new(self)
-    }
-
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
-        builder::IpPoolServiceRangeAdd::new(self)
-    }
-
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
-        builder::IpPoolServiceRangeRemove::new(self)
-    }
-
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
         builder::NetworkingAddressLotList::new(self)
     }
@@ -61903,9 +61911,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_list`]: super::ClientSystemNetworkingExt::ip_pool_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_list`]: super::ClientSystemIpPoolsExt::ip_pool_list
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
@@ -62051,9 +62059,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_create`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_create`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_create`]: super::ClientSystemNetworkingExt::ip_pool_create
+    /// [`ClientSystemIpPoolsExt::ip_pool_create`]: super::ClientSystemIpPoolsExt::ip_pool_create
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
@@ -62120,9 +62128,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_view`]: super::ClientSystemNetworkingExt::ip_pool_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_view`]: super::ClientSystemIpPoolsExt::ip_pool_view
     #[derive(Debug, Clone)]
     pub struct IpPoolView<'a> {
         client: &'a super::Client,
@@ -62180,9 +62188,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_update`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_update`]: super::ClientSystemNetworkingExt::ip_pool_update
+    /// [`ClientSystemIpPoolsExt::ip_pool_update`]: super::ClientSystemIpPoolsExt::ip_pool_update
     #[derive(Debug, Clone)]
     pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
@@ -62266,9 +62274,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_delete`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_delete`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_delete`]: super::ClientSystemNetworkingExt::ip_pool_delete
+    /// [`ClientSystemIpPoolsExt::ip_pool_delete`]: super::ClientSystemIpPoolsExt::ip_pool_delete
     #[derive(Debug, Clone)]
     pub struct IpPoolDelete<'a> {
         client: &'a super::Client,
@@ -62326,9 +62334,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_list`]: super::ClientSystemNetworkingExt::ip_pool_range_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
@@ -62473,9 +62481,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_add`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_add`]: super::ClientSystemNetworkingExt::ip_pool_range_add
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeAdd<'a> {
         client: &'a super::Client,
@@ -62547,9 +62555,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_remove`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_remove`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_range_remove
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeRemove<'a> {
         client: &'a super::Client,
@@ -62621,9 +62629,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_list`]: super::ClientSystemNetworkingExt::ip_pool_silo_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_list`]: super::ClientSystemIpPoolsExt::ip_pool_silo_list
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloList<'a> {
         client: &'a super::Client,
@@ -62787,9 +62795,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_link`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_link`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_link`]: super::ClientSystemNetworkingExt::ip_pool_silo_link
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_link`]: super::ClientSystemIpPoolsExt::ip_pool_silo_link
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloLink<'a> {
         client: &'a super::Client,
@@ -62875,9 +62883,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_update`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_update`]: super::ClientSystemNetworkingExt::ip_pool_silo_update
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_update`]: super::ClientSystemIpPoolsExt::ip_pool_silo_update
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloUpdate<'a> {
         client: &'a super::Client,
@@ -62984,9 +62992,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]: super::ClientSystemNetworkingExt::ip_pool_silo_unlink
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]: super::ClientSystemIpPoolsExt::ip_pool_silo_unlink
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloUnlink<'a> {
         client: &'a super::Client,
@@ -63059,9 +63067,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_utilization_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_utilization_view`]: super::ClientSystemNetworkingExt::ip_pool_utilization_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]: super::ClientSystemIpPoolsExt::ip_pool_utilization_view
     #[derive(Debug, Clone)]
     pub struct IpPoolUtilizationView<'a> {
         client: &'a super::Client,
@@ -63121,9 +63129,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_view`]: super::ClientSystemIpPoolsExt::ip_pool_service_view
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceView<'a> {
         client: &'a super::Client,
@@ -63162,9 +63170,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
@@ -63291,9 +63299,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
@@ -63348,9 +63356,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
@@ -71183,6 +71191,7 @@ pub mod prelude {
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
     pub use super::ClientSystemHardwareExt;
+    pub use super::ClientSystemIpPoolsExt;
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
