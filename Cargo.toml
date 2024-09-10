@@ -9,14 +9,14 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = "1.0.86"
+anyhow = "1.0.87"
 assert_cmd = "2.0.16"
 async-trait = "0.1.82"
 base64 = "0.22.1"
 built = { version = "0.7.4", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.16", features = ["derive", "string", "env", "wrap_help"] }
-clap_complete = "4.5.24"
+clap_complete = "4.5.26"
 colored = "2.1.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
@@ -48,7 +48,7 @@ regress = "0.10.1"
 reqwest = "0.11.27"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
-serde = { version = "1.0.209", features = ["derive"] }
+serde = { version = "1.0.210", features = ["derive"] }
 serde_json = "1.0.127"
 similar = "2.6.0"
 tabwriter = "1.4.0"
