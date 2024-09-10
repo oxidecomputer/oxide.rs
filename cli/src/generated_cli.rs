@@ -4176,13 +4176,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("A name or id to use when s electing BGP port settings"),
-            )
-            .arg(
                 clap::Arg::new("page-token")
                     .long("page-token")
                     .value_parser(clap::value_parser!(String))
@@ -4243,11 +4236,11 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
+                clap::Arg::new("announce-set")
+                    .long("announce-set")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("A name or id to use when selecting BGP port settings"),
+                    .help("Name or ID of the announce set"),
             )
             .about("Delete BGP announce set")
     }
@@ -4255,11 +4248,11 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_announcement_list() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
+                clap::Arg::new("announce-set")
+                    .long("announce-set")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("A name or id to use when selecting BGP port settings"),
+                    .help("Name or ID of the announce set"),
             )
             .about("Get originated routes for a specified BGP announce set")
     }
@@ -10803,10 +10796,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<String>("page-token") {
             request = request.page_token(value.clone());
         }
@@ -10870,8 +10859,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
+            request = request.announce_set(value.clone());
         }
 
         self.config
@@ -10894,8 +10883,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announcement_list();
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
+            request = request.announce_set(value.clone());
         }
 
         self.config
