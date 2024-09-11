@@ -217,8 +217,7 @@
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
-              "long": "certificate",
-              "help": "Name or ID of the certificate"
+              "long": "certificate"
             },
             {
               "long": "profile",
@@ -257,8 +256,7 @@
           "long_about": "Returns the details of a specific certificate",
           "args": [
             {
-              "long": "certificate",
-              "help": "Name or ID of the certificate"
+              "long": "certificate"
             },
             {
               "long": "profile",
@@ -3011,7 +3009,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal ID"
+                          "help": "The user's internal id"
                         }
                       ]
                     },
@@ -3039,7 +3037,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal ID"
+                          "help": "The user's internal id"
                         }
                       ]
                     }
@@ -3387,7 +3385,7 @@
                 },
                 {
                   "long": "user-id",
-                  "help": "The user's internal ID"
+                  "help": "The user's internal id"
                 }
               ]
             }
@@ -3682,7 +3680,7 @@
                     },
                     {
                       "long": "rack-id",
-                      "help": "ID of the rack"
+                      "help": "The rack's unique ID."
                     }
                   ]
                 }
@@ -3916,60 +3914,72 @@
               ],
               "subcommands": [
                 {
-                  "name": "apply-settings",
-                  "about": "Apply switch port settings",
+                  "name": "configuration",
                   "args": [
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "port",
-                      "help": "A name to use when selecting switch ports."
-                    },
-                    {
-                      "long": "port-settings",
-                      "help": "A name or id to use when applying switch port settings."
-                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
-                    },
-                    {
-                      "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
-                    },
-                    {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
                     }
-                  ]
-                },
-                {
-                  "name": "clear-settings",
-                  "about": "Clear switch port settings",
-                  "args": [
+                  ],
+                  "subcommands": [
                     {
-                      "long": "port",
-                      "help": "A name to use when selecting switch ports."
+                      "name": "apply",
+                      "about": "Apply switch port settings",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "port",
+                          "help": "A name to use when selecting switch ports."
+                        },
+                        {
+                          "long": "port-settings",
+                          "help": "A name or id to use when applying switch port settings."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "rack-id",
+                          "help": "A rack id to use when selecting switch ports."
+                        },
+                        {
+                          "long": "switch-location",
+                          "help": "A switch location to use when selecting switch ports."
+                        }
+                      ]
                     },
                     {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
-                    },
-                    {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
+                      "name": "remove",
+                      "about": "Clear switch port settings",
+                      "args": [
+                        {
+                          "long": "port",
+                          "help": "A name to use when selecting switch ports."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "rack-id",
+                          "help": "A rack id to use when selecting switch ports."
+                        },
+                        {
+                          "long": "switch-location",
+                          "help": "A switch location to use when selecting switch ports."
+                        }
+                      ]
                     }
                   ]
                 },
@@ -4218,6 +4228,37 @@
                   ],
                   "subcommands": [
                     {
+                      "name": "add",
+                      "about": "Add block to address lot",
+                      "args": [
+                        {
+                          "long": "address-lot",
+                          "help": "Name or ID of the address lot"
+                        },
+                        {
+                          "long": "first-address",
+                          "help": "The first address in the lot (inclusive)."
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "last-address",
+                          "help": "The last address in the lot (inclusive)."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
                       "name": "list",
                       "about": "List blocks in address lot",
                       "args": [
@@ -4239,6 +4280,37 @@
                           "values": [
                             "id_ascending"
                           ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove",
+                      "about": "Remove block from address lot",
+                      "args": [
+                        {
+                          "long": "address-lot",
+                          "help": "Name or ID of the address lot"
+                        },
+                        {
+                          "long": "first-address",
+                          "help": "The first address in the lot (inclusive)."
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "last-address",
+                          "help": "The last address in the lot (inclusive)."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
                         }
                       ]
                     }
@@ -5679,6 +5751,1013 @@
               ]
             },
             {
+              "name": "switch-port",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "configuration",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "address",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "add",
+                          "about": "Add address to an interface configuration",
+                          "args": [
+                            {
+                              "long": "address",
+                              "help": "The address and prefix length of this address."
+                            },
+                            {
+                              "long": "address-lot",
+                              "help": "The address lot this address is drawn from."
+                            },
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "interface",
+                              "help": "The name of the interface"
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            },
+                            {
+                              "long": "vlan-id",
+                              "help": "Optional VLAN ID for this address"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "list",
+                          "about": "List addresses assigned to a provided interface configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "remove",
+                          "about": "Remove address from an interface configuration",
+                          "args": [
+                            {
+                              "long": "address",
+                              "help": "The address and prefix length of this address."
+                            },
+                            {
+                              "long": "address-lot",
+                              "help": "The address lot this address is drawn from."
+                            },
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "interface",
+                              "help": "The name of the interface"
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            },
+                            {
+                              "long": "vlan-id",
+                              "help": "Optional VLAN ID for this address"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "bgp",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "peer",
+                          "args": [
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ],
+                          "subcommands": [
+                            {
+                              "name": "add",
+                              "about": "Add bgp peer to an interface configuration",
+                              "args": [
+                                {
+                                  "long": "addr",
+                                  "help": "The address of th e host to peer with."
+                                },
+                                {
+                                  "long": "allow-export-list-active",
+                                  "values": [
+                                    "true",
+                                    "false"
+                                  ],
+                                  "help": "Enable export policies"
+                                },
+                                {
+                                  "long": "allow-import-list-active",
+                                  "values": [
+                                    "true",
+                                    "false"
+                                  ],
+                                  "help": "Enable import policies"
+                                },
+                                {
+                                  "long": "bgp-config",
+                                  "help": "The global BGP configuration used for establishing a session with this peer."
+                                },
+                                {
+                                  "long": "configuration",
+                                  "help": "A name or id to use when selecting a switch port configuration."
+                                },
+                                {
+                                  "long": "connect-retry",
+                                  "help": "How long to to wait between TCP connection retries (seconds)."
+                                },
+                                {
+                                  "long": "delay-open",
+                                  "help": "How long to delay sending an open request after establishing a TCP session (seconds)."
+                                },
+                                {
+                                  "long": "enforce-first-as",
+                                  "values": [
+                                    "true",
+                                    "false"
+                                  ],
+                                  "help": "Enforce that the first AS in paths received from this peer is the peer's AS."
+                                },
+                                {
+                                  "long": "hold-time",
+                                  "help": "How long to hold peer connections between keepalives (seconds)."
+                                },
+                                {
+                                  "long": "idle-hold-time",
+                                  "help": "How long to hold a peer in idle before attempting a new session (seconds)."
+                                },
+                                {
+                                  "long": "interface-name",
+                                  "help": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
+                                },
+                                {
+                                  "long": "json-body",
+                                  "help": "Path to a file that contains the full json body."
+                                },
+                                {
+                                  "long": "json-body-template",
+                                  "help": "XXX"
+                                },
+                                {
+                                  "long": "keepalive",
+                                  "help": "How often to send keepalive requests (seconds)."
+                                },
+                                {
+                                  "long": "local-pref",
+                                  "help": "Apply a local preference to routes received from this peer."
+                                },
+                                {
+                                  "long": "md5-auth-key",
+                                  "help": "Use the given key for TCP-MD5 authentication with the peer."
+                                },
+                                {
+                                  "long": "min-ttl",
+                                  "help": "Require messages from a peer have a minimum IP time to live field."
+                                },
+                                {
+                                  "long": "multi-exit-discriminator",
+                                  "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer."
+                                },
+                                {
+                                  "long": "profile",
+                                  "help": "Configuration profile to use for commands",
+                                  "global": true
+                                },
+                                {
+                                  "long": "remote-asn",
+                                  "help": "Require that a peer has a specified ASN."
+                                },
+                                {
+                                  "long": "vlan-id",
+                                  "help": "Associate a VLAN ID with a peer."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "allow",
+                              "args": [
+                                {
+                                  "long": "profile",
+                                  "help": "Configuration profile to use for commands",
+                                  "global": true
+                                }
+                              ],
+                              "subcommands": [
+                                {
+                                  "name": "export",
+                                  "args": [
+                                    {
+                                      "long": "profile",
+                                      "help": "Configuration profile to use for commands",
+                                      "global": true
+                                    }
+                                  ],
+                                  "subcommands": [
+                                    {
+                                      "name": "add",
+                                      "about": "Add prefix to bgp peer allowed export list",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "interface",
+                                          "help": "The interface the peer is configured on"
+                                        },
+                                        {
+                                          "long": "json-body",
+                                          "help": "Path to a file that contains the full json body."
+                                        },
+                                        {
+                                          "long": "json-body-template",
+                                          "help": "XXX"
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying the target bgp peer"
+                                        },
+                                        {
+                                          "long": "prefix",
+                                          "help": "The allowed prefix to add or remove"
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "list",
+                                      "about": "List prefixes allowed to be exported by a given bgp peer",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying a configured bgp peer."
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "remove",
+                                      "about": "Remove prefix from bgp peer allowed export list",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "interface",
+                                          "help": "The interface the peer is configured on"
+                                        },
+                                        {
+                                          "long": "json-body",
+                                          "help": "Path to a file that contains the full json body."
+                                        },
+                                        {
+                                          "long": "json-body-template",
+                                          "help": "XXX"
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying the target bgp peer"
+                                        },
+                                        {
+                                          "long": "prefix",
+                                          "help": "The allowed prefix to add or remove"
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "import",
+                                  "args": [
+                                    {
+                                      "long": "profile",
+                                      "help": "Configuration profile to use for commands",
+                                      "global": true
+                                    }
+                                  ],
+                                  "subcommands": [
+                                    {
+                                      "name": "add",
+                                      "about": "Add prefix to bgp peer allowed import list",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "interface",
+                                          "help": "The interface the peer is configured on"
+                                        },
+                                        {
+                                          "long": "json-body",
+                                          "help": "Path to a file that contains the full json body."
+                                        },
+                                        {
+                                          "long": "json-body-template",
+                                          "help": "XXX"
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying the target bgp peer"
+                                        },
+                                        {
+                                          "long": "prefix",
+                                          "help": "The allowed prefix to add or remove"
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "list",
+                                      "about": "List prefixes allowed to be imported by a given bgp peer",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying a configured bgp peer."
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "remove",
+                                      "about": "Remove prefix from bgp peer allowed import list",
+                                      "args": [
+                                        {
+                                          "long": "configuration",
+                                          "help": "A name or id to use when selecting a switch port configuration."
+                                        },
+                                        {
+                                          "long": "interface",
+                                          "help": "The interface the peer is configured on"
+                                        },
+                                        {
+                                          "long": "json-body",
+                                          "help": "Path to a file that contains the full json body."
+                                        },
+                                        {
+                                          "long": "json-body-template",
+                                          "help": "XXX"
+                                        },
+                                        {
+                                          "long": "peer-address",
+                                          "help": "An address identifying the target bgp peer"
+                                        },
+                                        {
+                                          "long": "prefix",
+                                          "help": "The allowed prefix to add or remove"
+                                        },
+                                        {
+                                          "long": "profile",
+                                          "help": "Configuration profile to use for commands",
+                                          "global": true
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "community",
+                              "args": [
+                                {
+                                  "long": "profile",
+                                  "help": "Configuration profile to use for commands",
+                                  "global": true
+                                }
+                              ],
+                              "subcommands": [
+                                {
+                                  "name": "add",
+                                  "about": "Add community to bgp peer",
+                                  "args": [
+                                    {
+                                      "long": "community",
+                                      "help": "The community to add or remove"
+                                    },
+                                    {
+                                      "long": "configuration",
+                                      "help": "A name or id to use when selecting a switch port configuration."
+                                    },
+                                    {
+                                      "long": "interface",
+                                      "help": "The interface the peer is configured on"
+                                    },
+                                    {
+                                      "long": "json-body",
+                                      "help": "Path to a file that contains the full json body."
+                                    },
+                                    {
+                                      "long": "json-body-template",
+                                      "help": "XXX"
+                                    },
+                                    {
+                                      "long": "peer-address",
+                                      "help": "An address identifying the target bgp peer"
+                                    },
+                                    {
+                                      "long": "profile",
+                                      "help": "Configuration profile to use for commands",
+                                      "global": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "list",
+                                  "about": "List communities assigned to a bgp peer",
+                                  "args": [
+                                    {
+                                      "long": "configuration",
+                                      "help": "A name or id to use when selecting a switch port configuration."
+                                    },
+                                    {
+                                      "long": "peer-address",
+                                      "help": "An address identifying a configured bgp peer."
+                                    },
+                                    {
+                                      "long": "profile",
+                                      "help": "Configuration profile to use for commands",
+                                      "global": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "remove",
+                                  "about": "Remove community from bgp peer",
+                                  "args": [
+                                    {
+                                      "long": "community",
+                                      "help": "The community to add or remove"
+                                    },
+                                    {
+                                      "long": "configuration",
+                                      "help": "A name or id to use when selecting a switch port configuration."
+                                    },
+                                    {
+                                      "long": "interface",
+                                      "help": "The interface the peer is configured on"
+                                    },
+                                    {
+                                      "long": "json-body",
+                                      "help": "Path to a file that contains the full json body."
+                                    },
+                                    {
+                                      "long": "json-body-template",
+                                      "help": "XXX"
+                                    },
+                                    {
+                                      "long": "peer-address",
+                                      "help": "An address identifying the target bgp peer"
+                                    },
+                                    {
+                                      "long": "profile",
+                                      "help": "Configuration profile to use for commands",
+                                      "global": true
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "list",
+                              "about": "List bgp peers assigned to a provided interface configuration",
+                              "args": [
+                                {
+                                  "long": "configuration",
+                                  "help": "A name or id to use when selecting a switch port configuration."
+                                },
+                                {
+                                  "long": "profile",
+                                  "help": "Configuration profile to use for commands",
+                                  "global": true
+                                }
+                              ]
+                            },
+                            {
+                              "name": "remove",
+                              "about": "Remove bgp peer from an interface configuration",
+                              "args": [
+                                {
+                                  "long": "addr",
+                                  "help": "The address of the host to peer with."
+                                },
+                                {
+                                  "long": "bgp-config",
+                                  "help": "The global BGP configuration used for establishing a session with this peer."
+                                },
+                                {
+                                  "long": "configuration",
+                                  "help": "A name or id to use when selecting a switch port configuration."
+                                },
+                                {
+                                  "long": "interface-name",
+                                  "help": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
+                                },
+                                {
+                                  "long": "json-body",
+                                  "help": "Path to a file that contains the full json body."
+                                },
+                                {
+                                  "long": "json-body-template",
+                                  "help": "XXX"
+                                },
+                                {
+                                  "long": "profile",
+                                  "help": "Configuration profile to use for commands",
+                                  "global": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "create",
+                      "about": "Create switch port settings",
+                      "args": [
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "name"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "delete",
+                      "about": "Delete switch port settings",
+                      "args": [
+                        {
+                          "long": "configuration",
+                          "help": "An optional name or id to use when selecting a switch port configuration."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "geometry",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "set",
+                          "about": "Set switch port geometry for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "geometry",
+                              "values": [
+                                "qsfp28x1",
+                                "qsfp28x2",
+                                "sfp28x4"
+                              ],
+                              "help": "Link geometry for the switch port."
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "view",
+                          "about": "Get switch port geometry for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "link",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "create",
+                          "about": "Create a link for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "autoneg",
+                              "values": [
+                                "true",
+                                "false"
+                              ],
+                              "help": "Whether or not to set autonegotiation"
+                            },
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "fec",
+                              "values": [
+                                "firecode",
+                                "none",
+                                "rs"
+                              ],
+                              "help": "The forward error correction mode of the link."
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "lldp-config",
+                              "help": "The optional link-layer discovery protocol (LLDP) configuration for the link."
+                            },
+                            {
+                              "long": "mtu",
+                              "help": "Maximum transmission unit for the link."
+                            },
+                            {
+                              "long": "name",
+                              "help": "Name of link"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            },
+                            {
+                              "long": "speed",
+                              "values": [
+                                "speed0_g",
+                                "speed1_g",
+                                "speed10_g",
+                                "speed25_g",
+                                "speed40_g",
+                                "speed50_g",
+                                "speed100_g",
+                                "speed200_g",
+                                "speed400_g"
+                              ],
+                              "help": "The speed of the link."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "delete",
+                          "about": "Delete a link for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "link",
+                              "help": "Link name"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "list",
+                          "about": "List links for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "view",
+                          "about": "View a link for a provided switch port configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "link",
+                              "help": "Link name"
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List switch port settings",
+                      "args": [
+                        {
+                          "long": "configuration",
+                          "help": "An optional name or id to use when selecting a switch port configuration."
+                        },
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "name_ascending",
+                            "name_descending",
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "route",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ],
+                      "subcommands": [
+                        {
+                          "name": "add",
+                          "about": "Add route to an interface configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "dst",
+                              "help": "The route destination."
+                            },
+                            {
+                              "long": "gw",
+                              "help": "The route gateway."
+                            },
+                            {
+                              "long": "interface",
+                              "help": "The interface to configure the route on"
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "local-pref",
+                              "help": "Local preference for route. Higher preference indictes precedence within and across protocols."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            },
+                            {
+                              "long": "vid",
+                              "help": "VLAN id the gateway is reachable over."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "list",
+                          "about": "List routes assigned to a provided interface configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            }
+                          ]
+                        },
+                        {
+                          "name": "remove",
+                          "about": "Remove route from an interface configuration",
+                          "args": [
+                            {
+                              "long": "configuration",
+                              "help": "A name or id to use when selecting a switch port configuration."
+                            },
+                            {
+                              "long": "dst",
+                              "help": "The route destination."
+                            },
+                            {
+                              "long": "gw",
+                              "help": "The route gateway."
+                            },
+                            {
+                              "long": "interface",
+                              "help": "The interface to configure the route on"
+                            },
+                            {
+                              "long": "json-body",
+                              "help": "Path to a file that contains the full json body."
+                            },
+                            {
+                              "long": "json-body-template",
+                              "help": "XXX"
+                            },
+                            {
+                              "long": "local-pref",
+                              "help": "Local preference for route. Higher preference indictes precedence within and across protocols."
+                            },
+                            {
+                              "long": "profile",
+                              "help": "Configuration profile to use for commands",
+                              "global": true
+                            },
+                            {
+                              "long": "vid",
+                              "help": "VLAN id the gateway is reachable over."
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view",
+                      "about": "Get information about a named set of switch-port-settings",
+                      "args": [
+                        {
+                          "long": "configuration",
+                          "help": "A name or id to use when selecting a switch port configuration."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "switch-port-settings",
               "args": [
                 {
@@ -5689,91 +6768,9 @@
               ],
               "subcommands": [
                 {
-                  "name": "create",
-                  "about": "Create switch port settings",
-                  "args": [
-                    {
-                      "long": "description"
-                    },
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "name"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                },
-                {
-                  "name": "delete",
-                  "about": "Delete switch port settings",
-                  "args": [
-                    {
-                      "long": "port-settings",
-                      "help": "An optional name or id to use when selecting port settings."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                },
-                {
-                  "name": "list",
-                  "about": "List switch port settings",
-                  "args": [
-                    {
-                      "long": "limit",
-                      "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "port-settings",
-                      "help": "An optional name or id to use when selecting port settings."
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "sort-by",
-                      "values": [
-                        "name_ascending",
-                        "name_descending",
-                        "id_ascending"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "show",
                   "about": "Get the configuration of switch ports.",
                   "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                },
-                {
-                  "name": "view",
-                  "about": "Get information about switch port",
-                  "args": [
-                    {
-                      "long": "port",
-                      "help": "A name or id to use when selecting switch port settings info objects."
-                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",

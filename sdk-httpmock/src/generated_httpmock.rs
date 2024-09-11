@@ -10098,6 +10098,136 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingAddressLotBlockAddWhen(httpmock::When);
+    impl NetworkingAddressLotBlockAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/networking/address-lot/[^/]*/blocks/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn address_lot(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/address-lot/{}/blocks/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AddressLotBlockAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingAddressLotBlockAddThen(httpmock::Then);
+    impl NetworkingAddressLotBlockAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AddressLotBlock) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingAddressLotBlockRemoveWhen(httpmock::When);
+    impl NetworkingAddressLotBlockRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/networking/address-lot/[^/]*/blocks/remove$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn address_lot(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/address-lot/{}/blocks/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AddressLotBlockAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingAddressLotBlockRemoveThen(httpmock::Then);
+    impl NetworkingAddressLotBlockRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingAllowListViewWhen(httpmock::When);
     impl NetworkingAllowListViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -11376,16 +11506,32 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsListWhen(httpmock::When);
-    impl NetworkingSwitchPortSettingsListWhen {
+    pub struct NetworkingSwitchPortConfigurationListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationListWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/networking/switch-port-settings$").unwrap(),
+                regex::Regex::new("^/v1/system/networking/switch-port-configuration$").unwrap(),
             ))
         }
 
         pub fn into_inner(self) -> httpmock::When {
             self.0
+        }
+
+        pub fn configuration<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("configuration", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "configuration"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn limit<T>(self, value: T) -> Self
@@ -11420,22 +11566,6 @@ pub mod operations {
             }
         }
 
-        pub fn port_settings<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a types::NameOrId>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("port_settings", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "port_settings"))
-                        .is_none()
-                }))
-            }
-        }
-
         pub fn sort_by<T>(self, value: T) -> Self
         where
             T: Into<Option<types::NameOrIdSortMode>>,
@@ -11453,8 +11583,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsListThen(httpmock::Then);
-    impl NetworkingSwitchPortSettingsListThen {
+    pub struct NetworkingSwitchPortConfigurationListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationListThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11493,11 +11623,11 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsCreateWhen(httpmock::When);
-    impl NetworkingSwitchPortSettingsCreateWhen {
+    pub struct NetworkingSwitchPortConfigurationCreateWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationCreateWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::POST).path_matches(
-                regex::Regex::new("^/v1/system/networking/switch-port-settings$").unwrap(),
+                regex::Regex::new("^/v1/system/networking/switch-port-configuration$").unwrap(),
             ))
         }
 
@@ -11510,8 +11640,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsCreateThen(httpmock::Then);
-    impl NetworkingSwitchPortSettingsCreateThen {
+    pub struct NetworkingSwitchPortConfigurationCreateThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationCreateThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11550,11 +11680,11 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsDeleteWhen(httpmock::When);
-    impl NetworkingSwitchPortSettingsDeleteWhen {
+    pub struct NetworkingSwitchPortConfigurationDeleteWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationDeleteWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::DELETE).path_matches(
-                regex::Regex::new("^/v1/system/networking/switch-port-settings$").unwrap(),
+                regex::Regex::new("^/v1/system/networking/switch-port-configuration$").unwrap(),
             ))
         }
 
@@ -11562,25 +11692,25 @@ pub mod operations {
             self.0
         }
 
-        pub fn port_settings<'a, T>(self, value: T) -> Self
+        pub fn configuration<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a types::NameOrId>>,
         {
             if let Some(value) = value.into() {
-                Self(self.0.query_param("port_settings", value.to_string()))
+                Self(self.0.query_param("configuration", value.to_string()))
             } else {
                 Self(self.0.matches(|req| {
                     req.query_params
                         .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "port_settings"))
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "configuration"))
                         .is_none()
                 }))
             }
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsDeleteThen(httpmock::Then);
-    impl NetworkingSwitchPortSettingsDeleteThen {
+    pub struct NetworkingSwitchPortConfigurationDeleteThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationDeleteThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11614,21 +11744,24 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsViewWhen(httpmock::When);
-    impl NetworkingSwitchPortSettingsViewWhen {
+    pub struct NetworkingSwitchPortConfigurationViewWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/networking/switch-port-settings/[^/]*$").unwrap(),
-            ))
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/networking/switch-port-configuration/[^/]*$")
+                        .unwrap(),
+                ),
+            )
         }
 
         pub fn into_inner(self) -> httpmock::When {
             self.0
         }
 
-        pub fn port(self, value: &types::NameOrId) -> Self {
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
-                "^/v1/system/networking/switch-port-settings/{}$",
+                "^/v1/system/networking/switch-port-configuration/{}$",
                 value.to_string()
             ))
             .unwrap();
@@ -11636,8 +11769,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsViewThen(httpmock::Then);
-    impl NetworkingSwitchPortSettingsViewThen {
+    pub struct NetworkingSwitchPortConfigurationViewThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationViewThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11653,6 +11786,1674 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationAddressListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/address$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/address$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationAddressListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::SwitchPortAddressConfig>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationAddressAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/address/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/address/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AddressAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationAddressAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SwitchPortAddressConfig) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationAddressRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/address/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/address/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AddressAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationAddressRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationAddressRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpPeer>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::BgpPeer) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpPeer) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-export$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-export$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn peer_address(self, value: &std::net::IpAddr) -> Self {
+            Self(self.0.query_param("peer_address", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpAllowedPrefix>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-export/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-export/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AllowedPrefixAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpAllowedPrefix) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-export/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-export/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AllowedPrefixAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-import$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-import$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn peer_address(self, value: &std::net::IpAddr) -> Self {
+            Self(self.0.query_param("peer_address", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpAllowedPrefix>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-import/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-import/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AllowedPrefixAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpAllowedPrefix) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         allow-import/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/allow-import/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AllowedPrefixAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         community$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/community$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn peer_address(self, value: &std::net::IpAddr) -> Self {
+            Self(self.0.query_param("peer_address", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpCommunity>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         community/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/community/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::BgpCommunityAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpCommunity) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/\
+                         community/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/community/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::BgpCommunityAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationBgpPeerRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/bgp-peer/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/bgp-peer/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::BgpPeerRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationBgpPeerRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationBgpPeerRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationGeometryViewWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationGeometryViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/geometry$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/geometry$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationGeometryViewThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationGeometryViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SwitchPortConfig) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationGeometrySetWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationGeometrySetWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/geometry$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/geometry$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SwitchPortConfigCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationGeometrySetThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationGeometrySetThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SwitchPortConfig) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationLinkListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/link$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/link$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationLinkListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::SwitchPortLinkConfig>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkCreateWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationLinkCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/link$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/link$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::NamedLinkConfigCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkCreateThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationLinkCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SwitchPortLinkConfig) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkViewWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationLinkViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/link/[^/]*$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/link/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn link(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/.*/link/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkViewThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationLinkViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SwitchPortLinkConfig) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkDeleteWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationLinkDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::DELETE).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/link/[^/]*$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/link/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn link(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/.*/link/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationLinkDeleteThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationLinkDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteListWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationRouteListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/route$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/route$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteListThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationRouteListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::SwitchPortRouteConfig>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteAddWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationRouteAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/route/add$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/route/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::RouteAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteAddThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationRouteAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SwitchPortRouteConfig) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteRemoveWhen(httpmock::When);
+    impl NetworkingSwitchPortConfigurationRouteRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/networking/switch-port-configuration/[^/]*/route/remove$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn configuration(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/networking/switch-port-configuration/{}/route/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::RouteAddRemove) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortConfigurationRouteRemoveThen(httpmock::Then);
+    impl NetworkingSwitchPortConfigurationRouteRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -16221,6 +18022,18 @@ pub trait MockServerExt {
             operations::NetworkingAddressLotBlockListWhen,
             operations::NetworkingAddressLotBlockListThen,
         );
+    fn networking_address_lot_block_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAddressLotBlockAddWhen,
+            operations::NetworkingAddressLotBlockAddThen,
+        );
+    fn networking_address_lot_block_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAddressLotBlockRemoveWhen,
+            operations::NetworkingAddressLotBlockRemoveThen,
+        );
     fn networking_allow_list_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::NetworkingAllowListViewWhen, operations::NetworkingAllowListViewThen);
@@ -16314,29 +18127,206 @@ pub trait MockServerExt {
             operations::NetworkingLoopbackAddressDeleteWhen,
             operations::NetworkingLoopbackAddressDeleteThen,
         );
-    fn networking_switch_port_settings_list<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsListWhen,
-            operations::NetworkingSwitchPortSettingsListThen,
+            operations::NetworkingSwitchPortConfigurationListWhen,
+            operations::NetworkingSwitchPortConfigurationListThen,
         );
-    fn networking_switch_port_settings_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsCreateWhen,
-            operations::NetworkingSwitchPortSettingsCreateThen,
+            operations::NetworkingSwitchPortConfigurationCreateWhen,
+            operations::NetworkingSwitchPortConfigurationCreateThen,
         );
-    fn networking_switch_port_settings_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsDeleteWhen,
-            operations::NetworkingSwitchPortSettingsDeleteThen,
+            operations::NetworkingSwitchPortConfigurationDeleteWhen,
+            operations::NetworkingSwitchPortConfigurationDeleteThen,
         );
-    fn networking_switch_port_settings_view<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsViewWhen,
-            operations::NetworkingSwitchPortSettingsViewThen,
+            operations::NetworkingSwitchPortConfigurationViewWhen,
+            operations::NetworkingSwitchPortConfigurationViewThen,
+        );
+    fn networking_switch_port_configuration_address_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressListWhen,
+            operations::NetworkingSwitchPortConfigurationAddressListThen,
+        );
+    fn networking_switch_port_configuration_address_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressAddWhen,
+            operations::NetworkingSwitchPortConfigurationAddressAddThen,
+        );
+    fn networking_switch_port_configuration_address_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationAddressRemoveThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerListThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAddThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_export_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_export_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_export_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_import_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_import_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_allow_import_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_community_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_community_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_community_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveThen,
+        );
+    fn networking_switch_port_configuration_bgp_peer_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerRemoveThen,
+        );
+    fn networking_switch_port_configuration_geometry_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationGeometryViewWhen,
+            operations::NetworkingSwitchPortConfigurationGeometryViewThen,
+        );
+    fn networking_switch_port_configuration_geometry_set<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationGeometrySetWhen,
+            operations::NetworkingSwitchPortConfigurationGeometrySetThen,
+        );
+    fn networking_switch_port_configuration_link_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkListWhen,
+            operations::NetworkingSwitchPortConfigurationLinkListThen,
+        );
+    fn networking_switch_port_configuration_link_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkCreateWhen,
+            operations::NetworkingSwitchPortConfigurationLinkCreateThen,
+        );
+    fn networking_switch_port_configuration_link_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkViewWhen,
+            operations::NetworkingSwitchPortConfigurationLinkViewThen,
+        );
+    fn networking_switch_port_configuration_link_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkDeleteWhen,
+            operations::NetworkingSwitchPortConfigurationLinkDeleteThen,
+        );
+    fn networking_switch_port_configuration_route_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteListWhen,
+            operations::NetworkingSwitchPortConfigurationRouteListThen,
+        );
+    fn networking_switch_port_configuration_route_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteAddWhen,
+            operations::NetworkingSwitchPortConfigurationRouteAddThen,
+        );
+    fn networking_switch_port_configuration_route_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationRouteRemoveThen,
         );
     fn system_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
@@ -18075,6 +20065,36 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn networking_address_lot_block_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAddressLotBlockAddWhen,
+            operations::NetworkingAddressLotBlockAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingAddressLotBlockAddWhen::new(when),
+                operations::NetworkingAddressLotBlockAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_address_lot_block_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAddressLotBlockRemoveWhen,
+            operations::NetworkingAddressLotBlockRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingAddressLotBlockRemoveWhen::new(when),
+                operations::NetworkingAddressLotBlockRemoveThen::new(then),
+            )
+        })
+    }
+
     fn networking_allow_list_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::NetworkingAllowListViewWhen, operations::NetworkingAllowListViewThen),
@@ -18339,62 +20359,460 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn networking_switch_port_settings_list<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsListWhen,
-            operations::NetworkingSwitchPortSettingsListThen,
+            operations::NetworkingSwitchPortConfigurationListWhen,
+            operations::NetworkingSwitchPortConfigurationListThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingSwitchPortSettingsListWhen::new(when),
-                operations::NetworkingSwitchPortSettingsListThen::new(then),
+                operations::NetworkingSwitchPortConfigurationListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationListThen::new(then),
             )
         })
     }
 
-    fn networking_switch_port_settings_create<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsCreateWhen,
-            operations::NetworkingSwitchPortSettingsCreateThen,
+            operations::NetworkingSwitchPortConfigurationCreateWhen,
+            operations::NetworkingSwitchPortConfigurationCreateThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingSwitchPortSettingsCreateWhen::new(when),
-                operations::NetworkingSwitchPortSettingsCreateThen::new(then),
+                operations::NetworkingSwitchPortConfigurationCreateWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationCreateThen::new(then),
             )
         })
     }
 
-    fn networking_switch_port_settings_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsDeleteWhen,
-            operations::NetworkingSwitchPortSettingsDeleteThen,
+            operations::NetworkingSwitchPortConfigurationDeleteWhen,
+            operations::NetworkingSwitchPortConfigurationDeleteThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingSwitchPortSettingsDeleteWhen::new(when),
-                operations::NetworkingSwitchPortSettingsDeleteThen::new(then),
+                operations::NetworkingSwitchPortConfigurationDeleteWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationDeleteThen::new(then),
             )
         })
     }
 
-    fn networking_switch_port_settings_view<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_configuration_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsViewWhen,
-            operations::NetworkingSwitchPortSettingsViewThen,
+            operations::NetworkingSwitchPortConfigurationViewWhen,
+            operations::NetworkingSwitchPortConfigurationViewThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingSwitchPortSettingsViewWhen::new(when),
-                operations::NetworkingSwitchPortSettingsViewThen::new(then),
+                operations::NetworkingSwitchPortConfigurationViewWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_address_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressListWhen,
+            operations::NetworkingSwitchPortConfigurationAddressListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationAddressListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationAddressListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_address_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressAddWhen,
+            operations::NetworkingSwitchPortConfigurationAddressAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationAddressAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationAddressAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_address_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationAddressRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationAddressRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationAddressRemoveWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationAddressRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_export_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_export_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_export_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveWhen::new(
+                    when,
+                ),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowExportRemoveThen::new(
+                    then,
+                ),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_import_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_import_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_allow_import_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveWhen::new(
+                    when,
+                ),
+                operations::NetworkingSwitchPortConfigurationBgpPeerAllowImportRemoveThen::new(
+                    then,
+                ),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_community_list<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_community_add<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_community_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerCommunityRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_bgp_peer_remove<F>(
+        &self,
+        config_fn: F,
+    ) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationBgpPeerRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationBgpPeerRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationBgpPeerRemoveWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationBgpPeerRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_geometry_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationGeometryViewWhen,
+            operations::NetworkingSwitchPortConfigurationGeometryViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationGeometryViewWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationGeometryViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_geometry_set<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationGeometrySetWhen,
+            operations::NetworkingSwitchPortConfigurationGeometrySetThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationGeometrySetWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationGeometrySetThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_link_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkListWhen,
+            operations::NetworkingSwitchPortConfigurationLinkListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationLinkListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationLinkListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_link_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkCreateWhen,
+            operations::NetworkingSwitchPortConfigurationLinkCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationLinkCreateWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationLinkCreateThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_link_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkViewWhen,
+            operations::NetworkingSwitchPortConfigurationLinkViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationLinkViewWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationLinkViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_link_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationLinkDeleteWhen,
+            operations::NetworkingSwitchPortConfigurationLinkDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationLinkDeleteWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationLinkDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_route_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteListWhen,
+            operations::NetworkingSwitchPortConfigurationRouteListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationRouteListWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationRouteListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_route_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteAddWhen,
+            operations::NetworkingSwitchPortConfigurationRouteAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationRouteAddWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationRouteAddThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_configuration_route_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortConfigurationRouteRemoveWhen,
+            operations::NetworkingSwitchPortConfigurationRouteRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortConfigurationRouteRemoveWhen::new(when),
+                operations::NetworkingSwitchPortConfigurationRouteRemoveThen::new(then),
             )
         })
     }
