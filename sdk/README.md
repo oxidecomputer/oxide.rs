@@ -17,17 +17,17 @@ $ cargo add tokio
 To connect to the Oxide API, the SDK needs a host URL and a token. There are
 several ways to specify these:
 
-* Configuration files: When you use the CLI's `oxide auth login`, `config.toml`
-  and `credentials.toml` files are generated in `$HOME/.config/oxide/`. The
-  credentials file contains sensitive information such as your token and user
-  ID.
+* Configuration files: the CLI's `oxide auth login` command generates
+  `config.toml` and `credentials.toml` in `$HOME/.config/oxide/`. The
+  credentials file contains sensitive information such as tokens and user IDs.
 * Environment variables: You can set the `OXIDE_HOST` and `OXIDE_TOKEN`
   environment variables.
 * Explicit host URL and token.
 
 The simplest way to create an authenticated client is to use
-`oxide::Client::new_authenticated()` which uses the same credentials and
-authentication logic as the CLI.
+`oxide::Client::new_authenticated()`, which uses the same credentials and
+authentication logic as the CLI. By default, it reads data from configuration
+files in `$HOME/.config/oxide`.
 
 ## Example
 
