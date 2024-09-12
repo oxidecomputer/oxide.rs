@@ -112,17 +112,17 @@ impl AuthenticatedCmd for CmdLinkAdd {
         let mut settings = current_port_settings(client, &self.rack, &self.switch, &self.port)
             .await
             .unwrap_or(SwitchPortSettingsCreate {
-                addresses: HashMap::new(),
-                bgp_peers: HashMap::new(),
-                description: String::new(),
-                groups: Vec::new(),
-                interfaces: HashMap::new(),
-                links: HashMap::new(),
+                addresses: HashMap::default(),
+                bgp_peers: HashMap::default(),
+                description: String::default(),
+                groups: Vec::default(),
+                interfaces: HashMap::default(),
+                links: HashMap::default(),
                 name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
                 port_config: SwitchPortConfigCreate {
                     geometry: SwitchPortGeometry::Qsfp28x1,
                 },
-                routes: HashMap::new(),
+                routes: HashMap::default(),
             });
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
