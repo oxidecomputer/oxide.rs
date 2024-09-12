@@ -49604,14 +49604,12 @@ pub trait ClientSystemNetworkingExt {
     ///
     /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
-    /// - `name_or_id`: A name or id to use when selecting BGP config.
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_config_list()
     ///    .limit(limit)
-    ///    .name_or_id(name_or_id)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
@@ -64395,7 +64393,6 @@ pub mod builder {
     pub struct NetworkingBgpConfigList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -64405,7 +64402,6 @@ pub mod builder {
             Self {
                 client: client,
                 limit: Ok(None),
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -64418,17 +64414,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn name_or_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.name_or_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
@@ -64461,21 +64446,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                name_or_id,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &name_or_id {
-                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -64516,7 +64496,6 @@ pub mod builder {
             use futures::TryFutureExt;
             use futures::TryStreamExt;
             let next = Self {
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()

@@ -4078,13 +4078,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("A name or id to use when selecting BGP config."),
-            )
-            .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
@@ -10680,10 +10673,6 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.networking_bgp_config_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
