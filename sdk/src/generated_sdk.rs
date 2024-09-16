@@ -17880,8 +17880,8 @@ pub mod types {
         }
     }
 
-    /// A `RouteDestination` is used to match traffic with a routing rule, on
-    /// the destination of that traffic.
+    /// A `RouteDestination` is used to match traffic with a routing rule based
+    /// on the destination of that traffic.
     ///
     /// When traffic is to be sent to a destination that is within a given
     /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
@@ -17892,14 +17892,14 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `RouteDestination` is used to match traffic with a
-    /// routing rule, on the destination of that traffic.\n\nWhen traffic is to
-    /// be sent to a destination that is within a given `RouteDestination`, the
-    /// corresponding `RouterRoute` applies, and traffic will be forward to the
-    /// `RouteTarget` for that rule.",
+    /// routing rule based on the destination of that traffic.\n\nWhen traffic
+    /// is to be sent to a destination that is within a given
+    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
+    /// will be forward to the `RouteTarget` for that rule.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// address",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP address",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17919,8 +17919,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// subnet",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17939,8 +17939,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for the given
-    /// VPC.",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17959,7 +17959,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17986,16 +17987,16 @@ pub mod types {
     )]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
-        /// Route applies to traffic destined for a specific IP address
+        /// Route applies to traffic destined for the specified IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        /// Route applies to traffic destined for a specific IP subnet
+        /// Route applies to traffic destined for the specified IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
-        /// Route applies to traffic destined for the given VPC.
+        /// Route applies to traffic destined for the specified VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        /// Route applies to traffic
+        /// Route applies to traffic destined for the specified VPC subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
     }
