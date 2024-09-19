@@ -273,7 +273,7 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
@@ -325,7 +325,7 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
