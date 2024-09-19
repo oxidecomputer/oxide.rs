@@ -4514,8 +4514,8 @@
                       "about": "Delete BGP announce set",
                       "args": [
                         {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "long": "announce-set",
+                          "help": "Name or ID of the announce set"
                         },
                         {
                           "long": "profile",
@@ -4531,10 +4531,6 @@
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when s electing BGP port settings"
                         },
                         {
                           "long": "page-token",
@@ -4598,8 +4594,8 @@
                       "about": "Get originated routes for a specified BGP announce set",
                       "args": [
                         {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "long": "announce-set",
+                          "help": "Name or ID of the announce set"
                         },
                         {
                           "long": "profile",
@@ -4748,10 +4744,6 @@
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP config."
                         },
                         {
                           "long": "profile",
