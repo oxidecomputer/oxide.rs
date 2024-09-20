@@ -247,7 +247,7 @@ enum BgpSubCommand {
 ///
 /// This command adds the provided prefix to the specified announce set. It is
 /// required that the prefix be available in the given address lot. The add is
-/// performed as a read-modify-write on the specified address lot.
+/// performed as a read-modify-write on the announce set.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "announce")]
@@ -273,7 +273,7 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
@@ -305,8 +305,8 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
 
 /// Withdraw a prefix over BGP.
 ///
-/// This command removes the provided prefix to the specified announce set.
-/// The remove is performed as a read-modify-write on the specified address lot.
+/// This command removes the provided prefix from the specified announce set.
+/// The remove is performed as a read-modify-write on the announce set.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "withdraw")]
@@ -325,7 +325,7 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
