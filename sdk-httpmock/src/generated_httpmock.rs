@@ -10405,22 +10405,6 @@ pub mod operations {
             }
         }
 
-        pub fn name_or_id<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a types::NameOrId>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("name_or_id", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "name_or_id"))
-                        .is_none()
-                }))
-            }
-        }
-
         pub fn page_token<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a str>>,
@@ -10635,22 +10619,6 @@ pub mod operations {
             }
         }
 
-        pub fn name_or_id<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a types::NameOrId>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("name_or_id", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "name_or_id"))
-                        .is_none()
-                }))
-            }
-        }
-
         pub fn page_token<'a, T>(self, value: T) -> Self
         where
             T: Into<Option<&'a str>>,
@@ -10793,7 +10761,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
+        pub fn announce_set(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/bgp-announce-set/{}$",
                 value.to_string()
@@ -10855,7 +10823,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
+        pub fn announce_set(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/v1/system/networking/bgp-announce-set/{}/announcement$",
                 value.to_string()

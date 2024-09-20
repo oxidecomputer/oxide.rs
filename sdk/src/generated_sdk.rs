@@ -17880,8 +17880,8 @@ pub mod types {
         }
     }
 
-    /// A `RouteDestination` is used to match traffic with a routing rule, on
-    /// the destination of that traffic.
+    /// A `RouteDestination` is used to match traffic with a routing rule based
+    /// on the destination of that traffic.
     ///
     /// When traffic is to be sent to a destination that is within a given
     /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
@@ -17892,14 +17892,14 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `RouteDestination` is used to match traffic with a
-    /// routing rule, on the destination of that traffic.\n\nWhen traffic is to
-    /// be sent to a destination that is within a given `RouteDestination`, the
-    /// corresponding `RouterRoute` applies, and traffic will be forward to the
-    /// `RouteTarget` for that rule.",
+    /// routing rule based on the destination of that traffic.\n\nWhen traffic
+    /// is to be sent to a destination that is within a given
+    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
+    /// will be forward to the `RouteTarget` for that rule.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// address",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP address",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17919,8 +17919,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// subnet",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17939,8 +17939,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for the given
-    /// VPC.",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17959,7 +17959,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -17986,16 +17987,16 @@ pub mod types {
     )]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
-        /// Route applies to traffic destined for a specific IP address
+        /// Route applies to traffic destined for the specified IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        /// Route applies to traffic destined for a specific IP subnet
+        /// Route applies to traffic destined for the specified IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
-        /// Route applies to traffic destined for the given VPC.
+        /// Route applies to traffic destined for the specified VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        /// Route applies to traffic
+        /// Route applies to traffic destined for the specified VPC subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
     }
@@ -46774,7 +46775,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20240821.0
+/// Version: 20241009.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -46827,7 +46828,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "20240821.0"
+        "20241009.0"
     }
 }
 
@@ -49604,14 +49605,12 @@ pub trait ClientSystemNetworkingExt {
     ///
     /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
-    /// - `name_or_id`: A name or id to use when selecting BGP config.
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_config_list()
     ///    .limit(limit)
-    ///    .name_or_id(name_or_id)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
@@ -49648,14 +49647,12 @@ pub trait ClientSystemNetworkingExt {
     ///
     /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
-    /// - `name_or_id`: A name or id to use when s electing BGP port settings
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_list()
     ///    .limit(limit)
-    ///    .name_or_id(name_or_id)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
@@ -49679,13 +49676,13 @@ pub trait ClientSystemNetworkingExt {
     /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to
-    /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
+    /// `/v1/system/networking/bgp-announce-set/{announce_set}`
     ///
     /// Arguments:
-    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// - `announce_set`: Name or ID of the announce set
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_delete()
-    ///    .name_or_id(name_or_id)
+    ///    .announce_set(announce_set)
     ///    .send()
     ///    .await;
     /// ```
@@ -49693,13 +49690,13 @@ pub trait ClientSystemNetworkingExt {
     /// Get originated routes for a specified BGP announce set
     ///
     /// Sends a `GET` request to
-    /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+    /// `/v1/system/networking/bgp-announce-set/{announce_set}/announcement`
     ///
     /// Arguments:
-    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// - `announce_set`: Name or ID of the announce set
     /// ```ignore
     /// let response = client.networking_bgp_announcement_list()
-    ///    .name_or_id(name_or_id)
+    ///    .announce_set(announce_set)
     ///    .send()
     ///    .await;
     /// ```
@@ -64397,7 +64394,6 @@ pub mod builder {
     pub struct NetworkingBgpConfigList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -64407,7 +64403,6 @@ pub mod builder {
             Self {
                 client: client,
                 limit: Ok(None),
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -64420,17 +64415,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn name_or_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.name_or_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
@@ -64463,21 +64447,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                name_or_id,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &name_or_id {
-                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -64518,7 +64497,6 @@ pub mod builder {
             use futures::TryFutureExt;
             use futures::TryStreamExt;
             let next = Self {
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
@@ -64693,7 +64671,6 @@ pub mod builder {
     pub struct NetworkingBgpAnnounceSetList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -64703,7 +64680,6 @@ pub mod builder {
             Self {
                 client: client,
                 limit: Ok(None),
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -64716,17 +64692,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn name_or_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.name_or_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
@@ -64759,21 +64724,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                name_or_id,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-announce-set", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &name_or_id {
-                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -64889,36 +64849,39 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetDelete<'a> {
         client: &'a super::Client,
-        name_or_id: Result<types::NameOrId, String>,
+        announce_set: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                name_or_id: Err("name_or_id was not initialized".to_string()),
+                announce_set: Err("announce_set was not initialized".to_string()),
             }
         }
 
-        pub fn name_or_id<V>(mut self, value: V) -> Self
+        pub fn announce_set<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
         {
-            self.name_or_id = value
+            self.announce_set = value
                 .try_into()
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+                .map_err(|_| "conversion to `NameOrId` for announce_set failed".to_string());
             self
         }
 
         /// Sends a `DELETE` request to
-        /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
+        /// `/v1/system/networking/bgp-announce-set/{announce_set}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, name_or_id } = self;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let Self {
+                client,
+                announce_set,
+            } = self;
+            let announce_set = announce_set.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/bgp-announce-set/{}",
                 client.baseurl,
-                encode_path(&name_or_id.to_string()),
+                encode_path(&announce_set.to_string()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64951,38 +64914,41 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnouncementList<'a> {
         client: &'a super::Client,
-        name_or_id: Result<types::NameOrId, String>,
+        announce_set: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnouncementList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                name_or_id: Err("name_or_id was not initialized".to_string()),
+                announce_set: Err("announce_set was not initialized".to_string()),
             }
         }
 
-        pub fn name_or_id<V>(mut self, value: V) -> Self
+        pub fn announce_set<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
         {
-            self.name_or_id = value
+            self.announce_set = value
                 .try_into()
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+                .map_err(|_| "conversion to `NameOrId` for announce_set failed".to_string());
             self
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+        /// `/v1/system/networking/bgp-announce-set/{announce_set}/announcement`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
-            let Self { client, name_or_id } = self;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let Self {
+                client,
+                announce_set,
+            } = self;
+            let announce_set = announce_set.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/bgp-announce-set/{}/announcement",
                 client.baseurl,
-                encode_path(&name_or_id.to_string()),
+                encode_path(&announce_set.to_string()),
             );
             #[allow(unused_mut)]
             let mut request = client
