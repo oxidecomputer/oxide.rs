@@ -4475,7 +4475,7 @@
                 {
                   "name": "announce",
                   "about": "Announce a prefix over BGP.",
-                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the specified address lot.",
+                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "address-lot",
@@ -5213,7 +5213,7 @@
                 {
                   "name": "withdraw",
                   "about": "Withdraw a prefix over BGP.",
-                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix to the specified announce set.\nThe remove is performed as a read-modify-write on the specified address lot.",
+                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix from the specified announce set.\nThe remove is performed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "announce-set",
