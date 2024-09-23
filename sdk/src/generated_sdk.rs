@@ -11363,6 +11363,7 @@ pub mod types {
     ///  "description": "View of an Instance",
     ///  "type": "object",
     ///  "required": [
+    ///    "auto_restart_enabled",
     ///    "description",
     ///    "hostname",
     ///    "id",
@@ -11376,6 +11377,26 @@ pub mod types {
     ///    "time_run_state_updated"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_cooldown_expiration": {
+    ///      "description": "The time at which the auto-restart cooldown period
+    /// for this instance completes, permitting it to be automatically restarted
+    /// again. If the instance enters the `Failed` state, it will not be
+    /// restarted until after this time.\n\nIf this is not present, then either
+    /// the instance has never been automatically restarted, or the cooldown
+    /// period has already expired, allowing the instance to be restarted
+    /// immediately if it fails.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "auto_restart_enabled": {
+    ///      "description": "`true` if this instance's auto-restart policy will
+    /// permit the control plane to automatically restart it if it enters the
+    /// `Failed` state.",
+    ///      "type": "boolean"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -11428,6 +11449,16 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "time_last_auto_restarted": {
+    ///      "description": "The timestamp of the most recent time this instance
+    /// was automatically restarted by the control plane.\n\nIf this is not
+    /// present, then this instance has not been automatically restarted.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
     ///    "time_modified": {
     ///      "description": "timestamp when this resource was last modified",
     ///      "type": "string",
@@ -11445,6 +11476,20 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Instance {
+        /// The time at which the auto-restart cooldown period for this instance
+        /// completes, permitting it to be automatically restarted again. If the
+        /// instance enters the `Failed` state, it will not be restarted until
+        /// after this time.
+        ///
+        /// If this is not present, then either the instance has never been
+        /// automatically restarted, or the cooldown period has already expired,
+        /// allowing the instance to be restarted immediately if it fails.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_cooldown_expiration: Option<chrono::DateTime<chrono::offset::Utc>>,
+        /// `true` if this instance's auto-restart policy will permit the
+        /// control plane to automatically restart it if it enters the `Failed`
+        /// state.
+        pub auto_restart_enabled: bool,
         /// human-readable free-form text about a resource
         pub description: String,
         /// RFC1035-compliant hostname for the Instance.
@@ -11462,6 +11507,13 @@ pub mod types {
         pub run_state: InstanceState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// The timestamp of the most recent time this instance was
+        /// automatically restarted by the control plane.
+        ///
+        /// If this is not present, then this instance has not been
+        /// automatically restarted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub time_last_auto_restarted: Option<chrono::DateTime<chrono::offset::Utc>>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
@@ -11476,6 +11528,113 @@ pub mod types {
     impl Instance {
         pub fn builder() -> builder::Instance {
             Default::default()
+        }
+    }
+
+    /// A policy determining when an instance should be automatically restarted
+    /// by the control plane.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A policy determining when an instance should be
+    /// automatically restarted by the control plane.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The instance should not be automatically restarted
+    /// by the control plane if it fails.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "never"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "If this instance is running and unexpectedly fails
+    /// (e.g. due to a host software crash or unexpected host reboot), the
+    /// control plane will make a best-effort attempt to restart it. The control
+    /// plane may choose not to restart the instance to preserve the overall
+    /// availability of the system.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "best_effort"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum InstanceAutoRestartPolicy {
+        /// The instance should not be automatically restarted by the control
+        /// plane if it fails.
+        #[serde(rename = "never")]
+        Never,
+        /// If this instance is running and unexpectedly fails (e.g. due to a
+        /// host software crash or unexpected host reboot), the control plane
+        /// will make a best-effort attempt to restart it. The control plane may
+        /// choose not to restart the instance to preserve the overall
+        /// availability of the system.
+        #[serde(rename = "best_effort")]
+        BestEffort,
+    }
+
+    impl From<&InstanceAutoRestartPolicy> for InstanceAutoRestartPolicy {
+        fn from(value: &InstanceAutoRestartPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for InstanceAutoRestartPolicy {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Never => "never".to_string(),
+                Self::BestEffort => "best_effort".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for InstanceAutoRestartPolicy {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "never" => Ok(Self::Never),
+                "best_effort" => Ok(Self::BestEffort),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -11571,6 +11730,17 @@ pub mod types {
     ///    "ncpus"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy for this instance.\n\nThis
+    /// indicates whether the instance should be automatically restarted by the
+    /// control plane on failure. If this is `null`, no auto-restart policy has
+    /// been configured for this instance by the user.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -11657,6 +11827,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceCreate {
+        /// The auto-restart policy for this instance.
+        ///
+        /// This indicates whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, no
+        /// auto-restart policy has been configured for this instance by the
+        /// user.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         pub description: String,
         /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -34781,6 +34959,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Instance {
+            auto_restart_cooldown_expiration:
+                Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+            auto_restart_enabled: Result<bool, String>,
             description: Result<String, String>,
             hostname: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -34790,6 +34971,7 @@ pub mod types {
             project_id: Result<uuid::Uuid, String>,
             run_state: Result<super::InstanceState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_last_auto_restarted: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_run_state_updated: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -34797,6 +34979,10 @@ pub mod types {
         impl Default for Instance {
             fn default() -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(Default::default()),
+                    auto_restart_enabled: Err(
+                        "no value supplied for auto_restart_enabled".to_string()
+                    ),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -34806,6 +34992,7 @@ pub mod types {
                     project_id: Err("no value supplied for project_id".to_string()),
                     run_state: Err("no value supplied for run_state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
+                    time_last_auto_restarted: Ok(Default::default()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     time_run_state_updated: Err(
                         "no value supplied for time_run_state_updated".to_string()
@@ -34815,6 +35002,32 @@ pub mod types {
         }
 
         impl Instance {
+            pub fn auto_restart_cooldown_expiration<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_cooldown_expiration = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_cooldown_expiration: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn auto_restart_enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_enabled = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_enabled: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -34905,6 +35118,19 @@ pub mod types {
                 });
                 self
             }
+            pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_last_auto_restarted = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for time_last_auto_restarted: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -34934,6 +35160,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: Instance) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
+                    auto_restart_enabled: value.auto_restart_enabled?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -34943,6 +35171,7 @@ pub mod types {
                     project_id: value.project_id?,
                     run_state: value.run_state?,
                     time_created: value.time_created?,
+                    time_last_auto_restarted: value.time_last_auto_restarted?,
                     time_modified: value.time_modified?,
                     time_run_state_updated: value.time_run_state_updated?,
                 })
@@ -34952,6 +35181,8 @@ pub mod types {
         impl From<super::Instance> for Instance {
             fn from(value: super::Instance) -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(value.auto_restart_cooldown_expiration),
+                    auto_restart_enabled: Ok(value.auto_restart_enabled),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -34961,6 +35192,7 @@ pub mod types {
                     project_id: Ok(value.project_id),
                     run_state: Ok(value.run_state),
                     time_created: Ok(value.time_created),
+                    time_last_auto_restarted: Ok(value.time_last_auto_restarted),
                     time_modified: Ok(value.time_modified),
                     time_run_state_updated: Ok(value.time_run_state_updated),
                 }
@@ -34969,6 +35201,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
@@ -34985,6 +35218,7 @@ pub mod types {
         impl Default for InstanceCreate {
             fn default() -> Self {
                 Self {
+                    auto_restart_policy: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -35001,6 +35235,19 @@ pub mod types {
         }
 
         impl InstanceCreate {
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -35120,6 +35367,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_policy: value.auto_restart_policy?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -35138,6 +35386,7 @@ pub mod types {
         impl From<super::InstanceCreate> for InstanceCreate {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
+                    auto_restart_policy: Ok(value.auto_restart_policy),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),

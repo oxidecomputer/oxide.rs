@@ -1408,6 +1408,24 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_instance_create() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("auto-restart-policy")
+                    .long("auto-restart-policy")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::InstanceAutoRestartPolicy::Never.to_string(),
+                            types::InstanceAutoRestartPolicy::BestEffort.to_string(),
+                        ]),
+                        |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The auto-restart policy for this instance.\n\nThis indicates whether the \
+                         instance should be automatically restarted by the control plane on \
+                         failure. If this is `null`, no auto-restart policy has been configured \
+                         for this instance by the user.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("description")
                     .long("description")
                     .value_parser(clap::value_parser!(String))
@@ -7546,6 +7564,12 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_create();
+        if let Some(value) =
+            matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
+        {
+            request = request.body_map(|body| body.auto_restart_policy(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }

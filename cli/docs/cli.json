@@ -1401,6 +1401,14 @@
           "about": "Create instance",
           "args": [
             {
+              "long": "auto-restart-policy",
+              "values": [
+                "never",
+                "best_effort"
+              ],
+              "help": "The auto-restart policy for this instance.\n\nThis indicates whether the instance should be automatically restarted by the control plane on failure. If this is `null`, no auto-restart policy has been configured for this instance by the user."
+            },
+            {
               "long": "description"
             },
             {
