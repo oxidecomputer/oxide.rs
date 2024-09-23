@@ -1468,7 +1468,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -2439,7 +2439,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#e0a1045aed55a0db2cd67939252ea354e284d840"
+source = "git+https://github.com/oxidecomputer/progenitor#5d84e8ae721fed9a7edfd45c4d91f1bea0cd077c"
 dependencies = [
  "progenitor-client 0.7.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2464,7 +2464,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#e0a1045aed55a0db2cd67939252ea354e284d840"
+source = "git+https://github.com/oxidecomputer/progenitor#5d84e8ae721fed9a7edfd45c4d91f1bea0cd077c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2478,7 +2478,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#e0a1045aed55a0db2cd67939252ea354e284d840"
+source = "git+https://github.com/oxidecomputer/progenitor#5d84e8ae721fed9a7edfd45c4d91f1bea0cd077c"
 dependencies = [
  "heck",
  "http 0.2.12",
@@ -2499,7 +2499,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#e0a1045aed55a0db2cd67939252ea354e284d840"
+source = "git+https://github.com/oxidecomputer/progenitor#5d84e8ae721fed9a7edfd45c4d91f1bea0cd077c"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -3427,18 +3427,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c0342370b38b6a11b6cc11d6a805569958d54cfa061a29969c3b5ce2ea405724"
+checksum = "d50af8abc119fb8bb6dbabcfa89656f46f84aa0ac7688088608076ad2b459a84"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4558b58466b9ad7ca0f102865eccc95938dca1a74a856f2b57b6629050da261"
+checksum = "08904e7672f5eb876eaaf87e0ce17857500934f4981c4a0ab2b4aa98baac7fc3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3742,7 +3742,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#49f07469b6bdc4d98e00bfe2d12a55372e07e9a6"
+source = "git+https://github.com/oxidecomputer/typify#261e1e065f468765ab45ad8a1a524dec979f7aa8"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3751,7 +3751,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#49f07469b6bdc4d98e00bfe2d12a55372e07e9a6"
+source = "git+https://github.com/oxidecomputer/typify#261e1e065f468765ab45ad8a1a524dec979f7aa8"
 dependencies = [
  "heck",
  "log",
@@ -3770,7 +3770,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#49f07469b6bdc4d98e00bfe2d12a55372e07e9a6"
+source = "git+https://github.com/oxidecomputer/typify#261e1e065f468765ab45ad8a1a524dec979f7aa8"
 dependencies = [
  "proc-macro2",
  "quote",
