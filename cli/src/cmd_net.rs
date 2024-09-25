@@ -1352,8 +1352,8 @@ impl AuthenticatedCmd for CmdPortConfig {
                     writeln!(
                         &mut tw,
                         "{}\t{}\t{}\t{}",
-                        r.dst.to_string(),
-                        r.gw.to_string(),
+                        r.dst,
+                        r.gw,
                         r.vlan_id.unwrap_or(0),
                         r.local_pref.unwrap_or(0),
                     )?;
