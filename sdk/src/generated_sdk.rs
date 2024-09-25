@@ -581,11 +581,11 @@ pub mod types {
         }
     }
 
-    impl ToString for AddressLotKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for AddressLotKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Infra => "infra".to_string(),
-                Self::Pool => "pool".to_string(),
+                Self::Infra => write!(f, "infra"),
+                Self::Pool => write!(f, "pool"),
             }
         }
     }
@@ -991,13 +991,13 @@ pub mod types {
         }
     }
 
-    impl ToString for AuthzScope {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for AuthzScope {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Fleet => "fleet".to_string(),
-                Self::Silo => "silo".to_string(),
-                Self::Project => "project".to_string(),
-                Self::ViewableToAll => "viewable_to_all".to_string(),
+                Self::Fleet => write!(f, "fleet"),
+                Self::Silo => write!(f, "silo"),
+                Self::Project => write!(f, "project"),
+                Self::ViewableToAll => write!(f, "viewable_to_all"),
             }
         }
     }
@@ -1128,11 +1128,11 @@ pub mod types {
         }
     }
 
-    impl ToString for BfdMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BfdMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SingleHop => "single_hop".to_string(),
-                Self::MultiHop => "multi_hop".to_string(),
+                Self::SingleHop => write!(f, "single_hop"),
+                Self::MultiHop => write!(f, "multi_hop"),
             }
         }
     }
@@ -1407,13 +1407,13 @@ pub mod types {
         }
     }
 
-    impl ToString for BfdState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BfdState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AdminDown => "admin_down".to_string(),
-                Self::Down => "down".to_string(),
-                Self::Init => "init".to_string(),
-                Self::Up => "up".to_string(),
+                Self::AdminDown => write!(f, "admin_down"),
+                Self::Down => write!(f, "down"),
+                Self::Init => write!(f, "init"),
+                Self::Up => write!(f, "up"),
             }
         }
     }
@@ -2556,16 +2556,16 @@ pub mod types {
         }
     }
 
-    impl ToString for BgpPeerState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BgpPeerState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Idle => "idle".to_string(),
-                Self::Connect => "connect".to_string(),
-                Self::Active => "active".to_string(),
-                Self::OpenSent => "open_sent".to_string(),
-                Self::OpenConfirm => "open_confirm".to_string(),
-                Self::SessionSetup => "session_setup".to_string(),
-                Self::Established => "established".to_string(),
+                Self::Idle => write!(f, "idle"),
+                Self::Connect => write!(f, "connect"),
+                Self::Active => write!(f, "active"),
+                Self::OpenSent => write!(f, "open_sent"),
+                Self::OpenConfirm => write!(f, "open_confirm"),
+                Self::SessionSetup => write!(f, "session_setup"),
+                Self::Established => write!(f, "established"),
             }
         }
     }
@@ -4481,9 +4481,9 @@ pub mod types {
         }
     }
 
-    impl ToString for ByteCount {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for ByteCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -5835,36 +5835,36 @@ pub mod types {
         }
     }
 
-    impl ToString for DatumType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for DatumType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Bool => "bool".to_string(),
-                Self::I8 => "i8".to_string(),
-                Self::U8 => "u8".to_string(),
-                Self::I16 => "i16".to_string(),
-                Self::U16 => "u16".to_string(),
-                Self::I32 => "i32".to_string(),
-                Self::U32 => "u32".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::U64 => "u64".to_string(),
-                Self::F32 => "f32".to_string(),
-                Self::F64 => "f64".to_string(),
-                Self::String => "string".to_string(),
-                Self::Bytes => "bytes".to_string(),
-                Self::CumulativeI64 => "cumulative_i64".to_string(),
-                Self::CumulativeU64 => "cumulative_u64".to_string(),
-                Self::CumulativeF32 => "cumulative_f32".to_string(),
-                Self::CumulativeF64 => "cumulative_f64".to_string(),
-                Self::HistogramI8 => "histogram_i8".to_string(),
-                Self::HistogramU8 => "histogram_u8".to_string(),
-                Self::HistogramI16 => "histogram_i16".to_string(),
-                Self::HistogramU16 => "histogram_u16".to_string(),
-                Self::HistogramI32 => "histogram_i32".to_string(),
-                Self::HistogramU32 => "histogram_u32".to_string(),
-                Self::HistogramI64 => "histogram_i64".to_string(),
-                Self::HistogramU64 => "histogram_u64".to_string(),
-                Self::HistogramF32 => "histogram_f32".to_string(),
-                Self::HistogramF64 => "histogram_f64".to_string(),
+                Self::Bool => write!(f, "bool"),
+                Self::I8 => write!(f, "i8"),
+                Self::U8 => write!(f, "u8"),
+                Self::I16 => write!(f, "i16"),
+                Self::U16 => write!(f, "u16"),
+                Self::I32 => write!(f, "i32"),
+                Self::U32 => write!(f, "u32"),
+                Self::I64 => write!(f, "i64"),
+                Self::U64 => write!(f, "u64"),
+                Self::F32 => write!(f, "f32"),
+                Self::F64 => write!(f, "f64"),
+                Self::String => write!(f, "string"),
+                Self::Bytes => write!(f, "bytes"),
+                Self::CumulativeI64 => write!(f, "cumulative_i64"),
+                Self::CumulativeU64 => write!(f, "cumulative_u64"),
+                Self::CumulativeF32 => write!(f, "cumulative_f32"),
+                Self::CumulativeF64 => write!(f, "cumulative_f64"),
+                Self::HistogramI8 => write!(f, "histogram_i8"),
+                Self::HistogramU8 => write!(f, "histogram_u8"),
+                Self::HistogramI16 => write!(f, "histogram_i16"),
+                Self::HistogramU16 => write!(f, "histogram_u16"),
+                Self::HistogramI32 => write!(f, "histogram_i32"),
+                Self::HistogramU32 => write!(f, "histogram_u32"),
+                Self::HistogramI64 => write!(f, "histogram_i64"),
+                Self::HistogramU64 => write!(f, "histogram_u64"),
+                Self::HistogramF32 => write!(f, "histogram_f32"),
+                Self::HistogramF64 => write!(f, "histogram_f64"),
             }
         }
     }
@@ -6384,15 +6384,15 @@ pub mod types {
         }
     }
 
-    impl ToString for DiskMetricName {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for DiskMetricName {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Activated => "activated".to_string(),
-                Self::Flush => "flush".to_string(),
-                Self::Read => "read".to_string(),
-                Self::ReadBytes => "read_bytes".to_string(),
-                Self::Write => "write".to_string(),
-                Self::WriteBytes => "write_bytes".to_string(),
+                Self::Activated => write!(f, "activated"),
+                Self::Flush => write!(f, "flush"),
+                Self::Read => write!(f, "read"),
+                Self::ReadBytes => write!(f, "read_bytes"),
+                Self::Write => write!(f, "write"),
+                Self::WriteBytes => write!(f, "write_bytes"),
             }
         }
     }
@@ -7621,11 +7621,11 @@ pub mod types {
         }
     }
 
-    impl ToString for FieldSource {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FieldSource {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Target => "target".to_string(),
-                Self::Metric => "metric".to_string(),
+                Self::Target => write!(f, "target"),
+                Self::Metric => write!(f, "metric"),
             }
         }
     }
@@ -7734,21 +7734,21 @@ pub mod types {
         }
     }
 
-    impl ToString for FieldType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FieldType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::String => "string".to_string(),
-                Self::I8 => "i8".to_string(),
-                Self::U8 => "u8".to_string(),
-                Self::I16 => "i16".to_string(),
-                Self::U16 => "u16".to_string(),
-                Self::I32 => "i32".to_string(),
-                Self::U32 => "u32".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::U64 => "u64".to_string(),
-                Self::IpAddr => "ip_addr".to_string(),
-                Self::Uuid => "uuid".to_string(),
-                Self::Bool => "bool".to_string(),
+                Self::String => write!(f, "string"),
+                Self::I8 => write!(f, "i8"),
+                Self::U8 => write!(f, "u8"),
+                Self::I16 => write!(f, "i16"),
+                Self::U16 => write!(f, "u16"),
+                Self::I32 => write!(f, "i32"),
+                Self::U32 => write!(f, "u32"),
+                Self::I64 => write!(f, "i64"),
+                Self::U64 => write!(f, "u64"),
+                Self::IpAddr => write!(f, "ip_addr"),
+                Self::Uuid => write!(f, "uuid"),
+                Self::Bool => write!(f, "bool"),
             }
         }
     }
@@ -8232,12 +8232,12 @@ pub mod types {
         }
     }
 
-    impl ToString for FleetRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FleetRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -8670,10 +8670,10 @@ pub mod types {
         }
     }
 
-    impl ToString for FloatingIpParentKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FloatingIpParentKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Instance => "instance".to_string(),
+                Self::Instance => write!(f, "instance"),
             }
         }
     }
@@ -10490,10 +10490,10 @@ pub mod types {
         }
     }
 
-    impl ToString for IdSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IdAscending => "id_ascending".to_string(),
+                Self::IdAscending => write!(f, "id_ascending"),
             }
         }
     }
@@ -10714,10 +10714,10 @@ pub mod types {
         }
     }
 
-    impl ToString for IdentityProviderType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdentityProviderType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Saml => "saml".to_string(),
+                Self::Saml => write!(f, "saml"),
             }
         }
     }
@@ -10794,11 +10794,11 @@ pub mod types {
         }
     }
 
-    impl ToString for IdentityType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdentityType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SiloUser => "silo_user".to_string(),
-                Self::SiloGroup => "silo_group".to_string(),
+                Self::SiloUser => write!(f, "silo_user"),
+                Self::SiloGroup => write!(f, "silo_group"),
             }
         }
     }
@@ -11363,6 +11363,7 @@ pub mod types {
     ///  "description": "View of an Instance",
     ///  "type": "object",
     ///  "required": [
+    ///    "auto_restart_enabled",
     ///    "description",
     ///    "hostname",
     ///    "id",
@@ -11376,6 +11377,26 @@ pub mod types {
     ///    "time_run_state_updated"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_cooldown_expiration": {
+    ///      "description": "The time at which the auto-restart cooldown period
+    /// for this instance completes, permitting it to be automatically restarted
+    /// again. If the instance enters the `Failed` state, it will not be
+    /// restarted until after this time.\n\nIf this is not present, then either
+    /// the instance has never been automatically restarted, or the cooldown
+    /// period has already expired, allowing the instance to be restarted
+    /// immediately if it fails.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "auto_restart_enabled": {
+    ///      "description": "`true` if this instance's auto-restart policy will
+    /// permit the control plane to automatically restart it if it enters the
+    /// `Failed` state.",
+    ///      "type": "boolean"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -11428,6 +11449,16 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "time_last_auto_restarted": {
+    ///      "description": "The timestamp of the most recent time this instance
+    /// was automatically restarted by the control plane.\n\nIf this is not
+    /// present, then this instance has not been automatically restarted.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
     ///    "time_modified": {
     ///      "description": "timestamp when this resource was last modified",
     ///      "type": "string",
@@ -11445,6 +11476,20 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Instance {
+        /// The time at which the auto-restart cooldown period for this instance
+        /// completes, permitting it to be automatically restarted again. If the
+        /// instance enters the `Failed` state, it will not be restarted until
+        /// after this time.
+        ///
+        /// If this is not present, then either the instance has never been
+        /// automatically restarted, or the cooldown period has already expired,
+        /// allowing the instance to be restarted immediately if it fails.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_cooldown_expiration: Option<chrono::DateTime<chrono::offset::Utc>>,
+        /// `true` if this instance's auto-restart policy will permit the
+        /// control plane to automatically restart it if it enters the `Failed`
+        /// state.
+        pub auto_restart_enabled: bool,
         /// human-readable free-form text about a resource
         pub description: String,
         /// RFC1035-compliant hostname for the Instance.
@@ -11462,6 +11507,13 @@ pub mod types {
         pub run_state: InstanceState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// The timestamp of the most recent time this instance was
+        /// automatically restarted by the control plane.
+        ///
+        /// If this is not present, then this instance has not been
+        /// automatically restarted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub time_last_auto_restarted: Option<chrono::DateTime<chrono::offset::Utc>>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
@@ -11476,6 +11528,113 @@ pub mod types {
     impl Instance {
         pub fn builder() -> builder::Instance {
             Default::default()
+        }
+    }
+
+    /// A policy determining when an instance should be automatically restarted
+    /// by the control plane.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A policy determining when an instance should be
+    /// automatically restarted by the control plane.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The instance should not be automatically restarted
+    /// by the control plane if it fails.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "never"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "If this instance is running and unexpectedly fails
+    /// (e.g. due to a host software crash or unexpected host reboot), the
+    /// control plane will make a best-effort attempt to restart it. The control
+    /// plane may choose not to restart the instance to preserve the overall
+    /// availability of the system.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "best_effort"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum InstanceAutoRestartPolicy {
+        /// The instance should not be automatically restarted by the control
+        /// plane if it fails.
+        #[serde(rename = "never")]
+        Never,
+        /// If this instance is running and unexpectedly fails (e.g. due to a
+        /// host software crash or unexpected host reboot), the control plane
+        /// will make a best-effort attempt to restart it. The control plane may
+        /// choose not to restart the instance to preserve the overall
+        /// availability of the system.
+        #[serde(rename = "best_effort")]
+        BestEffort,
+    }
+
+    impl From<&InstanceAutoRestartPolicy> for InstanceAutoRestartPolicy {
+        fn from(value: &InstanceAutoRestartPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for InstanceAutoRestartPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Never => write!(f, "never"),
+                Self::BestEffort => write!(f, "best_effort"),
+            }
+        }
+    }
+
+    impl std::str::FromStr for InstanceAutoRestartPolicy {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "never" => Ok(Self::Never),
+                "best_effort" => Ok(Self::BestEffort),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -11549,9 +11708,9 @@ pub mod types {
         }
     }
 
-    impl ToString for InstanceCpuCount {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for InstanceCpuCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -11571,6 +11730,17 @@ pub mod types {
     ///    "ncpus"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy for this instance.\n\nThis
+    /// indicates whether the instance should be automatically restarted by the
+    /// control plane on failure. If this is `null`, no auto-restart policy has
+    /// been configured for this instance by the user.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -11657,6 +11827,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceCreate {
+        /// The auto-restart policy for this instance.
+        ///
+        /// This indicates whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, no
+        /// auto-restart policy has been configured for this instance by the
+        /// user.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         pub description: String,
         /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -12546,19 +12724,19 @@ pub mod types {
         }
     }
 
-    impl ToString for InstanceState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for InstanceState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Creating => "creating".to_string(),
-                Self::Starting => "starting".to_string(),
-                Self::Running => "running".to_string(),
-                Self::Stopping => "stopping".to_string(),
-                Self::Stopped => "stopped".to_string(),
-                Self::Rebooting => "rebooting".to_string(),
-                Self::Migrating => "migrating".to_string(),
-                Self::Repairing => "repairing".to_string(),
-                Self::Failed => "failed".to_string(),
-                Self::Destroyed => "destroyed".to_string(),
+                Self::Creating => write!(f, "creating"),
+                Self::Starting => write!(f, "starting"),
+                Self::Running => write!(f, "running"),
+                Self::Stopping => write!(f, "stopping"),
+                Self::Stopped => write!(f, "stopped"),
+                Self::Rebooting => write!(f, "rebooting"),
+                Self::Migrating => write!(f, "migrating"),
+                Self::Repairing => write!(f, "repairing"),
+                Self::Failed => write!(f, "failed"),
+                Self::Destroyed => write!(f, "destroyed"),
             }
         }
     }
@@ -12684,11 +12862,11 @@ pub mod types {
         }
     }
 
-    impl ToString for IpNet {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IpNet {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::V4(x) => x.to_string(),
-                Self::V6(x) => x.to_string(),
+                Self::V4(x) => x.fmt(f),
+                Self::V6(x) => x.fmt(f),
             }
         }
     }
@@ -14060,12 +14238,12 @@ pub mod types {
         }
     }
 
-    impl ToString for LinkFec {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for LinkFec {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Firecode => "firecode".to_string(),
-                Self::None => "none".to_string(),
-                Self::Rs => "rs".to_string(),
+                Self::Firecode => write!(f, "firecode"),
+                Self::None => write!(f, "none"),
+                Self::Rs => write!(f, "rs"),
             }
         }
     }
@@ -14227,18 +14405,18 @@ pub mod types {
         }
     }
 
-    impl ToString for LinkSpeed {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for LinkSpeed {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Speed0G => "speed0_g".to_string(),
-                Self::Speed1G => "speed1_g".to_string(),
-                Self::Speed10G => "speed10_g".to_string(),
-                Self::Speed25G => "speed25_g".to_string(),
-                Self::Speed40G => "speed40_g".to_string(),
-                Self::Speed50G => "speed50_g".to_string(),
-                Self::Speed100G => "speed100_g".to_string(),
-                Self::Speed200G => "speed200_g".to_string(),
-                Self::Speed400G => "speed400_g".to_string(),
+                Self::Speed0G => write!(f, "speed0_g"),
+                Self::Speed1G => write!(f, "speed1_g"),
+                Self::Speed10G => write!(f, "speed10_g"),
+                Self::Speed25G => write!(f, "speed25_g"),
+                Self::Speed40G => write!(f, "speed40_g"),
+                Self::Speed50G => write!(f, "speed50_g"),
+                Self::Speed100G => write!(f, "speed100_g"),
+                Self::Speed200G => write!(f, "speed200_g"),
+                Self::Speed400G => write!(f, "speed400_g"),
             }
         }
     }
@@ -14994,12 +15172,12 @@ pub mod types {
         }
     }
 
-    impl ToString for MetricType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for MetricType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Gauge => "gauge".to_string(),
-                Self::Delta => "delta".to_string(),
-                Self::Cumulative => "cumulative".to_string(),
+                Self::Gauge => write!(f, "gauge"),
+                Self::Delta => write!(f, "delta"),
+                Self::Cumulative => write!(f, "cumulative"),
             }
         }
     }
@@ -15262,11 +15440,11 @@ pub mod types {
         }
     }
 
-    impl ToString for NameOrId {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameOrId {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::Id(x) => x.to_string(),
-                Self::Name(x) => x.to_string(),
+                Self::Id(x) => x.fmt(f),
+                Self::Name(x) => x.fmt(f),
             }
         }
     }
@@ -15348,12 +15526,12 @@ pub mod types {
         }
     }
 
-    impl ToString for NameOrIdSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameOrIdSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::NameAscending => "name_ascending".to_string(),
-                Self::NameDescending => "name_descending".to_string(),
-                Self::IdAscending => "id_ascending".to_string(),
+                Self::NameAscending => write!(f, "name_ascending"),
+                Self::NameDescending => write!(f, "name_descending"),
+                Self::IdAscending => write!(f, "id_ascending"),
             }
         }
     }
@@ -15438,10 +15616,10 @@ pub mod types {
         }
     }
 
-    impl ToString for NameSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::NameAscending => "name_ascending".to_string(),
+                Self::NameAscending => write!(f, "name_ascending"),
             }
         }
     }
@@ -15750,11 +15928,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PaginationOrder {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PaginationOrder {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ascending => "ascending".to_string(),
-                Self::Descending => "descending".to_string(),
+                Self::Ascending => write!(f, "ascending"),
+                Self::Descending => write!(f, "descending"),
             }
         }
     }
@@ -16037,11 +16215,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::M2 => "m2".to_string(),
-                Self::U2 => "u2".to_string(),
+                Self::M2 => write!(f, "m2"),
+                Self::U2 => write!(f, "u2"),
             }
         }
     }
@@ -16152,11 +16330,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskPolicy {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::InService => "in_service".to_string(),
-                Self::Expunged => "expunged".to_string(),
+                Self::InService => write!(f, "in_service"),
+                Self::Expunged => write!(f, "expunged"),
             }
         }
     }
@@ -16310,11 +16488,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Active => "active".to_string(),
-                Self::Decommissioned => "decommissioned".to_string(),
+                Self::Active => write!(f, "active"),
+                Self::Decommissioned => write!(f, "decommissioned"),
             }
         }
     }
@@ -16433,10 +16611,10 @@ pub mod types {
         }
     }
 
-    impl ToString for PingStatus {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PingStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ok => "ok".to_string(),
+                Self::Ok => write!(f, "ok"),
             }
         }
     }
@@ -16777,12 +16955,12 @@ pub mod types {
         }
     }
 
-    impl ToString for ProbeExternalIpKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ProbeExternalIpKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Snat => "snat".to_string(),
-                Self::Floating => "floating".to_string(),
-                Self::Ephemeral => "ephemeral".to_string(),
+                Self::Snat => write!(f, "snat"),
+                Self::Floating => write!(f, "floating"),
+                Self::Ephemeral => write!(f, "ephemeral"),
             }
         }
     }
@@ -17153,12 +17331,12 @@ pub mod types {
         }
     }
 
-    impl ToString for ProjectRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ProjectRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -18464,13 +18642,13 @@ pub mod types {
         }
     }
 
-    impl ToString for RouterRouteKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for RouterRouteKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Default => "default".to_string(),
-                Self::VpcSubnet => "vpc_subnet".to_string(),
-                Self::VpcPeering => "vpc_peering".to_string(),
-                Self::Custom => "custom".to_string(),
+                Self::Default => write!(f, "default"),
+                Self::VpcSubnet => write!(f, "vpc_subnet"),
+                Self::VpcPeering => write!(f, "vpc_peering"),
+                Self::Custom => write!(f, "custom"),
             }
         }
     }
@@ -18942,10 +19120,10 @@ pub mod types {
         }
     }
 
-    impl ToString for ServiceUsingCertificate {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ServiceUsingCertificate {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::ExternalApi => "external_api".to_string(),
+                Self::ExternalApi => write!(f, "external_api"),
             }
         }
     }
@@ -19290,11 +19468,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SiloIdentityMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SiloIdentityMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SamlJit => "saml_jit".to_string(),
-                Self::LocalOnly => "local_only".to_string(),
+                Self::SamlJit => write!(f, "saml_jit"),
+                Self::LocalOnly => write!(f, "local_only"),
             }
         }
     }
@@ -19834,12 +20012,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SiloRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SiloRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -20571,11 +20749,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SledProvisionPolicy {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SledProvisionPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Provisionable => "provisionable".to_string(),
-                Self::NonProvisionable => "non_provisionable".to_string(),
+                Self::Provisionable => write!(f, "provisionable"),
+                Self::NonProvisionable => write!(f, "non_provisionable"),
             }
         }
     }
@@ -20828,11 +21006,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SledState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SledState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Active => "active".to_string(),
-                Self::Decommissioned => "decommissioned".to_string(),
+                Self::Active => write!(f, "active"),
+                Self::Decommissioned => write!(f, "decommissioned"),
             }
         }
     }
@@ -21122,13 +21300,13 @@ pub mod types {
         }
     }
 
-    impl ToString for SnapshotState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SnapshotState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Creating => "creating".to_string(),
-                Self::Ready => "ready".to_string(),
-                Self::Faulted => "faulted".to_string(),
-                Self::Destroyed => "destroyed".to_string(),
+                Self::Creating => write!(f, "creating"),
+                Self::Ready => write!(f, "ready"),
+                Self::Faulted => write!(f, "faulted"),
+                Self::Destroyed => write!(f, "destroyed"),
             }
         }
     }
@@ -21793,12 +21971,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchInterfaceKind2 {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchInterfaceKind2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Primary => "primary".to_string(),
-                Self::Vlan => "vlan".to_string(),
-                Self::Loopback => "loopback".to_string(),
+                Self::Primary => write!(f, "primary"),
+                Self::Vlan => write!(f, "vlan"),
+                Self::Loopback => write!(f, "loopback"),
             }
         }
     }
@@ -21927,11 +22105,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchLocation {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchLocation {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Switch0 => "switch0".to_string(),
-                Self::Switch1 => "switch1".to_string(),
+                Self::Switch0 => write!(f, "switch0"),
+                Self::Switch1 => write!(f, "switch1"),
             }
         }
     }
@@ -22337,12 +22515,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchPortGeometry {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchPortGeometry {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Qsfp28x1 => "qsfp28x1".to_string(),
-                Self::Qsfp28x2 => "qsfp28x2".to_string(),
-                Self::Sfp28x4 => "sfp28x4".to_string(),
+                Self::Qsfp28x1 => write!(f, "qsfp28x1"),
+                Self::Qsfp28x2 => write!(f, "qsfp28x2"),
+                Self::Sfp28x4 => write!(f, "sfp28x4"),
             }
         }
     }
@@ -22447,12 +22625,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchPortGeometry2 {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchPortGeometry2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Qsfp28x1 => "qsfp28x1".to_string(),
-                Self::Qsfp28x2 => "qsfp28x2".to_string(),
-                Self::Sfp28x4 => "sfp28x4".to_string(),
+                Self::Qsfp28x1 => write!(f, "qsfp28x1"),
+                Self::Qsfp28x2 => write!(f, "qsfp28x2"),
+                Self::Sfp28x4 => write!(f, "sfp28x4"),
             }
         }
     }
@@ -23346,12 +23524,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SystemMetricName {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SystemMetricName {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::VirtualDiskSpaceProvisioned => "virtual_disk_space_provisioned".to_string(),
-                Self::CpusProvisioned => "cpus_provisioned".to_string(),
-                Self::RamProvisioned => "ram_provisioned".to_string(),
+                Self::VirtualDiskSpaceProvisioned => write!(f, "virtual_disk_space_provisioned"),
+                Self::CpusProvisioned => write!(f, "cpus_provisioned"),
+                Self::RamProvisioned => write!(f, "ram_provisioned"),
             }
         }
     }
@@ -24051,19 +24229,19 @@ pub mod types {
         }
     }
 
-    impl ToString for Units {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for Units {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Count => "count".to_string(),
-                Self::Bytes => "bytes".to_string(),
-                Self::Seconds => "seconds".to_string(),
-                Self::Nanoseconds => "nanoseconds".to_string(),
-                Self::Volts => "volts".to_string(),
-                Self::Amps => "amps".to_string(),
-                Self::Watts => "watts".to_string(),
-                Self::DegreesCelsius => "degrees_celsius".to_string(),
-                Self::None => "none".to_string(),
-                Self::Rpm => "rpm".to_string(),
+                Self::Count => write!(f, "count"),
+                Self::Bytes => write!(f, "bytes"),
+                Self::Seconds => write!(f, "seconds"),
+                Self::Nanoseconds => write!(f, "nanoseconds"),
+                Self::Volts => write!(f, "volts"),
+                Self::Amps => write!(f, "amps"),
+                Self::Watts => write!(f, "watts"),
+                Self::DegreesCelsius => write!(f, "degrees_celsius"),
+                Self::None => write!(f, "none"),
+                Self::Rpm => write!(f, "rpm"),
             }
         }
     }
@@ -25103,9 +25281,9 @@ pub mod types {
         }
     }
 
-    impl ToString for Vni {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for Vni {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -25484,11 +25662,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleAction {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleAction {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Allow => "allow".to_string(),
-                Self::Deny => "deny".to_string(),
+                Self::Allow => write!(f, "allow"),
+                Self::Deny => write!(f, "deny"),
             }
         }
     }
@@ -25565,11 +25743,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleDirection {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleDirection {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Inbound => "inbound".to_string(),
-                Self::Outbound => "outbound".to_string(),
+                Self::Inbound => write!(f, "inbound"),
+                Self::Outbound => write!(f, "outbound"),
             }
         }
     }
@@ -25894,12 +26072,12 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleProtocol {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleProtocol {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Tcp => "TCP".to_string(),
-                Self::Udp => "UDP".to_string(),
-                Self::Icmp => "ICMP".to_string(),
+                Self::Tcp => write!(f, "TCP"),
+                Self::Udp => write!(f, "UDP"),
+                Self::Icmp => write!(f, "ICMP"),
             }
         }
     }
@@ -25977,11 +26155,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleStatus {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Disabled => "disabled".to_string(),
-                Self::Enabled => "enabled".to_string(),
+                Self::Disabled => write!(f, "disabled"),
+                Self::Enabled => write!(f, "enabled"),
             }
         }
     }
@@ -26606,11 +26784,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcRouterKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcRouterKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::System => "system".to_string(),
-                Self::Custom => "custom".to_string(),
+                Self::System => write!(f, "system"),
+                Self::Custom => write!(f, "custom"),
             }
         }
     }
@@ -34781,6 +34959,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Instance {
+            auto_restart_cooldown_expiration:
+                Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+            auto_restart_enabled: Result<bool, String>,
             description: Result<String, String>,
             hostname: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -34790,6 +34971,7 @@ pub mod types {
             project_id: Result<uuid::Uuid, String>,
             run_state: Result<super::InstanceState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_last_auto_restarted: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_run_state_updated: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -34797,6 +34979,10 @@ pub mod types {
         impl Default for Instance {
             fn default() -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(Default::default()),
+                    auto_restart_enabled: Err(
+                        "no value supplied for auto_restart_enabled".to_string()
+                    ),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -34806,6 +34992,7 @@ pub mod types {
                     project_id: Err("no value supplied for project_id".to_string()),
                     run_state: Err("no value supplied for run_state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
+                    time_last_auto_restarted: Ok(Default::default()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     time_run_state_updated: Err(
                         "no value supplied for time_run_state_updated".to_string()
@@ -34815,6 +35002,32 @@ pub mod types {
         }
 
         impl Instance {
+            pub fn auto_restart_cooldown_expiration<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_cooldown_expiration = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_cooldown_expiration: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn auto_restart_enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_enabled = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_enabled: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -34905,6 +35118,19 @@ pub mod types {
                 });
                 self
             }
+            pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_last_auto_restarted = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for time_last_auto_restarted: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -34934,6 +35160,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: Instance) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
+                    auto_restart_enabled: value.auto_restart_enabled?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -34943,6 +35171,7 @@ pub mod types {
                     project_id: value.project_id?,
                     run_state: value.run_state?,
                     time_created: value.time_created?,
+                    time_last_auto_restarted: value.time_last_auto_restarted?,
                     time_modified: value.time_modified?,
                     time_run_state_updated: value.time_run_state_updated?,
                 })
@@ -34952,6 +35181,8 @@ pub mod types {
         impl From<super::Instance> for Instance {
             fn from(value: super::Instance) -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(value.auto_restart_cooldown_expiration),
+                    auto_restart_enabled: Ok(value.auto_restart_enabled),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -34961,6 +35192,7 @@ pub mod types {
                     project_id: Ok(value.project_id),
                     run_state: Ok(value.run_state),
                     time_created: Ok(value.time_created),
+                    time_last_auto_restarted: Ok(value.time_last_auto_restarted),
                     time_modified: Ok(value.time_modified),
                     time_run_state_updated: Ok(value.time_run_state_updated),
                 }
@@ -34969,6 +35201,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
@@ -34985,6 +35218,7 @@ pub mod types {
         impl Default for InstanceCreate {
             fn default() -> Self {
                 Self {
+                    auto_restart_policy: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -35001,6 +35235,19 @@ pub mod types {
         }
 
         impl InstanceCreate {
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -35120,6 +35367,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_policy: value.auto_restart_policy?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -35138,6 +35386,7 @@ pub mod types {
         impl From<super::InstanceCreate> for InstanceCreate {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
+                    auto_restart_policy: Ok(value.auto_restart_policy),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),
