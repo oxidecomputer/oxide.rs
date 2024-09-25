@@ -128,7 +128,7 @@ fn yes(prompt: impl Into<String>) -> Result<bool> {
 ///     $ oxide auth login --host oxide.internal
 ///
 ///     # authenticate with an insecure Oxide silo (not recommended)
-///     $ oxide auth login --host http://oxide.internal
+///     $ oxide --insecure auth login --host oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdAuthLogin {

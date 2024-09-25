@@ -102,7 +102,7 @@
         {
           "name": "login",
           "about": "Authenticate with an Oxide Silo",
-          "long_about": "Authenticate with an Oxide Silo\n\n    # authenticate with a specific Oxide silo\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide silo (not recommended)\n    $ oxide auth login --host http://oxide.internal",
+          "long_about": "Authenticate with an Oxide Silo\n\n    # authenticate with a specific Oxide silo\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide silo (not recommended)\n    $ oxide --insecure auth login --host oxide.internal",
           "args": [
             {
               "long": "browser",
