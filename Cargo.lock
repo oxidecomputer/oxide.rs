@@ -508,9 +508,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "bytes"
-version = "1.7.1"
+version = "1.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8318a53db07bb3f8dca91a600466bdb3f2eaadeedfdbcf02e1accbad9271ba50"
+checksum = "428d9aa8fbc0670b7b8d6030a7fadd0f86151cae55e4dbbece15f3780a3dfaf3"
 
 [[package]]
 name = "camino"
@@ -2500,7 +2500,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0e5b49f9bf636c5e6ff8571dab4c7e259cf986b3"
+source = "git+https://github.com/oxidecomputer/progenitor#9213f9eb22772423b47454a7182478b1edaf386e"
 dependencies = [
  "progenitor-client 0.7.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2525,7 +2525,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0e5b49f9bf636c5e6ff8571dab4c7e259cf986b3"
+source = "git+https://github.com/oxidecomputer/progenitor#9213f9eb22772423b47454a7182478b1edaf386e"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2539,7 +2539,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0e5b49f9bf636c5e6ff8571dab4c7e259cf986b3"
+source = "git+https://github.com/oxidecomputer/progenitor#9213f9eb22772423b47454a7182478b1edaf386e"
 dependencies = [
  "heck",
  "http 0.2.12",
@@ -2560,7 +2560,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0e5b49f9bf636c5e6ff8571dab4c7e259cf986b3"
+source = "git+https://github.com/oxidecomputer/progenitor#9213f9eb22772423b47454a7182478b1edaf386e"
 dependencies = [
  "openapiv3",
  "proc-macro2",
