@@ -114,11 +114,6 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
 
         let (import_future, handle) = builder.execute_with_control()?;
 
-        let pb = ProgressBar::new(disk_info.file_size);
-        pb.set_style(ProgressStyle::default_bar().template(
-            "[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta}",
-        )?);
-        pb.println(format!("Creating disk \"{}\"", &*self.disk));
         let pb = start_progress_bar(handle.progress(), disk_info.file_size, &self.disk)?;
         watch_for_ctrl_c(handle, pb);
 
