@@ -2332,7 +2332,7 @@
           ],
           "subcommands": [
             {
-              "name": "create",
+              "name": "attach",
               "about": "Attach ip pool to internet gateway",
               "args": [
                 {
@@ -2371,7 +2371,7 @@
               ]
             },
             {
-              "name": "delete",
+              "name": "detach",
               "about": "Detach ip pool from internet gateway",
               "args": [
                 {
