@@ -2500,7 +2500,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a9a8ddc10fb3dea3ea839b0b7520c7f6b4ef682"
+source = "git+https://github.com/oxidecomputer/progenitor#137455149f7e1b902582d1da9d90ad4b09522e1c"
 dependencies = [
  "progenitor-client 0.8.0",
  "progenitor-impl",
@@ -2525,7 +2525,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a9a8ddc10fb3dea3ea839b0b7520c7f6b4ef682"
+source = "git+https://github.com/oxidecomputer/progenitor#137455149f7e1b902582d1da9d90ad4b09522e1c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2539,7 +2539,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a9a8ddc10fb3dea3ea839b0b7520c7f6b4ef682"
+source = "git+https://github.com/oxidecomputer/progenitor#137455149f7e1b902582d1da9d90ad4b09522e1c"
 dependencies = [
  "heck",
  "http 1.1.0",
@@ -2560,7 +2560,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a9a8ddc10fb3dea3ea839b0b7520c7f6b4ef682"
+source = "git+https://github.com/oxidecomputer/progenitor#137455149f7e1b902582d1da9d90ad4b09522e1c"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2667,9 +2667,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.10.6"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4219d74c6b67a3654a9fbebc4b419e22126d13d2f3c4a07ee0cb61ff79a79619"
+checksum = "38200e5ee88914975b69f657f0801b6f6dccafd44fd9326302a4aaeecfacb1d8"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -2679,9 +2679,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.7"
+version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38caf58cc5ef2fed281f89292ef23f6365465ed9a41b7a7754eb4e26496c92df"
+checksum = "368758f23274712b504848e9d5a6f010445cc8b87a7cdb4d7cbee666c1288da3"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -2690,9 +2690,9 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.8.4"
+version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
+checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
 name = "regress"
@@ -3402,9 +3402,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.77"
+version = "2.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f35bcdf61fd8e7be6caf75f429fdca8beb3ed76584befb503b1569faee373ed"
+checksum = "89132cd0bf050864e1d38dc3bbc07a0eb8e7530af26344d3d2bbbef83499f590"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3849,7 +3849,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#50d969668dcad42300423f893de9b3903f11b65c"
+source = "git+https://github.com/oxidecomputer/typify#d6f1877057e9a7a3146707ec3309044a4918697e"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3858,7 +3858,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#50d969668dcad42300423f893de9b3903f11b65c"
+source = "git+https://github.com/oxidecomputer/typify#d6f1877057e9a7a3146707ec3309044a4918697e"
 dependencies = [
  "heck",
  "log",
@@ -3877,7 +3877,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#50d969668dcad42300423f893de9b3903f11b65c"
+source = "git+https://github.com/oxidecomputer/typify#d6f1877057e9a7a3146707ec3309044a4918697e"
 dependencies = [
  "proc-macro2",
  "quote",
