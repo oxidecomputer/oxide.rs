@@ -39,9 +39,9 @@ impl clap::builder::TypedValueParser for ByteCountParser {
                 .unwrap_or(value.len());
 
             let number = &value[..ii];
-            let suffix = &value[ii..];
+            let suffix = value[ii..].trim_ascii_start().to_lowercase();
 
-            let multiple = match suffix {
+            let multiple = match suffix.as_ref() {
                 "kib" | "k" => 1024,
                 "mib" | "m" => 1024 * 1024,
                 "gib" | "g" => 1024 * 1024 * 1024,
@@ -196,6 +196,16 @@ mod tests {
         struct Cmd {
             x: ByteCount,
         }
+
+        let Ok(cmd) = Cmd::try_parse_from(vec!["", "1 k"]) else {
+            panic!()
+        };
+        assert_eq!(cmd.x.0, 1024);
+
+        let Ok(cmd) = Cmd::try_parse_from(vec!["", "1GiB"]) else {
+            panic!()
+        };
+        assert_eq!(cmd.x.0, 1024 * 1024 * 1024);
 
         let Err(err) = Cmd::try_parse_from(vec!["", "1.21jiggabytes"]) else {
             panic!()
