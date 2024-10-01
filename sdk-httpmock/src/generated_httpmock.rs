@@ -3066,6 +3066,86 @@ pub mod operations {
         }
     }
 
+    pub struct InstanceUpdateWhen(httpmock::When);
+    impl InstanceUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/instances/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::InstanceUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceUpdateThen(httpmock::Then);
+    impl InstanceUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Instance) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct InstanceDeleteWhen(httpmock::When);
     impl InstanceDeleteWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -15862,6 +15942,9 @@ pub trait MockServerExt {
     fn instance_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::InstanceViewWhen, operations::InstanceViewThen);
+    fn instance_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceUpdateWhen, operations::InstanceUpdateThen);
     fn instance_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::InstanceDeleteWhen, operations::InstanceDeleteThen);
@@ -16920,6 +17003,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::InstanceViewWhen::new(when),
                 operations::InstanceViewThen::new(then),
+            )
+        })
+    }
+
+    fn instance_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceUpdateWhen, operations::InstanceUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceUpdateWhen::new(when),
+                operations::InstanceUpdateThen::new(then),
             )
         })
     }

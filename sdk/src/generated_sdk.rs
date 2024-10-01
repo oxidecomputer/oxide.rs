@@ -11397,6 +11397,15 @@ pub mod types {
     /// `Failed` state.",
     ///      "type": "boolean"
     ///    },
+    ///    "boot_disk_id": {
+    ///      "description": "the ID of the disk used to boot this Instance, if a
+    /// specific one is assigned.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -11490,6 +11499,10 @@ pub mod types {
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
         pub auto_restart_enabled: bool,
+        /// the ID of the disk used to boot this Instance, if a specific one is
+        /// assigned.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk_id: Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: String,
         /// RFC1035-compliant hostname for the Instance.
@@ -11741,6 +11754,25 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "boot_disk": {
+    ///      "description": "The disk this instance should boot into. This disk
+    /// can either be attached if it already exists, or created, if it should be
+    /// a new disk.\n\nIt is strongly recommended to either provide a boot disk
+    /// at instance creation, or update the instance after creation to set a
+    /// boot disk.\n\nAn instance without an explicit boot disk can be booted:
+    /// the options are as managed by UEFI, and as controlled by the guest OS,
+    /// but with some risk.  If this instance later has a disk attached or
+    /// detached, it is possible that boot options can end up reordered, with
+    /// the intended boot disk moved after the EFI shell in boot priority. This
+    /// may result in an instance that only boots to the EFI shell until the
+    /// desired disk is set as an explicit boot disk and the instance
+    /// rebooted.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -11835,6 +11867,23 @@ pub mod types {
         /// user.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// The disk this instance should boot into. This disk can either be
+        /// attached if it already exists, or created, if it should be a new
+        /// disk.
+        ///
+        /// It is strongly recommended to either provide a boot disk at instance
+        /// creation, or update the instance after creation to set a boot disk.
+        ///
+        /// An instance without an explicit boot disk can be booted: the options
+        /// are as managed by UEFI, and as controlled by the guest OS, but with
+        /// some risk.  If this instance later has a disk attached or detached,
+        /// it is possible that boot options can end up reordered, with the
+        /// intended boot disk moved after the EFI shell in boot priority. This
+        /// may result in an instance that only boots to the EFI shell until the
+        /// desired disk is set as an explicit boot disk and the instance
+        /// rebooted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<InstanceDiskAttachment>,
         pub description: String,
         /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -12778,6 +12827,54 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Parameters of an `Instance` that can be reconfigured after creation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters of an `Instance` that can be reconfigured
+    /// after creation.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "boot_disk": {
+    ///      "description": "Name or ID of the disk the instance should be
+    /// instructed to boot from.\n\nIf not provided, unset the instance's boot
+    /// disk.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InstanceUpdate {
+        /// Name or ID of the disk the instance should be instructed to boot
+        /// from.
+        ///
+        /// If not provided, unset the instance's boot disk.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<NameOrId>,
+    }
+
+    impl From<&InstanceUpdate> for InstanceUpdate {
+        fn from(value: &InstanceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceUpdate {
+        pub fn builder() -> builder::InstanceUpdate {
+            Default::default()
         }
     }
 
@@ -34962,6 +35059,7 @@ pub mod types {
             auto_restart_cooldown_expiration:
                 Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
             auto_restart_enabled: Result<bool, String>,
+            boot_disk_id: Result<Option<uuid::Uuid>, String>,
             description: Result<String, String>,
             hostname: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -34983,6 +35081,7 @@ pub mod types {
                     auto_restart_enabled: Err(
                         "no value supplied for auto_restart_enabled".to_string()
                     ),
+                    boot_disk_id: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -35025,6 +35124,16 @@ pub mod types {
                         "error converting supplied value for auto_restart_enabled: {}",
                         e
                     )
+                });
+                self
+            }
+            pub fn boot_disk_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for boot_disk_id: {}", e)
                 });
                 self
             }
@@ -35162,6 +35271,7 @@ pub mod types {
                 Ok(Self {
                     auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
                     auto_restart_enabled: value.auto_restart_enabled?,
+                    boot_disk_id: value.boot_disk_id?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -35183,6 +35293,7 @@ pub mod types {
                 Self {
                     auto_restart_cooldown_expiration: Ok(value.auto_restart_cooldown_expiration),
                     auto_restart_enabled: Ok(value.auto_restart_enabled),
+                    boot_disk_id: Ok(value.boot_disk_id),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -35202,6 +35313,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
             auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk: Result<Option<super::InstanceDiskAttachment>, String>,
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
@@ -35219,6 +35331,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     auto_restart_policy: Ok(Default::default()),
+                    boot_disk: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -35246,6 +35359,16 @@ pub mod types {
                         e
                     )
                 });
+                self
+            }
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceDiskAttachment>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -35368,6 +35491,7 @@ pub mod types {
             fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk: value.boot_disk?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -35387,6 +35511,7 @@ pub mod types {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
                     auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk: Ok(value.boot_disk),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),
@@ -35969,6 +36094,49 @@ pub mod types {
                 Self {
                     data: Ok(value.data),
                     last_byte_offset: Ok(value.last_byte_offset),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceUpdate {
+            boot_disk: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for InstanceUpdate {
+            fn default() -> Self {
+                Self {
+                    boot_disk: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceUpdate {
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: InstanceUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    boot_disk: value.boot_disk?,
+                })
+            }
+        }
+
+        impl From<super::InstanceUpdate> for InstanceUpdate {
+            fn from(value: super::InstanceUpdate) -> Self {
+                Self {
+                    boot_disk: Ok(value.boot_disk),
                 }
             }
         }
@@ -47788,6 +47956,23 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
+    /// Update instance
+    ///
+    /// Sends a `PUT` request to `/v1/instances/{instance}`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.instance_update()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_update(&self) -> builder::InstanceUpdate;
     /// Delete instance
     ///
     /// Sends a `DELETE` request to `/v1/instances/{instance}`
@@ -48145,6 +48330,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_view(&self) -> builder::InstanceView {
         builder::InstanceView::new(self)
+    }
+
+    fn instance_update(&self) -> builder::InstanceUpdate {
+        builder::InstanceUpdate::new(self)
     }
 
     fn instance_delete(&self) -> builder::InstanceDelete {
@@ -55218,6 +55407,116 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_update`]
+    ///
+    /// [`ClientInstancesExt::instance_update`]: super::ClientInstancesExt::instance_update
+    #[derive(Debug, Clone)]
+    pub struct InstanceUpdate<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InstanceUpdate, String>,
+    }
+
+    impl<'a> InstanceUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::InstanceUpdate::default()),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InstanceUpdate>,
+            <V as std::convert::TryInto<types::InstanceUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `InstanceUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::InstanceUpdate) -> types::builder::InstanceUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/instances/{instance}`
+        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+                body,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::InstanceUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
                 .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
