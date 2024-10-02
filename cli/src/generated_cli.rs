@@ -665,7 +665,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("size")
                     .value_parser(clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
-                    .help("total size of the Disk in bytes"),
+                    .help("The total size of the Disk (in bytes)"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -1436,13 +1436,15 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("hostname")
                     .long("hostname")
                     .value_parser(clap::value_parser!(types::Hostname))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The hostname to be assigned to the instance"),
             )
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
                     .value_parser(clap::value_parser!(types::ByteCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The amount of RAM (in bytes) to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -1454,7 +1456,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("ncpus")
                     .long("ncpus")
                     .value_parser(clap::value_parser!(types::InstanceCpuCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The number of vCPUs to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("project")

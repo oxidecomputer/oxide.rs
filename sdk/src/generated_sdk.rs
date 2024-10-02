@@ -6286,7 +6286,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "disk_source": {
-    ///      "description": "initial source for this disk",
+    ///      "description": "The initial source for this disk",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/DiskSource"
@@ -6297,7 +6297,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "size": {
-    ///      "description": "total size of the Disk in bytes",
+    ///      "description": "The total size of the Disk (in bytes)",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -6313,10 +6313,10 @@ pub mod types {
     )]
     pub struct DiskCreate {
         pub description: String,
-        /// initial source for this disk
+        /// The initial source for this disk
         pub disk_source: DiskSource,
         pub name: Name,
-        /// total size of the Disk in bytes
+        /// The total size of the Disk (in bytes)
         pub size: ByteCount,
     }
 
@@ -11798,16 +11798,33 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "$ref": "#/components/schemas/Hostname"
+    ///      "description": "The hostname to be assigned to the instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Hostname"
+    ///        }
+    ///      ]
     ///    },
     ///    "memory": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "description": "The amount of RAM (in bytes) to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "ncpus": {
-    ///      "$ref": "#/components/schemas/InstanceCpuCount"
+    ///      "description": "The number of vCPUs to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceCpuCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "network_interfaces": {
     ///      "description": "The network interfaces to be created for this
@@ -11896,9 +11913,12 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
+        /// The hostname to be assigned to the instance
         pub hostname: Hostname,
+        /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
         pub name: Name,
+        /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
@@ -11956,7 +11976,7 @@ pub mod types {
     ///          "type": "string"
     ///        },
     ///        "disk_source": {
-    ///          "description": "initial source for this disk",
+    ///          "description": "The initial source for this disk",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/DiskSource"
@@ -11967,7 +11987,7 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        },
     ///        "size": {
-    ///          "description": "total size of the Disk in bytes",
+    ///          "description": "The total size of the Disk (in bytes)",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/ByteCount"
@@ -12019,10 +12039,10 @@ pub mod types {
         #[serde(rename = "create")]
         Create {
             description: String,
-            /// initial source for this disk
+            /// The initial source for this disk
             disk_source: DiskSource,
             name: Name,
-            /// total size of the Disk in bytes
+            /// The total size of the Disk (in bytes)
             size: ByteCount,
         },
         /// During instance creation, attach this disk
