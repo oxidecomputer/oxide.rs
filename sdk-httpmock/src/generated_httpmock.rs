@@ -4225,6 +4225,1153 @@ pub mod operations {
         }
     }
 
+    pub struct InternetGatewayIpAddressListWhen(httpmock::When);
+    impl InternetGatewayIpAddressListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/internet-gateway-ip-addresses$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("gateway", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayIpAddressListThen(httpmock::Then);
+    impl InternetGatewayIpAddressListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InternetGatewayIpAddressResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayIpAddressCreateWhen(httpmock::When);
+    impl InternetGatewayIpAddressCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/internet-gateway-ip-addresses$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("gateway", value.to_string()))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::InternetGatewayIpAddressCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InternetGatewayIpAddressCreateThen(httpmock::Then);
+    impl InternetGatewayIpAddressCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::InternetGatewayIpAddress) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayIpAddressDeleteWhen(httpmock::When);
+    impl InternetGatewayIpAddressDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/internet-gateway-ip-addresses/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn address(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/internet-gateway-ip-addresses/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn cascade<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("cascade", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn gateway<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("gateway", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayIpAddressDeleteThen(httpmock::Then);
+    impl InternetGatewayIpAddressDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayIpPoolListWhen(httpmock::When);
+    impl InternetGatewayIpPoolListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateway-ip-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("gateway", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayIpPoolListThen(httpmock::Then);
+    impl InternetGatewayIpPoolListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InternetGatewayIpPoolResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayIpPoolCreateWhen(httpmock::When);
+    impl InternetGatewayIpPoolCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateway-ip-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("gateway", value.to_string()))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::InternetGatewayIpPoolCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InternetGatewayIpPoolCreateThen(httpmock::Then);
+    impl InternetGatewayIpPoolCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::InternetGatewayIpPool) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayIpPoolDeleteWhen(httpmock::When);
+    impl InternetGatewayIpPoolDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::DELETE).path_matches(
+                    regex::Regex::new("^/v1/internet-gateway-ip-pools/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/internet-gateway-ip-pools/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn cascade<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("cascade", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn gateway<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("gateway", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayIpPoolDeleteThen(httpmock::Then);
+    impl InternetGatewayIpPoolDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayListWhen(httpmock::When);
+    impl InternetGatewayListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateways$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayListThen(httpmock::Then);
+    impl InternetGatewayListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InternetGatewayResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayCreateWhen(httpmock::When);
+    impl InternetGatewayCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateways$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::InternetGatewayCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InternetGatewayCreateThen(httpmock::Then);
+    impl InternetGatewayCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::InternetGateway) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayViewWhen(httpmock::When);
+    impl InternetGatewayViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateways/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/internet-gateways/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayViewThen(httpmock::Then);
+    impl InternetGatewayViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InternetGateway) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InternetGatewayDeleteWhen(httpmock::When);
+    impl InternetGatewayDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/internet-gateways/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn gateway(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/internet-gateways/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn cascade<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("cascade", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InternetGatewayDeleteThen(httpmock::Then);
+    impl InternetGatewayDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct ProjectIpPoolListWhen(httpmock::When);
     impl ProjectIpPoolListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -15913,6 +17060,54 @@ pub trait MockServerExt {
     fn instance_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::InstanceStopWhen, operations::InstanceStopThen);
+    fn internet_gateway_ip_address_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressListWhen,
+            operations::InternetGatewayIpAddressListThen,
+        );
+    fn internet_gateway_ip_address_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressCreateWhen,
+            operations::InternetGatewayIpAddressCreateThen,
+        );
+    fn internet_gateway_ip_address_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressDeleteWhen,
+            operations::InternetGatewayIpAddressDeleteThen,
+        );
+    fn internet_gateway_ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolListWhen,
+            operations::InternetGatewayIpPoolListThen,
+        );
+    fn internet_gateway_ip_pool_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolCreateWhen,
+            operations::InternetGatewayIpPoolCreateThen,
+        );
+    fn internet_gateway_ip_pool_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolDeleteWhen,
+            operations::InternetGatewayIpPoolDeleteThen,
+        );
+    fn internet_gateway_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayListWhen, operations::InternetGatewayListThen);
+    fn internet_gateway_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayCreateWhen, operations::InternetGatewayCreateThen);
+    fn internet_gateway_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayViewWhen, operations::InternetGatewayViewThen);
+    fn internet_gateway_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayDeleteWhen, operations::InternetGatewayDeleteThen);
     fn project_ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ProjectIpPoolListWhen, operations::ProjectIpPoolListThen);
@@ -17088,6 +18283,144 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::InstanceStopWhen::new(when),
                 operations::InstanceStopThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_address_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressListWhen,
+            operations::InternetGatewayIpAddressListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpAddressListWhen::new(when),
+                operations::InternetGatewayIpAddressListThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_address_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressCreateWhen,
+            operations::InternetGatewayIpAddressCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpAddressCreateWhen::new(when),
+                operations::InternetGatewayIpAddressCreateThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_address_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpAddressDeleteWhen,
+            operations::InternetGatewayIpAddressDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpAddressDeleteWhen::new(when),
+                operations::InternetGatewayIpAddressDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolListWhen,
+            operations::InternetGatewayIpPoolListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpPoolListWhen::new(when),
+                operations::InternetGatewayIpPoolListThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_pool_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolCreateWhen,
+            operations::InternetGatewayIpPoolCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpPoolCreateWhen::new(when),
+                operations::InternetGatewayIpPoolCreateThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_ip_pool_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InternetGatewayIpPoolDeleteWhen,
+            operations::InternetGatewayIpPoolDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayIpPoolDeleteWhen::new(when),
+                operations::InternetGatewayIpPoolDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayListWhen, operations::InternetGatewayListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayListWhen::new(when),
+                operations::InternetGatewayListThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayCreateWhen, operations::InternetGatewayCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayCreateWhen::new(when),
+                operations::InternetGatewayCreateThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayViewWhen, operations::InternetGatewayViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayViewWhen::new(when),
+                operations::InternetGatewayViewThen::new(then),
+            )
+        })
+    }
+
+    fn internet_gateway_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InternetGatewayDeleteWhen, operations::InternetGatewayDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InternetGatewayDeleteWhen::new(when),
+                operations::InternetGatewayDeleteThen::new(then),
             )
         })
     }

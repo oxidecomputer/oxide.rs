@@ -426,6 +426,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcRouterUpdate => Some("vpc router update"),
         CliCommand::VpcRouterDelete => Some("vpc router delete"),
 
+        CliCommand::InternetGatewayIpAddressList => Some("internet-gateway address list"),
+        CliCommand::InternetGatewayIpAddressCreate => Some("internet-gateway address create"),
+        CliCommand::InternetGatewayIpAddressDelete => Some("internet-gateway address delete"),
+        CliCommand::InternetGatewayIpPoolList => Some("internet-gateway ip-pool list"),
+        CliCommand::InternetGatewayIpPoolCreate => Some("internet-gateway ip-pool attach"),
+        CliCommand::InternetGatewayIpPoolDelete => Some("internet-gateway ip-pool detach"),
+        CliCommand::InternetGatewayList => Some("internet-gateway list"),
+        CliCommand::InternetGatewayCreate => Some("internet-gateway create"),
+        CliCommand::InternetGatewayView => Some("internet-gateway view"),
+        CliCommand::InternetGatewayDelete => Some("internet-gateway delete"),
+
         CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
         CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
         CliCommand::NetworkingAddressLotDelete => Some("system networking address-lot delete"),
