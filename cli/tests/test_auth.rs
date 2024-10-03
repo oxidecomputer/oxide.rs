@@ -84,6 +84,29 @@ impl<'a> MockOAuth<'a> {
     }
 }
 
+/// Assert the mode of a file on Unix. Does nothing on Windows.
+#[track_caller]
+fn assert_mode(path: &Path, expected_mode: u32) {
+    #[cfg(not(unix))]
+    {
+        // Avoid unused parameter warnings on Windows.
+        let _ = path;
+        let _ = expected_mode;
+    }
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let file = std::fs::File::open(path).unwrap();
+        let stat = file.metadata().unwrap();
+        let mode = stat.permissions().mode();
+        if mode != expected_mode {
+            panic!("assertion failed: modes do not match for {}\n  expected: 0o{expected_mode:o}\n    actual: 0o{mode:o}", path.display());
+        }
+    }
+}
+
 // Test the first login where no config files exist yet.
 #[test]
 fn test_auth_login_first() {
@@ -123,11 +146,13 @@ fn test_auth_login_first() {
             server.url(""),
         ),
     );
+    assert_mode(&config_dir.join("credentials.toml"), 0o100600);
 
     assert_contents(
         "tests/data/test_auth_login_first_config.toml",
         &read_to_string(config_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&config_dir.join("config.toml"), 0o100644);
 }
 
 fn write_first_creds(dir: &Path) {
@@ -155,7 +180,9 @@ fn test_auth_login_existing_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o100644);
     write_first_config(&temp_dir);
+    assert_mode(&temp_dir.join("config.toml"), 0o100644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -187,11 +214,13 @@ fn test_auth_login_existing_default() {
             server.url(""),
         ),
     );
+    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
 
     assert_contents(
         "tests/data/test_auth_existing_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o100644);
 }
 
 #[test]
@@ -201,6 +230,7 @@ fn test_auth_login_existing_no_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o100644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -230,11 +260,13 @@ fn test_auth_login_existing_no_default() {
             server.url(""),
         ),
     );
+    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
 
     assert_contents(
         "tests/data/test_auth_existing_no_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o100644);
 }
 
 #[test]
@@ -284,11 +316,13 @@ fn test_auth_login_double() {
             server.url(""),
         ),
     );
+    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
 
     assert_contents(
         "tests/data/test_auth_double_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o100644);
 }
 
 #[test]

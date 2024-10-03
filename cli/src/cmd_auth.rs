@@ -6,6 +6,7 @@
 
 use std::fs::File;
 use std::io::{self, Write};
+use std::path::Path;
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -340,7 +341,10 @@ impl CmdAuthLogin {
                 config_dir.to_string_lossy()
             )
         });
-        std::fs::write(credentials_path, credentials.to_string())
+        let mut credentials_file =
+            create_private_file(&credentials_path).expect("unable to create credentials.toml");
+        credentials_file
+            .write_all(credentials.to_string().as_bytes())
             .expect("unable to write credentials.toml");
 
         // If there is no default profile then we'll set this new profile to be
@@ -407,7 +411,7 @@ impl CmdAuthLogout {
 
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.
-            let _ = File::create(credentials_path)?;
+            let _ = create_private_file(&credentials_path)?;
             writeln!(io::stdout(), "Removed all authentication information")?;
         } else {
             let profile = ctx
@@ -434,8 +438,13 @@ impl CmdAuthLogout {
                     config_dir.to_string_lossy()
                 )
             });
-            std::fs::write(credentials_path, credentials.to_string())
+
+            let mut credentials_file =
+                create_private_file(&credentials_path).expect("unable to create credentials.toml");
+            credentials_file
+                .write_all(credentials.to_string().as_bytes())
                 .expect("unable to write credentials.toml");
+
             writeln!(
                 io::stdout(),
                 "Removed authentication information for profile \"{}\"",
@@ -533,6 +542,23 @@ impl CmdAuthStatus {
             ee => ee.to_string(),
         }
     }
+}
+
+/// Create a file. On Unix set permissions to 0600.
+fn create_private_file(path: &Path) -> Result<File> {
+    let file = File::create(path)?;
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let metadata = file.metadata()?;
+        let mut perms = metadata.permissions();
+        perms.set_mode(0o600);
+        file.set_permissions(perms)?;
+    }
+
+    Ok(file)
 }
 
 #[cfg(test)]
