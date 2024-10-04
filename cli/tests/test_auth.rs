@@ -101,10 +101,32 @@ fn assert_mode(path: &Path, expected_mode: u32) {
         let file = std::fs::File::open(path).unwrap();
         let stat = file.metadata().unwrap();
         let mode = stat.permissions().mode();
-        if mode != expected_mode {
-            panic!("assertion failed: modes do not match for {}\n  expected: 0o{expected_mode:o}\n    actual: 0o{mode:o}", path.display());
+
+        let umask = get_umask();
+        let derived_mode = expected_mode & !umask;
+
+        // Validate only the bottom nine permission bits.
+        if mode & 0o777 != derived_mode & 0o777 {
+            panic!("assertion failed: modes do not match for {}\n  expected: 0o{:o}\n    actual: 0o{:o}\n     umask: 0o{umask:03o}", path.display(), derived_mode & 0o777, mode & 0o777);
         }
     }
+}
+
+#[cfg(unix)]
+fn get_umask() -> u32 {
+    // Taken from https://github.com/rust-lang/cargo/blob/0473ee8b87dc7dbee53d13065c204ae63a0a2a9e/src/cargo/util/mod.rs#L143-L159
+    use std::sync::OnceLock;
+
+    static UMASK: OnceLock<u32> = OnceLock::new();
+
+    // We cannot retrieve umask without modifying it. Set it to zero, then
+    // immediately revert it to the original value. Store this so that we have a
+    // consistent value for the life of the program.
+    *UMASK.get_or_init(|| unsafe {
+        let umask = libc::umask(0);
+        libc::umask(umask);
+        umask as u32
+    })
 }
 
 // Test the first login where no config files exist yet.
@@ -146,13 +168,13 @@ fn test_auth_login_first() {
             server.url(""),
         ),
     );
-    assert_mode(&config_dir.join("credentials.toml"), 0o100600);
+    assert_mode(&config_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_login_first_config.toml",
         &read_to_string(config_dir.join("config.toml")).unwrap(),
     );
-    assert_mode(&config_dir.join("config.toml"), 0o100644);
+    assert_mode(&config_dir.join("config.toml"), 0o644);
 }
 
 fn write_first_creds(dir: &Path) {
@@ -180,9 +202,9 @@ fn test_auth_login_existing_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
-    assert_mode(&temp_dir.join("credentials.toml"), 0o100644);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o644);
     write_first_config(&temp_dir);
-    assert_mode(&temp_dir.join("config.toml"), 0o100644);
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -214,13 +236,13 @@ fn test_auth_login_existing_default() {
             server.url(""),
         ),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o100644);
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -230,7 +252,7 @@ fn test_auth_login_existing_no_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
-    assert_mode(&temp_dir.join("credentials.toml"), 0o100644);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -260,13 +282,13 @@ fn test_auth_login_existing_no_default() {
             server.url(""),
         ),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_no_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o100644);
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -316,13 +338,13 @@ fn test_auth_login_double() {
             server.url(""),
         ),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o100600);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_double_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o100644);
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 }
 
 #[test]
