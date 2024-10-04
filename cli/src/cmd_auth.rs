@@ -4,7 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::io::{self, Write};
 use std::path::Path;
 
@@ -546,8 +546,21 @@ impl CmdAuthStatus {
 
 /// Create a file. On Unix set permissions to 0600.
 fn create_private_file(path: &Path) -> Result<File> {
-    let file = File::create(path)?;
+    let mut open_opts = OpenOptions::new();
 
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        open_opts.mode(0o600);
+    }
+
+    let file = open_opts
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(path)?;
+
+    // `OpenOptions::mode` will not modify the permissions of an existing file.
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
