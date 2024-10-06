@@ -2155,7 +2155,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("gateway")
                     .long("gateway")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required_unless_present("json-body"),
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
             )
             .arg(
                 clap::Arg::new("ip-pool")
@@ -8788,7 +8789,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
-            request = request.body_map(|body| body.gateway(value.clone()))
+            request = request.gateway(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {

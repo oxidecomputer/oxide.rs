@@ -2339,7 +2339,8 @@
                   "long": "description"
                 },
                 {
-                  "long": "gateway"
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
                 },
                 {
                   "long": "ip-pool"

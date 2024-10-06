@@ -13215,16 +13215,12 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "description",
-    ///    "gateway",
     ///    "ip_pool",
     ///    "name"
     ///  ],
     ///  "properties": {
     ///    "description": {
     ///      "type": "string"
-    ///    },
-    ///    "gateway": {
-    ///      "$ref": "#/components/schemas/NameOrId"
     ///    },
     ///    "ip_pool": {
     ///      "$ref": "#/components/schemas/NameOrId"
@@ -13241,7 +13237,6 @@ pub mod types {
     )]
     pub struct InternetGatewayIpPoolCreate {
         pub description: String,
-        pub gateway: NameOrId,
         pub ip_pool: NameOrId,
         pub name: Name,
     }
@@ -37151,7 +37146,6 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpPoolCreate {
             description: Result<String, String>,
-            gateway: Result<super::NameOrId, String>,
             ip_pool: Result<super::NameOrId, String>,
             name: Result<super::Name, String>,
         }
@@ -37160,7 +37154,6 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
-                    gateway: Err("no value supplied for gateway".to_string()),
                     ip_pool: Err("no value supplied for ip_pool".to_string()),
                     name: Err("no value supplied for name".to_string()),
                 }
@@ -37176,16 +37169,6 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn gateway<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::NameOrId>,
-                T::Error: std::fmt::Display,
-            {
-                self.gateway = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for gateway: {}", e));
                 self
             }
             pub fn ip_pool<T>(mut self, value: T) -> Self
@@ -37217,7 +37200,6 @@ pub mod types {
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
-                    gateway: value.gateway?,
                     ip_pool: value.ip_pool?,
                     name: value.name?,
                 })
@@ -37228,7 +37210,6 @@ pub mod types {
             fn from(value: super::InternetGatewayIpPoolCreate) -> Self {
                 Self {
                     description: Ok(value.description),
-                    gateway: Ok(value.gateway),
                     ip_pool: Ok(value.ip_pool),
                     name: Ok(value.name),
                 }
