@@ -2161,6 +2161,379 @@
       ]
     },
     {
+      "name": "internet-gateway",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "address",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Attach ip pool to internet gateway",
+              "args": [
+                {
+                  "long": "address"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "gateway"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Detach ip pool from internet gateway",
+              "args": [
+                {
+                  "long": "address",
+                  "help": "Name or ID of the IP address"
+                },
+                {
+                  "long": "cascade",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Also delete routes targeting this gateway element."
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List addresses attached to an internet gateway.",
+              "args": [
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "create",
+          "about": "Create VPC internet gateway",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete internet gateway",
+          "args": [
+            {
+              "long": "cascade",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Also delete routes targeting this gateway."
+            },
+            {
+              "long": "gateway",
+              "help": "Name or ID of the gateway"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "ip-pool",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "attach",
+              "about": "Attach ip pool to internet gateway",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "ip-pool"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "detach",
+              "about": "Detach ip pool from internet gateway",
+              "args": [
+                {
+                  "long": "cascade",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Also delete routes targeting this gateway element."
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List IP pools attached to an internet gateway.",
+              "args": [
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List internet gateways",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch internet gateway",
+          "args": [
+            {
+              "long": "gateway",
+              "help": "Name or ID of the gateway"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "ip-pool",
       "args": [
         {
