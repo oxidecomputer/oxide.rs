@@ -20,6 +20,10 @@ use serde_json::json;
 fn scrub_server(raw: String, server: String) -> String {
     raw.replace(&server, "<TEST-SERVER>")
 }
+fn scrub_creds(raw: String, path: &Path) -> String {
+    let path = path.to_string_lossy().to_string();
+    raw.replace(&path, "<CREDENTIALS-PATH>")
+}
 struct MockOAuth<'a> {
     device_auth: Mock<'a>,
     device_token: Mock<'a>,
@@ -185,7 +189,17 @@ fn write_first_creds(dir: &Path) {
         token = \"***-***-***\"\n\
         user = \"00000000-0000-0000-0000-000000000000\"\n\
     ";
-    write(cred_path, creds).unwrap();
+    write(&cred_path, creds).unwrap();
+
+    // On Unix set permissions to 0600 to avoid triggering permissions warning.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let file = File::open(&cred_path).unwrap();
+        let mut perms = file.metadata().unwrap().permissions();
+        perms.set_mode(0o600);
+        file.set_permissions(perms).unwrap();
+    }
 }
 fn write_first_config(dir: &Path) {
     let config_path = dir.join("config.toml");
@@ -201,8 +215,11 @@ fn test_auth_login_existing_default() {
     let mock = MockOAuth::new(&server);
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
+
     write_first_creds(&temp_dir);
-    assert_mode(&temp_dir.join("credentials.toml"), 0o644);
+    let creds_path = temp_dir.join("credentials.toml");
+    assert_mode(&creds_path, 0o600);
+
     write_first_config(&temp_dir);
     assert_mode(&temp_dir.join("config.toml"), 0o644);
 
@@ -222,6 +239,7 @@ fn test_auth_login_existing_default() {
         .success();
     let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
 
+    let creds_path = temp_dir.join("credentials.toml");
     assert_contents(
         "tests/data/test_auth_existing_default.stdout",
         &scrub_server(stdout.to_string(), server.url("")),
@@ -231,12 +249,9 @@ fn test_auth_login_existing_default() {
 
     assert_contents(
         "tests/data/test_auth_existing_default_credentials.toml",
-        &scrub_server(
-            read_to_string(temp_dir.join("credentials.toml")).unwrap(),
-            server.url(""),
-        ),
+        &scrub_server(read_to_string(&creds_path).unwrap(), server.url("")),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
+    assert_mode(&creds_path, 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_default_config.toml",
@@ -252,7 +267,7 @@ fn test_auth_login_existing_no_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
-    assert_mode(&temp_dir.join("credentials.toml"), 0o644);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -289,6 +304,44 @@ fn test_auth_login_existing_no_default() {
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
     assert_mode(&temp_dir.join("config.toml"), 0o644);
+}
+
+#[test]
+#[cfg(unix)]
+fn test_auth_credentials_permissions() {
+    let server = MockServer::start();
+
+    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let cred_path = temp_dir.join("credentials.toml");
+    let creds = format!(
+        "\
+        [profile.lightman]\n\
+        host = \"{}\"\n\
+        token = \"***-***-*ok\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+        \n\
+        ",
+        server.url(""),
+    );
+    write(&cred_path, creds).unwrap();
+    assert_mode(&cred_path, 0o644);
+
+    // Validate authenticated credentials
+    let cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .success();
+    let stderr = String::from_utf8_lossy(&cmd.get_output().stderr);
+
+    assert_contents(
+        "tests/data/test_auth_credentials_permissions.stderr",
+        &scrub_creds(stderr.to_string(), &cred_path),
+    );
+    assert_mode(&cred_path, 0o644);
 }
 
 #[test]
@@ -380,7 +433,15 @@ fn test_cmd_auth_status() {
         server.url(""),
         server.url(""),
     );
-    write(cred_path, creds).unwrap();
+    write(&cred_path, creds).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let file = File::open(&cred_path).unwrap();
+        let mut perms = file.metadata().unwrap().permissions();
+        perms.set_mode(0o600);
+        file.set_permissions(perms).unwrap()
+    }
 
     let empty_creds_dir = tempfile::tempdir().unwrap().into_path();
     File::create(empty_creds_dir.join("credentials.toml")).unwrap();

@@ -560,17 +560,6 @@ fn create_private_file(path: &Path) -> Result<File> {
         .truncate(true)
         .open(path)?;
 
-    // `OpenOptions::mode` will not modify the permissions of an existing file.
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-
-        let metadata = file.metadata()?;
-        let mut perms = metadata.permissions();
-        perms.set_mode(0o600);
-        file.set_permissions(perms)?;
-    }
-
     Ok(file)
 }
 
