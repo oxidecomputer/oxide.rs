@@ -474,7 +474,7 @@
             },
             {
               "long": "size",
-              "help": "total size of the Disk in bytes"
+              "help": "The total size of the Disk (in bytes)"
             }
           ]
         },
@@ -1412,7 +1412,8 @@
               "long": "description"
             },
             {
-              "long": "hostname"
+              "long": "hostname",
+              "help": "The hostname to be assigned to the instance"
             },
             {
               "long": "json-body",
@@ -1423,13 +1424,15 @@
               "help": "XXX"
             },
             {
-              "long": "memory"
+              "long": "memory",
+              "help": "The amount of RAM (in bytes) to be allocated to the instance"
             },
             {
               "long": "name"
             },
             {
-              "long": "ncpus"
+              "long": "ncpus",
+              "help": "The number of vCPUs to be allocated to the instance"
             },
             {
               "long": "profile",
@@ -2093,6 +2096,37 @@
             {
               "long": "instance",
               "help": "Name or ID of the instance"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "about": "Update instance",
+          "args": [
+            {
+              "long": "boot-disk",
+              "help": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk."
+            },
+            {
+              "long": "instance",
+              "help": "Name or ID of the instance"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "profile",
