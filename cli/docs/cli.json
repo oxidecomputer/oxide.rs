@@ -2113,6 +2113,14 @@
           "about": "Update instance",
           "args": [
             {
+              "long": "auto-restart-policy",
+              "values": [
+                "never",
+                "best_effort"
+              ],
+              "help": "The auto-restart policy for this instance.\n\nIf not provided, unset the instance's auto-restart policy."
+            },
+            {
               "long": "boot-disk",
               "help": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk."
             },
@@ -2182,7 +2190,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Attach ip pool to internet gateway",
+              "about": "Attach IP pool to internet gateway",
               "args": [
                 {
                   "long": "address"
@@ -2221,7 +2229,7 @@
             },
             {
               "name": "delete",
-              "about": "Detach ip pool from internet gateway",
+              "about": "Detach IP pool from internet gateway",
               "args": [
                 {
                   "long": "address",
@@ -2256,7 +2264,7 @@
             },
             {
               "name": "list",
-              "about": "List addresses attached to an internet gateway.",
+              "about": "List IP addresses attached to internet gateway",
               "args": [
                 {
                   "long": "gateway",
@@ -2367,7 +2375,7 @@
           "subcommands": [
             {
               "name": "attach",
-              "about": "Attach ip pool to internet gateway",
+              "about": "Attach IP pool to internet gateway",
               "args": [
                 {
                   "long": "description"
@@ -2407,7 +2415,7 @@
             },
             {
               "name": "detach",
-              "about": "Detach ip pool from internet gateway",
+              "about": "Detach IP pool from internet gateway",
               "args": [
                 {
                   "long": "cascade",
@@ -2442,7 +2450,7 @@
             },
             {
               "name": "list",
-              "about": "List IP pools attached to an internet gateway.",
+              "about": "List IP pools attached to internet gateway",
               "args": [
                 {
                   "long": "gateway",
@@ -6015,10 +6023,6 @@
                       "help": "The route destination"
                     },
                     {
-                      "long": "local-pref",
-                      "help": "The route local preference"
-                    },
-                    {
                       "long": "nexthop",
                       "help": "The route nexthop"
                     },
@@ -6068,6 +6072,10 @@
                     {
                       "long": "rack",
                       "help": "Id of the rack to configure the route on"
+                    },
+                    {
+                      "long": "rib-priority",
+                      "help": "RIB Priority indicating priority within and across protocols"
                     },
                     {
                       "long": "switch",

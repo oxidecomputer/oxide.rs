@@ -1539,6 +1539,22 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_instance_update() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("auto-restart-policy")
+                    .long("auto-restart-policy")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::InstanceAutoRestartPolicy::Never.to_string(),
+                            types::InstanceAutoRestartPolicy::BestEffort.to_string(),
+                        ]),
+                        |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The auto-restart policy for this instance.\n\nIf not provided, unset the \
+                         instance's auto-restart policy.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("boot-disk")
                     .long("boot-disk")
                     .value_parser(clap::value_parser!(types::NameOrId))
@@ -2032,7 +2048,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("List addresses attached to an internet gateway.")
+            .about("List IP addresses attached to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_address_create() -> clap::Command {
@@ -2093,7 +2109,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach ip pool to internet gateway")
+            .about("Attach IP pool to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_address_delete() -> clap::Command {
@@ -2137,7 +2153,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("Detach ip pool from internet gateway")
+            .about("Detach IP pool from internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_list() -> clap::Command {
@@ -2187,7 +2203,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("List IP pools attached to an internet gateway.")
+            .about("List IP pools attached to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_create() -> clap::Command {
@@ -2249,7 +2265,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach ip pool to internet gateway")
+            .about("Attach IP pool to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_delete() -> clap::Command {
@@ -2293,7 +2309,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("Detach ip pool from internet gateway")
+            .about("Detach IP pool from internet gateway")
     }
 
     pub fn cli_internet_gateway_list() -> clap::Command {
@@ -8202,6 +8218,12 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_update();
+        if let Some(value) =
+            matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
+        {
+            request = request.body_map(|body| body.auto_restart_policy(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("boot-disk") {
             request = request.body_map(|body| body.boot_disk(value.clone()))
         }

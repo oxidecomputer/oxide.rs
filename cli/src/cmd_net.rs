@@ -628,9 +628,9 @@ pub struct CmdStaticRouteSet {
     #[clap(long)]
     vlan_id: Option<u16>,
 
-    /// The route local preference
+    /// RIB Priority indicating priority within and across protocols.
     #[clap(long)]
-    local_pref: Option<u32>,
+    rib_priority: Option<u8>,
 }
 
 #[async_trait]
@@ -647,7 +647,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         routes: vec![Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         }],
                     },
@@ -664,7 +664,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         *route = Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         };
                     }
@@ -672,7 +672,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         config.routes.push(Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         });
                     }
@@ -1355,7 +1355,7 @@ impl AuthenticatedCmd for CmdPortConfig {
                         r.dst,
                         r.gw,
                         r.vlan_id.unwrap_or(0),
-                        r.local_pref.unwrap_or(0),
+                        r.rib_priority.unwrap_or(0),
                     )?;
                 }
                 tw.flush()?;
@@ -1755,7 +1755,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                     dst: x.dst.clone(),
                     gw: gw.addr(),
                     vid: x.vlan_id,
-                    local_pref: x.local_pref,
+                    rib_priority: x.rib_priority,
                 }
             })
             .collect(),
