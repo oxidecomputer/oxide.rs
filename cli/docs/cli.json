@@ -474,7 +474,7 @@
             },
             {
               "long": "size",
-              "help": "total size of the Disk in bytes"
+              "help": "The total size of the Disk (in bytes)"
             }
           ]
         },
@@ -1412,7 +1412,8 @@
               "long": "description"
             },
             {
-              "long": "hostname"
+              "long": "hostname",
+              "help": "The hostname to be assigned to the instance"
             },
             {
               "long": "json-body",
@@ -1423,13 +1424,15 @@
               "help": "XXX"
             },
             {
-              "long": "memory"
+              "long": "memory",
+              "help": "The amount of RAM (in bytes) to be allocated to the instance"
             },
             {
               "long": "name"
             },
             {
-              "long": "ncpus"
+              "long": "ncpus",
+              "help": "The number of vCPUs to be allocated to the instance"
             },
             {
               "long": "profile",
@@ -2106,6 +2109,45 @@
           ]
         },
         {
+          "name": "update",
+          "about": "Update instance",
+          "args": [
+            {
+              "long": "auto-restart-policy",
+              "values": [
+                "never",
+                "best_effort"
+              ],
+              "help": "The auto-restart policy for this instance.\n\nIf not provided, unset the instance's auto-restart policy."
+            },
+            {
+              "long": "boot-disk",
+              "help": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk."
+            },
+            {
+              "long": "instance",
+              "help": "Name or ID of the instance"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
           "name": "view",
           "about": "Fetch instance",
           "args": [
@@ -2148,7 +2190,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Attach ip pool to internet gateway",
+              "about": "Attach IP pool to internet gateway",
               "args": [
                 {
                   "long": "address"
@@ -2187,7 +2229,7 @@
             },
             {
               "name": "delete",
-              "about": "Detach ip pool from internet gateway",
+              "about": "Detach IP pool from internet gateway",
               "args": [
                 {
                   "long": "address",
@@ -2222,7 +2264,7 @@
             },
             {
               "name": "list",
-              "about": "List addresses attached to an internet gateway.",
+              "about": "List IP addresses attached to internet gateway",
               "args": [
                 {
                   "long": "gateway",
@@ -2333,7 +2375,7 @@
           "subcommands": [
             {
               "name": "attach",
-              "about": "Attach ip pool to internet gateway",
+              "about": "Attach IP pool to internet gateway",
               "args": [
                 {
                   "long": "description"
@@ -2373,7 +2415,7 @@
             },
             {
               "name": "detach",
-              "about": "Detach ip pool from internet gateway",
+              "about": "Detach IP pool from internet gateway",
               "args": [
                 {
                   "long": "cascade",
@@ -2408,7 +2450,7 @@
             },
             {
               "name": "list",
-              "about": "List IP pools attached to an internet gateway.",
+              "about": "List IP pools attached to internet gateway",
               "args": [
                 {
                   "long": "gateway",
@@ -5981,10 +6023,6 @@
                       "help": "The route destination"
                     },
                     {
-                      "long": "local-pref",
-                      "help": "The route local preference"
-                    },
-                    {
                       "long": "nexthop",
                       "help": "The route nexthop"
                     },
@@ -6034,6 +6072,10 @@
                     {
                       "long": "rack",
                       "help": "Id of the rack to configure the route on"
+                    },
+                    {
+                      "long": "rib-priority",
+                      "help": "RIB Priority indicating priority within and across protocols"
                     },
                     {
                       "long": "switch",

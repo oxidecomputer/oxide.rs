@@ -325,6 +325,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceList => Some("instance list"),
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),
+        CliCommand::InstanceUpdate => Some("instance update"),
         CliCommand::InstanceDelete => Some("instance delete"),
         CliCommand::InstanceReboot => Some("instance reboot"),
         CliCommand::InstanceSerialConsole => None, // Special-cased

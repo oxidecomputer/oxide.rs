@@ -1913,6 +1913,60 @@
           }
         }
       },
+      "put": {
+        "tags": [
+          "instances"
+        ],
+        "summary": "Update instance",
+        "operationId": "instance_update",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "project",
+            "description": "Name or ID of the project",
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "instance",
+            "description": "Name or ID of the instance",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instance"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "instances"
@@ -2627,7 +2681,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "List addresses attached to an internet gateway.",
+        "summary": "List IP addresses attached to internet gateway",
         "operationId": "internet_gateway_ip_address_list",
         "parameters": [
           {
@@ -2710,7 +2764,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "Attach ip pool to internet gateway",
+        "summary": "Attach IP pool to internet gateway",
         "operationId": "internet_gateway_ip_address_create",
         "parameters": [
           {
@@ -2774,7 +2828,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "Detach ip pool from internet gateway",
+        "summary": "Detach IP pool from internet gateway",
         "operationId": "internet_gateway_ip_address_delete",
         "parameters": [
           {
@@ -2837,7 +2891,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "List IP pools attached to an internet gateway.",
+        "summary": "List IP pools attached to internet gateway",
         "operationId": "internet_gateway_ip_pool_list",
         "parameters": [
           {
@@ -2920,7 +2974,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "Attach ip pool to internet gateway",
+        "summary": "Attach IP pool to internet gateway",
         "operationId": "internet_gateway_ip_pool_create",
         "parameters": [
           {
@@ -2984,7 +3038,7 @@
         "tags": [
           "vpcs"
         ],
-        "summary": "Detach ip pool from internet gateway",
+        "summary": "Detach IP pool from internet gateway",
         "operationId": "internet_gateway_ip_pool_delete",
         "parameters": [
           {
@@ -13322,7 +13376,7 @@
             "type": "string"
           },
           "disk_source": {
-            "description": "initial source for this disk",
+            "description": "The initial source for this disk",
             "allOf": [
               {
                 "$ref": "#/components/schemas/DiskSource"
@@ -13333,7 +13387,7 @@
             "$ref": "#/components/schemas/Name"
           },
           "size": {
-            "description": "total size of the Disk in bytes",
+            "description": "The total size of the Disk (in bytes)",
             "allOf": [
               {
                 "$ref": "#/components/schemas/ByteCount"
@@ -15760,6 +15814,21 @@
             "description": "`true` if this instance's auto-restart policy will permit the control plane to automatically restart it if it enters the `Failed` state.",
             "type": "boolean"
           },
+          "auto_restart_policy": {
+            "nullable": true,
+            "description": "The auto-restart policy configured for this instance, or `None` if no explicit policy is configured.\n\nIf this is not present, then this instance uses the default auto-restart policy, which may or may not allow it to be restarted. The `auto_restart_enabled` field indicates whether the instance will be automatically restarted.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+              }
+            ]
+          },
+          "boot_disk_id": {
+            "nullable": true,
+            "description": "the ID of the disk used to boot this Instance, if a specific one is assigned.",
+            "type": "string",
+            "format": "uuid"
+          },
           "description": {
             "description": "human-readable free-form text about a resource",
             "type": "string"
@@ -15880,6 +15949,16 @@
               }
             ]
           },
+          "boot_disk": {
+            "nullable": true,
+            "description": "The disk this instance should boot into. This disk can either be attached if it already exists, or created, if it should be a new disk.\n\nIt is strongly recommended to either provide a boot disk at instance creation, or update the instance after creation to set a boot disk.\n\nAn instance without an explicit boot disk can be booted: the options are as managed by UEFI, and as controlled by the guest OS, but with some risk.  If this instance later has a disk attached or detached, it is possible that boot options can end up reordered, with the intended boot disk moved after the EFI shell in boot priority. This may result in an instance that only boots to the EFI shell until the desired disk is set as an explicit boot disk and the instance rebooted.",
+            "default": null,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceDiskAttachment"
+              }
+            ]
+          },
           "description": {
             "type": "string"
           },
@@ -15900,16 +15979,31 @@
             }
           },
           "hostname": {
-            "$ref": "#/components/schemas/Hostname"
+            "description": "The hostname to be assigned to the instance",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Hostname"
+              }
+            ]
           },
           "memory": {
-            "$ref": "#/components/schemas/ByteCount"
+            "description": "The amount of RAM (in bytes) to be allocated to the instance",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ByteCount"
+              }
+            ]
           },
           "name": {
             "$ref": "#/components/schemas/Name"
           },
           "ncpus": {
-            "$ref": "#/components/schemas/InstanceCpuCount"
+            "description": "The number of vCPUs to be allocated to the instance",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceCpuCount"
+              }
+            ]
           },
           "network_interfaces": {
             "description": "The network interfaces to be created for this instance.",
@@ -15961,7 +16055,7 @@
                 "type": "string"
               },
               "disk_source": {
-                "description": "initial source for this disk",
+                "description": "The initial source for this disk",
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/DiskSource"
@@ -15972,7 +16066,7 @@
                 "$ref": "#/components/schemas/Name"
               },
               "size": {
-                "description": "total size of the Disk in bytes",
+                "description": "The total size of the Disk (in bytes)",
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/ByteCount"
@@ -16375,6 +16469,30 @@
             ]
           }
         ]
+      },
+      "InstanceUpdate": {
+        "description": "Parameters of an `Instance` that can be reconfigured after creation.",
+        "type": "object",
+        "properties": {
+          "auto_restart_policy": {
+            "nullable": true,
+            "description": "The auto-restart policy for this instance.\n\nIf not provided, unset the instance's auto-restart policy.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+              }
+            ]
+          },
+          "boot_disk": {
+            "nullable": true,
+            "description": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NameOrId"
+              }
+            ]
+          }
+        }
       },
       "InternetGateway": {
         "description": "An internet gateway provides a path between VPC networks and external networks.",
@@ -18313,11 +18431,11 @@
             "type": "string",
             "format": "ip"
           },
-          "local_pref": {
+          "rib_priority": {
             "nullable": true,
             "description": "Local preference for route. Higher preference indictes precedence within and across protocols.",
             "type": "integer",
-            "format": "uint32",
+            "format": "uint8",
             "minimum": 0
           },
           "vid": {
@@ -18556,7 +18674,7 @@
             "type": "string"
           },
           "destination": {
-            "description": "Selects which traffic this routing rule will apply to.",
+            "description": "Selects which traffic this routing rule will apply to",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RouteDestination"
@@ -18585,7 +18703,7 @@
             ]
           },
           "target": {
-            "description": "The location that matched packets should be forwarded to.",
+            "description": "The location that matched packets should be forwarded to",
             "allOf": [
               {
                 "$ref": "#/components/schemas/RouteTarget"
@@ -20378,17 +20496,17 @@
             "description": "The interface name this route configuration is assigned to.",
             "type": "string"
           },
-          "local_pref": {
-            "nullable": true,
-            "description": "Local preference indicating priority within and across protocols.",
-            "type": "integer",
-            "format": "uint32",
-            "minimum": 0
-          },
           "port_settings_id": {
             "description": "The port settings object this route configuration belongs to.",
             "type": "string",
             "format": "uuid"
+          },
+          "rib_priority": {
+            "nullable": true,
+            "description": "RIB Priority indicating priority within and across protocols.",
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0
           },
           "vlan_id": {
             "nullable": true,

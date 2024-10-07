@@ -52,6 +52,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceList => Self::cli_instance_list(),
             CliCommand::InstanceCreate => Self::cli_instance_create(),
             CliCommand::InstanceView => Self::cli_instance_view(),
+            CliCommand::InstanceUpdate => Self::cli_instance_update(),
             CliCommand::InstanceDelete => Self::cli_instance_delete(),
             CliCommand::InstanceDiskList => Self::cli_instance_disk_list(),
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
@@ -680,7 +681,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("size")
                     .value_parser(clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
-                    .help("total size of the Disk in bytes"),
+                    .help("The total size of the Disk (in bytes)"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -1451,13 +1452,15 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("hostname")
                     .long("hostname")
                     .value_parser(clap::value_parser!(types::Hostname))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The hostname to be assigned to the instance"),
             )
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
                     .value_parser(clap::value_parser!(types::ByteCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The amount of RAM (in bytes) to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -1469,7 +1472,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("ncpus")
                     .long("ncpus")
                     .value_parser(clap::value_parser!(types::InstanceCpuCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The number of vCPUs to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -1530,6 +1534,65 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Fetch instance")
+    }
+
+    pub fn cli_instance_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("auto-restart-policy")
+                    .long("auto-restart-policy")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::InstanceAutoRestartPolicy::Never.to_string(),
+                            types::InstanceAutoRestartPolicy::BestEffort.to_string(),
+                        ]),
+                        |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The auto-restart policy for this instance.\n\nIf not provided, unset the \
+                         instance's auto-restart policy.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("boot-disk")
+                    .long("boot-disk")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the disk the instance should be instructed to boot \
+                         from.\n\nIf not provided, unset the instance's boot disk.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update instance")
     }
 
     pub fn cli_instance_delete() -> clap::Command {
@@ -1985,7 +2048,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("List addresses attached to an internet gateway.")
+            .about("List IP addresses attached to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_address_create() -> clap::Command {
@@ -2046,7 +2109,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach ip pool to internet gateway")
+            .about("Attach IP pool to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_address_delete() -> clap::Command {
@@ -2090,7 +2153,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("Detach ip pool from internet gateway")
+            .about("Detach IP pool from internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_list() -> clap::Command {
@@ -2140,7 +2203,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("List IP pools attached to an internet gateway.")
+            .about("List IP pools attached to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_create() -> clap::Command {
@@ -2202,7 +2265,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach ip pool to internet gateway")
+            .about("Attach IP pool to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_delete() -> clap::Command {
@@ -2246,7 +2309,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("Detach ip pool from internet gateway")
+            .about("Detach IP pool from internet gateway")
     }
 
     pub fn cli_internet_gateway_list() -> clap::Command {
@@ -6533,6 +6596,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceList => self.execute_instance_list(matches).await,
             CliCommand::InstanceCreate => self.execute_instance_create(matches).await,
             CliCommand::InstanceView => self.execute_instance_view(matches).await,
+            CliCommand::InstanceUpdate => self.execute_instance_update(matches).await,
             CliCommand::InstanceDelete => self.execute_instance_delete(matches).await,
             CliCommand::InstanceDiskList => self.execute_instance_disk_list(matches).await,
             CliCommand::InstanceDiskAttach => self.execute_instance_disk_attach(matches).await,
@@ -8139,6 +8203,46 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_instance_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.instance_update();
+        if let Some(value) =
+            matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
+        {
+            request = request.body_map(|body| body.auto_restart_policy(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("boot-disk") {
+            request = request.body_map(|body| body.boot_disk(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config.execute_instance_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -14177,6 +14281,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_delete(
         &self,
         matches: &clap::ArgMatches,
@@ -15563,6 +15675,7 @@ pub enum CliCommand {
     InstanceList,
     InstanceCreate,
     InstanceView,
+    InstanceUpdate,
     InstanceDelete,
     InstanceDiskList,
     InstanceDiskAttach,
@@ -15775,6 +15888,7 @@ impl CliCommand {
             CliCommand::InstanceList,
             CliCommand::InstanceCreate,
             CliCommand::InstanceView,
+            CliCommand::InstanceUpdate,
             CliCommand::InstanceDelete,
             CliCommand::InstanceDiskList,
             CliCommand::InstanceDiskAttach,

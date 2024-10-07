@@ -6286,7 +6286,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "disk_source": {
-    ///      "description": "initial source for this disk",
+    ///      "description": "The initial source for this disk",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/DiskSource"
@@ -6297,7 +6297,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "size": {
-    ///      "description": "total size of the Disk in bytes",
+    ///      "description": "The total size of the Disk (in bytes)",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -6313,10 +6313,10 @@ pub mod types {
     )]
     pub struct DiskCreate {
         pub description: String,
-        /// initial source for this disk
+        /// The initial source for this disk
         pub disk_source: DiskSource,
         pub name: Name,
-        /// total size of the Disk in bytes
+        /// The total size of the Disk (in bytes)
         pub size: ByteCount,
     }
 
@@ -11397,6 +11397,28 @@ pub mod types {
     /// `Failed` state.",
     ///      "type": "boolean"
     ///    },
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy configured for this
+    /// instance, or `None` if no explicit policy is configured.\n\nIf this is
+    /// not present, then this instance uses the default auto-restart policy,
+    /// which may or may not allow it to be restarted. The
+    /// `auto_restart_enabled` field indicates whether the instance will be
+    /// automatically restarted.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "boot_disk_id": {
+    ///      "description": "the ID of the disk used to boot this Instance, if a
+    /// specific one is assigned.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -11490,6 +11512,19 @@ pub mod types {
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
         pub auto_restart_enabled: bool,
+        /// The auto-restart policy configured for this instance, or `None` if
+        /// no explicit policy is configured.
+        ///
+        /// If this is not present, then this instance uses the default
+        /// auto-restart policy, which may or may not allow it to be restarted.
+        /// The `auto_restart_enabled` field indicates whether the instance will
+        /// be automatically restarted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// the ID of the disk used to boot this Instance, if a specific one is
+        /// assigned.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk_id: Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: String,
         /// RFC1035-compliant hostname for the Instance.
@@ -11741,6 +11776,25 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "boot_disk": {
+    ///      "description": "The disk this instance should boot into. This disk
+    /// can either be attached if it already exists, or created, if it should be
+    /// a new disk.\n\nIt is strongly recommended to either provide a boot disk
+    /// at instance creation, or update the instance after creation to set a
+    /// boot disk.\n\nAn instance without an explicit boot disk can be booted:
+    /// the options are as managed by UEFI, and as controlled by the guest OS,
+    /// but with some risk.  If this instance later has a disk attached or
+    /// detached, it is possible that boot options can end up reordered, with
+    /// the intended boot disk moved after the EFI shell in boot priority. This
+    /// may result in an instance that only boots to the EFI shell until the
+    /// desired disk is set as an explicit boot disk and the instance
+    /// rebooted.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -11766,16 +11820,33 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "$ref": "#/components/schemas/Hostname"
+    ///      "description": "The hostname to be assigned to the instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Hostname"
+    ///        }
+    ///      ]
     ///    },
     ///    "memory": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "description": "The amount of RAM (in bytes) to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "ncpus": {
-    ///      "$ref": "#/components/schemas/InstanceCpuCount"
+    ///      "description": "The number of vCPUs to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceCpuCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "network_interfaces": {
     ///      "description": "The network interfaces to be created for this
@@ -11835,6 +11906,23 @@ pub mod types {
         /// user.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// The disk this instance should boot into. This disk can either be
+        /// attached if it already exists, or created, if it should be a new
+        /// disk.
+        ///
+        /// It is strongly recommended to either provide a boot disk at instance
+        /// creation, or update the instance after creation to set a boot disk.
+        ///
+        /// An instance without an explicit boot disk can be booted: the options
+        /// are as managed by UEFI, and as controlled by the guest OS, but with
+        /// some risk.  If this instance later has a disk attached or detached,
+        /// it is possible that boot options can end up reordered, with the
+        /// intended boot disk moved after the EFI shell in boot priority. This
+        /// may result in an instance that only boots to the EFI shell until the
+        /// desired disk is set as an explicit boot disk and the instance
+        /// rebooted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<InstanceDiskAttachment>,
         pub description: String,
         /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -11847,9 +11935,12 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
+        /// The hostname to be assigned to the instance
         pub hostname: Hostname,
+        /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
         pub name: Name,
+        /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
@@ -11907,7 +11998,7 @@ pub mod types {
     ///          "type": "string"
     ///        },
     ///        "disk_source": {
-    ///          "description": "initial source for this disk",
+    ///          "description": "The initial source for this disk",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/DiskSource"
@@ -11918,7 +12009,7 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        },
     ///        "size": {
-    ///          "description": "total size of the Disk in bytes",
+    ///          "description": "The total size of the Disk (in bytes)",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/ByteCount"
@@ -11970,10 +12061,10 @@ pub mod types {
         #[serde(rename = "create")]
         Create {
             description: String,
-            /// initial source for this disk
+            /// The initial source for this disk
             disk_source: DiskSource,
             name: Name,
-            /// total size of the Disk in bytes
+            /// The total size of the Disk (in bytes)
             size: ByteCount,
         },
         /// During instance creation, attach this disk
@@ -12778,6 +12869,68 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Parameters of an `Instance` that can be reconfigured after creation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters of an `Instance` that can be reconfigured
+    /// after creation.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy for this instance.\n\nIf
+    /// not provided, unset the instance's auto-restart policy.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "boot_disk": {
+    ///      "description": "Name or ID of the disk the instance should be
+    /// instructed to boot from.\n\nIf not provided, unset the instance's boot
+    /// disk.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InstanceUpdate {
+        /// The auto-restart policy for this instance.
+        ///
+        /// If not provided, unset the instance's auto-restart policy.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// Name or ID of the disk the instance should be instructed to boot
+        /// from.
+        ///
+        /// If not provided, unset the instance's boot disk.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<NameOrId>,
+    }
+
+    impl From<&InstanceUpdate> for InstanceUpdate {
+        fn from(value: &InstanceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceUpdate {
+        pub fn builder() -> builder::InstanceUpdate {
+            Default::default()
         }
     }
 
@@ -18542,14 +18695,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
-    ///    "local_pref": {
+    ///    "rib_priority": {
     ///      "description": "Local preference for route. Higher preference
     /// indictes precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
     ///      ],
-    ///      "format": "uint32",
+    ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
     ///    "vid": {
@@ -18576,7 +18729,7 @@ pub mod types {
         /// Local preference for route. Higher preference indictes precedence
         /// within and across protocols.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local_pref: Option<u32>,
+        pub rib_priority: Option<u8>,
         /// VLAN id the gateway is reachable over.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub vid: Option<u16>,
@@ -18966,7 +19119,7 @@ pub mod types {
     ///    },
     ///    "destination": {
     ///      "description": "Selects which traffic this routing rule will apply
-    /// to.",
+    /// to",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/RouteDestination"
@@ -18999,7 +19152,7 @@ pub mod types {
     ///    },
     ///    "target": {
     ///      "description": "The location that matched packets should be
-    /// forwarded to.",
+    /// forwarded to",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/RouteTarget"
@@ -19032,7 +19185,7 @@ pub mod types {
     pub struct RouterRoute {
         /// human-readable free-form text about a resource
         pub description: String,
-        /// Selects which traffic this routing rule will apply to.
+        /// Selects which traffic this routing rule will apply to
         pub destination: RouteDestination,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
@@ -19040,7 +19193,7 @@ pub mod types {
         pub kind: RouterRouteKind,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// The location that matched packets should be forwarded to.
+        /// The location that matched packets should be forwarded to
         pub target: RouteTarget,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
@@ -23439,21 +23592,21 @@ pub mod types {
     /// assigned to.",
     ///      "type": "string"
     ///    },
-    ///    "local_pref": {
-    ///      "description": "Local preference indicating priority within and
-    /// across protocols.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this route configuration
     /// belongs to.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "rib_priority": {
+    ///      "description": "RIB Priority indicating priority within and across
+    /// protocols.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
     ///    },
     ///    "vlan_id": {
     ///      "description": "The VLAN identifier for the route. Use this if the
@@ -23479,11 +23632,11 @@ pub mod types {
         pub gw: IpNet,
         /// The interface name this route configuration is assigned to.
         pub interface_name: String,
-        /// Local preference indicating priority within and across protocols.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local_pref: Option<u32>,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: uuid::Uuid,
+        /// RIB Priority indicating priority within and across protocols.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub rib_priority: Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
         /// reachable over an 802.1Q tagged L2 segment.
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -35542,6 +35695,8 @@ pub mod types {
             auto_restart_cooldown_expiration:
                 Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
             auto_restart_enabled: Result<bool, String>,
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk_id: Result<Option<uuid::Uuid>, String>,
             description: Result<String, String>,
             hostname: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -35563,6 +35718,8 @@ pub mod types {
                     auto_restart_enabled: Err(
                         "no value supplied for auto_restart_enabled".to_string()
                     ),
+                    auto_restart_policy: Ok(Default::default()),
+                    boot_disk_id: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -35605,6 +35762,29 @@ pub mod types {
                         "error converting supplied value for auto_restart_enabled: {}",
                         e
                     )
+                });
+                self
+            }
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn boot_disk_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for boot_disk_id: {}", e)
                 });
                 self
             }
@@ -35742,6 +35922,8 @@ pub mod types {
                 Ok(Self {
                     auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
                     auto_restart_enabled: value.auto_restart_enabled?,
+                    auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk_id: value.boot_disk_id?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -35763,6 +35945,8 @@ pub mod types {
                 Self {
                     auto_restart_cooldown_expiration: Ok(value.auto_restart_cooldown_expiration),
                     auto_restart_enabled: Ok(value.auto_restart_enabled),
+                    auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk_id: Ok(value.boot_disk_id),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -35782,6 +35966,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
             auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk: Result<Option<super::InstanceDiskAttachment>, String>,
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
@@ -35799,6 +35984,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     auto_restart_policy: Ok(Default::default()),
+                    boot_disk: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -35826,6 +36012,16 @@ pub mod types {
                         e
                     )
                 });
+                self
+            }
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceDiskAttachment>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -35948,6 +36144,7 @@ pub mod types {
             fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk: value.boot_disk?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -35967,6 +36164,7 @@ pub mod types {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
                     auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk: Ok(value.boot_disk),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),
@@ -36549,6 +36747,66 @@ pub mod types {
                 Self {
                     data: Ok(value.data),
                     last_byte_offset: Ok(value.last_byte_offset),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceUpdate {
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for InstanceUpdate {
+            fn default() -> Self {
+                Self {
+                    auto_restart_policy: Ok(Default::default()),
+                    boot_disk: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceUpdate {
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: InstanceUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk: value.boot_disk?,
+                })
+            }
+        }
+
+        impl From<super::InstanceUpdate> for InstanceUpdate {
+            fn from(value: super::InstanceUpdate) -> Self {
+                Self {
+                    auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk: Ok(value.boot_disk),
                 }
             }
         }
@@ -40820,7 +41078,7 @@ pub mod types {
         pub struct Route {
             dst: Result<super::IpNet, String>,
             gw: Result<std::net::IpAddr, String>,
-            local_pref: Result<Option<u32>, String>,
+            rib_priority: Result<Option<u8>, String>,
             vid: Result<Option<u16>, String>,
         }
 
@@ -40829,7 +41087,7 @@ pub mod types {
                 Self {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
-                    local_pref: Ok(Default::default()),
+                    rib_priority: Ok(Default::default()),
                     vid: Ok(Default::default()),
                 }
             }
@@ -40856,14 +41114,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
-            pub fn local_pref<T>(mut self, value: T) -> Self
+            pub fn rib_priority<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u32>>,
+                T: std::convert::TryInto<Option<u8>>,
                 T::Error: std::fmt::Display,
             {
-                self.local_pref = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
+                });
                 self
             }
             pub fn vid<T>(mut self, value: T) -> Self
@@ -40884,7 +41142,7 @@ pub mod types {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
-                    local_pref: value.local_pref?,
+                    rib_priority: value.rib_priority?,
                     vid: value.vid?,
                 })
             }
@@ -40895,7 +41153,7 @@ pub mod types {
                 Self {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
-                    local_pref: Ok(value.local_pref),
+                    rib_priority: Ok(value.rib_priority),
                     vid: Ok(value.vid),
                 }
             }
@@ -44823,8 +45081,8 @@ pub mod types {
             dst: Result<super::IpNet, String>,
             gw: Result<super::IpNet, String>,
             interface_name: Result<String, String>,
-            local_pref: Result<Option<u32>, String>,
             port_settings_id: Result<uuid::Uuid, String>,
+            rib_priority: Result<Option<u8>, String>,
             vlan_id: Result<Option<u16>, String>,
         }
 
@@ -44834,8 +45092,8 @@ pub mod types {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
-                    local_pref: Ok(Default::default()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    rib_priority: Ok(Default::default()),
                     vlan_id: Ok(Default::default()),
                 }
             }
@@ -44872,16 +45130,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn local_pref<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<u32>>,
-                T::Error: std::fmt::Display,
-            {
-                self.local_pref = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
-                self
-            }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -44892,6 +45140,16 @@ pub mod types {
                         "error converting supplied value for port_settings_id: {}",
                         e
                     )
+                });
+                self
+            }
+            pub fn rib_priority<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u8>>,
+                T::Error: std::fmt::Display,
+            {
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
                 });
                 self
             }
@@ -44916,8 +45174,8 @@ pub mod types {
                     dst: value.dst?,
                     gw: value.gw?,
                     interface_name: value.interface_name?,
-                    local_pref: value.local_pref?,
                     port_settings_id: value.port_settings_id?,
+                    rib_priority: value.rib_priority?,
                     vlan_id: value.vlan_id?,
                 })
             }
@@ -44929,8 +45187,8 @@ pub mod types {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
                     interface_name: Ok(value.interface_name),
-                    local_pref: Ok(value.local_pref),
                     port_settings_id: Ok(value.port_settings_id),
+                    rib_priority: Ok(value.rib_priority),
                     vlan_id: Ok(value.vlan_id),
                 }
             }
@@ -49151,6 +49409,23 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
+    /// Update instance
+    ///
+    /// Sends a `PUT` request to `/v1/instances/{instance}`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.instance_update()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_update(&self) -> builder::InstanceUpdate;
     /// Delete instance
     ///
     /// Sends a `DELETE` request to `/v1/instances/{instance}`
@@ -49508,6 +49783,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_view(&self) -> builder::InstanceView {
         builder::InstanceView::new(self)
+    }
+
+    fn instance_update(&self) -> builder::InstanceUpdate {
+        builder::InstanceUpdate::new(self)
     }
 
     fn instance_delete(&self) -> builder::InstanceDelete {
@@ -52072,7 +52351,7 @@ impl ClientSystemStatusExt for Client {
 /// Virtual Private Clouds (VPCs) provide isolated network environments for
 /// managing and deploying services.
 pub trait ClientVpcsExt {
-    /// List addresses attached to an internet gateway
+    /// List IP addresses attached to internet gateway
     ///
     /// Sends a `GET` request to `/v1/internet-gateway-ip-addresses`
     ///
@@ -52098,7 +52377,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_address_list(&self) -> builder::InternetGatewayIpAddressList;
-    /// Attach ip pool to internet gateway
+    /// Attach IP pool to internet gateway
     ///
     /// Sends a `POST` request to `/v1/internet-gateway-ip-addresses`
     ///
@@ -52119,7 +52398,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_address_create(&self) -> builder::InternetGatewayIpAddressCreate;
-    /// Detach ip pool from internet gateway
+    /// Detach IP pool from internet gateway
     ///
     /// Sends a `DELETE` request to
     /// `/v1/internet-gateway-ip-addresses/{address}`
@@ -52143,7 +52422,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_address_delete(&self) -> builder::InternetGatewayIpAddressDelete;
-    /// List IP pools attached to an internet gateway
+    /// List IP pools attached to internet gateway
     ///
     /// Sends a `GET` request to `/v1/internet-gateway-ip-pools`
     ///
@@ -52169,7 +52448,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_pool_list(&self) -> builder::InternetGatewayIpPoolList;
-    /// Attach ip pool to internet gateway
+    /// Attach IP pool to internet gateway
     ///
     /// Sends a `POST` request to `/v1/internet-gateway-ip-pools`
     ///
@@ -52190,7 +52469,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_pool_create(&self) -> builder::InternetGatewayIpPoolCreate;
-    /// Detach ip pool from internet gateway
+    /// Detach IP pool from internet gateway
     ///
     /// Sends a `DELETE` request to `/v1/internet-gateway-ip-pools/{pool}`
     ///
@@ -56841,6 +57120,116 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_update`]
+    ///
+    /// [`ClientInstancesExt::instance_update`]: super::ClientInstancesExt::instance_update
+    #[derive(Debug, Clone)]
+    pub struct InstanceUpdate<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InstanceUpdate, String>,
+    }
+
+    impl<'a> InstanceUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::InstanceUpdate::default()),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InstanceUpdate>,
+            <V as std::convert::TryInto<types::InstanceUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `InstanceUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::InstanceUpdate) -> types::builder::InstanceUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/instances/{instance}`
+        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+                body,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::InstanceUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
                 .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
