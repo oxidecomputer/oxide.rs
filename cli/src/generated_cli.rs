@@ -2069,7 +2069,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("gateway")
                     .long("gateway")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required_unless_present("json-body"),
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -2109,7 +2110,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach IP pool to internet gateway")
+            .about("Attach IP address to internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_address_delete() -> clap::Command {
@@ -2153,7 +2154,7 @@ impl<T: CliConfig> Cli<T> {
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
-            .about("Detach IP pool from internet gateway")
+            .about("Detach IP address from internet gateway")
     }
 
     pub fn cli_internet_gateway_ip_pool_list() -> clap::Command {
@@ -8753,7 +8754,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
-            request = request.body_map(|body| body.gateway(value.clone()))
+            request = request.gateway(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
