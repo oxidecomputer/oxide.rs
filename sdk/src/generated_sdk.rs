@@ -13168,7 +13168,6 @@ pub mod types {
     ///  "required": [
     ///    "address",
     ///    "description",
-    ///    "gateway",
     ///    "name"
     ///  ],
     ///  "properties": {
@@ -13178,9 +13177,6 @@ pub mod types {
     ///    },
     ///    "description": {
     ///      "type": "string"
-    ///    },
-    ///    "gateway": {
-    ///      "$ref": "#/components/schemas/NameOrId"
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -13195,7 +13191,6 @@ pub mod types {
     pub struct InternetGatewayIpAddressCreate {
         pub address: std::net::IpAddr,
         pub description: String,
-        pub gateway: NameOrId,
         pub name: Name,
     }
 
@@ -37121,7 +37116,6 @@ pub mod types {
         pub struct InternetGatewayIpAddressCreate {
             address: Result<std::net::IpAddr, String>,
             description: Result<String, String>,
-            gateway: Result<super::NameOrId, String>,
             name: Result<super::Name, String>,
         }
 
@@ -37130,7 +37124,6 @@ pub mod types {
                 Self {
                     address: Err("no value supplied for address".to_string()),
                     description: Err("no value supplied for description".to_string()),
-                    gateway: Err("no value supplied for gateway".to_string()),
                     name: Err("no value supplied for name".to_string()),
                 }
             }
@@ -37157,16 +37150,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
-            pub fn gateway<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::NameOrId>,
-                T::Error: std::fmt::Display,
-            {
-                self.gateway = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for gateway: {}", e));
-                self
-            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -37189,7 +37172,6 @@ pub mod types {
                 Ok(Self {
                     address: value.address?,
                     description: value.description?,
-                    gateway: value.gateway?,
                     name: value.name?,
                 })
             }
@@ -37200,7 +37182,6 @@ pub mod types {
                 Self {
                     address: Ok(value.address),
                     description: Ok(value.description),
-                    gateway: Ok(value.gateway),
                     name: Ok(value.name),
                 }
             }
@@ -52377,7 +52358,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_address_list(&self) -> builder::InternetGatewayIpAddressList;
-    /// Attach IP pool to internet gateway
+    /// Attach IP address to internet gateway
     ///
     /// Sends a `POST` request to `/v1/internet-gateway-ip-addresses`
     ///
@@ -52398,7 +52379,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn internet_gateway_ip_address_create(&self) -> builder::InternetGatewayIpAddressCreate;
-    /// Detach IP pool from internet gateway
+    /// Detach IP address from internet gateway
     ///
     /// Sends a `DELETE` request to
     /// `/v1/internet-gateway-ip-addresses/{address}`
