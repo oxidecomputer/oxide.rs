@@ -20,6 +20,10 @@ use serde_json::json;
 fn scrub_server(raw: String, server: String) -> String {
     raw.replace(&server, "<TEST-SERVER>")
 }
+fn scrub_creds(raw: String, path: &Path) -> String {
+    let path = path.to_string_lossy().to_string();
+    raw.replace(&path, "<CREDENTIALS-PATH>")
+}
 struct MockOAuth<'a> {
     device_auth: Mock<'a>,
     device_token: Mock<'a>,
@@ -84,6 +88,51 @@ impl<'a> MockOAuth<'a> {
     }
 }
 
+/// Assert the mode of a file on Unix. Does nothing on Windows.
+#[track_caller]
+fn assert_mode(path: &Path, expected_mode: u32) {
+    #[cfg(not(unix))]
+    {
+        // Avoid unused parameter warnings on Windows.
+        let _ = path;
+        let _ = expected_mode;
+    }
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let file = std::fs::File::open(path).unwrap();
+        let stat = file.metadata().unwrap();
+        let mode = stat.permissions().mode();
+
+        let umask = get_umask();
+        let derived_mode = expected_mode & !umask;
+
+        // Validate only the bottom nine permission bits.
+        if mode & 0o777 != derived_mode & 0o777 {
+            panic!("assertion failed: modes do not match for {}\n  expected: 0o{:o}\n    actual: 0o{:o}\n     umask: 0o{umask:03o}", path.display(), derived_mode & 0o777, mode & 0o777);
+        }
+    }
+}
+
+#[cfg(unix)]
+fn get_umask() -> u32 {
+    // Taken from https://github.com/rust-lang/cargo/blob/0473ee8b87dc7dbee53d13065c204ae63a0a2a9e/src/cargo/util/mod.rs#L143-L159
+    use std::sync::OnceLock;
+
+    static UMASK: OnceLock<u32> = OnceLock::new();
+
+    // We cannot retrieve umask without modifying it. Set it to zero, then
+    // immediately revert it to the original value. Store this so that we have a
+    // consistent value for the life of the program.
+    *UMASK.get_or_init(|| unsafe {
+        let umask = libc::umask(0);
+        libc::umask(umask);
+        umask as u32
+    })
+}
+
 // Test the first login where no config files exist yet.
 #[test]
 fn test_auth_login_first() {
@@ -123,11 +172,13 @@ fn test_auth_login_first() {
             server.url(""),
         ),
     );
+    assert_mode(&config_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_login_first_config.toml",
         &read_to_string(config_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&config_dir.join("config.toml"), 0o644);
 }
 
 fn write_first_creds(dir: &Path) {
@@ -138,7 +189,17 @@ fn write_first_creds(dir: &Path) {
         token = \"***-***-***\"\n\
         user = \"00000000-0000-0000-0000-000000000000\"\n\
     ";
-    write(cred_path, creds).unwrap();
+    write(&cred_path, creds).unwrap();
+
+    // On Unix set permissions to 0600 to avoid triggering permissions warning.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let file = File::open(&cred_path).unwrap();
+        let mut perms = file.metadata().unwrap().permissions();
+        perms.set_mode(0o600);
+        file.set_permissions(perms).unwrap();
+    }
 }
 fn write_first_config(dir: &Path) {
     let config_path = dir.join("config.toml");
@@ -154,8 +215,13 @@ fn test_auth_login_existing_default() {
     let mock = MockOAuth::new(&server);
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
+
     write_first_creds(&temp_dir);
+    let creds_path = temp_dir.join("credentials.toml");
+    assert_mode(&creds_path, 0o600);
+
     write_first_config(&temp_dir);
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -173,6 +239,7 @@ fn test_auth_login_existing_default() {
         .success();
     let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
 
+    let creds_path = temp_dir.join("credentials.toml");
     assert_contents(
         "tests/data/test_auth_existing_default.stdout",
         &scrub_server(stdout.to_string(), server.url("")),
@@ -182,16 +249,15 @@ fn test_auth_login_existing_default() {
 
     assert_contents(
         "tests/data/test_auth_existing_default_credentials.toml",
-        &scrub_server(
-            read_to_string(temp_dir.join("credentials.toml")).unwrap(),
-            server.url(""),
-        ),
+        &scrub_server(read_to_string(&creds_path).unwrap(), server.url("")),
     );
+    assert_mode(&creds_path, 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -201,6 +267,7 @@ fn test_auth_login_existing_no_default() {
 
     let temp_dir = tempfile::tempdir().unwrap().into_path();
     write_first_creds(&temp_dir);
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -230,11 +297,51 @@ fn test_auth_login_existing_no_default() {
             server.url(""),
         ),
     );
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_no_default_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
+}
+
+#[test]
+#[cfg(unix)]
+fn test_auth_credentials_permissions() {
+    let server = MockServer::start();
+
+    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let cred_path = temp_dir.join("credentials.toml");
+    let creds = format!(
+        "\
+        [profile.lightman]\n\
+        host = \"{}\"\n\
+        token = \"***-***-*ok\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+        \n\
+        ",
+        server.url(""),
+    );
+    write(&cred_path, creds).unwrap();
+    assert_mode(&cred_path, 0o644);
+
+    // Validate authenticated credentials
+    let cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .success();
+    let stderr = String::from_utf8_lossy(&cmd.get_output().stderr);
+
+    assert_contents(
+        "tests/data/test_auth_credentials_permissions.stderr",
+        &scrub_creds(stderr.to_string(), &cred_path),
+    );
+    assert_mode(&cred_path, 0o644);
 }
 
 #[test]
@@ -284,11 +391,13 @@ fn test_auth_login_double() {
             server.url(""),
         ),
     );
+    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_double_config.toml",
         &read_to_string(temp_dir.join("config.toml")).unwrap(),
     );
+    assert_mode(&temp_dir.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -324,7 +433,15 @@ fn test_cmd_auth_status() {
         server.url(""),
         server.url(""),
     );
-    write(cred_path, creds).unwrap();
+    write(&cred_path, creds).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let file = File::open(&cred_path).unwrap();
+        let mut perms = file.metadata().unwrap().permissions();
+        perms.set_mode(0o600);
+        file.set_permissions(perms).unwrap()
+    }
 
     let empty_creds_dir = tempfile::tempdir().unwrap().into_path();
     File::create(empty_creds_dir.join("credentials.toml")).unwrap();
