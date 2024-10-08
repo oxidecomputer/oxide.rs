@@ -267,7 +267,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
             .body_map(|body| {
                 body.name(self.name.clone())
                     .description(self.description.clone())
-                    .disks(vec![InstanceDiskAttachment::Create {
+                    .boot_disk(InstanceDiskAttachment::Create {
                         description: format!("{} disk", *self.name),
                         disk_source: DiskSource::Image {
                             image_id: image_view.id,
@@ -276,7 +276,7 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                             .parse()
                             .expect("valid disk name"),
                         size: self.size.clone(),
-                    }])
+                    })
                     .external_ips(vec![ExternalIpCreate::Ephemeral { pool: None }])
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
