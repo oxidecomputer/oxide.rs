@@ -474,7 +474,7 @@
             },
             {
               "long": "size",
-              "help": "The total size of the Disk. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+              "help": "The total size of the Disk; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             }
           ]
         },
@@ -520,7 +520,7 @@
             },
             {
               "long": "disk-size",
-              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "image",
@@ -1425,7 +1425,7 @@
             },
             {
               "long": "memory",
-              "help": "The amount of RAM to be allocated to the instance. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+              "help": "The amount of RAM to be allocated to the instance; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "name"
@@ -1680,7 +1680,7 @@
             },
             {
               "long": "memory",
-              "help": "Amount of RAM to be allocated to the instance. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+              "help": "Amount of RAM to be allocated to the instance; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "name",
@@ -1701,7 +1701,7 @@
             },
             {
               "long": "size",
-              "help": "Boot disk size. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+              "help": "Boot disk size; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "start",
@@ -3726,7 +3726,7 @@
                 },
                 {
                   "long": "memory",
-                  "help": "The amount of RAM available for running instances in the Silo. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+                  "help": "The amount of RAM available for running instances in the Silo; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
                 },
                 {
                   "long": "profile",
@@ -3739,7 +3739,7 @@
                 },
                 {
                   "long": "storage",
-                  "help": "The amount of storage available for disks or snapshots. Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib)."
+                  "help": "The amount of storage available for disks or snapshots; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
                 }
               ]
             },
