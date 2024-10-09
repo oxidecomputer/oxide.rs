@@ -57,6 +57,7 @@ assert_cmd = { workspace = true }
 dropshot = { workspace = true }
 expectorate = { workspace = true }
 httpmock = { workspace = true }
+libc = { workspace = true }
 oxide-httpmock = { workspace = true }
 predicates = { workspace = true }
 pretty_assertions = { workspace = true }
