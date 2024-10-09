@@ -640,7 +640,7 @@ impl CommandExt for Command {
 /// For Args that take a `ByteCount`, append a message on the unit formatting accepted and remove
 /// any reference to the field taking bytes as an argument.
 fn update_byte_count_help(arg: Arg) -> Arg {
-    const UNIT_HINT: &str = "Units are in powers of two (e.g., 1k = 1024 bytes); use suffixes like k, KiB (e.g., 6GiB, 512k, 2048mib).";
+    const UNIT_HINT: &str = "unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib
 
     let parser = arg.get_value_parser();
     if parser.type_id() == TypeId::of::<ByteCount>() {
