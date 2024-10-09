@@ -225,7 +225,7 @@ impl CmdAuthLogin {
 
         let token = auth_client
             .exchange_device_access_token(&details)
-            .request_async(client, tokio::time::sleep, Some(Duration::from_secs(10)))
+            .request_async(client, tokio::time::sleep, None)
             .await?
             .access_token()
             .secret()
