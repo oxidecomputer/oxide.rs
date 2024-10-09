@@ -650,7 +650,7 @@ fn update_byte_count_help(arg: Arg) -> Arg {
             .map(|h| h.to_string().replace(" (in bytes)", ""));
 
         arg.help(match old_help {
-            Some(old) => format!("{old}. {UNIT_HINT}"),
+            Some(old) => format!("{old}; {UNIT_HINT}"),
             None => UNIT_HINT.to_string(),
         })
     } else {
