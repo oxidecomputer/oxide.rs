@@ -570,11 +570,15 @@ mod tests {
         use assert_cmd::Command;
         use predicates::str;
 
+        let temp_dir = tempfile::tempdir().unwrap().into_path();
+
         let bad_url = "sys.oxide.invalid";
 
         // Validate connection error details are printed
         Command::cargo_bin("oxide")
             .unwrap()
+            .arg("--config-dir")
+            .arg(temp_dir.as_os_str())
             .arg("auth")
             .arg("login")
             .arg("--host")
