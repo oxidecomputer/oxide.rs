@@ -545,7 +545,6 @@ impl CmdAuthStatus {
                 } else if error.is_connect() {
                     // Reqwest will just tell us there was an error; we want to
                     // look at its internal error to understand the cause.
-                    // Regardless this is reflective of a programming error.
                     let details = error
                         .source()
                         .map_or("(no details)".to_string(), ToString::to_string);
