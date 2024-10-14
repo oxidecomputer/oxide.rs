@@ -568,3 +568,23 @@ fn test_cmd_auth_status_env() {
         ));
     oxide_mock.assert();
 }
+
+#[test]
+fn test_cmd_auth_debug_logging() {
+    let server = MockServer::start();
+    let bad_url = "sys.oxide.invalid";
+
+    // Validate debug logs are printed
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-bad")
+        .arg("--debug")
+        .arg("auth")
+        .arg("login")
+        .arg("--host")
+        .arg(bad_url)
+        .assert()
+        .failure()
+        .stderr(str::contains("DEBUG"));
+}
