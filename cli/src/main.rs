@@ -98,8 +98,6 @@ pub fn make_cli() -> NewCli<'static> {
 
 #[tokio::main]
 async fn main() {
-    env_logger::init();
-
     let new_cli = make_cli();
 
     // Spawn a task so we get this potentially chunky Future off the
