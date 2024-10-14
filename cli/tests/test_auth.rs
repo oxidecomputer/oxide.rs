@@ -562,6 +562,9 @@ fn test_cmd_auth_status_env() {
         .env("OXIDE_TOKEN", "oxide-token-bad")
         .assert()
         .success()
-        .stdout(format!("{}: Error Response: oops\n", server.url("")));
+        .stdout(format!(
+            "{}: Server responded with an error message: oops\n",
+            server.url("")
+        ));
     oxide_mock.assert();
 }
