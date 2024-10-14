@@ -229,9 +229,11 @@ impl<'a> NewCli<'a> {
             timeout,
         } = OxideCli::from_arg_matches(&matches).unwrap();
 
+        let mut log_builder = env_logger::builder();
         if debug {
-            env_logger::builder().filter_level(LevelFilter::Debug);
+            log_builder.filter_level(LevelFilter::Debug);
         }
+        log_builder.init();
 
         let mut client_config = ClientConfig::default();
 
