@@ -1519,7 +1519,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -2203,7 +2203,7 @@ dependencies = [
  "clap",
  "dirs",
  "futures",
- "progenitor-client 0.7.0",
+ "progenitor-client 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand",
  "regress",
  "reqwest 0.11.27",
@@ -2533,21 +2533,21 @@ name = "progenitor"
 version = "0.8.0"
 source = "git+https://github.com/oxidecomputer/progenitor#e507f30e1701a8ec925734e683dc0dda5f426143"
 dependencies = [
- "progenitor-client 0.8.0",
+ "progenitor-client 0.8.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
  "progenitor-macro",
 ]
 
 [[package]]
 name = "progenitor-client"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cbd37f0c1cbefc31ca9e1a046edbffb9bd549742f58c1316c88119eb7a29493a"
+checksum = "d4a5db54eac3cae7007a0785854bc3e89fd418cca7dfc2207b99b43979154c1b"
 dependencies = [
  "bytes",
  "futures-core",
  "percent-encoding",
- "reqwest 0.11.27",
+ "reqwest 0.12.8",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -2770,12 +2770,10 @@ dependencies = [
  "tokio",
  "tokio-native-tls",
  "tokio-rustls 0.24.1",
- "tokio-util",
  "tower-service",
  "url",
  "wasm-bindgen",
  "wasm-bindgen-futures",
- "wasm-streams",
  "web-sys",
  "webpki-roots",
  "winreg",
