@@ -2196,7 +2196,7 @@ dependencies = [
 
 [[package]]
 name = "oxide"
-version = "0.7.0+20240821.0"
+version = "0.8.0+20241009.0"
 dependencies = [
  "base64 0.22.1",
  "chrono",
@@ -2219,7 +2219,7 @@ dependencies = [
 
 [[package]]
 name = "oxide-cli"
-version = "0.7.0+20240821.0"
+version = "0.8.0+20241009.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
@@ -2270,7 +2270,7 @@ dependencies = [
 
 [[package]]
 name = "oxide-httpmock"
-version = "0.7.0+20240821.0"
+version = "0.8.0+20241009.0"
 dependencies = [
  "chrono",
  "httpmock",
