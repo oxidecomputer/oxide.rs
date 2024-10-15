@@ -516,10 +516,15 @@ impl CmdAuthStatus {
                 if error.is_timeout() {
                     "Request timed out".to_string()
                 } else if error.is_connect() {
-                    // Reqwest will just tell us there was an error; we want to
-                    // look at its internal error to understand the cause.
+                    // Unfortunately this relies on internal knowledge of
+                    // reqwest::Error. In particular, in this case its source
+                    // will be a hyper_util::client::legacy::Error. Both the
+                    // reqwest error and the hyper_util error effectively add
+                    // no useful information. We therefore descend twice into
+                    // the source list to find a useful error to report.
                     let details = error
                         .source()
+                        .and_then(Error::source)
                         .map_or("(no details)".to_string(), ToString::to_string);
                     format!("Failed to connect to server: {}", details)
                 } else {
