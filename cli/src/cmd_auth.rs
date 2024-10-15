@@ -13,10 +13,8 @@ use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
-use oauth2::{
-    basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
-    ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
-};
+use oauth2::{basic::BasicClient, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenUrl};
+use oauth2::{StandardDeviceAuthorizationResponse, TokenResponse};
 use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientSessionExt};
 use std::time::Duration;
@@ -187,28 +185,6 @@ impl CmdAuthLogin {
             .make_unauthenticated_client_builder()
             .redirect(reqwest::redirect::Policy::none())
             .build()?;
-        // Copied from oauth2::async_http_client to customize the
-        // reqwest::Client with the top-level command-line options.
-        let async_http_client_custom = |request: oauth2::HttpRequest| async move {
-            let mut request_builder = client
-                .request(request.method, request.url.as_str())
-                .body(request.body);
-            for (name, value) in &request.headers {
-                request_builder = request_builder.header(name.as_str(), value.as_bytes());
-            }
-            let request = request_builder.build()?;
-
-            let response = client.execute(request).await?;
-
-            let status_code = response.status();
-            let headers = response.headers().to_owned();
-            let chunks = response.bytes().await?;
-            std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
-                status_code,
-                headers,
-                body: chunks.to_vec(),
-            })
-        };
 
         // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
         let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
@@ -216,18 +192,15 @@ impl CmdAuthLogin {
         // since we're not doing that and this ID would be public if it were
         // static, we just generate a random one each time we authenticate.
         let client_id = Uuid::new_v4();
-        let auth_client = BasicClient::new(
-            ClientId::new(client_id.to_string()),
-            None,
-            AuthUrl::new(format!("{}authorize", &self.host))?,
-            Some(TokenUrl::new(format!("{}device/token", &self.host))?),
-        )
-        .set_auth_type(AuthType::RequestBody)
-        .set_device_authorization_url(device_auth_url);
+        let auth_client = BasicClient::new(ClientId::new(client_id.to_string()))
+            .set_auth_uri(AuthUrl::new(format!("{}authorize", &self.host))?)
+            .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
+            .set_auth_type(AuthType::RequestBody)
+            .set_device_authorization_url(device_auth_url);
 
         let details: StandardDeviceAuthorizationResponse = auth_client
-            .exchange_device_code()?
-            .request_async(async_http_client_custom)
+            .exchange_device_code()
+            .request_async(client)
             .await?;
 
         let uri = details.verification_uri().to_string();
@@ -253,7 +226,7 @@ impl CmdAuthLogin {
 
         let token = auth_client
             .exchange_device_access_token(&details)
-            .request_async(async_http_client_custom, tokio::time::sleep, None)
+            .request_async(client, tokio::time::sleep, None)
             .await?
             .access_token()
             .secret()
@@ -543,10 +516,15 @@ impl CmdAuthStatus {
                 if error.is_timeout() {
                     "Request timed out".to_string()
                 } else if error.is_connect() {
-                    // Reqwest will just tell us there was an error; we want to
-                    // look at its internal error to understand the cause.
+                    // Unfortunately this relies on internal knowledge of
+                    // reqwest::Error. In particular, in this case its source
+                    // will be a hyper_util::client::legacy::Error. Both the
+                    // reqwest error and the hyper_util error effectively add
+                    // no useful information. We therefore descend twice into
+                    // the source list to find a useful error to report.
                     let details = error
                         .source()
+                        .and_then(Error::source)
                         .map_or("(no details)".to_string(), ToString::to_string);
                     format!("Failed to connect to server: {}", details)
                 } else {
@@ -639,8 +617,8 @@ mod tests {
             .arg(bad_url)
             .assert()
             .failure()
-            .stderr(str::starts_with(format!(
-                "Request failed: error sending request for url (https://{bad_url}/device/auth):"
+            .stderr(str::starts_with(&format!(
+                "Request failed: request failed: error sending request for url (https://{bad_url}/device/auth):"
             )));
     }
 

@@ -1,4 +1,4 @@
 Profile "jennifer" (<TEST-SERVER>) status: Authenticated
 Profile "lightman" (<TEST-SERVER>) status: Authenticated
 Profile "malvin" (<TEST-SERVER>) status: Server responded with an error message: ** IMPROPER REQUEST **
-Profile "sting" (https://unresolvabledomainnameihope) status: Failed to connect to server: error trying to connect: 
+Profile "sting" (https://unresolvabledomainnameihope) status: Failed to connect to server: 
