@@ -532,6 +532,7 @@ fn test_disk_import_bad_file_size() {
 // Test for required parameters being supplied
 #[test]
 fn test_disk_import_required_parameters() {
+    let temp_dir = tempfile::tempdir().unwrap().into_path();
     let test_file = Testfile::new_random(512 + 1).unwrap();
 
     // only supplying --image-description won't work
@@ -546,6 +547,8 @@ fn test_disk_import_required_parameters() {
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -574,6 +577,8 @@ fn test_disk_import_required_parameters() {
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -599,6 +604,8 @@ fn test_disk_import_required_parameters() {
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -636,6 +643,8 @@ fn test_disk_import_required_parameters() {
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")

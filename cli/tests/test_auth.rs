@@ -562,6 +562,26 @@ fn test_cmd_auth_status_env() {
         .env("OXIDE_TOKEN", "oxide-token-bad")
         .assert()
         .success()
-        .stdout(format!("{}: Error Response: oops\n", server.url("")));
+        .stdout(format!(
+            "{}: Server responded with an error message: oops\n",
+            server.url("")
+        ));
     oxide_mock.assert();
+}
+
+#[test]
+fn test_cmd_auth_debug_logging() {
+    let bad_url = "sys.oxide.invalid";
+
+    // Validate debug logs are printed
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("--debug")
+        .arg("auth")
+        .arg("login")
+        .arg("--host")
+        .arg(bad_url)
+        .assert()
+        .failure()
+        .stderr(str::contains("DEBUG"));
 }

@@ -221,19 +221,19 @@ pub struct CmdInstanceFromImage {
     #[clap(long)]
     project: NameOrId,
 
-    /// Description of the instance to create
+    /// Description of the instance
     #[clap(long)]
     description: String,
 
-    /// Hostname of the instance to create
+    /// The hostname to be assigned to the instance
     #[clap(long)]
     hostname: String,
 
-    /// Instance memory e.g 32M. Suffix can be k,m,g,t
+    /// Amount of RAM to be allocated to the instance
     #[clap(long)]
     memory: ByteCount,
 
-    /// Instance CPU count
+    /// Number of vCPUs to be allocated to the instance
     #[clap(long)]
     ncpus: InstanceCpuCount,
 
@@ -241,7 +241,7 @@ pub struct CmdInstanceFromImage {
     #[clap(long)]
     image: NameOrId,
 
-    /// Boot disk size e.g. 512G. Suffix can be k,m,g,t
+    /// Boot disk size
     #[clap(long)]
     size: ByteCount,
 

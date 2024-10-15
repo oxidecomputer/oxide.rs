@@ -4,6 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
+use std::error::Error;
 use std::fs::{File, OpenOptions};
 use std::io::{self, Write};
 use std::path::Path;
@@ -511,8 +512,61 @@ impl CmdAuthStatus {
 
     fn error_msg(e: &oxide::Error<oxide::types::Error>) -> String {
         match e {
-            oxide::Error::ErrorResponse(ee) => format!("Error Response: {}", ee.message),
-            ee => ee.to_string(),
+            oxide::Error::CommunicationError(error) => {
+                if error.is_timeout() {
+                    "Request timed out".to_string()
+                } else if error.is_connect() {
+                    // Reqwest will just tell us there was an error; we want to
+                    // look at its internal error to understand the cause.
+                    let details = error
+                        .source()
+                        .map_or("(no details)".to_string(), ToString::to_string);
+                    format!("Failed to connect to server: {}", details)
+                } else {
+                    let mut msg = "Unexpected error".to_string();
+                    let mut next = Some(error as &(dyn std::error::Error + 'static));
+                    while let Some(ee) = next {
+                        msg += ": ";
+                        msg += &ee.to_string();
+                        next = ee.source();
+                    }
+                    msg
+                }
+            }
+            oxide::Error::ErrorResponse(response_value) => {
+                format!(
+                    "Server responded with an error message: {}",
+                    response_value.message,
+                )
+            }
+            oxide::Error::ResponseBodyError(_) => "Error reading the server's response".to_string(),
+            oxide::Error::InvalidResponsePayload(bytes, error) => {
+                // While this output might be big, it's a pretty unlikely
+                // failure mode for which we might reasonably want to see the
+                // output.
+                format!(
+                    "Server responded with unexpected data: {} {}",
+                    error,
+                    bytes.escape_ascii(),
+                )
+            }
+            oxide::Error::UnexpectedResponse(response) => {
+                format!(
+                    "Server responded with an unexpected status: {}",
+                    response.status()
+                )
+            }
+            oxide::Error::InvalidRequest(msg) => {
+                // This would be indicative of a programming error where we
+                // didn't supply all required values.
+                format!("Internal error: {}", msg)
+            }
+            oxide::Error::InvalidUpgrade(_) => {
+                unreachable!("auth should not be establishing a websocket")
+            }
+            oxide::Error::PreHookError(_) => {
+                unreachable!("there is no pre-hook")
+            }
         }
     }
 }
@@ -543,11 +597,15 @@ mod tests {
         use assert_cmd::Command;
         use predicates::str;
 
+        let temp_dir = tempfile::tempdir().unwrap().into_path();
+
         let bad_url = "sys.oxide.invalid";
 
         // Validate connection error details are printed
         Command::cargo_bin("oxide")
             .unwrap()
+            .arg("--config-dir")
+            .arg(temp_dir.as_os_str())
             .arg("auth")
             .arg("login")
             .arg("--host")
