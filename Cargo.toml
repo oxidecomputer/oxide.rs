@@ -50,7 +50,7 @@ reqwest = "0.12.8"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.210", features = ["derive"] }
-serde_json = "1.0.127"
+serde_json = "1.0.132"
 similar = "2.6.0"
 tabwriter = "1.4.0"
 thiserror = { version = "1", default-features = false }
