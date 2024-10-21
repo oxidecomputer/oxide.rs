@@ -893,7 +893,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#e57aad3a19c5b6ef4f3cc7958dc1079b184370b9"
+source = "git+https://github.com/oxidecomputer/dropshot#115dd34e1cfecb69d65067c7da3b20e06f88f41e"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -908,7 +908,7 @@ dependencies = [
  "hostname 0.4.0",
  "http 1.1.0",
  "http-body-util",
- "hyper 1.4.1",
+ "hyper 1.5.0",
  "hyper-util",
  "indexmap",
  "multer",
@@ -941,7 +941,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#e57aad3a19c5b6ef4f3cc7958dc1079b184370b9"
+source = "git+https://github.com/oxidecomputer/dropshot#115dd34e1cfecb69d65067c7da3b20e06f88f41e"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -1508,9 +1508,9 @@ dependencies = [
 
 [[package]]
 name = "hyper"
-version = "1.4.1"
+version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "50dfd22e0e76d0f662d429a5f80fcaf3855009297eab6a0a9f8543834744ba05"
+checksum = "bbbff0a806a4728c99295b254c8838933b5b082d75e3cb70c8dab21fdfbcfa9a"
 dependencies = [
  "bytes",
  "futures-channel",
@@ -1535,7 +1535,7 @@ checksum = "08afdbb5c31130e3034af566421053ab03787c640246a446327f550d11bcb333"
 dependencies = [
  "futures-util",
  "http 1.1.0",
- "hyper 1.4.1",
+ "hyper 1.5.0",
  "hyper-util",
  "rustls 0.23.12",
  "rustls-pki-types",
@@ -1553,7 +1553,7 @@ checksum = "70206fc6890eaca9fde8a0bf71caa2ddfc9fe045ac9e5c70df101a7dbde866e0"
 dependencies = [
  "bytes",
  "http-body-util",
- "hyper 1.4.1",
+ "hyper 1.5.0",
  "hyper-util",
  "native-tls",
  "tokio",
@@ -1572,7 +1572,7 @@ dependencies = [
  "futures-util",
  "http 1.1.0",
  "http-body 1.0.1",
- "hyper 1.4.1",
+ "hyper 1.5.0",
  "pin-project-lite",
  "socket2 0.5.7",
  "tokio",
@@ -2076,7 +2076,7 @@ version = "5.0.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23d385da3c602d29036d2f70beed71c36604df7570be17fed4c5b839616785bf"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.21.7",
  "chrono",
  "getrandom",
  "http 1.1.0",
@@ -2785,7 +2785,7 @@ dependencies = [
  "http 1.1.0",
  "http-body 1.0.1",
  "http-body-util",
- "hyper 1.4.1",
+ "hyper 1.5.0",
  "hyper-rustls",
  "hyper-tls",
  "hyper-util",
@@ -3084,9 +3084,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.128"
+version = "1.0.132"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ff5456707a1de34e7e37f2a6fd3d3f808c318259cbd01ab6377795054b483d8"
+checksum = "d726bfaff4b320266d395898905d0eba0345aae23b54aee3a737e260fd46db03"
 dependencies = [
  "itoa",
  "memchr",
@@ -3991,9 +3991,9 @@ checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
 
 [[package]]
 name = "uuid"
-version = "1.10.0"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81dfa00651efa65069b0b6b651f4aaa31ba9e3c3ce0137aaad053604ee7e0314"
+checksum = "f8c5f0a0af699448548ad1a2fbf920fb4bee257eae39953ba95cb84891a0446a"
 dependencies = [
  "getrandom",
  "serde",
