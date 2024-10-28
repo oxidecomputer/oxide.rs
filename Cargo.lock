@@ -110,9 +110,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.90"
+version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37bf3594c4c988a53154954629820791dde498571819ae4ca50ca811e060cc95"
+checksum = "c042108f3ed77fd83760a5fd79b53be043192bb3b9dba91d8c574c0ada7850c8"
 
 [[package]]
 name = "ascii-canvas"
@@ -599,9 +599,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.33"
+version = "4.5.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9646e2e245bf62f45d39a0f3f36f1171ad1ea0d6967fd114bca72cb02a8fcdfb"
+checksum = "07a13ab5b8cb13dbe35e68b83f6c12f9293b2f601797b71bc9f23befdb329feb"
 dependencies = [
  "clap",
 ]
@@ -893,7 +893,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#115dd34e1cfecb69d65067c7da3b20e06f88f41e"
+source = "git+https://github.com/oxidecomputer/dropshot#203bff4fd608e73d22ac969810c7e1f23fe946d5"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -941,7 +941,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#115dd34e1cfecb69d65067c7da3b20e06f88f41e"
+source = "git+https://github.com/oxidecomputer/dropshot#203bff4fd608e73d22ac969810c7e1f23fe946d5"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -2076,7 +2076,7 @@ version = "5.0.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23d385da3c602d29036d2f70beed71c36604df7570be17fed4c5b839616785bf"
 dependencies = [
- "base64 0.21.7",
+ "base64 0.22.1",
  "chrono",
  "getrandom",
  "http 1.1.0",
@@ -2733,9 +2733,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.11.0"
+version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38200e5ee88914975b69f657f0801b6f6dccafd44fd9326302a4aaeecfacb1d8"
+checksum = "b544ef1b4eac5dc2db33ea63606ae9ffcfac26c1416a2806ae0bf5f56b201191"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -2772,9 +2772,9 @@ dependencies = [
 
 [[package]]
 name = "reqwest"
-version = "0.12.8"
+version = "0.12.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f713147fbe92361e52392c73b8c9e48c04c6625bce969ef54dc901e58e042a7b"
+checksum = "a77c62af46e79de0a562e1a9849205ffcb7fc1238876e9bd743357570e04046f"
 dependencies = [
  "base64 0.22.1",
  "bytes",
@@ -3053,18 +3053,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.210"
+version = "1.0.214"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c8e3592472072e6e22e0a54d5904d9febf8508f65fb8552499a1abc7d1078c3a"
+checksum = "f55c3193aca71c12ad7890f1785d2b73e1b9f63a0bbc353c08ef26fe03fc56b5"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.210"
+version = "1.0.214"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "243902eda00fad750862fc144cea25caca5e20d615af0a81bee94ca738f1df1f"
+checksum = "de523f781f095e28fa605cdce0f8307e451cc0fd14e2eb4cd2e98a355b147766"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3643,9 +3643,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.40.0"
+version = "1.41.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2b070231665d27ad9ec9b8df639893f46727666c6767db40317fbe920a5d998"
+checksum = "145f3413504347a2be84393cc8a7d2fb4d863b375909ea59f2158261aa258bbb"
 dependencies = [
  "backtrace",
  "bytes",
