@@ -465,12 +465,26 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
         CliCommand::NetworkingSwitchPortStatus => Some("system hardware switch-port status"),
 
+        // TODO: deprecate?
+        // how do we go about deprecating commands?
         CliCommand::NetworkingSwitchPortApplySettings => {
-            Some("system hardware switch-port configuration apply")
+            Some("system hardware switch-port apply-settings")
         }
         CliCommand::NetworkingSwitchPortClearSettings => {
-            Some("system hardware switch-port configuration remove")
+            Some("system hardware switch-port clear-settings")
         }
+
+        // Use these instead
+        CliCommand::NetworkingSwitchPortActiveConfigurationView => {
+            Some("system hardware switch-port active-configuration view")
+        }
+        CliCommand::NetworkingSwitchPortActiveConfigurationSet => {
+            Some("system hardware switch-port active-configuration set")
+        }
+        CliCommand::NetworkingSwitchPortActiveConfigurationClear => {
+            Some("system hardware switch-port active-configuration clear")
+        }
+
         CliCommand::NetworkingSwitchPortConfigurationList => {
             Some("system networking switch-port configuration list")
         }

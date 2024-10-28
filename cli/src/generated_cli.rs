@@ -122,6 +122,15 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
+            CliCommand::NetworkingSwitchPortActiveConfigurationView => {
+                Self::cli_networking_switch_port_active_configuration_view()
+            }
+            CliCommand::NetworkingSwitchPortActiveConfigurationSet => {
+                Self::cli_networking_switch_port_active_configuration_set()
+            }
+            CliCommand::NetworkingSwitchPortActiveConfigurationClear => {
+                Self::cli_networking_switch_port_active_configuration_clear()
+            }
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledAdd => Self::cli_sled_add(),
             CliCommand::SledView => Self::cli_sled_view(),
@@ -216,11 +225,11 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingSwitchPortConfigurationCreate => {
                 Self::cli_networking_switch_port_configuration_create()
             }
-            CliCommand::NetworkingSwitchPortConfigurationDelete => {
-                Self::cli_networking_switch_port_configuration_delete()
-            }
             CliCommand::NetworkingSwitchPortConfigurationView => {
                 Self::cli_networking_switch_port_configuration_view()
+            }
+            CliCommand::NetworkingSwitchPortConfigurationDelete => {
+                Self::cli_networking_switch_port_configuration_delete()
             }
             CliCommand::NetworkingSwitchPortConfigurationAddressList => {
                 Self::cli_networking_switch_port_configuration_address_list()
@@ -681,7 +690,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
+                    .required(true)
+                    .help("Name or ID of the certificate"),
             )
             .about("Fetch certificate")
             .long_about("Returns the details of a specific certificate")
@@ -693,7 +703,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("certificate")
                     .long("certificate")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
+                    .required(true)
+                    .help("Name or ID of the certificate"),
             )
             .about("Delete certificate")
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
@@ -3415,9 +3426,126 @@ impl<T: CliConfig> Cli<T> {
                     .long("rack-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The rack's unique ID."),
+                    .help("ID of the rack"),
             )
             .about("Fetch rack")
+    }
+
+    pub fn cli_networking_switch_port_active_configuration_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("View switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_active_configuration_set() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("port-settings")
+                    .long("port-settings")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("A name or id to use when applying switch port settings."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_active_configuration_clear() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("Clear switch port configuration")
     }
 
     pub fn cli_sled_list() -> clap::Command {
@@ -3653,7 +3781,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3693,7 +3827,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3719,7 +3859,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SwitchLocation::Switch0.to_string(),
+                            types::SwitchLocation::Switch1.to_string(),
+                        ]),
+                        |s| types::SwitchLocation::try_from(s).unwrap(),
+                    ))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
@@ -3845,7 +3991,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .about("Delete user")
     }
@@ -3864,7 +4010,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -4866,8 +5012,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_config_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
+                clap::Arg::new("bgp-config")
+                    .long("bgp-config")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
@@ -5195,20 +5341,6 @@ impl<T: CliConfig> Cli<T> {
             .about("Create switch port settings")
     }
 
-    pub fn cli_networking_switch_port_configuration_delete() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("configuration")
-                    .long("configuration")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "An optional name or id to use when selecting a switch port configuration.",
-                    ),
-            )
-            .about("Delete switch port settings")
-    }
-
     pub fn cli_networking_switch_port_configuration_view() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5218,7 +5350,19 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("A name or id to use when selecting a switch port configuration."),
             )
-            .about("Get information about a named set of switch-port-settings")
+            .about("View a switch port configuration")
+    }
+
+    pub fn cli_networking_switch_port_configuration_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("configuration")
+                    .long("configuration")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting a switch port configuration."),
+            )
+            .about("Delete switch port settings")
     }
 
     pub fn cli_networking_switch_port_configuration_address_list() -> clap::Command {
@@ -5240,7 +5384,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("address")
                     .value_parser(clap::value_parser!(types::IpNet))
                     .required_unless_present("json-body")
-                    .help("The address and prefix length of this address."),
+                    .help("The address and subnet mask"),
             )
             .arg(
                 clap::Arg::new("address-lot")
@@ -5294,7 +5438,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("address")
                     .value_parser(clap::value_parser!(types::IpNet))
                     .required_unless_present("json-body")
-                    .help("The address and prefix length of this address."),
+                    .help("The address and subnet mask"),
             )
             .arg(
                 clap::Arg::new("address-lot")
@@ -5360,7 +5504,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("addr")
                     .value_parser(clap::value_parser!(types::IpNet))
                     .required_unless_present("json-body")
-                    .help("The address of th e host to peer with."),
+                    .help("The address of the host to peer with."),
             )
             .arg(
                 clap::Arg::new("allow-export-list-active")
@@ -5433,7 +5577,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(u32))
                     .required_unless_present("json-body")
                     .help(
-                        "How long to hold a peer in idle before attempting a new session \
+                        "How long to hold this peer in idle before attempting a new session \
                          (seconds).",
                     ),
             )
@@ -5443,7 +5587,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(String))
                     .required_unless_present("json-body")
                     .help(
-                        "The name of interface to peer on. This is relative to the port \
+                        "The name of the interface to peer on. This is relative to the port \
                          configuration this BGP peer configuration is a part of. For example this \
                          value could be phy0 to refer to a primary physical interface. Or it \
                          could be vlan47 to refer to a VLAN interface.",
@@ -5468,38 +5612,37 @@ impl<T: CliConfig> Cli<T> {
                     .long("md5-auth-key")
                     .value_parser(clap::value_parser!(String))
                     .required(false)
-                    .help("Use the given key for TCP-MD5 authentication with the peer."),
+                    .help("Use the given key for TCP-MD5 authentication with this peer."),
             )
             .arg(
                 clap::Arg::new("min-ttl")
                     .long("min-ttl")
                     .value_parser(clap::value_parser!(u8))
                     .required(false)
-                    .help("Require messages from a peer have a minimum IP time to live field."),
+                    .help(
+                        "Require messages from this peer to have a minimum IP time to live field.",
+                    ),
             )
             .arg(
                 clap::Arg::new("multi-exit-discriminator")
                     .long("multi-exit-discriminator")
                     .value_parser(clap::value_parser!(u32))
                     .required(false)
-                    .help(
-                        "Apply the provided multi-exit discriminator (MED) updates sent to the \
-                         peer.",
-                    ),
+                    .help("Apply a multi-exit discriminator (MED) in updates sent to this peer."),
             )
             .arg(
                 clap::Arg::new("remote-asn")
                     .long("remote-asn")
                     .value_parser(clap::value_parser!(u32))
                     .required(false)
-                    .help("Require that a peer has a specified ASN."),
+                    .help("Require that this peer have a specified ASN."),
             )
             .arg(
                 clap::Arg::new("vlan-id")
                     .long("vlan-id")
                     .value_parser(clap::value_parser!(u16))
                     .required(false)
-                    .help("Associate a VLAN ID with a peer."),
+                    .help("Associate a VLAN ID with this peer."),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -5891,7 +6034,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(String))
                     .required_unless_present("json-body")
                     .help(
-                        "The name of interface to peer on. This is relative to the port \
+                        "The name of the interface to peer on. This is relative to the port \
                          configuration this BGP peer configuration is a part of. For example this \
                          value could be phy0 to refer to a primary physical interface. Or it \
                          could be vlan47 to refer to a VLAN interface.",
@@ -6150,13 +6293,13 @@ impl<T: CliConfig> Cli<T> {
                     .help("The interface to configure the route on"),
             )
             .arg(
-                clap::Arg::new("local-pref")
-                    .long("local-pref")
-                    .value_parser(clap::value_parser!(u32))
+                clap::Arg::new("rib-priority")
+                    .long("rib-priority")
+                    .value_parser(clap::value_parser!(u8))
                     .required(false)
                     .help(
-                        "Local preference for route. Higher preference indictes precedence within \
-                         and across protocols.",
+                        "Local preference for route. Higher preference indicates precedence \
+                         within and across protocols.",
                     ),
             )
             .arg(
@@ -6214,13 +6357,13 @@ impl<T: CliConfig> Cli<T> {
                     .help("The interface to configure the route on"),
             )
             .arg(
-                clap::Arg::new("local-pref")
-                    .long("local-pref")
-                    .value_parser(clap::value_parser!(u32))
+                clap::Arg::new("rib-priority")
+                    .long("rib-priority")
+                    .value_parser(clap::value_parser!(u8))
                     .required(false)
                     .help(
-                        "Local preference for route. Higher preference indictes precedence within \
-                         and across protocols.",
+                        "Local preference for route. Higher preference indicates precedence \
+                         within and across protocols.",
                     ),
             )
             .arg(
@@ -6613,7 +6756,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("user-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The user's internal id"),
+                    .help("The user's internal ID"),
             )
             .about("Fetch built-in (system) user")
     }
@@ -7892,6 +8035,18 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
+            CliCommand::NetworkingSwitchPortActiveConfigurationView => {
+                self.execute_networking_switch_port_active_configuration_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortActiveConfigurationSet => {
+                self.execute_networking_switch_port_active_configuration_set(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortActiveConfigurationClear => {
+                self.execute_networking_switch_port_active_configuration_clear(matches)
+                    .await
+            }
             CliCommand::SledList => self.execute_sled_list(matches).await,
             CliCommand::SledAdd => self.execute_sled_add(matches).await,
             CliCommand::SledView => self.execute_sled_view(matches).await,
@@ -8041,12 +8196,12 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_networking_switch_port_configuration_create(matches)
                     .await
             }
-            CliCommand::NetworkingSwitchPortConfigurationDelete => {
-                self.execute_networking_switch_port_configuration_delete(matches)
-                    .await
-            }
             CliCommand::NetworkingSwitchPortConfigurationView => {
                 self.execute_networking_switch_port_configuration_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortConfigurationDelete => {
+                self.execute_networking_switch_port_configuration_delete(matches)
                     .await
             }
             CliCommand::NetworkingSwitchPortConfigurationAddressList => {
@@ -11494,6 +11649,119 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_switch_port_active_configuration_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_active_configuration_view();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch") {
+            request = request.switch(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_active_configuration_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_active_configuration_set(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_active_configuration_set();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
+            request = request.body_map(|body| body.port_settings(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch") {
+            request = request.switch(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_active_configuration_set(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_active_configuration_clear(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self
+            .client
+            .networking_switch_port_active_configuration_clear();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch") {
+            request = request.switch(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_active_configuration_clear(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11800,7 +12068,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -11839,7 +12107,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -11871,7 +12139,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+        if let Some(value) = matches.get_one::<types::SwitchLocation>("switch-location") {
             request = request.switch_location(value.clone());
         }
 
@@ -13215,8 +13483,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-config") {
+            request = request.bgp_config(value.clone());
         }
 
         self.config
@@ -13645,30 +13913,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_configuration_delete(
-        &self,
-        matches: &clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_switch_port_configuration_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
-            request = request.configuration(value.clone());
-        }
-
-        self.config
-            .execute_networking_switch_port_configuration_delete(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_networking_switch_port_configuration_view(
         &self,
         matches: &clap::ArgMatches,
@@ -13684,6 +13928,30 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_configuration_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_configuration_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("configuration") {
+            request = request.configuration(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_configuration_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -14621,8 +14889,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.interface(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<u32>("local-pref") {
-            request = request.body_map(|body| body.local_pref(value.clone()))
+        if let Some(value) = matches.get_one::<u8>("rib-priority") {
+            request = request.body_map(|body| body.rib_priority(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<u16>("vid") {
@@ -14673,8 +14941,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.interface(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<u32>("local-pref") {
-            request = request.body_map(|body| body.local_pref(value.clone()))
+        if let Some(value) = matches.get_one::<u8>("rib-priority") {
+            request = request.body_map(|body| body.rib_priority(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<u16>("vid") {
@@ -17130,6 +17398,30 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_switch_port_active_configuration_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortActiveConfigurationView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_active_configuration_set(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortActiveConfigurationSet,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_active_configuration_clear(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortActiveConfigurationClear,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_sled_list(
         &self,
         matches: &clap::ArgMatches,
@@ -17642,18 +17934,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_networking_switch_port_configuration_delete(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortConfigurationDelete,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_networking_switch_port_configuration_view(
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortConfigurationView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_configuration_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortConfigurationDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -18326,6 +18618,9 @@ pub enum CliCommand {
     PhysicalDiskView,
     RackList,
     RackView,
+    NetworkingSwitchPortActiveConfigurationView,
+    NetworkingSwitchPortActiveConfigurationSet,
+    NetworkingSwitchPortActiveConfigurationClear,
     SledList,
     SledAdd,
     SledView,
@@ -18390,8 +18685,8 @@ pub enum CliCommand {
     NetworkingLoopbackAddressDelete,
     NetworkingSwitchPortConfigurationList,
     NetworkingSwitchPortConfigurationCreate,
-    NetworkingSwitchPortConfigurationDelete,
     NetworkingSwitchPortConfigurationView,
+    NetworkingSwitchPortConfigurationDelete,
     NetworkingSwitchPortConfigurationAddressList,
     NetworkingSwitchPortConfigurationAddressAdd,
     NetworkingSwitchPortConfigurationAddressRemove,
@@ -18565,6 +18860,9 @@ impl CliCommand {
             CliCommand::PhysicalDiskView,
             CliCommand::RackList,
             CliCommand::RackView,
+            CliCommand::NetworkingSwitchPortActiveConfigurationView,
+            CliCommand::NetworkingSwitchPortActiveConfigurationSet,
+            CliCommand::NetworkingSwitchPortActiveConfigurationClear,
             CliCommand::SledList,
             CliCommand::SledAdd,
             CliCommand::SledView,
@@ -18629,8 +18927,8 @@ impl CliCommand {
             CliCommand::NetworkingLoopbackAddressDelete,
             CliCommand::NetworkingSwitchPortConfigurationList,
             CliCommand::NetworkingSwitchPortConfigurationCreate,
-            CliCommand::NetworkingSwitchPortConfigurationDelete,
             CliCommand::NetworkingSwitchPortConfigurationView,
+            CliCommand::NetworkingSwitchPortConfigurationDelete,
             CliCommand::NetworkingSwitchPortConfigurationAddressList,
             CliCommand::NetworkingSwitchPortConfigurationAddressAdd,
             CliCommand::NetworkingSwitchPortConfigurationAddressRemove,

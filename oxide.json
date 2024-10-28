@@ -468,6 +468,7 @@
           {
             "in": "path",
             "name": "certificate",
+            "description": "Name or ID of the certificate",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
@@ -504,6 +505,7 @@
           {
             "in": "path",
             "name": "certificate",
+            "description": "Name or ID of the certificate",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/NameOrId"
@@ -4879,7 +4881,7 @@
           {
             "in": "path",
             "name": "rack_id",
-            "description": "The rack's unique ID.",
+            "description": "ID of the rack",
             "required": true,
             "schema": {
               "type": "string",
@@ -4897,6 +4899,169 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/system/hardware/racks/{rack_id}/switch/{switch}/switch-port/{port}/configuration": {
+      "get": {
+        "tags": [
+          "system/hardware"
+        ],
+        "summary": "View switch port configuration",
+        "operationId": "networking_switch_port_active_configuration_view",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "port",
+            "description": "A name to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          },
+          {
+            "in": "path",
+            "name": "rack_id",
+            "description": "A rack id to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "switch",
+            "description": "A switch location to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SwitchLocation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwitchPortSettings"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "system/hardware"
+        ],
+        "summary": "Set switch port configuration",
+        "operationId": "networking_switch_port_active_configuration_set",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "port",
+            "description": "A name to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          },
+          {
+            "in": "path",
+            "name": "rack_id",
+            "description": "A rack id to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "switch",
+            "description": "A switch location to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SwitchLocation"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchPortApplySettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "resource updated"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "system/hardware"
+        ],
+        "summary": "Clear switch port configuration",
+        "operationId": "networking_switch_port_active_configuration_clear",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "port",
+            "description": "A name to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Name"
+            }
+          },
+          {
+            "in": "path",
+            "name": "rack_id",
+            "description": "A rack id to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "switch",
+            "description": "A switch location to use when selecting switch ports.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SwitchLocation"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "successful deletion"
           },
           "4XX": {
             "$ref": "#/components/responses/Error"
@@ -5381,7 +5546,7 @@
             "description": "A switch location to use when selecting switch ports.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Name"
+              "$ref": "#/components/schemas/SwitchLocation"
             }
           }
         ],
@@ -5405,7 +5570,8 @@
           "5XX": {
             "$ref": "#/components/responses/Error"
           }
-        }
+        },
+        "deprecated": true
       },
       "delete": {
         "tags": [
@@ -5439,7 +5605,7 @@
             "description": "A switch location to use when selecting switch ports.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Name"
+              "$ref": "#/components/schemas/SwitchLocation"
             }
           }
         ],
@@ -5453,7 +5619,8 @@
           "5XX": {
             "$ref": "#/components/responses/Error"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/v1/system/hardware/switch-port/{port}/status": {
@@ -5489,7 +5656,7 @@
             "description": "A switch location to use when selecting switch ports.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Name"
+              "$ref": "#/components/schemas/SwitchLocation"
             }
           }
         ],
@@ -5740,7 +5907,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal id",
+            "description": "The user's internal ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -5782,7 +5949,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal id",
+            "description": "The user's internal ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -7295,7 +7462,9 @@
             "$ref": "#/components/responses/Error"
           }
         }
-      },
+      }
+    },
+    "/v1/system/networking/bgp/{bgp_config}": {
       "delete": {
         "tags": [
           "system/networking"
@@ -7304,8 +7473,8 @@
         "operationId": "networking_bgp_config_delete",
         "parameters": [
           {
-            "in": "query",
-            "name": "name_or_id",
+            "in": "path",
+            "name": "bgp_config",
             "description": "A name or id to use when selecting BGP config.",
             "required": true,
             "schema": {
@@ -7406,8 +7575,8 @@
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "successful creation",
+          "200": {
+            "description": "successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -7896,34 +8065,6 @@
             "$ref": "#/components/responses/Error"
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "system/networking"
-        ],
-        "summary": "Delete switch port settings",
-        "operationId": "networking_switch_port_configuration_delete",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "configuration",
-            "description": "An optional name or id to use when selecting a switch port configuration.",
-            "schema": {
-              "$ref": "#/components/schemas/NameOrId"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "successful deletion"
-          },
-          "4XX": {
-            "$ref": "#/components/responses/Error"
-          },
-          "5XX": {
-            "$ref": "#/components/responses/Error"
-          }
-        }
       }
     },
     "/v1/system/networking/switch-port-configuration/{configuration}": {
@@ -7931,7 +8072,7 @@
         "tags": [
           "system/networking"
         ],
-        "summary": "Get information about a named set of switch-port-settings",
+        "summary": "View a switch port configuration",
         "operationId": "networking_switch_port_configuration_view",
         "parameters": [
           {
@@ -7954,6 +8095,35 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Delete switch port settings",
+        "operationId": "networking_switch_port_configuration_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "configuration",
+            "description": "A name or id to use when selecting a switch port configuration.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NameOrId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "successful deletion"
           },
           "4XX": {
             "$ref": "#/components/responses/Error"
@@ -9730,7 +9900,7 @@
           {
             "in": "path",
             "name": "user_id",
-            "description": "The user's internal id",
+            "description": "The user's internal ID",
             "required": true,
             "schema": {
               "type": "string",
@@ -11508,7 +11678,7 @@
         "type": "object",
         "properties": {
           "address": {
-            "description": "The address and prefix length of this address.",
+            "description": "The address and subnet mask",
             "allOf": [
               {
                 "$ref": "#/components/schemas/IpNet"
@@ -11537,11 +11707,11 @@
         ]
       },
       "AddressAddRemove": {
-        "description": "An address to be added or removed from an interface",
+        "description": "An address to be added to or removed from an interface",
         "type": "object",
         "properties": {
           "address": {
-            "description": "The address and prefix length of this address.",
+            "description": "The address and subnet mask",
             "allOf": [
               {
                 "$ref": "#/components/schemas/IpNet"
@@ -12533,7 +12703,7 @@
         "type": "object",
         "properties": {
           "addr": {
-            "description": "The address of th e host to peer with.",
+            "description": "The address of the host to peer with.",
             "allOf": [
               {
                 "$ref": "#/components/schemas/IpNet"
@@ -12579,13 +12749,13 @@
             "minimum": 0
           },
           "idle_hold_time": {
-            "description": "How long to hold a peer in idle before attempting a new session (seconds).",
+            "description": "How long to hold this peer in idle before attempting a new session (seconds).",
             "type": "integer",
             "format": "uint32",
             "minimum": 0
           },
           "interface_name": {
-            "description": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
+            "description": "The name of the interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
             "type": "string"
           },
           "keepalive": {
@@ -12603,33 +12773,33 @@
           },
           "md5_auth_key": {
             "nullable": true,
-            "description": "Use the given key for TCP-MD5 authentication with the peer.",
+            "description": "Use the given key for TCP-MD5 authentication with this peer.",
             "type": "string"
           },
           "min_ttl": {
             "nullable": true,
-            "description": "Require messages from a peer have a minimum IP time to live field.",
+            "description": "Require messages from this peer to have a minimum IP time to live field.",
             "type": "integer",
             "format": "uint8",
             "minimum": 0
           },
           "multi_exit_discriminator": {
             "nullable": true,
-            "description": "Apply the provided multi-exit discriminator (MED) updates sent to the peer.",
+            "description": "Apply a multi-exit discriminator (MED) in updates sent to this peer.",
             "type": "integer",
             "format": "uint32",
             "minimum": 0
           },
           "remote_asn": {
             "nullable": true,
-            "description": "Require that a peer has a specified ASN.",
+            "description": "Require that this peer have a specified ASN.",
             "type": "integer",
             "format": "uint32",
             "minimum": 0
           },
           "vlan_id": {
             "nullable": true,
-            "description": "Associate a VLAN ID with a peer.",
+            "description": "Associate a VLAN ID with this peer.",
             "type": "integer",
             "format": "uint16",
             "minimum": 0
@@ -12659,7 +12829,7 @@
             "format": "ip"
           },
           "allowed_export": {
-            "description": "Define export policy for a peer.",
+            "description": "Define export policy for this peer.",
             "allOf": [
               {
                 "$ref": "#/components/schemas/ImportExportPolicy"
@@ -12667,7 +12837,7 @@
             ]
           },
           "allowed_import": {
-            "description": "Define import policy for a peer.",
+            "description": "Define import policy for this peer.",
             "allOf": [
               {
                 "$ref": "#/components/schemas/ImportExportPolicy"
@@ -12683,7 +12853,7 @@
             ]
           },
           "communities": {
-            "description": "Include the provided communities in updates sent to the peer.",
+            "description": "Include the provided communities in updates sent to this peer.",
             "type": "array",
             "items": {
               "type": "integer",
@@ -12720,7 +12890,7 @@
             "minimum": 0
           },
           "interface_name": {
-            "description": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
+            "description": "The name of the interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
             "type": "string"
           },
           "keepalive": {
@@ -12738,33 +12908,33 @@
           },
           "md5_auth_key": {
             "nullable": true,
-            "description": "Use the given key for TCP-MD5 authentication with the peer.",
+            "description": "Use the given key for TCP-MD5 authentication with this peer.",
             "type": "string"
           },
           "min_ttl": {
             "nullable": true,
-            "description": "Require messages from a peer have a minimum IP time to live field.",
+            "description": "Require messages from this peer have a minimum IP time to live field.",
             "type": "integer",
             "format": "uint8",
             "minimum": 0
           },
           "multi_exit_discriminator": {
             "nullable": true,
-            "description": "Apply the provided multi-exit discriminator (MED) updates sent to the peer.",
+            "description": "Apply a multi-exit discriminator (MED) in updates sent to this peer.",
             "type": "integer",
             "format": "uint32",
             "minimum": 0
           },
           "remote_asn": {
             "nullable": true,
-            "description": "Require that a peer has a specified ASN.",
+            "description": "Require that this peer has a specified ASN.",
             "type": "integer",
             "format": "uint32",
             "minimum": 0
           },
           "vlan_id": {
             "nullable": true,
-            "description": "Associate a VLAN ID with a peer.",
+            "description": "Associate a VLAN ID with this peer.",
             "type": "integer",
             "format": "uint16",
             "minimum": 0
@@ -12817,7 +12987,7 @@
             ]
           },
           "interface_name": {
-            "description": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
+            "description": "The name of the interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface.",
             "type": "string"
           }
         },
@@ -19954,7 +20124,7 @@
           },
           "rib_priority": {
             "nullable": true,
-            "description": "Local preference for route. Higher preference indictes precedence within and across protocols.",
+            "description": "Local preference for route. Higher preference indicates precedence within and across protocols.",
             "type": "integer",
             "format": "uint8",
             "minimum": 0
@@ -19973,7 +20143,7 @@
         ]
       },
       "RouteAddRemove": {
-        "description": "A route to a destination network through a gateway address to add or remove to an interface.",
+        "description": "A network route to to add to or remove from an interface.",
         "type": "object",
         "properties": {
           "dst": {
@@ -19997,11 +20167,11 @@
               }
             ]
           },
-          "local_pref": {
+          "rib_priority": {
             "nullable": true,
-            "description": "Local preference for route. Higher preference indictes precedence within and across protocols.",
+            "description": "Local preference for route. Higher preference indicates precedence within and across protocols.",
             "type": "integer",
-            "format": "uint32",
+            "format": "uint8",
             "minimum": 0
           },
           "vid": {
@@ -21984,6 +22154,7 @@
             "type": "string"
           },
           "lldp_link_config_id": {
+            "nullable": true,
             "description": "The link-layer discovery protocol service configuration id for this link.",
             "type": "string",
             "format": "uuid"
@@ -22012,7 +22183,6 @@
           "autoneg",
           "fec",
           "link_name",
-          "lldp_link_config_id",
           "mtu",
           "port_settings_id",
           "speed"
@@ -22583,7 +22753,8 @@
               "nanoseconds",
               "volts",
               "amps",
-              "degrees_celcius"
+              "watts",
+              "degrees_celsius"
             ]
           },
           {
