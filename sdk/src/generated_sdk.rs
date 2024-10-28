@@ -639,11 +639,11 @@ pub mod types {
         }
     }
 
-    impl ToString for AddressLotKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for AddressLotKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Infra => "infra".to_string(),
-                Self::Pool => "pool".to_string(),
+                Self::Infra => write!(f, "infra"),
+                Self::Pool => write!(f, "pool"),
             }
         }
     }
@@ -1113,13 +1113,13 @@ pub mod types {
         }
     }
 
-    impl ToString for AuthzScope {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for AuthzScope {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Fleet => "fleet".to_string(),
-                Self::Silo => "silo".to_string(),
-                Self::Project => "project".to_string(),
-                Self::ViewableToAll => "viewable_to_all".to_string(),
+                Self::Fleet => write!(f, "fleet"),
+                Self::Silo => write!(f, "silo"),
+                Self::Project => write!(f, "project"),
+                Self::ViewableToAll => write!(f, "viewable_to_all"),
             }
         }
     }
@@ -1250,11 +1250,11 @@ pub mod types {
         }
     }
 
-    impl ToString for BfdMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BfdMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SingleHop => "single_hop".to_string(),
-                Self::MultiHop => "multi_hop".to_string(),
+                Self::SingleHop => write!(f, "single_hop"),
+                Self::MultiHop => write!(f, "multi_hop"),
             }
         }
     }
@@ -1529,13 +1529,13 @@ pub mod types {
         }
     }
 
-    impl ToString for BfdState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BfdState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AdminDown => "admin_down".to_string(),
-                Self::Down => "down".to_string(),
-                Self::Init => "init".to_string(),
-                Self::Up => "up".to_string(),
+                Self::AdminDown => write!(f, "admin_down"),
+                Self::Down => write!(f, "down"),
+                Self::Init => write!(f, "init"),
+                Self::Up => write!(f, "up"),
             }
         }
     }
@@ -3163,16 +3163,16 @@ pub mod types {
         }
     }
 
-    impl ToString for BgpPeerState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for BgpPeerState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Idle => "idle".to_string(),
-                Self::Connect => "connect".to_string(),
-                Self::Active => "active".to_string(),
-                Self::OpenSent => "open_sent".to_string(),
-                Self::OpenConfirm => "open_confirm".to_string(),
-                Self::SessionSetup => "session_setup".to_string(),
-                Self::Established => "established".to_string(),
+                Self::Idle => write!(f, "idle"),
+                Self::Connect => write!(f, "connect"),
+                Self::Active => write!(f, "active"),
+                Self::OpenSent => write!(f, "open_sent"),
+                Self::OpenConfirm => write!(f, "open_confirm"),
+                Self::SessionSetup => write!(f, "session_setup"),
+                Self::Established => write!(f, "established"),
             }
         }
     }
@@ -5088,9 +5088,9 @@ pub mod types {
         }
     }
 
-    impl ToString for ByteCount {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for ByteCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -6442,36 +6442,36 @@ pub mod types {
         }
     }
 
-    impl ToString for DatumType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for DatumType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Bool => "bool".to_string(),
-                Self::I8 => "i8".to_string(),
-                Self::U8 => "u8".to_string(),
-                Self::I16 => "i16".to_string(),
-                Self::U16 => "u16".to_string(),
-                Self::I32 => "i32".to_string(),
-                Self::U32 => "u32".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::U64 => "u64".to_string(),
-                Self::F32 => "f32".to_string(),
-                Self::F64 => "f64".to_string(),
-                Self::String => "string".to_string(),
-                Self::Bytes => "bytes".to_string(),
-                Self::CumulativeI64 => "cumulative_i64".to_string(),
-                Self::CumulativeU64 => "cumulative_u64".to_string(),
-                Self::CumulativeF32 => "cumulative_f32".to_string(),
-                Self::CumulativeF64 => "cumulative_f64".to_string(),
-                Self::HistogramI8 => "histogram_i8".to_string(),
-                Self::HistogramU8 => "histogram_u8".to_string(),
-                Self::HistogramI16 => "histogram_i16".to_string(),
-                Self::HistogramU16 => "histogram_u16".to_string(),
-                Self::HistogramI32 => "histogram_i32".to_string(),
-                Self::HistogramU32 => "histogram_u32".to_string(),
-                Self::HistogramI64 => "histogram_i64".to_string(),
-                Self::HistogramU64 => "histogram_u64".to_string(),
-                Self::HistogramF32 => "histogram_f32".to_string(),
-                Self::HistogramF64 => "histogram_f64".to_string(),
+                Self::Bool => write!(f, "bool"),
+                Self::I8 => write!(f, "i8"),
+                Self::U8 => write!(f, "u8"),
+                Self::I16 => write!(f, "i16"),
+                Self::U16 => write!(f, "u16"),
+                Self::I32 => write!(f, "i32"),
+                Self::U32 => write!(f, "u32"),
+                Self::I64 => write!(f, "i64"),
+                Self::U64 => write!(f, "u64"),
+                Self::F32 => write!(f, "f32"),
+                Self::F64 => write!(f, "f64"),
+                Self::String => write!(f, "string"),
+                Self::Bytes => write!(f, "bytes"),
+                Self::CumulativeI64 => write!(f, "cumulative_i64"),
+                Self::CumulativeU64 => write!(f, "cumulative_u64"),
+                Self::CumulativeF32 => write!(f, "cumulative_f32"),
+                Self::CumulativeF64 => write!(f, "cumulative_f64"),
+                Self::HistogramI8 => write!(f, "histogram_i8"),
+                Self::HistogramU8 => write!(f, "histogram_u8"),
+                Self::HistogramI16 => write!(f, "histogram_i16"),
+                Self::HistogramU16 => write!(f, "histogram_u16"),
+                Self::HistogramI32 => write!(f, "histogram_i32"),
+                Self::HistogramU32 => write!(f, "histogram_u32"),
+                Self::HistogramI64 => write!(f, "histogram_i64"),
+                Self::HistogramU64 => write!(f, "histogram_u64"),
+                Self::HistogramF32 => write!(f, "histogram_f32"),
+                Self::HistogramF64 => write!(f, "histogram_f64"),
             }
         }
     }
@@ -6893,7 +6893,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "disk_source": {
-    ///      "description": "initial source for this disk",
+    ///      "description": "The initial source for this disk",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/DiskSource"
@@ -6904,7 +6904,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "size": {
-    ///      "description": "total size of the Disk in bytes",
+    ///      "description": "The total size of the Disk (in bytes)",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -6920,10 +6920,10 @@ pub mod types {
     )]
     pub struct DiskCreate {
         pub description: String,
-        /// initial source for this disk
+        /// The initial source for this disk
         pub disk_source: DiskSource,
         pub name: Name,
-        /// total size of the Disk in bytes
+        /// The total size of the Disk (in bytes)
         pub size: ByteCount,
     }
 
@@ -6991,15 +6991,15 @@ pub mod types {
         }
     }
 
-    impl ToString for DiskMetricName {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for DiskMetricName {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Activated => "activated".to_string(),
-                Self::Flush => "flush".to_string(),
-                Self::Read => "read".to_string(),
-                Self::ReadBytes => "read_bytes".to_string(),
-                Self::Write => "write".to_string(),
-                Self::WriteBytes => "write_bytes".to_string(),
+                Self::Activated => write!(f, "activated"),
+                Self::Flush => write!(f, "flush"),
+                Self::Read => write!(f, "read"),
+                Self::ReadBytes => write!(f, "read_bytes"),
+                Self::Write => write!(f, "write"),
+                Self::WriteBytes => write!(f, "write_bytes"),
             }
         }
     }
@@ -8228,11 +8228,11 @@ pub mod types {
         }
     }
 
-    impl ToString for FieldSource {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FieldSource {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Target => "target".to_string(),
-                Self::Metric => "metric".to_string(),
+                Self::Target => write!(f, "target"),
+                Self::Metric => write!(f, "metric"),
             }
         }
     }
@@ -8341,21 +8341,21 @@ pub mod types {
         }
     }
 
-    impl ToString for FieldType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FieldType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::String => "string".to_string(),
-                Self::I8 => "i8".to_string(),
-                Self::U8 => "u8".to_string(),
-                Self::I16 => "i16".to_string(),
-                Self::U16 => "u16".to_string(),
-                Self::I32 => "i32".to_string(),
-                Self::U32 => "u32".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::U64 => "u64".to_string(),
-                Self::IpAddr => "ip_addr".to_string(),
-                Self::Uuid => "uuid".to_string(),
-                Self::Bool => "bool".to_string(),
+                Self::String => write!(f, "string"),
+                Self::I8 => write!(f, "i8"),
+                Self::U8 => write!(f, "u8"),
+                Self::I16 => write!(f, "i16"),
+                Self::U16 => write!(f, "u16"),
+                Self::I32 => write!(f, "i32"),
+                Self::U32 => write!(f, "u32"),
+                Self::I64 => write!(f, "i64"),
+                Self::U64 => write!(f, "u64"),
+                Self::IpAddr => write!(f, "ip_addr"),
+                Self::Uuid => write!(f, "uuid"),
+                Self::Bool => write!(f, "bool"),
             }
         }
     }
@@ -8839,12 +8839,12 @@ pub mod types {
         }
     }
 
-    impl ToString for FleetRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FleetRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -9277,10 +9277,10 @@ pub mod types {
         }
     }
 
-    impl ToString for FloatingIpParentKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for FloatingIpParentKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Instance => "instance".to_string(),
+                Self::Instance => write!(f, "instance"),
             }
         }
     }
@@ -11097,10 +11097,10 @@ pub mod types {
         }
     }
 
-    impl ToString for IdSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IdAscending => "id_ascending".to_string(),
+                Self::IdAscending => write!(f, "id_ascending"),
             }
         }
     }
@@ -11321,10 +11321,10 @@ pub mod types {
         }
     }
 
-    impl ToString for IdentityProviderType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdentityProviderType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Saml => "saml".to_string(),
+                Self::Saml => write!(f, "saml"),
             }
         }
     }
@@ -11401,11 +11401,11 @@ pub mod types {
         }
     }
 
-    impl ToString for IdentityType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IdentityType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SiloUser => "silo_user".to_string(),
-                Self::SiloGroup => "silo_group".to_string(),
+                Self::SiloUser => write!(f, "silo_user"),
+                Self::SiloGroup => write!(f, "silo_group"),
             }
         }
     }
@@ -11970,6 +11970,7 @@ pub mod types {
     ///  "description": "View of an Instance",
     ///  "type": "object",
     ///  "required": [
+    ///    "auto_restart_enabled",
     ///    "description",
     ///    "hostname",
     ///    "id",
@@ -11983,6 +11984,48 @@ pub mod types {
     ///    "time_run_state_updated"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_cooldown_expiration": {
+    ///      "description": "The time at which the auto-restart cooldown period
+    /// for this instance completes, permitting it to be automatically restarted
+    /// again. If the instance enters the `Failed` state, it will not be
+    /// restarted until after this time.\n\nIf this is not present, then either
+    /// the instance has never been automatically restarted, or the cooldown
+    /// period has already expired, allowing the instance to be restarted
+    /// immediately if it fails.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "auto_restart_enabled": {
+    ///      "description": "`true` if this instance's auto-restart policy will
+    /// permit the control plane to automatically restart it if it enters the
+    /// `Failed` state.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy configured for this
+    /// instance, or `None` if no explicit policy is configured.\n\nIf this is
+    /// not present, then this instance uses the default auto-restart policy,
+    /// which may or may not allow it to be restarted. The
+    /// `auto_restart_enabled` field indicates whether the instance will be
+    /// automatically restarted.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "boot_disk_id": {
+    ///      "description": "the ID of the disk used to boot this Instance, if a
+    /// specific one is assigned.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -12035,6 +12078,16 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "time_last_auto_restarted": {
+    ///      "description": "The timestamp of the most recent time this instance
+    /// was automatically restarted by the control plane.\n\nIf this is not
+    /// present, then this instance has not been automatically restarted.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
     ///    "time_modified": {
     ///      "description": "timestamp when this resource was last modified",
     ///      "type": "string",
@@ -12052,6 +12105,33 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Instance {
+        /// The time at which the auto-restart cooldown period for this instance
+        /// completes, permitting it to be automatically restarted again. If the
+        /// instance enters the `Failed` state, it will not be restarted until
+        /// after this time.
+        ///
+        /// If this is not present, then either the instance has never been
+        /// automatically restarted, or the cooldown period has already expired,
+        /// allowing the instance to be restarted immediately if it fails.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_cooldown_expiration: Option<chrono::DateTime<chrono::offset::Utc>>,
+        /// `true` if this instance's auto-restart policy will permit the
+        /// control plane to automatically restart it if it enters the `Failed`
+        /// state.
+        pub auto_restart_enabled: bool,
+        /// The auto-restart policy configured for this instance, or `None` if
+        /// no explicit policy is configured.
+        ///
+        /// If this is not present, then this instance uses the default
+        /// auto-restart policy, which may or may not allow it to be restarted.
+        /// The `auto_restart_enabled` field indicates whether the instance will
+        /// be automatically restarted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// the ID of the disk used to boot this Instance, if a specific one is
+        /// assigned.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk_id: Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: String,
         /// RFC1035-compliant hostname for the Instance.
@@ -12069,6 +12149,13 @@ pub mod types {
         pub run_state: InstanceState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// The timestamp of the most recent time this instance was
+        /// automatically restarted by the control plane.
+        ///
+        /// If this is not present, then this instance has not been
+        /// automatically restarted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub time_last_auto_restarted: Option<chrono::DateTime<chrono::offset::Utc>>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
@@ -12083,6 +12170,113 @@ pub mod types {
     impl Instance {
         pub fn builder() -> builder::Instance {
             Default::default()
+        }
+    }
+
+    /// A policy determining when an instance should be automatically restarted
+    /// by the control plane.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A policy determining when an instance should be
+    /// automatically restarted by the control plane.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The instance should not be automatically restarted
+    /// by the control plane if it fails.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "never"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "If this instance is running and unexpectedly fails
+    /// (e.g. due to a host software crash or unexpected host reboot), the
+    /// control plane will make a best-effort attempt to restart it. The control
+    /// plane may choose not to restart the instance to preserve the overall
+    /// availability of the system.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "best_effort"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum InstanceAutoRestartPolicy {
+        /// The instance should not be automatically restarted by the control
+        /// plane if it fails.
+        #[serde(rename = "never")]
+        Never,
+        /// If this instance is running and unexpectedly fails (e.g. due to a
+        /// host software crash or unexpected host reboot), the control plane
+        /// will make a best-effort attempt to restart it. The control plane may
+        /// choose not to restart the instance to preserve the overall
+        /// availability of the system.
+        #[serde(rename = "best_effort")]
+        BestEffort,
+    }
+
+    impl From<&InstanceAutoRestartPolicy> for InstanceAutoRestartPolicy {
+        fn from(value: &InstanceAutoRestartPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for InstanceAutoRestartPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Never => write!(f, "never"),
+                Self::BestEffort => write!(f, "best_effort"),
+            }
+        }
+    }
+
+    impl std::str::FromStr for InstanceAutoRestartPolicy {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "never" => Ok(Self::Never),
+                "best_effort" => Ok(Self::BestEffort),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for InstanceAutoRestartPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -12156,9 +12350,9 @@ pub mod types {
         }
     }
 
-    impl ToString for InstanceCpuCount {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for InstanceCpuCount {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -12178,6 +12372,36 @@ pub mod types {
     ///    "ncpus"
     ///  ],
     ///  "properties": {
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy for this instance.\n\nThis
+    /// indicates whether the instance should be automatically restarted by the
+    /// control plane on failure. If this is `null`, no auto-restart policy has
+    /// been configured for this instance by the user.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "boot_disk": {
+    ///      "description": "The disk this instance should boot into. This disk
+    /// can either be attached if it already exists, or created, if it should be
+    /// a new disk.\n\nIt is strongly recommended to either provide a boot disk
+    /// at instance creation, or update the instance after creation to set a
+    /// boot disk.\n\nAn instance without an explicit boot disk can be booted:
+    /// the options are as managed by UEFI, and as controlled by the guest OS,
+    /// but with some risk.  If this instance later has a disk attached or
+    /// detached, it is possible that boot options can end up reordered, with
+    /// the intended boot disk moved after the EFI shell in boot priority. This
+    /// may result in an instance that only boots to the EFI shell until the
+    /// desired disk is set as an explicit boot disk and the instance
+    /// rebooted.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
@@ -12203,16 +12427,33 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "$ref": "#/components/schemas/Hostname"
+    ///      "description": "The hostname to be assigned to the instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Hostname"
+    ///        }
+    ///      ]
     ///    },
     ///    "memory": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "description": "The amount of RAM (in bytes) to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "ncpus": {
-    ///      "$ref": "#/components/schemas/InstanceCpuCount"
+    ///      "description": "The number of vCPUs to be allocated to the
+    /// instance",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceCpuCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "network_interfaces": {
     ///      "description": "The network interfaces to be created for this
@@ -12264,6 +12505,31 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceCreate {
+        /// The auto-restart policy for this instance.
+        ///
+        /// This indicates whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, no
+        /// auto-restart policy has been configured for this instance by the
+        /// user.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// The disk this instance should boot into. This disk can either be
+        /// attached if it already exists, or created, if it should be a new
+        /// disk.
+        ///
+        /// It is strongly recommended to either provide a boot disk at instance
+        /// creation, or update the instance after creation to set a boot disk.
+        ///
+        /// An instance without an explicit boot disk can be booted: the options
+        /// are as managed by UEFI, and as controlled by the guest OS, but with
+        /// some risk.  If this instance later has a disk attached or detached,
+        /// it is possible that boot options can end up reordered, with the
+        /// intended boot disk moved after the EFI shell in boot priority. This
+        /// may result in an instance that only boots to the EFI shell until the
+        /// desired disk is set as an explicit boot disk and the instance
+        /// rebooted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<InstanceDiskAttachment>,
         pub description: String,
         /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -12276,9 +12542,12 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
+        /// The hostname to be assigned to the instance
         pub hostname: Hostname,
+        /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
         pub name: Name,
+        /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
@@ -12336,7 +12605,7 @@ pub mod types {
     ///          "type": "string"
     ///        },
     ///        "disk_source": {
-    ///          "description": "initial source for this disk",
+    ///          "description": "The initial source for this disk",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/DiskSource"
@@ -12347,7 +12616,7 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        },
     ///        "size": {
-    ///          "description": "total size of the Disk in bytes",
+    ///          "description": "The total size of the Disk (in bytes)",
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/ByteCount"
@@ -12399,10 +12668,10 @@ pub mod types {
         #[serde(rename = "create")]
         Create {
             description: String,
-            /// initial source for this disk
+            /// The initial source for this disk
             disk_source: DiskSource,
             name: Name,
-            /// total size of the Disk in bytes
+            /// The total size of the Disk (in bytes)
             size: ByteCount,
         },
         /// During instance creation, attach this disk
@@ -13153,19 +13422,19 @@ pub mod types {
         }
     }
 
-    impl ToString for InstanceState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for InstanceState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Creating => "creating".to_string(),
-                Self::Starting => "starting".to_string(),
-                Self::Running => "running".to_string(),
-                Self::Stopping => "stopping".to_string(),
-                Self::Stopped => "stopped".to_string(),
-                Self::Rebooting => "rebooting".to_string(),
-                Self::Migrating => "migrating".to_string(),
-                Self::Repairing => "repairing".to_string(),
-                Self::Failed => "failed".to_string(),
-                Self::Destroyed => "destroyed".to_string(),
+                Self::Creating => write!(f, "creating"),
+                Self::Starting => write!(f, "starting"),
+                Self::Running => write!(f, "running"),
+                Self::Stopping => write!(f, "stopping"),
+                Self::Stopped => write!(f, "stopped"),
+                Self::Rebooting => write!(f, "rebooting"),
+                Self::Migrating => write!(f, "migrating"),
+                Self::Repairing => write!(f, "repairing"),
+                Self::Failed => write!(f, "failed"),
+                Self::Destroyed => write!(f, "destroyed"),
             }
         }
     }
@@ -13207,6 +13476,643 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Parameters of an `Instance` that can be reconfigured after creation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters of an `Instance` that can be reconfigured
+    /// after creation.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "auto_restart_policy": {
+    ///      "description": "The auto-restart policy for this instance.\n\nIf
+    /// not provided, unset the instance's auto-restart policy.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "boot_disk": {
+    ///      "description": "Name or ID of the disk the instance should be
+    /// instructed to boot from.\n\nIf not provided, unset the instance's boot
+    /// disk.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InstanceUpdate {
+        /// The auto-restart policy for this instance.
+        ///
+        /// If not provided, unset the instance's auto-restart policy.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        /// Name or ID of the disk the instance should be instructed to boot
+        /// from.
+        ///
+        /// If not provided, unset the instance's boot disk.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub boot_disk: Option<NameOrId>,
+    }
+
+    impl From<&InstanceUpdate> for InstanceUpdate {
+        fn from(value: &InstanceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceUpdate {
+        pub fn builder() -> builder::InstanceUpdate {
+            Default::default()
+        }
+    }
+
+    /// An internet gateway provides a path between VPC networks and external
+    /// networks.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An internet gateway provides a path between VPC
+    /// networks and external networks.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified",
+    ///    "vpc_id"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "vpc_id": {
+    ///      "description": "The VPC to which the gateway belongs.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGateway {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        /// The VPC to which the gateway belongs.
+        pub vpc_id: uuid::Uuid,
+    }
+
+    impl From<&InternetGateway> for InternetGateway {
+        fn from(value: &InternetGateway) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGateway {
+        pub fn builder() -> builder::InternetGateway {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for an `InternetGateway`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for an `InternetGateway`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayCreate {
+        pub description: String,
+        pub name: Name,
+    }
+
+    impl From<&InternetGatewayCreate> for InternetGatewayCreate {
+        fn from(value: &InternetGatewayCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayCreate {
+        pub fn builder() -> builder::InternetGatewayCreate {
+            Default::default()
+        }
+    }
+
+    /// An IP address that is attached to an internet gateway
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An IP address that is attached to an internet gateway",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "address",
+    ///    "description",
+    ///    "id",
+    ///    "internet_gateway_id",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "address": {
+    ///      "description": "The associated IP address,",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "internet_gateway_id": {
+    ///      "description": "The associated internet gateway.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpAddress {
+        /// The associated IP address,
+        pub address: std::net::IpAddr,
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// The associated internet gateway.
+        pub internet_gateway_id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&InternetGatewayIpAddress> for InternetGatewayIpAddress {
+        fn from(value: &InternetGatewayIpAddress) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpAddress {
+        pub fn builder() -> builder::InternetGatewayIpAddress {
+            Default::default()
+        }
+    }
+
+    /// Create-time identity-related parameters
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time identity-related parameters",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "address",
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "address": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpAddressCreate {
+        pub address: std::net::IpAddr,
+        pub description: String,
+        pub name: Name,
+    }
+
+    impl From<&InternetGatewayIpAddressCreate> for InternetGatewayIpAddressCreate {
+        fn from(value: &InternetGatewayIpAddressCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpAddressCreate {
+        pub fn builder() -> builder::InternetGatewayIpAddressCreate {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/InternetGatewayIpAddress"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpAddressResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<InternetGatewayIpAddress>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&InternetGatewayIpAddressResultsPage> for InternetGatewayIpAddressResultsPage {
+        fn from(value: &InternetGatewayIpAddressResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpAddressResultsPage {
+        pub fn builder() -> builder::InternetGatewayIpAddressResultsPage {
+            Default::default()
+        }
+    }
+
+    /// An IP pool that is attached to an internet gateway
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An IP pool that is attached to an internet gateway",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "internet_gateway_id",
+    ///    "ip_pool_id",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "internet_gateway_id": {
+    ///      "description": "The associated internet gateway.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip_pool_id": {
+    ///      "description": "The associated IP pool.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpPool {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// The associated internet gateway.
+        pub internet_gateway_id: uuid::Uuid,
+        /// The associated IP pool.
+        pub ip_pool_id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&InternetGatewayIpPool> for InternetGatewayIpPool {
+        fn from(value: &InternetGatewayIpPool) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpPool {
+        pub fn builder() -> builder::InternetGatewayIpPool {
+            Default::default()
+        }
+    }
+
+    /// Create-time identity-related parameters
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time identity-related parameters",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "ip_pool",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip_pool": {
+    ///      "$ref": "#/components/schemas/NameOrId"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpPoolCreate {
+        pub description: String,
+        pub ip_pool: NameOrId,
+        pub name: Name,
+    }
+
+    impl From<&InternetGatewayIpPoolCreate> for InternetGatewayIpPoolCreate {
+        fn from(value: &InternetGatewayIpPoolCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpPoolCreate {
+        pub fn builder() -> builder::InternetGatewayIpPoolCreate {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/InternetGatewayIpPool"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayIpPoolResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<InternetGatewayIpPool>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&InternetGatewayIpPoolResultsPage> for InternetGatewayIpPoolResultsPage {
+        fn from(value: &InternetGatewayIpPoolResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayIpPoolResultsPage {
+        pub fn builder() -> builder::InternetGatewayIpPoolResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/InternetGateway"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct InternetGatewayResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<InternetGateway>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&InternetGatewayResultsPage> for InternetGatewayResultsPage {
+        fn from(value: &InternetGatewayResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InternetGatewayResultsPage {
+        pub fn builder() -> builder::InternetGatewayResultsPage {
+            Default::default()
         }
     }
 
@@ -13291,11 +14197,11 @@ pub mod types {
         }
     }
 
-    impl ToString for IpNet {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for IpNet {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::V4(x) => x.to_string(),
-                Self::V6(x) => x.to_string(),
+                Self::V4(x) => x.fmt(f),
+                Self::V6(x) => x.fmt(f),
             }
         }
     }
@@ -14667,12 +15573,12 @@ pub mod types {
         }
     }
 
-    impl ToString for LinkFec {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for LinkFec {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Firecode => "firecode".to_string(),
-                Self::None => "none".to_string(),
-                Self::Rs => "rs".to_string(),
+                Self::Firecode => write!(f, "firecode"),
+                Self::None => write!(f, "none"),
+                Self::Rs => write!(f, "rs"),
             }
         }
     }
@@ -14834,18 +15740,18 @@ pub mod types {
         }
     }
 
-    impl ToString for LinkSpeed {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for LinkSpeed {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Speed0G => "speed0_g".to_string(),
-                Self::Speed1G => "speed1_g".to_string(),
-                Self::Speed10G => "speed10_g".to_string(),
-                Self::Speed25G => "speed25_g".to_string(),
-                Self::Speed40G => "speed40_g".to_string(),
-                Self::Speed50G => "speed50_g".to_string(),
-                Self::Speed100G => "speed100_g".to_string(),
-                Self::Speed200G => "speed200_g".to_string(),
-                Self::Speed400G => "speed400_g".to_string(),
+                Self::Speed0G => write!(f, "speed0_g"),
+                Self::Speed1G => write!(f, "speed1_g"),
+                Self::Speed10G => write!(f, "speed10_g"),
+                Self::Speed25G => write!(f, "speed25_g"),
+                Self::Speed40G => write!(f, "speed40_g"),
+                Self::Speed50G => write!(f, "speed50_g"),
+                Self::Speed100G => write!(f, "speed100_g"),
+                Self::Speed200G => write!(f, "speed200_g"),
+                Self::Speed400G => write!(f, "speed400_g"),
             }
         }
     }
@@ -15601,12 +16507,12 @@ pub mod types {
         }
     }
 
-    impl ToString for MetricType {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for MetricType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Gauge => "gauge".to_string(),
-                Self::Delta => "delta".to_string(),
-                Self::Cumulative => "cumulative".to_string(),
+                Self::Gauge => write!(f, "gauge"),
+                Self::Delta => write!(f, "delta"),
+                Self::Cumulative => write!(f, "cumulative"),
             }
         }
     }
@@ -15869,11 +16775,11 @@ pub mod types {
         }
     }
 
-    impl ToString for NameOrId {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameOrId {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::Id(x) => x.to_string(),
-                Self::Name(x) => x.to_string(),
+                Self::Id(x) => x.fmt(f),
+                Self::Name(x) => x.fmt(f),
             }
         }
     }
@@ -15955,12 +16861,12 @@ pub mod types {
         }
     }
 
-    impl ToString for NameOrIdSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameOrIdSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::NameAscending => "name_ascending".to_string(),
-                Self::NameDescending => "name_descending".to_string(),
-                Self::IdAscending => "id_ascending".to_string(),
+                Self::NameAscending => write!(f, "name_ascending"),
+                Self::NameDescending => write!(f, "name_descending"),
+                Self::IdAscending => write!(f, "id_ascending"),
             }
         }
     }
@@ -16045,10 +16951,10 @@ pub mod types {
         }
     }
 
-    impl ToString for NameSortMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for NameSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::NameAscending => "name_ascending".to_string(),
+                Self::NameAscending => write!(f, "name_ascending"),
             }
         }
     }
@@ -16452,11 +17358,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PaginationOrder {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PaginationOrder {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ascending => "ascending".to_string(),
-                Self::Descending => "descending".to_string(),
+                Self::Ascending => write!(f, "ascending"),
+                Self::Descending => write!(f, "descending"),
             }
         }
     }
@@ -16739,11 +17645,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::M2 => "m2".to_string(),
-                Self::U2 => "u2".to_string(),
+                Self::M2 => write!(f, "m2"),
+                Self::U2 => write!(f, "u2"),
             }
         }
     }
@@ -16854,11 +17760,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskPolicy {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::InService => "in_service".to_string(),
-                Self::Expunged => "expunged".to_string(),
+                Self::InService => write!(f, "in_service"),
+                Self::Expunged => write!(f, "expunged"),
             }
         }
     }
@@ -17012,11 +17918,11 @@ pub mod types {
         }
     }
 
-    impl ToString for PhysicalDiskState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PhysicalDiskState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Active => "active".to_string(),
-                Self::Decommissioned => "decommissioned".to_string(),
+                Self::Active => write!(f, "active"),
+                Self::Decommissioned => write!(f, "decommissioned"),
             }
         }
     }
@@ -17135,10 +18041,10 @@ pub mod types {
         }
     }
 
-    impl ToString for PingStatus {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for PingStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ok => "ok".to_string(),
+                Self::Ok => write!(f, "ok"),
             }
         }
     }
@@ -17479,12 +18385,12 @@ pub mod types {
         }
     }
 
-    impl ToString for ProbeExternalIpKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ProbeExternalIpKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Snat => "snat".to_string(),
-                Self::Floating => "floating".to_string(),
-                Self::Ephemeral => "ephemeral".to_string(),
+                Self::Snat => write!(f, "snat"),
+                Self::Floating => write!(f, "floating"),
+                Self::Ephemeral => write!(f, "ephemeral"),
             }
         }
     }
@@ -17855,12 +18761,12 @@ pub mod types {
         }
     }
 
-    impl ToString for ProjectRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ProjectRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -18486,14 +19392,14 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    },
-    ///    "local_pref": {
+    ///    "rib_priority": {
     ///      "description": "Local preference for route. Higher preference
     /// indictes precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
     ///      ],
-    ///      "format": "uint32",
+    ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
     ///    "vid": {
@@ -18520,7 +19426,7 @@ pub mod types {
         /// Local preference for route. Higher preference indictes precedence
         /// within and across protocols.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local_pref: Option<u32>,
+        pub rib_priority: Option<u8>,
         /// VLAN id the gateway is reachable over.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub vid: Option<u16>,
@@ -18673,8 +19579,8 @@ pub mod types {
         }
     }
 
-    /// A `RouteDestination` is used to match traffic with a routing rule, on
-    /// the destination of that traffic.
+    /// A `RouteDestination` is used to match traffic with a routing rule based
+    /// on the destination of that traffic.
     ///
     /// When traffic is to be sent to a destination that is within a given
     /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
@@ -18685,14 +19591,14 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `RouteDestination` is used to match traffic with a
-    /// routing rule, on the destination of that traffic.\n\nWhen traffic is to
-    /// be sent to a destination that is within a given `RouteDestination`, the
-    /// corresponding `RouterRoute` applies, and traffic will be forward to the
-    /// `RouteTarget` for that rule.",
+    /// routing rule based on the destination of that traffic.\n\nWhen traffic
+    /// is to be sent to a destination that is within a given
+    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
+    /// will be forward to the `RouteTarget` for that rule.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// address",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP address",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -18712,8 +19618,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for a specific IP
-    /// subnet",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// IP subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -18732,8 +19638,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic destined for the given
-    /// VPC.",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -18752,7 +19658,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "Route applies to traffic",
+    ///      "description": "Route applies to traffic destined for the specified
+    /// VPC subnet",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -18779,16 +19686,16 @@ pub mod types {
     )]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
-        /// Route applies to traffic destined for a specific IP address
+        /// Route applies to traffic destined for the specified IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        /// Route applies to traffic destined for a specific IP subnet
+        /// Route applies to traffic destined for the specified IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
-        /// Route applies to traffic destined for the given VPC.
+        /// Route applies to traffic destined for the specified VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        /// Route applies to traffic
+        /// Route applies to traffic destined for the specified VPC subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
     }
@@ -19000,7 +19907,7 @@ pub mod types {
     ///    },
     ///    "destination": {
     ///      "description": "Selects which traffic this routing rule will apply
-    /// to.",
+    /// to",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/RouteDestination"
@@ -19033,7 +19940,7 @@ pub mod types {
     ///    },
     ///    "target": {
     ///      "description": "The location that matched packets should be
-    /// forwarded to.",
+    /// forwarded to",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/RouteTarget"
@@ -19066,7 +19973,7 @@ pub mod types {
     pub struct RouterRoute {
         /// human-readable free-form text about a resource
         pub description: String,
-        /// Selects which traffic this routing rule will apply to.
+        /// Selects which traffic this routing rule will apply to
         pub destination: RouteDestination,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
@@ -19074,7 +19981,7 @@ pub mod types {
         pub kind: RouterRouteKind,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// The location that matched packets should be forwarded to.
+        /// The location that matched packets should be forwarded to
         pub target: RouteTarget,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
@@ -19256,13 +20163,13 @@ pub mod types {
         }
     }
 
-    impl ToString for RouterRouteKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for RouterRouteKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Default => "default".to_string(),
-                Self::VpcSubnet => "vpc_subnet".to_string(),
-                Self::VpcPeering => "vpc_peering".to_string(),
-                Self::Custom => "custom".to_string(),
+                Self::Default => write!(f, "default"),
+                Self::VpcSubnet => write!(f, "vpc_subnet"),
+                Self::VpcPeering => write!(f, "vpc_peering"),
+                Self::Custom => write!(f, "custom"),
             }
         }
     }
@@ -19734,10 +20641,10 @@ pub mod types {
         }
     }
 
-    impl ToString for ServiceUsingCertificate {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for ServiceUsingCertificate {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::ExternalApi => "external_api".to_string(),
+                Self::ExternalApi => write!(f, "external_api"),
             }
         }
     }
@@ -20082,11 +20989,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SiloIdentityMode {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SiloIdentityMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SamlJit => "saml_jit".to_string(),
-                Self::LocalOnly => "local_only".to_string(),
+                Self::SamlJit => write!(f, "saml_jit"),
+                Self::LocalOnly => write!(f, "local_only"),
             }
         }
     }
@@ -20626,12 +21533,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SiloRole {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SiloRole {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
+                Self::Admin => write!(f, "admin"),
+                Self::Collaborator => write!(f, "collaborator"),
+                Self::Viewer => write!(f, "viewer"),
             }
         }
     }
@@ -21363,11 +22270,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SledProvisionPolicy {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SledProvisionPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Provisionable => "provisionable".to_string(),
-                Self::NonProvisionable => "non_provisionable".to_string(),
+                Self::Provisionable => write!(f, "provisionable"),
+                Self::NonProvisionable => write!(f, "non_provisionable"),
             }
         }
     }
@@ -21620,11 +22527,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SledState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SledState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Active => "active".to_string(),
-                Self::Decommissioned => "decommissioned".to_string(),
+                Self::Active => write!(f, "active"),
+                Self::Decommissioned => write!(f, "decommissioned"),
             }
         }
     }
@@ -21914,13 +22821,13 @@ pub mod types {
         }
     }
 
-    impl ToString for SnapshotState {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SnapshotState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Creating => "creating".to_string(),
-                Self::Ready => "ready".to_string(),
-                Self::Faulted => "faulted".to_string(),
-                Self::Destroyed => "destroyed".to_string(),
+                Self::Creating => write!(f, "creating"),
+                Self::Ready => write!(f, "ready"),
+                Self::Faulted => write!(f, "faulted"),
+                Self::Destroyed => write!(f, "destroyed"),
             }
         }
     }
@@ -22585,12 +23492,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchInterfaceKind2 {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchInterfaceKind2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Primary => "primary".to_string(),
-                Self::Vlan => "vlan".to_string(),
-                Self::Loopback => "loopback".to_string(),
+                Self::Primary => write!(f, "primary"),
+                Self::Vlan => write!(f, "vlan"),
+                Self::Loopback => write!(f, "loopback"),
             }
         }
     }
@@ -22719,11 +23626,11 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchLocation {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchLocation {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Switch0 => "switch0".to_string(),
-                Self::Switch1 => "switch1".to_string(),
+                Self::Switch0 => write!(f, "switch0"),
+                Self::Switch1 => write!(f, "switch1"),
             }
         }
     }
@@ -23129,12 +24036,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchPortGeometry {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchPortGeometry {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Qsfp28x1 => "qsfp28x1".to_string(),
-                Self::Qsfp28x2 => "qsfp28x2".to_string(),
-                Self::Sfp28x4 => "sfp28x4".to_string(),
+                Self::Qsfp28x1 => write!(f, "qsfp28x1"),
+                Self::Qsfp28x2 => write!(f, "qsfp28x2"),
+                Self::Sfp28x4 => write!(f, "sfp28x4"),
             }
         }
     }
@@ -23239,12 +24146,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SwitchPortGeometry2 {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SwitchPortGeometry2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Qsfp28x1 => "qsfp28x1".to_string(),
-                Self::Qsfp28x2 => "qsfp28x2".to_string(),
-                Self::Sfp28x4 => "sfp28x4".to_string(),
+                Self::Qsfp28x1 => write!(f, "qsfp28x1"),
+                Self::Qsfp28x2 => write!(f, "qsfp28x2"),
+                Self::Sfp28x4 => write!(f, "sfp28x4"),
             }
         }
     }
@@ -23470,21 +24377,21 @@ pub mod types {
     /// assigned to.",
     ///      "type": "string"
     ///    },
-    ///    "local_pref": {
-    ///      "description": "Local preference indicating priority within and
-    /// across protocols.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this route configuration
     /// belongs to.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "rib_priority": {
+    ///      "description": "RIB Priority indicating priority within and across
+    /// protocols.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
     ///    },
     ///    "vlan_id": {
     ///      "description": "The VLAN identifier for the route. Use this if the
@@ -23510,11 +24417,11 @@ pub mod types {
         pub gw: IpNet,
         /// The interface name this route configuration is assigned to.
         pub interface_name: String,
-        /// Local preference indicating priority within and across protocols.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local_pref: Option<u32>,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: uuid::Uuid,
+        /// RIB Priority indicating priority within and across protocols.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub rib_priority: Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
         /// reachable over an 802.1Q tagged L2 segment.
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -24135,12 +25042,12 @@ pub mod types {
         }
     }
 
-    impl ToString for SystemMetricName {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for SystemMetricName {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::VirtualDiskSpaceProvisioned => "virtual_disk_space_provisioned".to_string(),
-                Self::CpusProvisioned => "cpus_provisioned".to_string(),
-                Self::RamProvisioned => "ram_provisioned".to_string(),
+                Self::VirtualDiskSpaceProvisioned => write!(f, "virtual_disk_space_provisioned"),
+                Self::CpusProvisioned => write!(f, "cpus_provisioned"),
+                Self::RamProvisioned => write!(f, "ram_provisioned"),
             }
         }
     }
@@ -24837,18 +25744,19 @@ pub mod types {
         }
     }
 
-    impl ToString for Units {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for Units {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Count => "count".to_string(),
-                Self::Bytes => "bytes".to_string(),
-                Self::Seconds => "seconds".to_string(),
-                Self::Nanoseconds => "nanoseconds".to_string(),
-                Self::Volts => "volts".to_string(),
-                Self::Amps => "amps".to_string(),
-                Self::DegreesCelcius => "degrees_celcius".to_string(),
-                Self::None => "none".to_string(),
-                Self::Rpm => "rpm".to_string(),
+                Self::Count => write!(f, "count"),
+                Self::Bytes => write!(f, "bytes"),
+                Self::Seconds => write!(f, "seconds"),
+                Self::Nanoseconds => write!(f, "nanoseconds"),
+                Self::Volts => write!(f, "volts"),
+                Self::Amps => write!(f, "amps"),
+                Self::Watts => write!(f, "watts"),
+                Self::DegreesCelsius => write!(f, "degrees_celsius"),
+                Self::None => write!(f, "none"),
+                Self::Rpm => write!(f, "rpm"),
             }
         }
     }
@@ -25887,9 +26795,9 @@ pub mod types {
         }
     }
 
-    impl ToString for Vni {
-        fn to_string(&self) -> String {
-            self.0.to_string()
+    impl ::std::fmt::Display for Vni {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -26268,11 +27176,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleAction {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleAction {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Allow => "allow".to_string(),
-                Self::Deny => "deny".to_string(),
+                Self::Allow => write!(f, "allow"),
+                Self::Deny => write!(f, "deny"),
             }
         }
     }
@@ -26349,11 +27257,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleDirection {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleDirection {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Inbound => "inbound".to_string(),
-                Self::Outbound => "outbound".to_string(),
+                Self::Inbound => write!(f, "inbound"),
+                Self::Outbound => write!(f, "outbound"),
             }
         }
     }
@@ -26678,12 +27586,12 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleProtocol {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleProtocol {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Tcp => "TCP".to_string(),
-                Self::Udp => "UDP".to_string(),
-                Self::Icmp => "ICMP".to_string(),
+                Self::Tcp => write!(f, "TCP"),
+                Self::Udp => write!(f, "UDP"),
+                Self::Icmp => write!(f, "ICMP"),
             }
         }
     }
@@ -26761,11 +27669,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcFirewallRuleStatus {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcFirewallRuleStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Disabled => "disabled".to_string(),
-                Self::Enabled => "enabled".to_string(),
+                Self::Disabled => write!(f, "disabled"),
+                Self::Enabled => write!(f, "enabled"),
             }
         }
     }
@@ -27390,11 +28298,11 @@ pub mod types {
         }
     }
 
-    impl ToString for VpcRouterKind {
-        fn to_string(&self) -> String {
+    impl ::std::fmt::Display for VpcRouterKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::System => "system".to_string(),
-                Self::Custom => "custom".to_string(),
+                Self::System => write!(f, "system"),
+                Self::Custom => write!(f, "custom"),
             }
         }
     }
@@ -36294,6 +37202,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Instance {
+            auto_restart_cooldown_expiration:
+                Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+            auto_restart_enabled: Result<bool, String>,
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk_id: Result<Option<uuid::Uuid>, String>,
             description: Result<String, String>,
             hostname: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -36303,6 +37216,7 @@ pub mod types {
             project_id: Result<uuid::Uuid, String>,
             run_state: Result<super::InstanceState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_last_auto_restarted: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_run_state_updated: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -36310,6 +37224,12 @@ pub mod types {
         impl Default for Instance {
             fn default() -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(Default::default()),
+                    auto_restart_enabled: Err(
+                        "no value supplied for auto_restart_enabled".to_string()
+                    ),
+                    auto_restart_policy: Ok(Default::default()),
+                    boot_disk_id: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -36319,6 +37239,7 @@ pub mod types {
                     project_id: Err("no value supplied for project_id".to_string()),
                     run_state: Err("no value supplied for run_state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
+                    time_last_auto_restarted: Ok(Default::default()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     time_run_state_updated: Err(
                         "no value supplied for time_run_state_updated".to_string()
@@ -36328,6 +37249,55 @@ pub mod types {
         }
 
         impl Instance {
+            pub fn auto_restart_cooldown_expiration<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_cooldown_expiration = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_cooldown_expiration: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn auto_restart_enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_enabled = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_enabled: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn boot_disk_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for boot_disk_id: {}", e)
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -36418,6 +37388,19 @@ pub mod types {
                 });
                 self
             }
+            pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_last_auto_restarted = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for time_last_auto_restarted: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -36447,6 +37430,10 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: Instance) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
+                    auto_restart_enabled: value.auto_restart_enabled?,
+                    auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk_id: value.boot_disk_id?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -36456,6 +37443,7 @@ pub mod types {
                     project_id: value.project_id?,
                     run_state: value.run_state?,
                     time_created: value.time_created?,
+                    time_last_auto_restarted: value.time_last_auto_restarted?,
                     time_modified: value.time_modified?,
                     time_run_state_updated: value.time_run_state_updated?,
                 })
@@ -36465,6 +37453,10 @@ pub mod types {
         impl From<super::Instance> for Instance {
             fn from(value: super::Instance) -> Self {
                 Self {
+                    auto_restart_cooldown_expiration: Ok(value.auto_restart_cooldown_expiration),
+                    auto_restart_enabled: Ok(value.auto_restart_enabled),
+                    auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk_id: Ok(value.boot_disk_id),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -36474,6 +37466,7 @@ pub mod types {
                     project_id: Ok(value.project_id),
                     run_state: Ok(value.run_state),
                     time_created: Ok(value.time_created),
+                    time_last_auto_restarted: Ok(value.time_last_auto_restarted),
                     time_modified: Ok(value.time_modified),
                     time_run_state_updated: Ok(value.time_run_state_updated),
                 }
@@ -36482,6 +37475,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk: Result<Option<super::InstanceDiskAttachment>, String>,
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
@@ -36498,6 +37493,8 @@ pub mod types {
         impl Default for InstanceCreate {
             fn default() -> Self {
                 Self {
+                    auto_restart_policy: Ok(Default::default()),
+                    boot_disk: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -36514,6 +37511,29 @@ pub mod types {
         }
 
         impl InstanceCreate {
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceDiskAttachment>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -36633,6 +37653,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk: value.boot_disk?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -36651,6 +37673,8 @@ pub mod types {
         impl From<super::InstanceCreate> for InstanceCreate {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
+                    auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk: Ok(value.boot_disk),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),
@@ -37233,6 +38257,835 @@ pub mod types {
                 Self {
                     data: Ok(value.data),
                     last_byte_offset: Ok(value.last_byte_offset),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceUpdate {
+            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
+            boot_disk: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for InstanceUpdate {
+            fn default() -> Self {
+                Self {
+                    auto_restart_policy: Ok(Default::default()),
+                    boot_disk: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceUpdate {
+            pub fn auto_restart_policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T::Error: std::fmt::Display,
+            {
+                self.auto_restart_policy = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for auto_restart_policy: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn boot_disk<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.boot_disk = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: InstanceUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    auto_restart_policy: value.auto_restart_policy?,
+                    boot_disk: value.boot_disk?,
+                })
+            }
+        }
+
+        impl From<super::InstanceUpdate> for InstanceUpdate {
+            fn from(value: super::InstanceUpdate) -> Self {
+                Self {
+                    auto_restart_policy: Ok(value.auto_restart_policy),
+                    boot_disk: Ok(value.boot_disk),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGateway {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            vpc_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for InternetGateway {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    vpc_id: Err("no value supplied for vpc_id".to_string()),
+                }
+            }
+        }
+
+        impl InternetGateway {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+            pub fn vpc_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.vpc_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGateway> for super::InternetGateway {
+            type Error = super::error::ConversionError;
+            fn try_from(value: InternetGateway) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    vpc_id: value.vpc_id?,
+                })
+            }
+        }
+
+        impl From<super::InternetGateway> for InternetGateway {
+            fn from(value: super::InternetGateway) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayCreate {
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for InternetGatewayCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl InternetGatewayCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayCreate> for super::InternetGatewayCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayCreate,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayCreate> for InternetGatewayCreate {
+            fn from(value: super::InternetGatewayCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpAddress {
+            address: Result<std::net::IpAddr, String>,
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            internet_gateway_id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for InternetGatewayIpAddress {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    internet_gateway_id: Err(
+                        "no value supplied for internet_gateway_id".to_string()
+                    ),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpAddress {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn internet_gateway_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.internet_gateway_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for internet_gateway_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpAddress> for super::InternetGatewayIpAddress {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpAddress,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    address: value.address?,
+                    description: value.description?,
+                    id: value.id?,
+                    internet_gateway_id: value.internet_gateway_id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpAddress> for InternetGatewayIpAddress {
+            fn from(value: super::InternetGatewayIpAddress) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    internet_gateway_id: Ok(value.internet_gateway_id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpAddressCreate {
+            address: Result<std::net::IpAddr, String>,
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for InternetGatewayIpAddressCreate {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpAddressCreate {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpAddressCreate>
+            for super::InternetGatewayIpAddressCreate
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpAddressCreate,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    address: value.address?,
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpAddressCreate> for InternetGatewayIpAddressCreate {
+            fn from(value: super::InternetGatewayIpAddressCreate) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpAddressResultsPage {
+            items: Result<Vec<super::InternetGatewayIpAddress>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for InternetGatewayIpAddressResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpAddressResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::InternetGatewayIpAddress>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpAddressResultsPage>
+            for super::InternetGatewayIpAddressResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpAddressResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpAddressResultsPage> for InternetGatewayIpAddressResultsPage {
+            fn from(value: super::InternetGatewayIpAddressResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpPool {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            internet_gateway_id: Result<uuid::Uuid, String>,
+            ip_pool_id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for InternetGatewayIpPool {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    internet_gateway_id: Err(
+                        "no value supplied for internet_gateway_id".to_string()
+                    ),
+                    ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpPool {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn internet_gateway_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.internet_gateway_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for internet_gateway_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn ip_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpPool> for super::InternetGatewayIpPool {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpPool,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    internet_gateway_id: value.internet_gateway_id?,
+                    ip_pool_id: value.ip_pool_id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpPool> for InternetGatewayIpPool {
+            fn from(value: super::InternetGatewayIpPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    internet_gateway_id: Ok(value.internet_gateway_id),
+                    ip_pool_id: Ok(value.ip_pool_id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpPoolCreate {
+            description: Result<String, String>,
+            ip_pool: Result<super::NameOrId, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for InternetGatewayIpPoolCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    ip_pool: Err("no value supplied for ip_pool".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpPoolCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip_pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpPoolCreate> for super::InternetGatewayIpPoolCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpPoolCreate,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    ip_pool: value.ip_pool?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpPoolCreate> for InternetGatewayIpPoolCreate {
+            fn from(value: super::InternetGatewayIpPoolCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip_pool: Ok(value.ip_pool),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayIpPoolResultsPage {
+            items: Result<Vec<super::InternetGatewayIpPool>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for InternetGatewayIpPoolResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InternetGatewayIpPoolResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::InternetGatewayIpPool>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayIpPoolResultsPage>
+            for super::InternetGatewayIpPoolResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayIpPoolResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayIpPoolResultsPage> for InternetGatewayIpPoolResultsPage {
+            fn from(value: super::InternetGatewayIpPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InternetGatewayResultsPage {
+            items: Result<Vec<super::InternetGateway>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for InternetGatewayResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InternetGatewayResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::InternetGateway>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InternetGatewayResultsPage> for super::InternetGatewayResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: InternetGatewayResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::InternetGatewayResultsPage> for InternetGatewayResultsPage {
+            fn from(value: super::InternetGatewayResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -40836,7 +42689,7 @@ pub mod types {
         pub struct Route {
             dst: Result<super::IpNet, String>,
             gw: Result<std::net::IpAddr, String>,
-            local_pref: Result<Option<u32>, String>,
+            rib_priority: Result<Option<u8>, String>,
             vid: Result<Option<u16>, String>,
         }
 
@@ -40845,7 +42698,7 @@ pub mod types {
                 Self {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
-                    local_pref: Ok(Default::default()),
+                    rib_priority: Ok(Default::default()),
                     vid: Ok(Default::default()),
                 }
             }
@@ -40872,14 +42725,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
-            pub fn local_pref<T>(mut self, value: T) -> Self
+            pub fn rib_priority<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u32>>,
+                T: std::convert::TryInto<Option<u8>>,
                 T::Error: std::fmt::Display,
             {
-                self.local_pref = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
+                });
                 self
             }
             pub fn vid<T>(mut self, value: T) -> Self
@@ -40900,7 +42753,7 @@ pub mod types {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
-                    local_pref: value.local_pref?,
+                    rib_priority: value.rib_priority?,
                     vid: value.vid?,
                 })
             }
@@ -40911,7 +42764,7 @@ pub mod types {
                 Self {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
-                    local_pref: Ok(value.local_pref),
+                    rib_priority: Ok(value.rib_priority),
                     vid: Ok(value.vid),
                 }
             }
@@ -44940,8 +46793,8 @@ pub mod types {
             dst: Result<super::IpNet, String>,
             gw: Result<super::IpNet, String>,
             interface_name: Result<String, String>,
-            local_pref: Result<Option<u32>, String>,
             port_settings_id: Result<uuid::Uuid, String>,
+            rib_priority: Result<Option<u8>, String>,
             vlan_id: Result<Option<u16>, String>,
         }
 
@@ -44951,8 +46804,8 @@ pub mod types {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
-                    local_pref: Ok(Default::default()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    rib_priority: Ok(Default::default()),
                     vlan_id: Ok(Default::default()),
                 }
             }
@@ -44989,16 +46842,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn local_pref<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<u32>>,
-                T::Error: std::fmt::Display,
-            {
-                self.local_pref = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
-                self
-            }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -45009,6 +46852,16 @@ pub mod types {
                         "error converting supplied value for port_settings_id: {}",
                         e
                     )
+                });
+                self
+            }
+            pub fn rib_priority<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u8>>,
+                T::Error: std::fmt::Display,
+            {
+                self.rib_priority = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rib_priority: {}", e)
                 });
                 self
             }
@@ -45033,8 +46886,8 @@ pub mod types {
                     dst: value.dst?,
                     gw: value.gw?,
                     interface_name: value.interface_name?,
-                    local_pref: value.local_pref?,
                     port_settings_id: value.port_settings_id?,
+                    rib_priority: value.rib_priority?,
                     vlan_id: value.vlan_id?,
                 })
             }
@@ -45046,8 +46899,8 @@ pub mod types {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
                     interface_name: Ok(value.interface_name),
-                    local_pref: Ok(value.local_pref),
                     port_settings_id: Ok(value.port_settings_id),
+                    rib_priority: Ok(value.rib_priority),
                     vlan_id: Ok(value.vlan_id),
                 }
             }
@@ -48504,7 +50357,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20240821.0
+/// Version: 20241204.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -48557,7 +50410,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "20240821.0"
+        "20241204.0"
     }
 }
 
@@ -49268,6 +51121,23 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
+    /// Update instance
+    ///
+    /// Sends a `PUT` request to `/v1/instances/{instance}`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.instance_update()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_update(&self) -> builder::InstanceUpdate;
     /// Delete instance
     ///
     /// Sends a `DELETE` request to `/v1/instances/{instance}`
@@ -49625,6 +51495,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_view(&self) -> builder::InstanceView {
         builder::InstanceView::new(self)
+    }
+
+    fn instance_update(&self) -> builder::InstanceUpdate {
+        builder::InstanceUpdate::new(self)
     }
 
     fn instance_delete(&self) -> builder::InstanceDelete {
@@ -50829,49 +52703,10 @@ impl ClientSystemHardwareExt for Client {
     }
 }
 
-/// Metrics provide insight into the operation of the Oxide deployment. These
-/// include telemetry on hardware and software components that can be used to
-/// understand the current state as well as to diagnose issues.
-pub trait ClientSystemMetricsExt {
-    /// View metrics
-    ///
-    /// View CPU, memory, or storage utilization metrics at the fleet or silo
-    /// level.
-    ///
-    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
-    ///
-    /// Arguments:
-    /// - `metric_name`
-    /// - `end_time`: An exclusive end time of metrics.
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `order`: Query result order
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `silo`: Name or ID of the silo
-    /// - `start_time`: An inclusive start time of metrics.
-    /// ```ignore
-    /// let response = client.system_metric()
-    ///    .metric_name(metric_name)
-    ///    .end_time(end_time)
-    ///    .limit(limit)
-    ///    .order(order)
-    ///    .page_token(page_token)
-    ///    .silo(silo)
-    ///    .start_time(start_time)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_metric(&self) -> builder::SystemMetric;
-}
-
-impl ClientSystemMetricsExt for Client {
-    fn system_metric(&self) -> builder::SystemMetric {
-        builder::SystemMetric::new(self)
-    }
-}
-
-/// This provides rack-level network configuration.
-pub trait ClientSystemNetworkingExt {
+/// IP pools are collections of external IPs that can be assigned to silos. When
+/// a pool is linked to a silo, users in that silo can allocate IPs from the
+/// pool for their instances.
+pub trait ClientSystemIpPoolsExt {
     /// List IP pools
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools`
@@ -51131,6 +52966,121 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
+}
+
+impl ClientSystemIpPoolsExt for Client {
+    fn ip_pool_list(&self) -> builder::IpPoolList {
+        builder::IpPoolList::new(self)
+    }
+
+    fn ip_pool_create(&self) -> builder::IpPoolCreate {
+        builder::IpPoolCreate::new(self)
+    }
+
+    fn ip_pool_view(&self) -> builder::IpPoolView {
+        builder::IpPoolView::new(self)
+    }
+
+    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
+        builder::IpPoolUpdate::new(self)
+    }
+
+    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
+        builder::IpPoolDelete::new(self)
+    }
+
+    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
+        builder::IpPoolRangeList::new(self)
+    }
+
+    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
+        builder::IpPoolRangeAdd::new(self)
+    }
+
+    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
+        builder::IpPoolRangeRemove::new(self)
+    }
+
+    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList {
+        builder::IpPoolSiloList::new(self)
+    }
+
+    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink {
+        builder::IpPoolSiloLink::new(self)
+    }
+
+    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate {
+        builder::IpPoolSiloUpdate::new(self)
+    }
+
+    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
+        builder::IpPoolSiloUnlink::new(self)
+    }
+
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
+        builder::IpPoolUtilizationView::new(self)
+    }
+
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
+        builder::IpPoolServiceView::new(self)
+    }
+
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
+        builder::IpPoolServiceRangeList::new(self)
+    }
+
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
+        builder::IpPoolServiceRangeAdd::new(self)
+    }
+
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
+        builder::IpPoolServiceRangeRemove::new(self)
+    }
+}
+
+/// Metrics provide insight into the operation of the Oxide deployment. These
+/// include telemetry on hardware and software components that can be used to
+/// understand the current state as well as to diagnose issues.
+pub trait ClientSystemMetricsExt {
+    /// View metrics
+    ///
+    /// View CPU, memory, or storage utilization metrics at the fleet or silo
+    /// level.
+    ///
+    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
+    ///
+    /// Arguments:
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `start_time`: An inclusive start time of metrics.
+    /// ```ignore
+    /// let response = client.system_metric()
+    ///    .metric_name(metric_name)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .order(order)
+    ///    .page_token(page_token)
+    ///    .silo(silo)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_metric(&self) -> builder::SystemMetric;
+}
+
+impl ClientSystemMetricsExt for Client {
+    fn system_metric(&self) -> builder::SystemMetric {
+        builder::SystemMetric::new(self)
+    }
+}
+
+/// This provides rack-level network configuration.
+pub trait ClientSystemNetworkingExt {
     /// List address lots
     ///
     /// Sends a `GET` request to `/v1/system/networking/address-lot`
@@ -51286,14 +53236,12 @@ pub trait ClientSystemNetworkingExt {
     ///
     /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
-    /// - `name_or_id`: A name or id to use when selecting BGP config.
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_config_list()
     ///    .limit(limit)
-    ///    .name_or_id(name_or_id)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
@@ -51330,14 +53278,12 @@ pub trait ClientSystemNetworkingExt {
     ///
     /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
-    /// - `name_or_id`: A name or id to use when s electing BGP port settings
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_list()
     ///    .limit(limit)
-    ///    .name_or_id(name_or_id)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
@@ -51361,13 +53307,13 @@ pub trait ClientSystemNetworkingExt {
     /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to
-    /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
+    /// `/v1/system/networking/bgp-announce-set/{announce_set}`
     ///
     /// Arguments:
-    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// - `announce_set`: Name or ID of the announce set
     /// ```ignore
     /// let response = client.networking_bgp_announce_set_delete()
-    ///    .name_or_id(name_or_id)
+    ///    .announce_set(announce_set)
     ///    .send()
     ///    .await;
     /// ```
@@ -51375,13 +53321,13 @@ pub trait ClientSystemNetworkingExt {
     /// Get originated routes for a specified BGP announce set
     ///
     /// Sends a `GET` request to
-    /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+    /// `/v1/system/networking/bgp-announce-set/{announce_set}/announcement`
     ///
     /// Arguments:
-    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// - `announce_set`: Name or ID of the announce set
     /// ```ignore
     /// let response = client.networking_bgp_announcement_list()
-    ///    .name_or_id(name_or_id)
+    ///    .announce_set(announce_set)
     ///    .send()
     ///    .await;
     /// ```
@@ -52027,74 +53973,6 @@ pub trait ClientSystemNetworkingExt {
 }
 
 impl ClientSystemNetworkingExt for Client {
-    fn ip_pool_list(&self) -> builder::IpPoolList {
-        builder::IpPoolList::new(self)
-    }
-
-    fn ip_pool_create(&self) -> builder::IpPoolCreate {
-        builder::IpPoolCreate::new(self)
-    }
-
-    fn ip_pool_view(&self) -> builder::IpPoolView {
-        builder::IpPoolView::new(self)
-    }
-
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
-        builder::IpPoolUpdate::new(self)
-    }
-
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
-        builder::IpPoolDelete::new(self)
-    }
-
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
-        builder::IpPoolRangeList::new(self)
-    }
-
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
-        builder::IpPoolRangeAdd::new(self)
-    }
-
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
-        builder::IpPoolRangeRemove::new(self)
-    }
-
-    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList {
-        builder::IpPoolSiloList::new(self)
-    }
-
-    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink {
-        builder::IpPoolSiloLink::new(self)
-    }
-
-    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate {
-        builder::IpPoolSiloUpdate::new(self)
-    }
-
-    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
-        builder::IpPoolSiloUnlink::new(self)
-    }
-
-    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
-        builder::IpPoolUtilizationView::new(self)
-    }
-
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
-        builder::IpPoolServiceView::new(self)
-    }
-
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
-        builder::IpPoolServiceRangeList::new(self)
-    }
-
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
-        builder::IpPoolServiceRangeAdd::new(self)
-    }
-
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
-        builder::IpPoolServiceRangeRemove::new(self)
-    }
-
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
         builder::NetworkingAddressLotList::new(self)
     }
@@ -52845,6 +54723,226 @@ impl ClientSystemStatusExt for Client {
 /// Virtual Private Clouds (VPCs) provide isolated network environments for
 /// managing and deploying services.
 pub trait ClientVpcsExt {
+    /// List IP addresses attached to internet gateway
+    ///
+    /// Sends a `GET` request to `/v1/internet-gateway-ip-addresses`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_address_list()
+    ///    .gateway(gateway)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_address_list(&self) -> builder::InternetGatewayIpAddressList;
+    /// Attach IP address to internet gateway
+    ///
+    /// Sends a `POST` request to `/v1/internet-gateway-ip-addresses`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// - `body`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_address_create()
+    ///    .gateway(gateway)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_address_create(&self) -> builder::InternetGatewayIpAddressCreate;
+    /// Detach IP address from internet gateway
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/internet-gateway-ip-addresses/{address}`
+    ///
+    /// Arguments:
+    /// - `address`: Name or ID of the IP address
+    /// - `cascade`: Also delete routes targeting this gateway element.
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_address_delete()
+    ///    .address(address)
+    ///    .cascade(cascade)
+    ///    .gateway(gateway)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_address_delete(&self) -> builder::InternetGatewayIpAddressDelete;
+    /// List IP pools attached to internet gateway
+    ///
+    /// Sends a `GET` request to `/v1/internet-gateway-ip-pools`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_pool_list()
+    ///    .gateway(gateway)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_pool_list(&self) -> builder::InternetGatewayIpPoolList;
+    /// Attach IP pool to internet gateway
+    ///
+    /// Sends a `POST` request to `/v1/internet-gateway-ip-pools`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// - `body`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_pool_create()
+    ///    .gateway(gateway)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_pool_create(&self) -> builder::InternetGatewayIpPoolCreate;
+    /// Detach IP pool from internet gateway
+    ///
+    /// Sends a `DELETE` request to `/v1/internet-gateway-ip-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// - `cascade`: Also delete routes targeting this gateway element.
+    /// - `gateway`: Name or ID of the internet gateway
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC, only required if `gateway` is provided
+    ///   as a `Name`
+    /// ```ignore
+    /// let response = client.internet_gateway_ip_pool_delete()
+    ///    .pool(pool)
+    ///    .cascade(cascade)
+    ///    .gateway(gateway)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_ip_pool_delete(&self) -> builder::InternetGatewayIpPoolDelete;
+    /// List internet gateways
+    ///
+    /// Sends a `GET` request to `/v1/internet-gateways`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.internet_gateway_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_list(&self) -> builder::InternetGatewayList;
+    /// Create VPC internet gateway
+    ///
+    /// Sends a `POST` request to `/v1/internet-gateways`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
+    /// ```ignore
+    /// let response = client.internet_gateway_create()
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_create(&self) -> builder::InternetGatewayCreate;
+    /// Fetch internet gateway
+    ///
+    /// Sends a `GET` request to `/v1/internet-gateways/{gateway}`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the gateway
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.internet_gateway_view()
+    ///    .gateway(gateway)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_view(&self) -> builder::InternetGatewayView;
+    /// Delete internet gateway
+    ///
+    /// Sends a `DELETE` request to `/v1/internet-gateways/{gateway}`
+    ///
+    /// Arguments:
+    /// - `gateway`: Name or ID of the gateway
+    /// - `cascade`: Also delete routes targeting this gateway.
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// ```ignore
+    /// let response = client.internet_gateway_delete()
+    ///    .gateway(gateway)
+    ///    .cascade(cascade)
+    ///    .project(project)
+    ///    .vpc(vpc)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn internet_gateway_delete(&self) -> builder::InternetGatewayDelete;
     /// List firewall rules
     ///
     /// Sends a `GET` request to `/v1/vpc-firewall-rules`
@@ -53310,6 +55408,46 @@ pub trait ClientVpcsExt {
 }
 
 impl ClientVpcsExt for Client {
+    fn internet_gateway_ip_address_list(&self) -> builder::InternetGatewayIpAddressList {
+        builder::InternetGatewayIpAddressList::new(self)
+    }
+
+    fn internet_gateway_ip_address_create(&self) -> builder::InternetGatewayIpAddressCreate {
+        builder::InternetGatewayIpAddressCreate::new(self)
+    }
+
+    fn internet_gateway_ip_address_delete(&self) -> builder::InternetGatewayIpAddressDelete {
+        builder::InternetGatewayIpAddressDelete::new(self)
+    }
+
+    fn internet_gateway_ip_pool_list(&self) -> builder::InternetGatewayIpPoolList {
+        builder::InternetGatewayIpPoolList::new(self)
+    }
+
+    fn internet_gateway_ip_pool_create(&self) -> builder::InternetGatewayIpPoolCreate {
+        builder::InternetGatewayIpPoolCreate::new(self)
+    }
+
+    fn internet_gateway_ip_pool_delete(&self) -> builder::InternetGatewayIpPoolDelete {
+        builder::InternetGatewayIpPoolDelete::new(self)
+    }
+
+    fn internet_gateway_list(&self) -> builder::InternetGatewayList {
+        builder::InternetGatewayList::new(self)
+    }
+
+    fn internet_gateway_create(&self) -> builder::InternetGatewayCreate {
+        builder::InternetGatewayCreate::new(self)
+    }
+
+    fn internet_gateway_view(&self) -> builder::InternetGatewayView {
+        builder::InternetGatewayView::new(self)
+    }
+
+    fn internet_gateway_delete(&self) -> builder::InternetGatewayDelete {
+        builder::InternetGatewayDelete::new(self)
+    }
+
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView {
         builder::VpcFirewallRulesView::new(self)
     }
@@ -57371,6 +59509,116 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientInstancesExt::instance_update`]
+    ///
+    /// [`ClientInstancesExt::instance_update`]: super::ClientInstancesExt::instance_update
+    #[derive(Debug, Clone)]
+    pub struct InstanceUpdate<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InstanceUpdate, String>,
+    }
+
+    impl<'a> InstanceUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::InstanceUpdate::default()),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InstanceUpdate>,
+            <V as std::convert::TryInto<types::InstanceUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `InstanceUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::InstanceUpdate) -> types::builder::InstanceUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/instances/{instance}`
+        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+                body,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::InstanceUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_delete`]
     ///
     /// [`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete
@@ -58808,6 +61056,1484 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_address_list`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_address_list`]: super::ClientVpcsExt::internet_gateway_ip_address_list
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpAddressList<'a> {
+        client: &'a super::Client,
+        gateway: Result<Option<types::NameOrId>, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayIpAddressList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/internet-gateway-ip-addresses`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGatewayIpAddressResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                gateway,
+                limit,
+                page_token,
+                project,
+                sort_by,
+                vpc,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateway-ip-addresses", client.baseurl,);
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &gateway {
+                query.push(("gateway", v.to_string()));
+            }
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/internet-gateway-ip-addresses`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::InternetGatewayIpAddress, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                gateway: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_address_create`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_address_create`]: super::ClientVpcsExt::internet_gateway_ip_address_create
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpAddressCreate<'a> {
+        client: &'a super::Client,
+        gateway: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InternetGatewayIpAddressCreate, String>,
+    }
+
+    impl<'a> InternetGatewayIpAddressCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Err("gateway was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+                body: Ok(types::builder::InternetGatewayIpAddressCreate::default()),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InternetGatewayIpAddressCreate>,
+            <V as std::convert::TryInto<types::InternetGatewayIpAddressCreate>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `InternetGatewayIpAddressCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::InternetGatewayIpAddressCreate,
+            ) -> types::builder::InternetGatewayIpAddressCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/internet-gateway-ip-addresses`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGatewayIpAddress>, Error<types::Error>> {
+            let Self {
+                client,
+                gateway,
+                project,
+                vpc,
+                body,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::InternetGatewayIpAddressCreate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateway-ip-addresses", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            query.push(("gateway", gateway.to_string()));
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_address_delete`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_address_delete`]: super::ClientVpcsExt::internet_gateway_ip_address_delete
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpAddressDelete<'a> {
+        client: &'a super::Client,
+        address: Result<types::NameOrId, String>,
+        cascade: Result<Option<bool>, String>,
+        gateway: Result<Option<types::NameOrId>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayIpAddressDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                address: Err("address was not initialized".to_string()),
+                cascade: Ok(None),
+                gateway: Ok(None),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn address<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.address = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for address failed".to_string());
+            self
+        }
+
+        pub fn cascade<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.cascade = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for cascade failed".to_string());
+            self
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/internet-gateway-ip-addresses/{address}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                address,
+                cascade,
+                gateway,
+                project,
+                vpc,
+            } = self;
+            let address = address.map_err(Error::InvalidRequest)?;
+            let cascade = cascade.map_err(Error::InvalidRequest)?;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/internet-gateway-ip-addresses/{}",
+                client.baseurl,
+                encode_path(&address.to_string()),
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &cascade {
+                query.push(("cascade", v.to_string()));
+            }
+            if let Some(v) = &gateway {
+                query.push(("gateway", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_pool_list`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_pool_list`]: super::ClientVpcsExt::internet_gateway_ip_pool_list
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpPoolList<'a> {
+        client: &'a super::Client,
+        gateway: Result<Option<types::NameOrId>, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayIpPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/internet-gateway-ip-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGatewayIpPoolResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                gateway,
+                limit,
+                page_token,
+                project,
+                sort_by,
+                vpc,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateway-ip-pools", client.baseurl,);
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &gateway {
+                query.push(("gateway", v.to_string()));
+            }
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/internet-gateway-ip-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::InternetGatewayIpPool, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                gateway: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_pool_create`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_pool_create`]: super::ClientVpcsExt::internet_gateway_ip_pool_create
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpPoolCreate<'a> {
+        client: &'a super::Client,
+        gateway: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::InternetGatewayIpPoolCreate, String>,
+    }
+
+    impl<'a> InternetGatewayIpPoolCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Err("gateway was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+                body: Ok(types::builder::InternetGatewayIpPoolCreate::default()),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InternetGatewayIpPoolCreate>,
+            <V as std::convert::TryInto<types::InternetGatewayIpPoolCreate>>::Error:
+                std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `InternetGatewayIpPoolCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::InternetGatewayIpPoolCreate,
+            ) -> types::builder::InternetGatewayIpPoolCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/internet-gateway-ip-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGatewayIpPool>, Error<types::Error>> {
+            let Self {
+                client,
+                gateway,
+                project,
+                vpc,
+                body,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::InternetGatewayIpPoolCreate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateway-ip-pools", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            query.push(("gateway", gateway.to_string()));
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_ip_pool_delete`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_ip_pool_delete`]: super::ClientVpcsExt::internet_gateway_ip_pool_delete
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayIpPoolDelete<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        cascade: Result<Option<bool>, String>,
+        gateway: Result<Option<types::NameOrId>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayIpPoolDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                cascade: Ok(None),
+                gateway: Ok(None),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn cascade<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.cascade = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for cascade failed".to_string());
+            self
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/internet-gateway-ip-pools/{pool}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                cascade,
+                gateway,
+                project,
+                vpc,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let cascade = cascade.map_err(Error::InvalidRequest)?;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/internet-gateway-ip-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &cascade {
+                query.push(("cascade", v.to_string()));
+            }
+            if let Some(v) = &gateway {
+                query.push(("gateway", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_list`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_list`]: super::ClientVpcsExt::internet_gateway_list
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/internet-gateways`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGatewayResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+                vpc,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateways", client.baseurl,);
+            let mut query = Vec::with_capacity(5usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/internet-gateways`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::InternetGateway, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_create`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_create`]: super::ClientVpcsExt::internet_gateway_create
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayCreate<'a> {
+        client: &'a super::Client,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<types::NameOrId, String>,
+        body: Result<types::builder::InternetGatewayCreate, String>,
+    }
+
+    impl<'a> InternetGatewayCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Ok(None),
+                vpc: Err("vpc was not initialized".to_string()),
+                body: Ok(types::builder::InternetGatewayCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::InternetGatewayCreate>,
+            <V as std::convert::TryInto<types::InternetGatewayCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `InternetGatewayCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::InternetGatewayCreate,
+            ) -> types::builder::InternetGatewayCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/internet-gateways`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGateway>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                vpc,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::InternetGatewayCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/internet-gateways", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            query.push(("vpc", vpc.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_view`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_view`]: super::ClientVpcsExt::internet_gateway_view
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayView<'a> {
+        client: &'a super::Client,
+        gateway: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Err("gateway was not initialized".to_string()),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/internet-gateways/{gateway}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::InternetGateway>, Error<types::Error>> {
+            let Self {
+                client,
+                gateway,
+                project,
+                vpc,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/internet-gateways/{}",
+                client.baseurl,
+                encode_path(&gateway.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientVpcsExt::internet_gateway_delete`]
+    ///
+    /// [`ClientVpcsExt::internet_gateway_delete`]: super::ClientVpcsExt::internet_gateway_delete
+    #[derive(Debug, Clone)]
+    pub struct InternetGatewayDelete<'a> {
+        client: &'a super::Client,
+        gateway: Result<types::NameOrId, String>,
+        cascade: Result<Option<bool>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InternetGatewayDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                gateway: Err("gateway was not initialized".to_string()),
+                cascade: Ok(None),
+                project: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn gateway<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.gateway = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for gateway failed".to_string());
+            self
+        }
+
+        pub fn cascade<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.cascade = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for cascade failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/internet-gateways/{gateway}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                gateway,
+                cascade,
+                project,
+                vpc,
+            } = self;
+            let gateway = gateway.map_err(Error::InvalidRequest)?;
+            let cascade = cascade.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/internet-gateways/{}",
+                client.baseurl,
+                encode_path(&gateway.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &cascade {
+                query.push(("cascade", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -64293,9 +68019,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_list`]: super::ClientSystemNetworkingExt::ip_pool_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_list`]: super::ClientSystemIpPoolsExt::ip_pool_list
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
@@ -64441,9 +68167,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_create`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_create`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_create`]: super::ClientSystemNetworkingExt::ip_pool_create
+    /// [`ClientSystemIpPoolsExt::ip_pool_create`]: super::ClientSystemIpPoolsExt::ip_pool_create
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
@@ -64510,9 +68236,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_view`]: super::ClientSystemNetworkingExt::ip_pool_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_view`]: super::ClientSystemIpPoolsExt::ip_pool_view
     #[derive(Debug, Clone)]
     pub struct IpPoolView<'a> {
         client: &'a super::Client,
@@ -64570,9 +68296,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_update`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_update`]: super::ClientSystemNetworkingExt::ip_pool_update
+    /// [`ClientSystemIpPoolsExt::ip_pool_update`]: super::ClientSystemIpPoolsExt::ip_pool_update
     #[derive(Debug, Clone)]
     pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
@@ -64656,9 +68382,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_delete`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_delete`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_delete`]: super::ClientSystemNetworkingExt::ip_pool_delete
+    /// [`ClientSystemIpPoolsExt::ip_pool_delete`]: super::ClientSystemIpPoolsExt::ip_pool_delete
     #[derive(Debug, Clone)]
     pub struct IpPoolDelete<'a> {
         client: &'a super::Client,
@@ -64716,9 +68442,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_list`]: super::ClientSystemNetworkingExt::ip_pool_range_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
@@ -64863,9 +68589,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_add`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_add`]: super::ClientSystemNetworkingExt::ip_pool_range_add
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeAdd<'a> {
         client: &'a super::Client,
@@ -64937,9 +68663,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_remove`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_range_remove`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_range_remove
+    /// [`ClientSystemIpPoolsExt::ip_pool_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeRemove<'a> {
         client: &'a super::Client,
@@ -65011,9 +68737,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_list`]: super::ClientSystemNetworkingExt::ip_pool_silo_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_list`]: super::ClientSystemIpPoolsExt::ip_pool_silo_list
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloList<'a> {
         client: &'a super::Client,
@@ -65177,9 +68903,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_link`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_link`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_link`]: super::ClientSystemNetworkingExt::ip_pool_silo_link
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_link`]: super::ClientSystemIpPoolsExt::ip_pool_silo_link
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloLink<'a> {
         client: &'a super::Client,
@@ -65265,9 +68991,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_update`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_update`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_update`]: super::ClientSystemNetworkingExt::ip_pool_silo_update
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_update`]: super::ClientSystemIpPoolsExt::ip_pool_silo_update
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloUpdate<'a> {
         client: &'a super::Client,
@@ -65374,9 +69100,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]: super::ClientSystemNetworkingExt::ip_pool_silo_unlink
+    /// [`ClientSystemIpPoolsExt::ip_pool_silo_unlink`]: super::ClientSystemIpPoolsExt::ip_pool_silo_unlink
     #[derive(Debug, Clone)]
     pub struct IpPoolSiloUnlink<'a> {
         client: &'a super::Client,
@@ -65449,9 +69175,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_utilization_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_utilization_view`]: super::ClientSystemNetworkingExt::ip_pool_utilization_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_utilization_view`]: super::ClientSystemIpPoolsExt::ip_pool_utilization_view
     #[derive(Debug, Clone)]
     pub struct IpPoolUtilizationView<'a> {
         client: &'a super::Client,
@@ -65511,9 +69237,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_view`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_view`]: super::ClientSystemIpPoolsExt::ip_pool_service_view
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceView<'a> {
         client: &'a super::Client,
@@ -65552,9 +69278,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_list`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_list`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
@@ -65681,9 +69407,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_add`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_add`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
@@ -65738,9 +69464,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]
+    /// Builder for [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]
     ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
+    /// [`ClientSystemIpPoolsExt::ip_pool_service_range_remove`]: super::ClientSystemIpPoolsExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
@@ -66977,7 +70703,6 @@ pub mod builder {
     pub struct NetworkingBgpConfigList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -66987,7 +70712,6 @@ pub mod builder {
             Self {
                 client: client,
                 limit: Ok(None),
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -67000,17 +70724,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn name_or_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.name_or_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
@@ -67043,21 +70756,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                name_or_id,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &name_or_id {
-                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -67098,7 +70806,6 @@ pub mod builder {
             use futures::TryFutureExt;
             use futures::TryStreamExt;
             let next = Self {
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
@@ -67273,7 +70980,6 @@ pub mod builder {
     pub struct NetworkingBgpAnnounceSetList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -67283,7 +70989,6 @@ pub mod builder {
             Self {
                 client: client,
                 limit: Ok(None),
-                name_or_id: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -67296,17 +71001,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn name_or_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.name_or_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
             self
         }
 
@@ -67339,21 +71033,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                name_or_id,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-announce-set", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &name_or_id {
-                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -67469,36 +71158,39 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetDelete<'a> {
         client: &'a super::Client,
-        name_or_id: Result<types::NameOrId, String>,
+        announce_set: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                name_or_id: Err("name_or_id was not initialized".to_string()),
+                announce_set: Err("announce_set was not initialized".to_string()),
             }
         }
 
-        pub fn name_or_id<V>(mut self, value: V) -> Self
+        pub fn announce_set<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
         {
-            self.name_or_id = value
+            self.announce_set = value
                 .try_into()
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+                .map_err(|_| "conversion to `NameOrId` for announce_set failed".to_string());
             self
         }
 
         /// Sends a `DELETE` request to
-        /// `/v1/system/networking/bgp-announce-set/{name_or_id}`
+        /// `/v1/system/networking/bgp-announce-set/{announce_set}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, name_or_id } = self;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let Self {
+                client,
+                announce_set,
+            } = self;
+            let announce_set = announce_set.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/bgp-announce-set/{}",
                 client.baseurl,
-                encode_path(&name_or_id.to_string()),
+                encode_path(&announce_set.to_string()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67531,38 +71223,41 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnouncementList<'a> {
         client: &'a super::Client,
-        name_or_id: Result<types::NameOrId, String>,
+        announce_set: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnouncementList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                name_or_id: Err("name_or_id was not initialized".to_string()),
+                announce_set: Err("announce_set was not initialized".to_string()),
             }
         }
 
-        pub fn name_or_id<V>(mut self, value: V) -> Self
+        pub fn announce_set<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
         {
-            self.name_or_id = value
+            self.announce_set = value
                 .try_into()
-                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+                .map_err(|_| "conversion to `NameOrId` for announce_set failed".to_string());
             self
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/networking/bgp-announce-set/{name_or_id}/announcement`
+        /// `/v1/system/networking/bgp-announce-set/{announce_set}/announcement`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
-            let Self { client, name_or_id } = self;
-            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let Self {
+                client,
+                announce_set,
+            } = self;
+            let announce_set = announce_set.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/bgp-announce-set/{}/announcement",
                 client.baseurl,
-                encode_path(&name_or_id.to_string()),
+                encode_path(&announce_set.to_string()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75882,6 +79577,7 @@ pub mod prelude {
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
     pub use super::ClientSystemHardwareExt;
+    pub use super::ClientSystemIpPoolsExt;
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;

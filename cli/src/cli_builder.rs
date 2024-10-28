@@ -4,11 +4,11 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
+use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
-use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
+use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
@@ -16,7 +16,7 @@ use crate::{
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
 };
-use oxide::ClientConfig;
+use oxide::{types::ByteCount, ClientConfig};
 
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
@@ -27,7 +27,7 @@ struct OxideCli {
     pub debug: bool,
 
     /// Configuration profile to use for commands
-    #[clap(long, global = true)]
+    #[clap(long, global = true, help_heading = "Global Options")]
     pub profile: Option<String>,
 
     /// Directory to use for configuration
@@ -229,9 +229,11 @@ impl<'a> NewCli<'a> {
             timeout,
         } = OxideCli::from_arg_matches(&matches).unwrap();
 
+        let mut log_builder = env_logger::builder();
         if debug {
-            env_logger::builder().filter_level(LevelFilter::Debug);
+            log_builder.filter_level(LevelFilter::Debug);
         }
+        log_builder.init();
 
         let mut client_config = ClientConfig::default();
 
@@ -325,6 +327,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceList => Some("instance list"),
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),
+        CliCommand::InstanceUpdate => Some("instance update"),
         CliCommand::InstanceDelete => Some("instance delete"),
         CliCommand::InstanceReboot => Some("instance reboot"),
         CliCommand::InstanceSerialConsole => None, // Special-cased
@@ -425,6 +428,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcRouterView => Some("vpc router view"),
         CliCommand::VpcRouterUpdate => Some("vpc router update"),
         CliCommand::VpcRouterDelete => Some("vpc router delete"),
+
+        CliCommand::InternetGatewayIpAddressList => Some("internet-gateway address list"),
+        CliCommand::InternetGatewayIpAddressCreate => Some("internet-gateway address create"),
+        CliCommand::InternetGatewayIpAddressDelete => Some("internet-gateway address delete"),
+        CliCommand::InternetGatewayIpPoolList => Some("internet-gateway ip-pool list"),
+        CliCommand::InternetGatewayIpPoolCreate => Some("internet-gateway ip-pool attach"),
+        CliCommand::InternetGatewayIpPoolDelete => Some("internet-gateway ip-pool detach"),
+        CliCommand::InternetGatewayList => Some("internet-gateway list"),
+        CliCommand::InternetGatewayCreate => Some("internet-gateway create"),
+        CliCommand::InternetGatewayView => Some("internet-gateway view"),
+        CliCommand::InternetGatewayDelete => Some("internet-gateway delete"),
 
         CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
         CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
@@ -689,11 +703,16 @@ impl CommandExt for Command {
                     Command::new(first.to_owned())
                         .subcommand_required(true)
                         .display_order(0)
+                        .mut_args(update_byte_count_help)
                         .add_subcommand(rest, subcmd),
                 )
             }
         } else {
-            let new_subcmd = subcmd.into().name(path.to_owned()).display_order(0);
+            let new_subcmd = subcmd
+                .into()
+                .name(path.to_owned())
+                .display_order(0)
+                .mut_args(update_byte_count_help);
             let has_subcommand = self.find_subcommand(path).is_some();
             if has_subcommand {
                 self.mut_subcommand(path, |cmd| {
@@ -704,6 +723,28 @@ impl CommandExt for Command {
                 self.subcommand(new_subcmd)
             }
         }
+    }
+}
+
+/// For Args that take a `ByteCount`, append a message on the unit formatting accepted and remove
+/// any reference to the field taking bytes as an argument.
+fn update_byte_count_help(arg: Arg) -> Arg {
+    const UNIT_HINT: &str =
+        "unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib";
+
+    let parser = arg.get_value_parser();
+    if parser.type_id() == TypeId::of::<ByteCount>() {
+        let old_help = arg
+            .get_help()
+            .cloned()
+            .map(|h| h.to_string().replace(" (in bytes)", ""));
+
+        arg.help(match old_help {
+            Some(old) => format!("{old}; {UNIT_HINT}"),
+            None => UNIT_HINT.to_string(),
+        })
+    } else {
+        arg
     }
 }
 

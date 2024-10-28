@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 //! A Facility to generate valid, random data for types that are
 //! `schemars::JsonSchema + serde::Deserialize`. It generates a JSON value
@@ -103,15 +103,19 @@ fn mock_schema_object(
     src: &mut impl Source,
 ) -> Result<Value, Error> {
     match schema {
+        // Enumerated values
         SchemaObject {
             enum_values: Some(values),
             ..
         } => Ok(values[src.gen_range(0..values.len())].clone()),
+
+        // A constant value
         SchemaObject {
             const_value: Some(value),
             ..
         } => Ok(value.clone()),
 
+        // Subschemas
         SchemaObject {
             metadata: _,
             instance_type: None,
@@ -127,23 +131,6 @@ fn mock_schema_object(
             extensions: _,
         } => mock_subschemas(subschemas, definitions, src),
 
-        // Number
-        SchemaObject {
-            metadata: _,
-            instance_type: Some(SingleOrVec::Single(instance_type)),
-            format: _,
-            enum_values: None,
-            const_value: None,
-            subschemas: None,
-            number,
-            string: _,
-            array: _,
-            object: _,
-            reference: None,
-            extensions: _,
-        } if instance_type.as_ref() == &InstanceType::Number => mock_number(number, src),
-
-        // Integer
         SchemaObject {
             metadata: _,
             instance_type: Some(SingleOrVec::Single(instance_type)),
@@ -152,28 +139,20 @@ fn mock_schema_object(
             const_value: None,
             subschemas: None,
             number,
-            string: _,
-            array: _,
-            object: _,
-            reference: None,
-            extensions: _,
-        } if instance_type.as_ref() == &InstanceType::Integer => mock_integer(format, number, src),
-
-        // String
-        SchemaObject {
-            metadata: _,
-            instance_type: Some(SingleOrVec::Single(instance_type)),
-            format,
-            enum_values: None,
-            const_value: None,
-            subschemas: None,
-            number: _,
             string,
-            array: _,
-            object: _,
+            array,
+            object,
             reference: None,
             extensions: _,
-        } if instance_type.as_ref() == &InstanceType::String => mock_string(format, string, src),
+        } => match instance_type.as_ref() {
+            InstanceType::Null => Ok(json! { null }),
+            InstanceType::Boolean => mock_bool(src),
+            InstanceType::Object => mock_object(object, definitions, src),
+            InstanceType::Array => mock_array(array, definitions, src),
+            InstanceType::Number => mock_number(number, src),
+            InstanceType::String => mock_string(format, string, src),
+            InstanceType::Integer => mock_integer(format, number, src),
+        },
 
         // One way to express an option
         SchemaObject {
@@ -193,39 +172,6 @@ fn mock_schema_object(
             | matches!(&vec[..], &[InstanceType::Null, InstanceType::String]) =>
         {
             mock_string(format, string, src)
-        }
-
-        // Array
-        SchemaObject {
-            metadata: _,
-            instance_type: Some(SingleOrVec::Single(instance_type)),
-            format: _,
-            enum_values: None,
-            const_value: None,
-            subschemas: None,
-            number: _,
-            string: _,
-            array,
-            object: _,
-            reference: None,
-            extensions: _,
-        } if instance_type.as_ref() == &InstanceType::Array => mock_array(array, definitions, src),
-
-        SchemaObject {
-            metadata: _,
-            instance_type: Some(SingleOrVec::Single(instance_type)),
-            format: _,
-            enum_values: None,
-            const_value: None,
-            subschemas: None,
-            number: _,
-            string: _,
-            array: _,
-            object,
-            reference: None,
-            extensions: _,
-        } if instance_type.as_ref() == &InstanceType::Object => {
-            mock_object(object, definitions, src)
         }
 
         SchemaObject {
@@ -252,22 +198,6 @@ fn mock_schema_object(
 
             mock_schema(schema, definitions, src)
         }
-
-        // The null schema--we see this sometimes in an `anyOf` resulting from an `Option`
-        SchemaObject {
-            metadata: _,
-            instance_type: Some(SingleOrVec::Single(instance_type)),
-            format: _,
-            enum_values: None,
-            const_value: None,
-            subschemas: None,
-            number: _,
-            string: _,
-            array: _,
-            object: _,
-            reference: None,
-            extensions: _,
-        } if instance_type.as_ref() == &InstanceType::Null => Ok(json! {null}),
 
         s => todo!("schema {}", serde_json::to_string_pretty(s).unwrap()),
     }
@@ -480,6 +410,11 @@ macro_rules! mock_int_type {
             }
         }
     }};
+}
+
+fn mock_bool(src: &mut impl Source) -> Result<Value, Error> {
+    let b = src.gen_bool(0.5);
+    Ok(json! { b })
 }
 
 fn mock_integer(

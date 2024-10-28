@@ -4,17 +4,17 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::fs::File;
+use std::error::Error;
+use std::fs::{File, OpenOptions};
 use std::io::{self, Write};
+use std::path::Path;
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
-use oauth2::{
-    basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
-    ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
-};
+use oauth2::{basic::BasicClient, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenUrl};
+use oauth2::{StandardDeviceAuthorizationResponse, TokenResponse};
 use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientSessionExt};
 use std::time::Duration;
@@ -128,7 +128,7 @@ fn yes(prompt: impl Into<String>) -> Result<bool> {
 ///     $ oxide auth login --host oxide.internal
 ///
 ///     # authenticate with an insecure Oxide silo (not recommended)
-///     $ oxide auth login --host http://oxide.internal
+///     $ oxide --insecure auth login --host oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdAuthLogin {
@@ -185,28 +185,6 @@ impl CmdAuthLogin {
             .make_unauthenticated_client_builder()
             .redirect(reqwest::redirect::Policy::none())
             .build()?;
-        // Copied from oauth2::async_http_client to customize the
-        // reqwest::Client with the top-level command-line options.
-        let async_http_client_custom = |request: oauth2::HttpRequest| async move {
-            let mut request_builder = client
-                .request(request.method, request.url.as_str())
-                .body(request.body);
-            for (name, value) in &request.headers {
-                request_builder = request_builder.header(name.as_str(), value.as_bytes());
-            }
-            let request = request_builder.build()?;
-
-            let response = client.execute(request).await?;
-
-            let status_code = response.status();
-            let headers = response.headers().to_owned();
-            let chunks = response.bytes().await?;
-            std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
-                status_code,
-                headers,
-                body: chunks.to_vec(),
-            })
-        };
 
         // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
         let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
@@ -214,18 +192,15 @@ impl CmdAuthLogin {
         // since we're not doing that and this ID would be public if it were
         // static, we just generate a random one each time we authenticate.
         let client_id = Uuid::new_v4();
-        let auth_client = BasicClient::new(
-            ClientId::new(client_id.to_string()),
-            None,
-            AuthUrl::new(format!("{}authorize", &self.host))?,
-            Some(TokenUrl::new(format!("{}device/token", &self.host))?),
-        )
-        .set_auth_type(AuthType::RequestBody)
-        .set_device_authorization_url(device_auth_url);
+        let auth_client = BasicClient::new(ClientId::new(client_id.to_string()))
+            .set_auth_uri(AuthUrl::new(format!("{}authorize", &self.host))?)
+            .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
+            .set_auth_type(AuthType::RequestBody)
+            .set_device_authorization_url(device_auth_url);
 
         let details: StandardDeviceAuthorizationResponse = auth_client
-            .exchange_device_code()?
-            .request_async(async_http_client_custom)
+            .exchange_device_code()
+            .request_async(client)
             .await?;
 
         let uri = details.verification_uri().to_string();
@@ -251,7 +226,7 @@ impl CmdAuthLogin {
 
         let token = auth_client
             .exchange_device_access_token(&details)
-            .request_async(async_http_client_custom, tokio::time::sleep, None)
+            .request_async(client, tokio::time::sleep, None)
             .await?
             .access_token()
             .secret()
@@ -340,7 +315,10 @@ impl CmdAuthLogin {
                 config_dir.to_string_lossy()
             )
         });
-        std::fs::write(credentials_path, credentials.to_string())
+        let mut credentials_file =
+            create_private_file(&credentials_path).expect("unable to create credentials.toml");
+        credentials_file
+            .write_all(credentials.to_string().as_bytes())
             .expect("unable to write credentials.toml");
 
         // If there is no default profile then we'll set this new profile to be
@@ -407,7 +385,7 @@ impl CmdAuthLogout {
 
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.
-            let _ = File::create(credentials_path)?;
+            let _ = create_private_file(&credentials_path)?;
             writeln!(io::stdout(), "Removed all authentication information")?;
         } else {
             let profile = ctx
@@ -434,8 +412,13 @@ impl CmdAuthLogout {
                     config_dir.to_string_lossy()
                 )
             });
-            std::fs::write(credentials_path, credentials.to_string())
+
+            let mut credentials_file =
+                create_private_file(&credentials_path).expect("unable to create credentials.toml");
+            credentials_file
+                .write_all(credentials.to_string().as_bytes())
                 .expect("unable to write credentials.toml");
+
             writeln!(
                 io::stdout(),
                 "Removed authentication information for profile \"{}\"",
@@ -529,10 +512,87 @@ impl CmdAuthStatus {
 
     fn error_msg(e: &oxide::Error<oxide::types::Error>) -> String {
         match e {
-            oxide::Error::ErrorResponse(ee) => format!("Error Response: {}", ee.message),
-            ee => ee.to_string(),
+            oxide::Error::CommunicationError(error) => {
+                if error.is_timeout() {
+                    "Request timed out".to_string()
+                } else if error.is_connect() {
+                    // Unfortunately this relies on internal knowledge of
+                    // reqwest::Error. In particular, in this case its source
+                    // will be a hyper_util::client::legacy::Error. Both the
+                    // reqwest error and the hyper_util error effectively add
+                    // no useful information. We therefore descend twice into
+                    // the source list to find a useful error to report.
+                    let details = error
+                        .source()
+                        .and_then(Error::source)
+                        .map_or("(no details)".to_string(), ToString::to_string);
+                    format!("Failed to connect to server: {}", details)
+                } else {
+                    let mut msg = "Unexpected error".to_string();
+                    let mut next = Some(error as &(dyn std::error::Error + 'static));
+                    while let Some(ee) = next {
+                        msg += ": ";
+                        msg += &ee.to_string();
+                        next = ee.source();
+                    }
+                    msg
+                }
+            }
+            oxide::Error::ErrorResponse(response_value) => {
+                format!(
+                    "Server responded with an error message: {}",
+                    response_value.message,
+                )
+            }
+            oxide::Error::ResponseBodyError(_) => "Error reading the server's response".to_string(),
+            oxide::Error::InvalidResponsePayload(bytes, error) => {
+                // While this output might be big, it's a pretty unlikely
+                // failure mode for which we might reasonably want to see the
+                // output.
+                format!(
+                    "Server responded with unexpected data: {} {}",
+                    error,
+                    bytes.escape_ascii(),
+                )
+            }
+            oxide::Error::UnexpectedResponse(response) => {
+                format!(
+                    "Server responded with an unexpected status: {}",
+                    response.status()
+                )
+            }
+            oxide::Error::InvalidRequest(msg) => {
+                // This would be indicative of a programming error where we
+                // didn't supply all required values.
+                format!("Internal error: {}", msg)
+            }
+            oxide::Error::InvalidUpgrade(_) => {
+                unreachable!("auth should not be establishing a websocket")
+            }
+            oxide::Error::PreHookError(_) => {
+                unreachable!("there is no pre-hook")
+            }
         }
     }
+}
+
+/// Create a file. On Unix set permissions to 0600.
+fn create_private_file(path: &Path) -> Result<File> {
+    let mut open_opts = OpenOptions::new();
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        open_opts.mode(0o600);
+    }
+
+    let file = open_opts
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(path)?;
+
+    Ok(file)
 }
 
 #[cfg(test)]
@@ -542,19 +602,23 @@ mod tests {
         use assert_cmd::Command;
         use predicates::str;
 
+        let temp_dir = tempfile::tempdir().unwrap().into_path();
+
         let bad_url = "sys.oxide.invalid";
 
         // Validate connection error details are printed
         Command::cargo_bin("oxide")
             .unwrap()
+            .arg("--config-dir")
+            .arg(temp_dir.as_os_str())
             .arg("auth")
             .arg("login")
             .arg("--host")
             .arg(bad_url)
             .assert()
             .failure()
-            .stderr(str::starts_with(format!(
-                "Request failed: error sending request for url (https://{bad_url}/device/auth):"
+            .stderr(str::starts_with(&format!(
+                "Request failed: request failed: error sending request for url (https://{bad_url}/device/auth):"
             )));
     }
 

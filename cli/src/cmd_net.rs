@@ -109,8 +109,21 @@ pub struct CmdLinkAdd {
 #[async_trait]
 impl AuthenticatedCmd for CmdLinkAdd {
     async fn run(&self, client: &Client) -> Result<()> {
-        let mut settings =
-            current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
+        let mut settings = current_port_settings(client, &self.rack, &self.switch, &self.port)
+            .await
+            .unwrap_or(SwitchPortSettingsCreate {
+                addresses: HashMap::default(),
+                bgp_peers: HashMap::default(),
+                description: String::default(),
+                groups: Vec::default(),
+                interfaces: HashMap::default(),
+                links: HashMap::default(),
+                name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
+                port_config: SwitchPortConfigCreate {
+                    geometry: SwitchPortGeometry::Qsfp28x1,
+                },
+                routes: HashMap::default(),
+            });
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
             fec: self.fec.into(),
@@ -234,7 +247,7 @@ enum BgpSubCommand {
 ///
 /// This command adds the provided prefix to the specified announce set. It is
 /// required that the prefix be available in the given address lot. The add is
-/// performed as a read-modify-write on the specified address lot.
+/// performed as a read-modify-write on the announce set.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "announce")]
@@ -260,7 +273,7 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
@@ -292,8 +305,8 @@ impl AuthenticatedCmd for CmdBgpAnnounce {
 
 /// Withdraw a prefix over BGP.
 ///
-/// This command removes the provided prefix to the specified announce set.
-/// The remove is performed as a read-modify-write on the specified address lot.
+/// This command removes the provided prefix from the specified announce set.
+/// The remove is performed as a read-modify-write on the announce set.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "withdraw")]
@@ -312,7 +325,7 @@ impl AuthenticatedCmd for CmdBgpWithdraw {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut current: Vec<BgpAnnouncementCreate> = client
             .networking_bgp_announcement_list()
-            .name_or_id(NameOrId::Name(self.announce_set.clone()))
+            .announce_set(NameOrId::Name(self.announce_set.clone()))
             .send()
             .await?
             .into_inner()
@@ -615,9 +628,9 @@ pub struct CmdStaticRouteSet {
     #[clap(long)]
     vlan_id: Option<u16>,
 
-    /// The route local preference
+    /// RIB Priority indicating priority within and across protocols.
     #[clap(long)]
-    local_pref: Option<u32>,
+    rib_priority: Option<u8>,
 }
 
 #[async_trait]
@@ -634,7 +647,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         routes: vec![Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         }],
                     },
@@ -651,7 +664,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         *route = Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         };
                     }
@@ -659,7 +672,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
                         config.routes.push(Route {
                             dst: self.destination.clone(),
                             gw: self.nexthop,
-                            local_pref: self.local_pref,
+                            rib_priority: self.rib_priority,
                             vid: self.vlan_id,
                         });
                     }
@@ -1339,10 +1352,10 @@ impl AuthenticatedCmd for CmdPortConfig {
                     writeln!(
                         &mut tw,
                         "{}\t{}\t{}\t{}",
-                        r.dst.to_string(),
-                        r.gw.to_string(),
+                        r.dst,
+                        r.gw,
                         r.vlan_id.unwrap_or(0),
-                        r.local_pref.unwrap_or(0),
+                        r.rib_priority.unwrap_or(0),
                     )?;
                 }
                 tw.flush()?;
@@ -1742,7 +1755,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                     dst: x.dst.clone(),
                     gw: gw.addr(),
                     vid: x.vlan_id,
-                    local_pref: x.local_pref,
+                    rib_priority: x.rib_priority,
                 }
             })
             .collect(),

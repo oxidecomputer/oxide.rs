@@ -12,10 +12,10 @@ use std::path::PathBuf;
 use thiserror::Error;
 
 mod auth;
-mod generated_sdk;
-
 #[cfg(feature = "clap")]
 mod clap_feature;
+pub mod extras;
+mod generated_sdk;
 
 pub use auth::*;
 pub use generated_sdk::*;

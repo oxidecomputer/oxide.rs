@@ -52,6 +52,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceList => Self::cli_instance_list(),
             CliCommand::InstanceCreate => Self::cli_instance_create(),
             CliCommand::InstanceView => Self::cli_instance_view(),
+            CliCommand::InstanceUpdate => Self::cli_instance_update(),
             CliCommand::InstanceDelete => Self::cli_instance_delete(),
             CliCommand::InstanceDiskList => Self::cli_instance_disk_list(),
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
@@ -65,6 +66,22 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceSshPublicKeyList => Self::cli_instance_ssh_public_key_list(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
+            CliCommand::InternetGatewayIpAddressList => {
+                Self::cli_internet_gateway_ip_address_list()
+            }
+            CliCommand::InternetGatewayIpAddressCreate => {
+                Self::cli_internet_gateway_ip_address_create()
+            }
+            CliCommand::InternetGatewayIpAddressDelete => {
+                Self::cli_internet_gateway_ip_address_delete()
+            }
+            CliCommand::InternetGatewayIpPoolList => Self::cli_internet_gateway_ip_pool_list(),
+            CliCommand::InternetGatewayIpPoolCreate => Self::cli_internet_gateway_ip_pool_create(),
+            CliCommand::InternetGatewayIpPoolDelete => Self::cli_internet_gateway_ip_pool_delete(),
+            CliCommand::InternetGatewayList => Self::cli_internet_gateway_list(),
+            CliCommand::InternetGatewayCreate => Self::cli_internet_gateway_create(),
+            CliCommand::InternetGatewayView => Self::cli_internet_gateway_view(),
+            CliCommand::InternetGatewayDelete => Self::cli_internet_gateway_delete(),
             CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
             CliCommand::ProjectIpPoolView => Self::cli_project_ip_pool_view(),
             CliCommand::LoginLocal => Self::cli_login_local(),
@@ -740,7 +757,7 @@ impl<T: CliConfig> Cli<T> {
                     .long("size")
                     .value_parser(clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
-                    .help("total size of the Disk in bytes"),
+                    .help("The total size of the Disk (in bytes)"),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -1484,6 +1501,24 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_instance_create() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("auto-restart-policy")
+                    .long("auto-restart-policy")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::InstanceAutoRestartPolicy::Never.to_string(),
+                            types::InstanceAutoRestartPolicy::BestEffort.to_string(),
+                        ]),
+                        |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The auto-restart policy for this instance.\n\nThis indicates whether the \
+                         instance should be automatically restarted by the control plane on \
+                         failure. If this is `null`, no auto-restart policy has been configured \
+                         for this instance by the user.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("description")
                     .long("description")
                     .value_parser(clap::value_parser!(String))
@@ -1493,13 +1528,15 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("hostname")
                     .long("hostname")
                     .value_parser(clap::value_parser!(types::Hostname))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The hostname to be assigned to the instance"),
             )
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
                     .value_parser(clap::value_parser!(types::ByteCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The amount of RAM (in bytes) to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -1511,7 +1548,8 @@ impl<T: CliConfig> Cli<T> {
                 clap::Arg::new("ncpus")
                     .long("ncpus")
                     .value_parser(clap::value_parser!(types::InstanceCpuCount))
-                    .required_unless_present("json-body"),
+                    .required_unless_present("json-body")
+                    .help("The number of vCPUs to be allocated to the instance"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -1572,6 +1610,65 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Fetch instance")
+    }
+
+    pub fn cli_instance_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("auto-restart-policy")
+                    .long("auto-restart-policy")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::InstanceAutoRestartPolicy::Never.to_string(),
+                            types::InstanceAutoRestartPolicy::BestEffort.to_string(),
+                        ]),
+                        |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The auto-restart policy for this instance.\n\nIf not provided, unset the \
+                         instance's auto-restart policy.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("boot-disk")
+                    .long("boot-disk")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the disk the instance should be instructed to boot \
+                         from.\n\nIf not provided, unset the instance's boot disk.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update instance")
     }
 
     pub fn cli_instance_delete() -> clap::Command {
@@ -1978,6 +2075,469 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Stop instance")
+    }
+
+    pub fn cli_internet_gateway_ip_address_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .about("List IP addresses attached to internet gateway")
+    }
+
+    pub fn cli_internet_gateway_ip_address_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Attach IP address to internet gateway")
+    }
+
+    pub fn cli_internet_gateway_ip_address_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP address"),
+            )
+            .arg(
+                clap::Arg::new("cascade")
+                    .long("cascade")
+                    .value_parser(clap::value_parser!(bool))
+                    .required(false)
+                    .help("Also delete routes targeting this gateway element."),
+            )
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .about("Detach IP address from internet gateway")
+    }
+
+    pub fn cli_internet_gateway_ip_pool_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .about("List IP pools attached to internet gateway")
+    }
+
+    pub fn cli_internet_gateway_ip_pool_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("ip-pool")
+                    .long("ip-pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Attach IP pool to internet gateway")
+    }
+
+    pub fn cli_internet_gateway_ip_pool_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("cascade")
+                    .long("cascade")
+                    .value_parser(clap::value_parser!(bool))
+                    .required(false)
+                    .help("Also delete routes targeting this gateway element."),
+            )
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the internet gateway"),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
+                    ),
+            )
+            .about("Detach IP pool from internet gateway")
+    }
+
+    pub fn cli_internet_gateway_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("List internet gateways")
+    }
+
+    pub fn cli_internet_gateway_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the VPC"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create VPC internet gateway")
+    }
+
+    pub fn cli_internet_gateway_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the gateway"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("Fetch internet gateway")
+    }
+
+    pub fn cli_internet_gateway_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("cascade")
+                    .long("cascade")
+                    .value_parser(clap::value_parser!(bool))
+                    .required(false)
+                    .help("Also delete routes targeting this gateway."),
+            )
+            .arg(
+                clap::Arg::new("gateway")
+                    .long("gateway")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the gateway"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the VPC"),
+            )
+            .about("Delete internet gateway")
     }
 
     pub fn cli_project_ip_pool_list() -> clap::Command {
@@ -4234,13 +4794,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("A name or id to use when selecting BGP config."),
-            )
-            .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
@@ -4332,13 +4885,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("A name or id to use when s electing BGP port settings"),
-            )
-            .arg(
                 clap::Arg::new("page-token")
                     .long("page-token")
                     .value_parser(clap::value_parser!(String))
@@ -4399,11 +4945,11 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
+                clap::Arg::new("announce-set")
+                    .long("announce-set")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("A name or id to use when selecting BGP port settings"),
+                    .help("Name or ID of the announce set"),
             )
             .about("Delete BGP announce set")
     }
@@ -4411,11 +4957,11 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_networking_bgp_announcement_list() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
-                    .long("name-or-id")
+                clap::Arg::new("announce-set")
+                    .long("announce-set")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("A name or id to use when selecting BGP port settings"),
+                    .help("Name or ID of the announce set"),
             )
             .about("Get originated routes for a specified BGP announce set")
     }
@@ -7237,6 +7783,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceList => self.execute_instance_list(matches).await,
             CliCommand::InstanceCreate => self.execute_instance_create(matches).await,
             CliCommand::InstanceView => self.execute_instance_view(matches).await,
+            CliCommand::InstanceUpdate => self.execute_instance_update(matches).await,
             CliCommand::InstanceDelete => self.execute_instance_delete(matches).await,
             CliCommand::InstanceDiskList => self.execute_instance_disk_list(matches).await,
             CliCommand::InstanceDiskAttach => self.execute_instance_disk_attach(matches).await,
@@ -7262,6 +7809,34 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::InstanceStart => self.execute_instance_start(matches).await,
             CliCommand::InstanceStop => self.execute_instance_stop(matches).await,
+            CliCommand::InternetGatewayIpAddressList => {
+                self.execute_internet_gateway_ip_address_list(matches).await
+            }
+            CliCommand::InternetGatewayIpAddressCreate => {
+                self.execute_internet_gateway_ip_address_create(matches)
+                    .await
+            }
+            CliCommand::InternetGatewayIpAddressDelete => {
+                self.execute_internet_gateway_ip_address_delete(matches)
+                    .await
+            }
+            CliCommand::InternetGatewayIpPoolList => {
+                self.execute_internet_gateway_ip_pool_list(matches).await
+            }
+            CliCommand::InternetGatewayIpPoolCreate => {
+                self.execute_internet_gateway_ip_pool_create(matches).await
+            }
+            CliCommand::InternetGatewayIpPoolDelete => {
+                self.execute_internet_gateway_ip_pool_delete(matches).await
+            }
+            CliCommand::InternetGatewayList => self.execute_internet_gateway_list(matches).await,
+            CliCommand::InternetGatewayCreate => {
+                self.execute_internet_gateway_create(matches).await
+            }
+            CliCommand::InternetGatewayView => self.execute_internet_gateway_view(matches).await,
+            CliCommand::InternetGatewayDelete => {
+                self.execute_internet_gateway_delete(matches).await
+            }
             CliCommand::ProjectIpPoolList => self.execute_project_ip_pool_list(matches).await,
             CliCommand::ProjectIpPoolView => self.execute_project_ip_pool_view(matches).await,
             CliCommand::LoginLocal => self.execute_login_local(matches).await,
@@ -8857,6 +9432,12 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_create();
+        if let Some(value) =
+            matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
+        {
+            request = request.body_map(|body| body.auto_restart_policy(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -8920,6 +9501,46 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config.execute_instance_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.instance_update();
+        if let Some(value) =
+            matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
+        {
+            request = request.body_map(|body| body.auto_restart_policy(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("boot-disk") {
+            request = request.body_map(|body| body.boot_disk(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config.execute_instance_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -9354,6 +9975,454 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_address_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_ip_address_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::InternetGatewayIpAddressResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::InternetGatewayIpAddressResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_address_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_address_create();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+            request = request.body_map(|body| body.address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::InternetGatewayIpAddressCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_internet_gateway_ip_address_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_address_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_address_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address") {
+            request = request.address(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("cascade") {
+            request = request.cascade(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_ip_address_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_pool_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_ip_pool_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::InternetGatewayIpPoolResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::InternetGatewayIpPoolResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_pool_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_pool_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {
+            request = request.body_map(|body| body.ip_pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::InternetGatewayIpPoolCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_internet_gateway_ip_pool_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_ip_pool_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_ip_pool_delete();
+        if let Some(value) = matches.get_one::<bool>("cascade") {
+            request = request.cascade(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_ip_pool_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::InternetGatewayResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::InternetGatewayResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::InternetGatewayCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_internet_gateway_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_internet_gateway_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.internet_gateway_delete();
+        if let Some(value) = matches.get_one::<bool>("cascade") {
+            request = request.cascade(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
+            request = request.gateway(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        self.config
+            .execute_internet_gateway_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -12064,10 +13133,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
@@ -12178,10 +13243,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<String>("page-token") {
             request = request.page_token(value.clone());
         }
@@ -12245,8 +13306,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
+            request = request.announce_set(value.clone());
         }
 
         self.config
@@ -12269,8 +13330,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announcement_list();
-        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
-            request = request.name_or_id(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
+            request = request.announce_set(value.clone());
         }
 
         self.config
@@ -15605,6 +16666,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_delete(
         &self,
         matches: &clap::ArgMatches,
@@ -15705,6 +16774,86 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceStop,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpAddressList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_address_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpAddressCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_address_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpAddressDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpPoolList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_pool_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpPoolCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_ip_pool_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayIpPoolDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_internet_gateway_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InternetGatewayDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -17119,6 +18268,7 @@ pub enum CliCommand {
     InstanceList,
     InstanceCreate,
     InstanceView,
+    InstanceUpdate,
     InstanceDelete,
     InstanceDiskList,
     InstanceDiskAttach,
@@ -17132,6 +18282,16 @@ pub enum CliCommand {
     InstanceSshPublicKeyList,
     InstanceStart,
     InstanceStop,
+    InternetGatewayIpAddressList,
+    InternetGatewayIpAddressCreate,
+    InternetGatewayIpAddressDelete,
+    InternetGatewayIpPoolList,
+    InternetGatewayIpPoolCreate,
+    InternetGatewayIpPoolDelete,
+    InternetGatewayList,
+    InternetGatewayCreate,
+    InternetGatewayView,
+    InternetGatewayDelete,
     ProjectIpPoolList,
     ProjectIpPoolView,
     LoginLocal,
@@ -17347,6 +18507,7 @@ impl CliCommand {
             CliCommand::InstanceList,
             CliCommand::InstanceCreate,
             CliCommand::InstanceView,
+            CliCommand::InstanceUpdate,
             CliCommand::InstanceDelete,
             CliCommand::InstanceDiskList,
             CliCommand::InstanceDiskAttach,
@@ -17360,6 +18521,16 @@ impl CliCommand {
             CliCommand::InstanceSshPublicKeyList,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
+            CliCommand::InternetGatewayIpAddressList,
+            CliCommand::InternetGatewayIpAddressCreate,
+            CliCommand::InternetGatewayIpAddressDelete,
+            CliCommand::InternetGatewayIpPoolList,
+            CliCommand::InternetGatewayIpPoolCreate,
+            CliCommand::InternetGatewayIpPoolDelete,
+            CliCommand::InternetGatewayList,
+            CliCommand::InternetGatewayCreate,
+            CliCommand::InternetGatewayView,
+            CliCommand::InternetGatewayDelete,
             CliCommand::ProjectIpPoolList,
             CliCommand::ProjectIpPoolView,
             CliCommand::LoginLocal,

@@ -49,7 +49,7 @@ enum AuthMethod {
 
 impl Default for ClientConfig {
     fn default() -> Self {
-        let mut config_dir = dirs::home_dir().expect("unable to determint the home directory");
+        let mut config_dir = dirs::home_dir().expect("unable to determine the home directory");
         config_dir.push(".config");
         config_dir.push("oxide");
         Self {
@@ -130,6 +130,7 @@ impl ClientConfig {
 }
 
 #[derive(Deserialize, Debug, Default)]
+#[serde(default)]
 pub struct CredentialsFile {
     pub profile: BTreeMap<String, ProfileCredentials>,
 }

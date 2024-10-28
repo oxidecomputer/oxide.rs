@@ -1,6 +1,6 @@
 {
   "name": "oxide",
-  "version": "0.6.1+20240710.0",
+  "version": "0.8.0+20241009.0",
   "about": "Control an Oxide environment",
   "args": [
     {
@@ -102,7 +102,7 @@
         {
           "name": "login",
           "about": "Authenticate with an Oxide Silo",
-          "long_about": "Authenticate with an Oxide Silo\n\n    # authenticate with a specific Oxide silo\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide silo (not recommended)\n    $ oxide auth login --host http://oxide.internal",
+          "long_about": "Authenticate with an Oxide Silo\n\n    # authenticate with a specific Oxide silo\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide silo (not recommended)\n    $ oxide --insecure auth login --host oxide.internal",
           "args": [
             {
               "long": "browser",
@@ -472,7 +472,7 @@
             },
             {
               "long": "size",
-              "help": "total size of the Disk in bytes"
+              "help": "The total size of the Disk; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             }
           ]
         },
@@ -518,7 +518,7 @@
             },
             {
               "long": "disk-size",
-              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB"
+              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "image",
@@ -1399,10 +1399,19 @@
           "about": "Create instance",
           "args": [
             {
+              "long": "auto-restart-policy",
+              "values": [
+                "never",
+                "best_effort"
+              ],
+              "help": "The auto-restart policy for this instance.\n\nThis indicates whether the instance should be automatically restarted by the control plane on failure. If this is `null`, no auto-restart policy has been configured for this instance by the user."
+            },
+            {
               "long": "description"
             },
             {
-              "long": "hostname"
+              "long": "hostname",
+              "help": "The hostname to be assigned to the instance"
             },
             {
               "long": "json-body",
@@ -1413,13 +1422,15 @@
               "help": "XXX"
             },
             {
-              "long": "memory"
+              "long": "memory",
+              "help": "The amount of RAM to be allocated to the instance; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "name"
             },
             {
-              "long": "ncpus"
+              "long": "ncpus",
+              "help": "The number of vCPUs to be allocated to the instance"
             },
             {
               "long": "profile",
@@ -1655,11 +1666,11 @@
           "args": [
             {
               "long": "description",
-              "help": "Description of the instance to create"
+              "help": "Description of the instance"
             },
             {
               "long": "hostname",
-              "help": "Hostname of the instance to create"
+              "help": "The hostname to be assigned to the instance"
             },
             {
               "long": "image",
@@ -1667,7 +1678,7 @@
             },
             {
               "long": "memory",
-              "help": "Instance memory e.g 32M. Suffix can be k,m,g,t"
+              "help": "Amount of RAM to be allocated to the instance; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "name",
@@ -1675,7 +1686,7 @@
             },
             {
               "long": "ncpus",
-              "help": "Instance CPU count"
+              "help": "Number of vCPUs to be allocated to the instance"
             },
             {
               "long": "profile",
@@ -1688,7 +1699,7 @@
             },
             {
               "long": "size",
-              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t"
+              "help": "Boot disk size; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
             },
             {
               "long": "start",
@@ -2096,6 +2107,45 @@
           ]
         },
         {
+          "name": "update",
+          "about": "Update instance",
+          "args": [
+            {
+              "long": "auto-restart-policy",
+              "values": [
+                "never",
+                "best_effort"
+              ],
+              "help": "The auto-restart policy for this instance.\n\nIf not provided, unset the instance's auto-restart policy."
+            },
+            {
+              "long": "boot-disk",
+              "help": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk."
+            },
+            {
+              "long": "instance",
+              "help": "Name or ID of the instance"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
           "name": "view",
           "about": "Fetch instance",
           "args": [
@@ -2111,6 +2161,380 @@
             {
               "long": "project",
               "help": "Name or ID of the project"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "internet-gateway",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "address",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Attach IP address to internet gateway",
+              "args": [
+                {
+                  "long": "address"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Detach IP address from internet gateway",
+              "args": [
+                {
+                  "long": "address",
+                  "help": "Name or ID of the IP address"
+                },
+                {
+                  "long": "cascade",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Also delete routes targeting this gateway element."
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List IP addresses attached to internet gateway",
+              "args": [
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "create",
+          "about": "Create VPC internet gateway",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete internet gateway",
+          "args": [
+            {
+              "long": "cascade",
+              "values": [
+                "true",
+                "false"
+              ],
+              "help": "Also delete routes targeting this gateway."
+            },
+            {
+              "long": "gateway",
+              "help": "Name or ID of the gateway"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "ip-pool",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "attach",
+              "about": "Attach IP pool to internet gateway",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "ip-pool"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "detach",
+              "about": "Detach IP pool from internet gateway",
+              "args": [
+                {
+                  "long": "cascade",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Also delete routes targeting this gateway element."
+                },
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List IP pools attached to internet gateway",
+              "args": [
+                {
+                  "long": "gateway",
+                  "help": "Name or ID of the internet gateway"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                },
+                {
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC, only required if `gateway` is provided as a `Name`"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List internet gateways",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch internet gateway",
+          "args": [
+            {
+              "long": "gateway",
+              "help": "Name or ID of the gateway"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
+            },
+            {
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
             }
           ]
         }
@@ -3301,7 +3725,7 @@
                 },
                 {
                   "long": "memory",
-                  "help": "The amount of RAM (in bytes) available for running instances in the Silo"
+                  "help": "The amount of RAM available for running instances in the Silo; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
                 },
                 {
                   "long": "profile",
@@ -3314,7 +3738,7 @@
                 },
                 {
                   "long": "storage",
-                  "help": "The amount of storage (in bytes) available for disks or snapshots"
+                  "help": "The amount of storage available for disks or snapshots; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
                 }
               ]
             },
@@ -4547,7 +4971,7 @@
                 {
                   "name": "announce",
                   "about": "Announce a prefix over BGP.",
-                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the specified address lot.",
+                  "long_about": "Announce a prefix over BGP.\n\nThis command adds the provided prefix to the specified announce set. It is\nrequired that the prefix be available in the given address lot. The add is\nperformed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "address-lot",
@@ -4586,8 +5010,8 @@
                       "about": "Delete BGP announce set",
                       "args": [
                         {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "long": "announce-set",
+                          "help": "Name or ID of the announce set"
                         },
                         {
                           "long": "profile",
@@ -4603,10 +5027,6 @@
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when s electing BGP port settings"
                         },
                         {
                           "long": "page-token",
@@ -4670,8 +5090,8 @@
                       "about": "Get originated routes for a specified BGP announce set",
                       "args": [
                         {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP port settings"
+                          "long": "announce-set",
+                          "help": "Name or ID of the announce set"
                         },
                         {
                           "long": "profile",
@@ -4820,10 +5240,6 @@
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "name-or-id",
-                          "help": "A name or id to use when selecting BGP config."
                         },
                         {
                           "long": "profile",
@@ -5293,7 +5709,7 @@
                 {
                   "name": "withdraw",
                   "about": "Withdraw a prefix over BGP.",
-                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix to the specified announce set.\nThe remove is performed as a read-modify-write on the specified address lot.",
+                  "long_about": "Withdraw a prefix over BGP.\n\nThis command removes the provided prefix from the specified announce set.\nThe remove is performed as a read-modify-write on the announce set.",
                   "args": [
                     {
                       "long": "announce-set",
@@ -5680,10 +6096,6 @@
                       "help": "The route destination"
                     },
                     {
-                      "long": "local-pref",
-                      "help": "The route local preference"
-                    },
-                    {
                       "long": "nexthop",
                       "help": "The route nexthop"
                     },
@@ -5733,6 +6145,10 @@
                     {
                       "long": "rack",
                       "help": "Id of the rack to configure the route on"
+                    },
+                    {
+                      "long": "rib-priority",
+                      "help": "RIB Priority indicating priority within and across protocols"
                     },
                     {
                       "long": "switch",
