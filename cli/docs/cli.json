@@ -217,7 +217,8 @@
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "help": "Name or ID of the certificate"
             },
             {
               "long": "profile",
@@ -256,7 +257,8 @@
           "long_about": "Returns the details of a specific certificate",
           "args": [
             {
-              "long": "certificate"
+              "long": "certificate",
+              "help": "Name or ID of the certificate"
             },
             {
               "long": "profile",
@@ -3433,7 +3435,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal ID"
                         }
                       ]
                     },
@@ -3461,7 +3463,7 @@
                         },
                         {
                           "long": "user-id",
-                          "help": "The user's internal id"
+                          "help": "The user's internal ID"
                         }
                       ]
                     }
@@ -3809,7 +3811,7 @@
                 },
                 {
                   "long": "user-id",
-                  "help": "The user's internal id"
+                  "help": "The user's internal ID"
                 }
               ]
             }
@@ -4104,7 +4106,7 @@
                     },
                     {
                       "long": "rack-id",
-                      "help": "The rack's unique ID."
+                      "help": "ID of the rack"
                     }
                   ]
                 }
@@ -4338,7 +4340,7 @@
               ],
               "subcommands": [
                 {
-                  "name": "configuration",
+                  "name": "active-configuration",
                   "args": [
                     {
                       "long": "profile",
@@ -4348,8 +4350,35 @@
                   ],
                   "subcommands": [
                     {
-                      "name": "apply",
-                      "about": "Apply switch port settings",
+                      "name": "clear",
+                      "about": "Clear switch port configuration",
+                      "args": [
+                        {
+                          "long": "port",
+                          "help": "A name to use when selecting switch ports."
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "rack-id",
+                          "help": "A rack id to use when selecting switch ports."
+                        },
+                        {
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
+                          "help": "A switch location to use when selecting switch ports."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "set",
+                      "about": "Set switch port configuration",
                       "args": [
                         {
                           "long": "json-body",
@@ -4377,14 +4406,18 @@
                           "help": "A rack id to use when selecting switch ports."
                         },
                         {
-                          "long": "switch-location",
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
                           "help": "A switch location to use when selecting switch ports."
                         }
                       ]
                     },
                     {
-                      "name": "remove",
-                      "about": "Clear switch port settings",
+                      "name": "view",
+                      "about": "View switch port configuration",
                       "args": [
                         {
                           "long": "port",
@@ -4400,10 +4433,80 @@
                           "help": "A rack id to use when selecting switch ports."
                         },
                         {
-                          "long": "switch-location",
+                          "long": "switch",
+                          "values": [
+                            "switch0",
+                            "switch1"
+                          ],
                           "help": "A switch location to use when selecting switch ports."
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "apply-settings",
+                  "about": "Apply switch port settings",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "port-settings",
+                      "help": "A name or id to use when applying switch port settings."
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "A switch location to use when selecting switch ports."
+                    }
+                  ]
+                },
+                {
+                  "name": "clear-settings",
+                  "about": "Clear switch port settings",
+                  "args": [
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
+                      "help": "A switch location to use when selecting switch ports."
                     }
                   ]
                 },
@@ -4462,6 +4565,10 @@
                     },
                     {
                       "long": "switch-location",
+                      "values": [
+                        "switch0",
+                        "switch1"
+                      ],
                       "help": "A switch location to use when selecting switch ports."
                     }
                   ]
@@ -5223,7 +5330,7 @@
                       "about": "Delete BGP configuration",
                       "args": [
                         {
-                          "long": "name-or-id",
+                          "long": "bgp-config",
                           "help": "A name or id to use when selecting BGP config."
                         },
                         {
@@ -6202,7 +6309,7 @@
                           "args": [
                             {
                               "long": "address",
-                              "help": "The address and prefix length of this address."
+                              "help": "The address and subnet mask"
                             },
                             {
                               "long": "address-lot",
@@ -6256,7 +6363,7 @@
                           "args": [
                             {
                               "long": "address",
-                              "help": "The address and prefix length of this address."
+                              "help": "The address and subnet mask"
                             },
                             {
                               "long": "address-lot",
@@ -6317,7 +6424,7 @@
                               "args": [
                                 {
                                   "long": "addr",
-                                  "help": "The address of th e host to peer with."
+                                  "help": "The address of the host to peer with."
                                 },
                                 {
                                   "long": "allow-export-list-active",
@@ -6365,11 +6472,11 @@
                                 },
                                 {
                                   "long": "idle-hold-time",
-                                  "help": "How long to hold a peer in idle before attempting a new session (seconds)."
+                                  "help": "How long to hold this peer in idle before attempting a new session (seconds)."
                                 },
                                 {
                                   "long": "interface-name",
-                                  "help": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
+                                  "help": "The name of the interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
                                 },
                                 {
                                   "long": "json-body",
@@ -6389,15 +6496,15 @@
                                 },
                                 {
                                   "long": "md5-auth-key",
-                                  "help": "Use the given key for TCP-MD5 authentication with the peer."
+                                  "help": "Use the given key for TCP-MD5 authentication with this peer."
                                 },
                                 {
                                   "long": "min-ttl",
-                                  "help": "Require messages from a peer have a minimum IP time to live field."
+                                  "help": "Require messages from this peer to have a minimum IP time to live field."
                                 },
                                 {
                                   "long": "multi-exit-discriminator",
-                                  "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer."
+                                  "help": "Apply a multi-exit discriminator (MED) in updates sent to this peer."
                                 },
                                 {
                                   "long": "profile",
@@ -6406,11 +6513,11 @@
                                 },
                                 {
                                   "long": "remote-asn",
-                                  "help": "Require that a peer has a specified ASN."
+                                  "help": "Require that this peer have a specified ASN."
                                 },
                                 {
                                   "long": "vlan-id",
-                                  "help": "Associate a VLAN ID with a peer."
+                                  "help": "Associate a VLAN ID with this peer."
                                 }
                               ]
                             },
@@ -6762,7 +6869,7 @@
                                 },
                                 {
                                   "long": "interface-name",
-                                  "help": "The name of interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
+                                  "help": "The name of the interface to peer on. This is relative to the port configuration this BGP peer configuration is a part of. For example this value could be phy0 to refer to a primary physical interface. Or it could be vlan47 to refer to a VLAN interface."
                                 },
                                 {
                                   "long": "json-body",
@@ -6814,7 +6921,7 @@
                       "args": [
                         {
                           "long": "configuration",
-                          "help": "An optional name or id to use when selecting a switch port configuration."
+                          "help": "A name or id to use when selecting a switch port configuration."
                         },
                         {
                           "long": "profile",
@@ -7080,13 +7187,13 @@
                               "help": "XXX"
                             },
                             {
-                              "long": "local-pref",
-                              "help": "Local preference for route. Higher preference indictes precedence within and across protocols."
-                            },
-                            {
                               "long": "profile",
                               "help": "Configuration profile to use for commands",
                               "global": true
+                            },
+                            {
+                              "long": "rib-priority",
+                              "help": "Local preference for route. Higher preference indicates precedence within and across protocols."
                             },
                             {
                               "long": "vid",
@@ -7138,13 +7245,13 @@
                               "help": "XXX"
                             },
                             {
-                              "long": "local-pref",
-                              "help": "Local preference for route. Higher preference indictes precedence within and across protocols."
-                            },
-                            {
                               "long": "profile",
                               "help": "Configuration profile to use for commands",
                               "global": true
+                            },
+                            {
+                              "long": "rib-priority",
+                              "help": "Local preference for route. Higher preference indicates precedence within and across protocols."
                             },
                             {
                               "long": "vid",
@@ -7156,7 +7263,7 @@
                     },
                     {
                       "name": "view",
-                      "about": "Get information about a named set of switch-port-settings",
+                      "about": "View a switch port configuration",
                       "args": [
                         {
                           "long": "configuration",
