@@ -11399,11 +11399,14 @@ pub mod types {
     ///    },
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy configured for this
-    /// instance, or `None` if no explicit policy is configured.\n\nIf this is
-    /// not present, then this instance uses the default auto-restart policy,
-    /// which may or may not allow it to be restarted. The
-    /// `auto_restart_enabled` field indicates whether the instance will be
-    /// automatically restarted.",
+    /// instance, or `null` if no explicit policy has been configured.\n\nThis
+    /// policy determines whether the instance should be automatically restarted
+    /// by the control plane on failure. If this is `null`, the control plane
+    /// will use the default policy when determining whether or not to
+    /// automatically restart this instance, which may or may not allow it to be
+    /// restarted. The value of the `auto_restart_enabled` field indicates
+    /// whether the instance will be auto-restarted, based on its current policy
+    /// or the default if it has no configured policy.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
@@ -11512,13 +11515,16 @@ pub mod types {
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
         pub auto_restart_enabled: bool,
-        /// The auto-restart policy configured for this instance, or `None` if
-        /// no explicit policy is configured.
+        /// The auto-restart policy configured for this instance, or `null` if
+        /// no explicit policy has been configured.
         ///
-        /// If this is not present, then this instance uses the default
-        /// auto-restart policy, which may or may not allow it to be restarted.
-        /// The `auto_restart_enabled` field indicates whether the instance will
-        /// be automatically restarted.
+        /// This policy determines whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, the
+        /// control plane will use the default policy when determining whether
+        /// or not to automatically restart this instance, which may or may not
+        /// allow it to be restarted. The value of the `auto_restart_enabled`
+        /// field indicates whether the instance will be auto-restarted, based
+        /// on its current policy or the default if it has no configured policy.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// the ID of the disk used to boot this Instance, if a specific one is
@@ -11767,9 +11773,16 @@ pub mod types {
     ///  "properties": {
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy for this instance.\n\nThis
-    /// indicates whether the instance should be automatically restarted by the
-    /// control plane on failure. If this is `null`, no auto-restart policy has
-    /// been configured for this instance by the user.",
+    /// policy determines whether the instance should be automatically restarted
+    /// by the control plane on failure. If this is `null`, no auto-restart
+    /// policy will be explicitly configured for this instance, and the control
+    /// plane will select the default policy when determining whether the
+    /// instance can be automatically restarted.\n\nCurrently, the global
+    /// default auto-restart policy is \"best-effort\", so instances with `null`
+    /// auto-restart policies will be automatically restarted. However, in the
+    /// future, the default policy may be configurable through other mechanisms,
+    /// such as on a per-project basis. In that case, any configured default
+    /// policy will be used if this is `null`.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
@@ -11900,10 +11913,18 @@ pub mod types {
     pub struct InstanceCreate {
         /// The auto-restart policy for this instance.
         ///
-        /// This indicates whether the instance should be automatically
+        /// This policy determines whether the instance should be automatically
         /// restarted by the control plane on failure. If this is `null`, no
-        /// auto-restart policy has been configured for this instance by the
-        /// user.
+        /// auto-restart policy will be explicitly configured for this instance,
+        /// and the control plane will select the default policy when
+        /// determining whether the instance can be automatically restarted.
+        ///
+        /// Currently, the global default auto-restart policy is "best-effort",
+        /// so instances with `null` auto-restart policies will be automatically
+        /// restarted. However, in the future, the default policy may be
+        /// configurable through other mechanisms, such as on a per-project
+        /// basis. In that case, any configured default policy will be used if
+        /// this is `null`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// The disk this instance should boot into. This disk can either be
@@ -12883,8 +12904,17 @@ pub mod types {
     ///  "type": "object",
     ///  "properties": {
     ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy for this instance.\n\nIf
-    /// not provided, unset the instance's auto-restart policy.",
+    ///      "description": "Sets the auto-restart policy for this
+    /// instance.\n\nThis policy determines whether the instance should be
+    /// automatically restarted by the control plane on failure. If this is
+    /// `null`, any explicitly configured auto-restart policy will be unset, and
+    /// the control plane will select the default policy when determining
+    /// whether the instance can be automatically restarted.\n\nCurrently, the
+    /// global default auto-restart policy is \"best-effort\", so instances with
+    /// `null` auto-restart policies will be automatically restarted. However,
+    /// in the future, the default policy may be configurable through other
+    /// mechanisms, such as on a per-project basis. In that case, any configured
+    /// default policy will be used if this is `null`.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
@@ -12909,9 +12939,20 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceUpdate {
-        /// The auto-restart policy for this instance.
+        /// Sets the auto-restart policy for this instance.
         ///
-        /// If not provided, unset the instance's auto-restart policy.
+        /// This policy determines whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, any
+        /// explicitly configured auto-restart policy will be unset, and the
+        /// control plane will select the default policy when determining
+        /// whether the instance can be automatically restarted.
+        ///
+        /// Currently, the global default auto-restart policy is "best-effort",
+        /// so instances with `null` auto-restart policies will be automatically
+        /// restarted. However, in the future, the default policy may be
+        /// configurable through other mechanisms, such as on a per-project
+        /// basis. In that case, any configured default policy will be used if
+        /// this is `null`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// Name or ID of the disk the instance should be instructed to boot
