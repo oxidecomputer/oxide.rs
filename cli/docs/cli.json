@@ -539,6 +539,10 @@
               "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
             },
             {
+              "long": "parallelism",
+              "help": "The degree or parallelism to use during upload"
+            },
+            {
               "long": "path",
               "help": "Path to the file to import"
             },

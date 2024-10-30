@@ -76,6 +76,10 @@ pub struct CmdDiskImport {
     /// The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)
     #[clap(long, requires_all = ["snapshot", "image", "image_description", "image_os"])]
     image_version: Option<String>,
+
+    /// The degree or parallelism to use during upload
+    #[clap(long, default_value = "8", hide = true)]
+    parallelism: usize,
 }
 
 #[async_trait]
@@ -97,7 +101,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             .disk_import()
             .project(self.project.clone())
             .description(self.description.clone())
-            .upload_thread_ct(8)
+            .upload_thread_ct(self.parallelism)
             .disk(self.disk.clone())
             .disk_info(disk_info.clone());
 
