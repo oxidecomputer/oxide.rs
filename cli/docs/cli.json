@@ -554,6 +554,10 @@
             {
               "long": "snapshot",
               "help": "If supplied, create a snapshot with the given name"
+            },
+            {
+              "long": "thread-count",
+              "help": "The number of parallel threads to use during upload"
             }
           ],
           "subcommands": [
