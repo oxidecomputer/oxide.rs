@@ -82,6 +82,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
+        .add_custom::<cmd_timeseries::CmdTimeseriesRaw>("experimental timeseries raw")
         .add_custom::<cmd_net::CmdAddr>("system networking addr")
         .add_custom::<cmd_net::CmdLink>("system networking link")
         .add_custom::<cmd_net::CmdPortConfig>("system networking switch-port-settings show")

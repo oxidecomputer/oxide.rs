@@ -44,6 +44,7 @@ reqwest = { workspace = true, features = ["native-tls-vendored"] }
 schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+statrs = { workspace = true }
 tabwriter = { workspace = true }
 thouart = { workspace = true }
 toml = { workspace = true }
