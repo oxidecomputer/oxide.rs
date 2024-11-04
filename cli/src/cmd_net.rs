@@ -138,6 +138,7 @@ impl AuthenticatedCmd for CmdLinkAdd {
                 system_description: None,
                 management_ip: None,
             },
+            tx_eq: None,
         };
         match settings.links.get(PHY0) {
             Some(_) => {
@@ -1732,6 +1733,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
                         system_description: None,
                         management_ip: None,
                     },
+                    tx_eq: None,
                 },
             )
         })

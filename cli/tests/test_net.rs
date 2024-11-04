@@ -171,6 +171,7 @@ fn test_port_config() {
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
+            tx_eq_config_id: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
@@ -192,6 +193,7 @@ fn test_port_config() {
             time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         },
         vlan_interfaces: Vec::new(),
+        tx_eq: Vec::new(),
     };
     let switch1_qsfp0_view = SwitchPortSettingsView {
         addresses: vec![
@@ -263,6 +265,7 @@ fn test_port_config() {
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
+            tx_eq_config_id: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
@@ -277,6 +280,7 @@ fn test_port_config() {
             time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         },
         vlan_interfaces: Vec::new(),
+        tx_eq: Vec::new(),
     };
 
     let mock_switch0_qsfp0_settings_view =
