@@ -1915,9 +1915,16 @@ pub mod types {
     ///    "vrf": {
     ///      "description": "Optional virtual routing and forwarding identifier
     /// for this BGP configuration.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -6959,23 +6966,44 @@ pub mod types {
     ///      "format": "double"
     ///    },
     ///    "p50": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "p90": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "p99": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -7077,23 +7105,44 @@ pub mod types {
     ///      "format": "int64"
     ///    },
     ///    "p50": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "p90": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "p99": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Quantile"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Quantile"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -7154,9 +7203,16 @@ pub mod types {
     ///    "pool": {
     ///      "description": "Name or ID of the IP pool used to allocate an
     /// address",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -7403,9 +7459,16 @@ pub mod types {
     ///      ],
     ///      "properties": {
     ///        "pool": {
-    ///          "allOf": [
+    ///          "oneOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/NameOrId"
+    ///                }
+    ///              ]
     ///            }
     ///          ]
     ///        },
@@ -8155,9 +8218,16 @@ pub mod types {
     /// with the given name during finalization. If not specified, a snapshot
     /// for the disk will _not_ be created. A snapshot can be manually created
     /// once the disk transitions into the `Detached` state.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -8591,9 +8661,16 @@ pub mod types {
     ///    "pool": {
     ///      "description": "The parent IP pool that a floating IP is pulled
     /// from. If unset, the default pool is selected.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -8779,9 +8856,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -10939,9 +11023,16 @@ pub mod types {
     ///    },
     ///    "digest": {
     ///      "description": "Hash of the image contents, if applicable",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Digest"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Digest"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -11404,9 +11495,16 @@ pub mod types {
     /// which may or may not allow it to be restarted. The
     /// `auto_restart_enabled` field indicates whether the instance will be
     /// automatically restarted.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -11770,9 +11868,16 @@ pub mod types {
     /// indicates whether the instance should be automatically restarted by the
     /// control plane on failure. If this is `null`, no auto-restart policy has
     /// been configured for this instance by the user.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -11789,9 +11894,16 @@ pub mod types {
     /// may result in an instance that only boots to the EFI shell until the
     /// desired disk is set as an explicit boot disk and the instance
     /// rebooted.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -12482,9 +12594,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -12885,9 +13004,16 @@ pub mod types {
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy for this instance.\n\nIf
     /// not provided, unset the instance's auto-restart policy.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceAutoRestartPolicy"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -12895,9 +13021,16 @@ pub mod types {
     ///      "description": "Name or ID of the disk the instance should be
     /// instructed to boot from.\n\nIf not provided, unset the instance's boot
     /// disk.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -14119,9 +14252,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -15234,9 +15374,16 @@ pub mod types {
     ///    },
     ///    "management_ip": {
     ///      "description": "The LLDP management IP TLV.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IpNet"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -17543,9 +17690,16 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "ip_pool": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -18226,9 +18380,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -19498,9 +19659,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -19739,9 +19907,16 @@ pub mod types {
     ///    },
     ///    "signing_keypair": {
     ///      "description": "request signing key pair",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/DerEncodedKeyPair"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/DerEncodedKeyPair"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -20595,18 +20770,32 @@ pub mod types {
     ///    "memory": {
     ///      "description": "The amount of RAM (in bytes) available for running
     /// instances in the Silo",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/ByteCount"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "storage": {
     ///      "description": "The amount of storage (in bytes) available for
     /// disks or snapshots",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/ByteCount"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/ByteCount"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -25719,9 +25908,16 @@ pub mod types {
     ///        "values": {
     ///          "type": "array",
     ///          "items": {
-    ///            "allOf": [
+    ///            "oneOf": [
     ///              {
-    ///                "$ref": "#/components/schemas/Distributionint64"
+    ///                "type": "null"
+    ///              },
+    ///              {
+    ///                "allOf": [
+    ///                  {
+    ///                    "$ref": "#/components/schemas/Distributionint64"
+    ///                  }
+    ///                ]
     ///              }
     ///            ]
     ///          }
@@ -25744,9 +25940,16 @@ pub mod types {
     ///        "values": {
     ///          "type": "array",
     ///          "items": {
-    ///            "allOf": [
+    ///            "oneOf": [
     ///              {
-    ///                "$ref": "#/components/schemas/Distributiondouble"
+    ///                "type": "null"
+    ///              },
+    ///              {
+    ///                "allOf": [
+    ///                  {
+    ///                    "$ref": "#/components/schemas/Distributiondouble"
+    ///                  }
+    ///                ]
     ///              }
     ///            ]
     ///          }
@@ -25771,9 +25974,9 @@ pub mod types {
         #[serde(rename = "string")]
         String(Vec<Option<String>>),
         #[serde(rename = "integer_distribution")]
-        IntegerDistribution(Vec<Distributionint64>),
+        IntegerDistribution(Vec<Option<Distributionint64>>),
         #[serde(rename = "double_distribution")]
-        DoubleDistribution(Vec<Distributiondouble>),
+        DoubleDistribution(Vec<Option<Distributiondouble>>),
     }
 
     impl From<&ValueArray> for ValueArray {
@@ -25806,14 +26009,14 @@ pub mod types {
         }
     }
 
-    impl From<Vec<Distributionint64>> for ValueArray {
-        fn from(value: Vec<Distributionint64>) -> Self {
+    impl From<Vec<Option<Distributionint64>>> for ValueArray {
+        fn from(value: Vec<Option<Distributionint64>>) -> Self {
             Self::IntegerDistribution(value)
         }
     }
 
-    impl From<Vec<Distributiondouble>> for ValueArray {
-        fn from(value: Vec<Distributiondouble>) -> Self {
+    impl From<Vec<Option<Distributiondouble>>> for ValueArray {
+        fn from(value: Vec<Option<Distributiondouble>>) -> Self {
             Self::DoubleDistribution(value)
         }
     }
@@ -26157,9 +26360,16 @@ pub mod types {
     /// created from this VPC must be taken from this range, which should be a
     /// Unique Local Address in the range `fd00::/48`. The default VPC Subnet
     /// will have the first `/64` range from this prefix.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Ipv6Net"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -27623,9 +27833,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -27797,9 +28014,16 @@ pub mod types {
     /// apply in addition to the VPC-wide *system* router, and have higher
     /// priority than the system router for an otherwise equal-prefix-length
     /// match.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -27822,9 +28046,16 @@ pub mod types {
     /// prefix equal to the parent VPC's prefix. A random `/64` block will be
     /// assigned if one is not provided. It must not overlap with any existing
     /// subnet in the VPC.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Net"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Ipv6Net"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -27942,9 +28173,16 @@ pub mod types {
     ///    "custom_router": {
     ///      "description": "An optional router, used to direct packets sent
     /// from hosts in this subnet to any destination address.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -27955,9 +28193,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
@@ -28007,16 +28252,30 @@ pub mod types {
     ///      ]
     ///    },
     ///    "dns_name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "name": {
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/Name"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    }
