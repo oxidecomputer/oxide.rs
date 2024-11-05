@@ -11490,11 +11490,14 @@ pub mod types {
     ///    },
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy configured for this
-    /// instance, or `None` if no explicit policy is configured.\n\nIf this is
-    /// not present, then this instance uses the default auto-restart policy,
-    /// which may or may not allow it to be restarted. The
-    /// `auto_restart_enabled` field indicates whether the instance will be
-    /// automatically restarted.",
+    /// instance, or `null` if no explicit policy has been configured.\n\nThis
+    /// policy determines whether the instance should be automatically restarted
+    /// by the control plane on failure. If this is `null`, the control plane
+    /// will use the default policy when determining whether or not to
+    /// automatically restart this instance, which may or may not allow it to be
+    /// restarted. The value of the `auto_restart_enabled` field indicates
+    /// whether the instance will be auto-restarted, based on its current policy
+    /// or the default if it has no configured policy.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -11610,13 +11613,16 @@ pub mod types {
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
         pub auto_restart_enabled: bool,
-        /// The auto-restart policy configured for this instance, or `None` if
-        /// no explicit policy is configured.
+        /// The auto-restart policy configured for this instance, or `null` if
+        /// no explicit policy has been configured.
         ///
-        /// If this is not present, then this instance uses the default
-        /// auto-restart policy, which may or may not allow it to be restarted.
-        /// The `auto_restart_enabled` field indicates whether the instance will
-        /// be automatically restarted.
+        /// This policy determines whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, the
+        /// control plane will use the default policy when determining whether
+        /// or not to automatically restart this instance, which may or may not
+        /// allow it to be restarted. The value of the `auto_restart_enabled`
+        /// field indicates whether the instance will be auto-restarted, based
+        /// on its current policy or the default if it has no configured policy.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// the ID of the disk used to boot this Instance, if a specific one is
@@ -11865,9 +11871,16 @@ pub mod types {
     ///  "properties": {
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy for this instance.\n\nThis
-    /// indicates whether the instance should be automatically restarted by the
-    /// control plane on failure. If this is `null`, no auto-restart policy has
-    /// been configured for this instance by the user.",
+    /// policy determines whether the instance should be automatically restarted
+    /// by the control plane on failure. If this is `null`, no auto-restart
+    /// policy will be explicitly configured for this instance, and the control
+    /// plane will select the default policy when determining whether the
+    /// instance can be automatically restarted.\n\nCurrently, the global
+    /// default auto-restart policy is \"best-effort\", so instances with `null`
+    /// auto-restart policies will be automatically restarted. However, in the
+    /// future, the default policy may be configurable through other mechanisms,
+    /// such as on a per-project basis. In that case, any configured default
+    /// policy will be used if this is `null`.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -12012,10 +12025,18 @@ pub mod types {
     pub struct InstanceCreate {
         /// The auto-restart policy for this instance.
         ///
-        /// This indicates whether the instance should be automatically
+        /// This policy determines whether the instance should be automatically
         /// restarted by the control plane on failure. If this is `null`, no
-        /// auto-restart policy has been configured for this instance by the
-        /// user.
+        /// auto-restart policy will be explicitly configured for this instance,
+        /// and the control plane will select the default policy when
+        /// determining whether the instance can be automatically restarted.
+        ///
+        /// Currently, the global default auto-restart policy is "best-effort",
+        /// so instances with `null` auto-restart policies will be automatically
+        /// restarted. However, in the future, the default policy may be
+        /// configurable through other mechanisms, such as on a per-project
+        /// basis. In that case, any configured default policy will be used if
+        /// this is `null`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// The disk this instance should boot into. This disk can either be
@@ -13002,8 +13023,17 @@ pub mod types {
     ///  "type": "object",
     ///  "properties": {
     ///    "auto_restart_policy": {
-    ///      "description": "The auto-restart policy for this instance.\n\nIf
-    /// not provided, unset the instance's auto-restart policy.",
+    ///      "description": "Sets the auto-restart policy for this
+    /// instance.\n\nThis policy determines whether the instance should be
+    /// automatically restarted by the control plane on failure. If this is
+    /// `null`, any explicitly configured auto-restart policy will be unset, and
+    /// the control plane will select the default policy when determining
+    /// whether the instance can be automatically restarted.\n\nCurrently, the
+    /// global default auto-restart policy is \"best-effort\", so instances with
+    /// `null` auto-restart policies will be automatically restarted. However,
+    /// in the future, the default policy may be configurable through other
+    /// mechanisms, such as on a per-project basis. In that case, any configured
+    /// default policy will be used if this is `null`.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -13042,9 +13072,20 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceUpdate {
-        /// The auto-restart policy for this instance.
+        /// Sets the auto-restart policy for this instance.
         ///
-        /// If not provided, unset the instance's auto-restart policy.
+        /// This policy determines whether the instance should be automatically
+        /// restarted by the control plane on failure. If this is `null`, any
+        /// explicitly configured auto-restart policy will be unset, and the
+        /// control plane will select the default policy when determining
+        /// whether the instance can be automatically restarted.
+        ///
+        /// Currently, the global default auto-restart policy is "best-effort",
+        /// so instances with `null` auto-restart policies will be automatically
+        /// restarted. However, in the future, the default policy may be
+        /// configurable through other mechanisms, such as on a per-project
+        /// basis. In that case, any configured default policy will be used if
+        /// this is `null`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
         /// Name or ID of the disk the instance should be instructed to boot
@@ -15009,6 +15050,21 @@ pub mod types {
     ///          "$ref": "#/components/schemas/LinkSpeed"
     ///        }
     ///      ]
+    ///    },
+    ///    "tx_eq": {
+    ///      "description": "Optional tx_eq settings",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/TxEqConfig"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -15028,6 +15084,9 @@ pub mod types {
         pub mtu: u16,
         /// The speed of the link.
         pub speed: LinkSpeed,
+        /// Optional tx_eq settings
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub tx_eq: Option<TxEqConfig>,
     }
 
     impl From<&LinkConfigCreate> for LinkConfigCreate {
@@ -23647,6 +23706,14 @@ pub mod types {
     ///          "$ref": "#/components/schemas/LinkSpeed"
     ///        }
     ///      ]
+    ///    },
+    ///    "tx_eq_config_id": {
+    ///      "description": "The tx_eq configuration id for this link.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
     ///    }
     ///  }
     /// }
@@ -23672,6 +23739,9 @@ pub mod types {
         pub port_settings_id: uuid::Uuid,
         /// The configured speed of the link.
         pub speed: LinkSpeed,
+        /// The tx_eq configuration id for this link.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub tx_eq_config_id: Option<uuid::Uuid>,
     }
 
     impl From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
@@ -24168,6 +24238,7 @@ pub mod types {
     ///    "port",
     ///    "routes",
     ///    "settings",
+    ///    "tx_eq",
     ///    "vlan_interfaces"
     ///  ],
     ///  "properties": {
@@ -24237,6 +24308,25 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "tx_eq": {
+    ///      "description": "TX equalization settings.  These are optional, and
+    /// most links will not need them.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "oneOf": [
+    ///          {
+    ///            "type": "null"
+    ///          },
+    ///          {
+    ///            "allOf": [
+    ///              {
+    ///                "$ref": "#/components/schemas/TxEqConfig"
+    ///              }
+    ///            ]
+    ///          }
+    ///        ]
+    ///      }
+    ///    },
     ///    "vlan_interfaces": {
     ///      "description": "Vlan interface settings.",
     ///      "type": "array",
@@ -24271,6 +24361,9 @@ pub mod types {
         pub routes: Vec<SwitchPortRouteConfig>,
         /// The primary switch port settings handle.
         pub settings: SwitchPortSettings,
+        /// TX equalization settings.  These are optional, and most links will
+        /// not need them.
+        pub tx_eq: Vec<Option<TxEqConfig>>,
         /// Vlan interface settings.
         pub vlan_interfaces: Vec<SwitchVlanInterfaceConfig>,
     }
@@ -24909,6 +25002,95 @@ pub mod types {
 
     impl TimeseriesSchemaResultsPage {
         pub fn builder() -> builder::TimeseriesSchemaResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Per-port tx-eq overrides.  This can be used to fine-tune the transceiver
+    /// equalization settings to improve signal integrity.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Per-port tx-eq overrides.  This can be used to
+    /// fine-tune the transceiver equalization settings to improve signal
+    /// integrity.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "main": {
+    ///      "description": "Main tap",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "post1": {
+    ///      "description": "Post-cursor tap1",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "post2": {
+    ///      "description": "Post-cursor tap2",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "pre1": {
+    ///      "description": "Pre-cursor tap1",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "pre2": {
+    ///      "description": "Pre-cursor tap2",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TxEqConfig {
+        /// Main tap
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub main: Option<i32>,
+        /// Post-cursor tap1
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub post1: Option<i32>,
+        /// Post-cursor tap2
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub post2: Option<i32>,
+        /// Pre-cursor tap1
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub pre1: Option<i32>,
+        /// Pre-cursor tap2
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub pre2: Option<i32>,
+    }
+
+    impl From<&TxEqConfig> for TxEqConfig {
+        fn from(value: &TxEqConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TxEqConfig {
+        pub fn builder() -> builder::TxEqConfig {
             Default::default()
         }
     }
@@ -38770,6 +38952,7 @@ pub mod types {
             lldp: Result<super::LldpLinkConfigCreate, String>,
             mtu: Result<u16, String>,
             speed: Result<super::LinkSpeed, String>,
+            tx_eq: Result<Option<super::TxEqConfig>, String>,
         }
 
         impl Default for LinkConfigCreate {
@@ -38780,6 +38963,7 @@ pub mod types {
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
+                    tx_eq: Ok(Default::default()),
                 }
             }
         }
@@ -38835,6 +39019,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for speed: {}", e));
                 self
             }
+            pub fn tx_eq<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::TxEqConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tx_eq = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tx_eq: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<LinkConfigCreate> for super::LinkConfigCreate {
@@ -38846,6 +39040,7 @@ pub mod types {
                     lldp: value.lldp?,
                     mtu: value.mtu?,
                     speed: value.speed?,
+                    tx_eq: value.tx_eq?,
                 })
             }
         }
@@ -38858,6 +39053,7 @@ pub mod types {
                     lldp: Ok(value.lldp),
                     mtu: Ok(value.mtu),
                     speed: Ok(value.speed),
+                    tx_eq: Ok(value.tx_eq),
                 }
             }
         }
@@ -45131,6 +45327,7 @@ pub mod types {
             mtu: Result<u16, String>,
             port_settings_id: Result<uuid::Uuid, String>,
             speed: Result<super::LinkSpeed, String>,
+            tx_eq_config_id: Result<Option<uuid::Uuid>, String>,
         }
 
         impl Default for SwitchPortLinkConfig {
@@ -45143,6 +45340,7 @@ pub mod types {
                     mtu: Err("no value supplied for mtu".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
+                    tx_eq_config_id: Ok(Default::default()),
                 }
             }
         }
@@ -45224,6 +45422,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for speed: {}", e));
                 self
             }
+            pub fn tx_eq_config_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tx_eq_config_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for tx_eq_config_id: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<SwitchPortLinkConfig> for super::SwitchPortLinkConfig {
@@ -45239,6 +45447,7 @@ pub mod types {
                     mtu: value.mtu?,
                     port_settings_id: value.port_settings_id?,
                     speed: value.speed?,
+                    tx_eq_config_id: value.tx_eq_config_id?,
                 })
             }
         }
@@ -45253,6 +45462,7 @@ pub mod types {
                     mtu: Ok(value.mtu),
                     port_settings_id: Ok(value.port_settings_id),
                     speed: Ok(value.speed),
+                    tx_eq_config_id: Ok(value.tx_eq_config_id),
                 }
             }
         }
@@ -45834,6 +46044,7 @@ pub mod types {
             port: Result<super::SwitchPortConfig, String>,
             routes: Result<Vec<super::SwitchPortRouteConfig>, String>,
             settings: Result<super::SwitchPortSettings, String>,
+            tx_eq: Result<Vec<Option<super::TxEqConfig>>, String>,
             vlan_interfaces: Result<Vec<super::SwitchVlanInterfaceConfig>, String>,
         }
 
@@ -45849,6 +46060,7 @@ pub mod types {
                     port: Err("no value supplied for port".to_string()),
                     routes: Err("no value supplied for routes".to_string()),
                     settings: Err("no value supplied for settings".to_string()),
+                    tx_eq: Err("no value supplied for tx_eq".to_string()),
                     vlan_interfaces: Err("no value supplied for vlan_interfaces".to_string()),
                 }
             }
@@ -45945,6 +46157,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for settings: {}", e));
                 self
             }
+            pub fn tx_eq<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<Option<super::TxEqConfig>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tx_eq = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tx_eq: {}", e));
+                self
+            }
             pub fn vlan_interfaces<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Vec<super::SwitchVlanInterfaceConfig>>,
@@ -45972,6 +46194,7 @@ pub mod types {
                     port: value.port?,
                     routes: value.routes?,
                     settings: value.settings?,
+                    tx_eq: value.tx_eq?,
                     vlan_interfaces: value.vlan_interfaces?,
                 })
             }
@@ -45989,6 +46212,7 @@ pub mod types {
                     port: Ok(value.port),
                     routes: Ok(value.routes),
                     settings: Ok(value.settings),
+                    tx_eq: Ok(value.tx_eq),
                     vlan_interfaces: Ok(value.vlan_interfaces),
                 }
             }
@@ -46527,6 +46751,105 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TxEqConfig {
+            main: Result<Option<i32>, String>,
+            post1: Result<Option<i32>, String>,
+            post2: Result<Option<i32>, String>,
+            pre1: Result<Option<i32>, String>,
+            pre2: Result<Option<i32>, String>,
+        }
+
+        impl Default for TxEqConfig {
+            fn default() -> Self {
+                Self {
+                    main: Ok(Default::default()),
+                    post1: Ok(Default::default()),
+                    post2: Ok(Default::default()),
+                    pre1: Ok(Default::default()),
+                    pre2: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl TxEqConfig {
+            pub fn main<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.main = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for main: {}", e));
+                self
+            }
+            pub fn post1<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.post1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for post1: {}", e));
+                self
+            }
+            pub fn post2<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.post2 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for post2: {}", e));
+                self
+            }
+            pub fn pre1<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.pre1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pre1: {}", e));
+                self
+            }
+            pub fn pre2<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.pre2 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pre2: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<TxEqConfig> for super::TxEqConfig {
+            type Error = super::error::ConversionError;
+            fn try_from(value: TxEqConfig) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    main: value.main?,
+                    post1: value.post1?,
+                    post2: value.post2?,
+                    pre1: value.pre1?,
+                    pre2: value.pre2?,
+                })
+            }
+        }
+
+        impl From<super::TxEqConfig> for TxEqConfig {
+            fn from(value: super::TxEqConfig) -> Self {
+                Self {
+                    main: Ok(value.main),
+                    post1: Ok(value.post1),
+                    post2: Ok(value.post2),
+                    pre1: Ok(value.pre1),
+                    pre2: Ok(value.pre2),
                 }
             }
         }
