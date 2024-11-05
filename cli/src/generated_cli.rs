@@ -1436,10 +1436,17 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false)
                     .help(
-                        "The auto-restart policy for this instance.\n\nThis indicates whether the \
-                         instance should be automatically restarted by the control plane on \
-                         failure. If this is `null`, no auto-restart policy has been configured \
-                         for this instance by the user.",
+                        "The auto-restart policy for this instance.\n\nThis policy determines \
+                         whether the instance should be automatically restarted by the control \
+                         plane on failure. If this is `null`, no auto-restart policy will be \
+                         explicitly configured for this instance, and the control plane will \
+                         select the default policy when determining whether the instance can be \
+                         automatically restarted.\n\nCurrently, the global default auto-restart \
+                         policy is \"best-effort\", so instances with `null` auto-restart \
+                         policies will be automatically restarted. However, in the future, the \
+                         default policy may be configurable through other mechanisms, such as on \
+                         a per-project basis. In that case, any configured default policy will be \
+                         used if this is `null`.",
                     ),
             )
             .arg(
@@ -1550,8 +1557,17 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false)
                     .help(
-                        "The auto-restart policy for this instance.\n\nIf not provided, unset the \
-                         instance's auto-restart policy.",
+                        "Sets the auto-restart policy for this instance.\n\nThis policy \
+                         determines whether the instance should be automatically restarted by the \
+                         control plane on failure. If this is `null`, any explicitly configured \
+                         auto-restart policy will be unset, and the control plane will select the \
+                         default policy when determining whether the instance can be \
+                         automatically restarted.\n\nCurrently, the global default auto-restart \
+                         policy is \"best-effort\", so instances with `null` auto-restart \
+                         policies will be automatically restarted. However, in the future, the \
+                         default policy may be configurable through other mechanisms, such as on \
+                         a per-project basis. In that case, any configured default policy will be \
+                         used if this is `null`.",
                     ),
             )
             .arg(
