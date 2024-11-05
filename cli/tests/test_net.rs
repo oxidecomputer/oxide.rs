@@ -193,7 +193,7 @@ fn test_port_config() {
             time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         },
         vlan_interfaces: Vec::new(),
-        tx_eq: Vec::new(),
+        tx_eq: vec![None],
     };
     let switch1_qsfp0_view = SwitchPortSettingsView {
         addresses: vec![
@@ -280,7 +280,7 @@ fn test_port_config() {
             time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         },
         vlan_interfaces: Vec::new(),
-        tx_eq: Vec::new(),
+        tx_eq: vec![None],
     };
 
     let mock_switch0_qsfp0_settings_view =
