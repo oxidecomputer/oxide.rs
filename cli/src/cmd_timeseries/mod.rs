@@ -19,16 +19,16 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use oxide::{
-    types::{OxqlQueryResult, Table, TimeseriesQuery, ValueArray},
+    types::{FieldValue, OxqlQueryResult, Table, TimeseriesQuery, ValueArray},
     Client, ClientMetricsExt, ResponseValue,
 };
 
 use chrono::{DateTime, TimeDelta, Utc};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::str::FromStr;
 
-use statrs::statistics::Statistics;
 use ratatui::{prelude::CrosstermBackend, Terminal};
+use statrs::statistics::Statistics;
 
 use self::dashboard::Dashboard;
 
@@ -137,7 +137,7 @@ pub struct CmdTimeseriesRaw {
     #[clap(long, default_value = "voltage")]
     kind: String,
 
-    /// Kind of chassis 
+    /// Kind of chassis
     #[clap(long, default_value = "sled")]
     chassis_kind: String,
 
@@ -189,7 +189,12 @@ pub struct CmdTimeseriesRaw {
     #[clap(long, conflicts_with_all = &["start", "end", "seconds"])]
     all: bool,
 
-    sensor: String,
+    /// List all available sensors for a given slot and kind
+    #[clap(long, conflicts_with_all = &["start", "end", "duration", "all"])]
+    list: bool,
+
+    #[clap(conflicts_with = "list")]
+    sensor: Option<String>,
 }
 
 #[derive(Debug, Default)]
@@ -206,7 +211,7 @@ impl State {
             header: false,
             rollup: match rollup {
                 Some(rollup) => Some(rollup * 60),
-                None => None
+                None => None,
             },
             epoch: None,
             data: Vec::new(),
@@ -235,7 +240,8 @@ impl CmdTimeseriesRaw {
 
         for ts in table.timeseries.values() {
             if !state.header {
-                println!("# chassis={:?} slot={:?} sensor={:?} kind={}",
+                println!(
+                    "# chassis={:?} slot={:?} sensor={:?} kind={}",
                     ts.fields.get("chassis_kind").unwrap(),
                     ts.fields.get("slot").unwrap(),
                     ts.fields.get("sensor").unwrap(),
@@ -294,6 +300,35 @@ impl CmdTimeseriesRaw {
         Ok(())
     }
 
+    fn list(&self, table: &Table) -> Result<()> {
+        let mut sensors = BTreeMap::new();
+
+        let get = |f: &HashMap<String, FieldValue>, name| {
+            if let Some(FieldValue::String(str)) = f.get(name) {
+                str.clone()
+            } else {
+                "???".to_string()
+            }
+        };
+
+        for ts in table.timeseries.values() {
+            sensors.insert(get(&ts.fields, "sensor"), &ts.fields);
+        }
+
+        println!("{:22} {:13} {}", "SENSOR", "DEVICE", "DESCRIPTION");
+
+        for (sensor, fields) in sensors {
+            println!(
+                "{:22} {:13} {}",
+                sensor,
+                get(fields, "component_kind"),
+                get(fields, "description"),
+            );
+        }
+
+        Ok(())
+    }
+
     #[rustfmt::skip]
     async fn query(
         &self,
@@ -328,21 +363,41 @@ impl CmdTimeseriesRaw {
 #[async_trait]
 impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
     async fn run(&self, client: &Client) -> Result<()> {
-        let sensor = format!("sensor == \"{}\"", self.sensor);
+        let formatstr = "%Y-%m-%dT%H:%M:%S";
 
         let which = if let Some(slot) = self.slot {
-            format!("slot == {slot} && chassis_kind == \"{}\"", self.chassis_kind)
+            format!(
+                "slot == {slot} && chassis_kind == \"{}\"",
+                self.chassis_kind
+            )
         } else if let Some(ref serial) = self.serial {
             format!("chassis_serial == \"{serial}\"")
         } else {
             bail!("must specify slot or serial number");
         };
 
+        if self.list {
+            let time = Utc::now() - TimeDelta::seconds(60);
+
+            let q = format!(
+                "get hardware_component:{} | \
+                filter {which} && timestamp >= @{} | last 1",
+                self.kind,
+                time.format(formatstr)
+            );
+
+            let result = self.query(client, &q).await?;
+            self.list(&result.tables[0])?;
+
+            return Ok(());
+        }
+
+        let sensor = format!("sensor == \"{}\"", self.sensor.as_ref().unwrap());
         let default = TimeDelta::hours(24);
 
         let seconds = if let Some(seconds) = self.seconds {
             Some(seconds)
-        } else if let Some(minutes) = self.minutes{
+        } else if let Some(minutes) = self.minutes {
             Some(minutes * 60)
         } else if let Some(hours) = self.hours {
             Some(hours * 60 * 60)
@@ -397,7 +452,6 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
         let mut s = start;
 
         let batchsize = TimeDelta::hours(self.batchsize.into());
-        let formatstr = "%Y-%m-%dT%H:%M:%S";
 
         let mut state = State::new(self.rollup);
 
