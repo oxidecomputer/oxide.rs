@@ -39,6 +39,7 @@ open = { workspace = true }
 oxide = { workspace = true }
 oxnet = { workspace = true }
 predicates = { workspace = true }
+range-parser = { workspace = true }
 ratatui = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }
 schemars = { workspace = true }

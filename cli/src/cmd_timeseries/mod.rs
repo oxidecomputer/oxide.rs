@@ -28,7 +28,7 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::str::FromStr;
 
 use ratatui::{prelude::CrosstermBackend, Terminal};
-use statrs::statistics::Statistics;
+use statrs::statistics::{Data, Median, Statistics};
 
 use self::dashboard::Dashboard;
 
@@ -124,6 +124,22 @@ impl FromStr for RawTime {
     }
 }
 
+#[derive(Clone, Debug)]
+struct Slots(Vec<u32>);
+
+impl FromStr for Slots {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        match range_parser::parse(s) {
+            Ok(val) => Ok(Self(val)),
+            Err(err) => {
+                bail!("could not parse {s}: {err:?}");
+            }
+        }
+    }
+}
+
 /// Pull a timeseries for a single sensor.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -193,28 +209,46 @@ pub struct CmdTimeseriesRaw {
     #[clap(long, conflicts_with_all = &["start", "end", "duration", "all"])]
     list: bool,
 
+    /// Calculate variance across specified slots
+    #[clap(long, conflicts_with_all = &["which", "list"])]
+    variance: Option<Slots>,
+
     #[clap(conflicts_with = "list")]
     sensor: Option<String>,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
+struct SlotData {
+    min: f64,
+    max: f64,
+    mean: f64,
+    std_dev: f64,
+}
+
+#[derive(Debug, PartialEq)]
+enum Rollup {
+    None,
+    All,
+    Periodic(i64),
+}
+
+#[derive(Debug)]
 struct State {
     header: bool,
-    rollup: Option<i64>,
+    rollup: Rollup,
     epoch: Option<i64>,
     data: Vec<f64>,
+    slot_data: Vec<SlotData>,
 }
 
 impl State {
-    fn new(rollup: Option<i64>) -> Self {
+    fn new(rollup: Rollup) -> Self {
         State {
-            header: false,
-            rollup: match rollup {
-                Some(rollup) => Some(rollup * 60),
-                None => None,
-            },
+            header: rollup == Rollup::All,
+            rollup,
             epoch: None,
             data: Vec::new(),
+            slot_data: Vec::new(),
         }
     }
 }
@@ -268,32 +302,38 @@ impl CmdTimeseriesRaw {
         }
 
         for (ts, value) in aggregated.iter() {
-            if let Some(rollup) = state.rollup {
-                let epoch = ts.timestamp() / rollup;
+            match state.rollup {
+                Rollup::Periodic(rollup) => {
+                    let epoch = ts.timestamp() / rollup;
 
-                match state.epoch {
-                    None => {
-                        state.epoch = Some(epoch);
-                    }
-                    Some(e) if e != epoch => {
-                        let start = DateTime::from_timestamp(e * rollup, 0).unwrap();
+                    match state.epoch {
+                        None => {
+                            state.epoch = Some(epoch);
+                        }
+                        Some(e) if e != epoch => {
+                            let start = DateTime::from_timestamp(e * rollup, 0).unwrap();
 
-                        print!("{} ", start.format("%s"));
-                        print!("min={:.5} ", Statistics::min(&state.data));
-                        print!("mean={:.5} ", Statistics::mean(&state.data));
-                        print!("max={:.5} ", Statistics::max(&state.data));
-                        print!("stddev={:.5} ", Statistics::std_dev(&state.data));
-                        println!();
+                            print!("{} ", start.format("%s"));
+                            print!("min={:.5} ", Statistics::min(&state.data));
+                            print!("mean={:.5} ", Statistics::mean(&state.data));
+                            print!("max={:.5} ", Statistics::max(&state.data));
+                            print!("stddev={:.5} ", Statistics::std_dev(&state.data));
+                            println!();
 
-                        state.epoch = Some(epoch);
-                        state.data = vec![**value];
-                    }
-                    _ => {
-                        state.data.push(**value);
+                            state.epoch = Some(epoch);
+                            state.data = vec![**value];
+                        }
+                        _ => {
+                            state.data.push(**value);
+                        }
                     }
                 }
-            } else {
-                println!("{} {value}", ts.format("%s%.9f"));
+                Rollup::None => {
+                    println!("{} {value}", ts.format("%s%.9f"));
+                }
+                Rollup::All => {
+                    state.data.push(**value);
+                }
             }
         }
 
@@ -323,6 +363,93 @@ impl CmdTimeseriesRaw {
                 sensor,
                 get(fields, "component_kind"),
                 get(fields, "description"),
+            );
+        }
+
+        Ok(())
+    }
+
+    fn variances(&self, state: &State, sensor: &str) -> Result<()> {
+        let s = state
+            .slot_data
+            .iter()
+            .filter(|s| !s.std_dev.is_nan())
+            .map(|s| s.std_dev)
+            .collect::<Vec<_>>();
+
+        let mean = Statistics::mean(&s);
+        let std_dev = Statistics::std_dev(&s);
+        let median = Data::new(s.clone()).median();
+        let sme = std_dev / (s.len() as f64).sqrt();
+
+        let m = s.iter().map(|v| (v - median).abs()).collect::<Vec<_>>();
+        let mad = Data::new(m).median();
+
+        println!("{:50} = {}", "kind", self.kind);
+        println!("{:50} = {sensor}", "sensor");
+        println!("{:50} = {:.4}", "mean standard deviation", mean);
+        println!(
+            "{:50} = {:.4}",
+            "standard deviation of standard deviation", std_dev
+        );
+        println!("{:50} = {:.4}", "median of standard deviation", median);
+        println!(
+            "{:50} = {:.4}",
+            "median absolute deviation of standard deviation", mad
+        );
+        println!();
+
+        println!(
+            "{:4} {:>9} {:>9} {:>9} {:>9} {:>9} {:>9} {:>9}",
+            "SLOT", "MIN", "MAX", "MEAN", "STDDEV", "T-SCORE", "Z-SCORE", "MOD-Z"
+        );
+
+        let mut outliers = vec![];
+
+        for (slot, data) in self
+            .variance
+            .as_ref()
+            .unwrap()
+            .0
+            .iter()
+            .zip(state.slot_data.iter())
+        {
+            if data.min.is_nan() {
+                continue;
+            }
+
+            let min = data.min;
+            let max = data.max;
+            let data_mean = data.mean;
+            let std_dev = data.std_dev;
+            let t_score = (data.std_dev - mean) / sme;
+            let z = if std_dev != 0.0 {
+                (data.std_dev - mean) / std_dev
+            } else {
+                0.0
+            };
+
+            let mod_z = (0.6745 * (data.std_dev - median)) / mad;
+
+            println!(
+                "{slot:4} {min:>9.4} {max:>9.4} {data_mean:>9.4} \
+                {std_dev:>9.4} {t_score:>9.4} {z:>9.4} {mod_z:>9.4}",
+            );
+
+            if mod_z >= 3.5 {
+                outliers.push((slot, mod_z));
+            }
+        }
+
+        if outliers.len() != 0 {
+            println!();
+        }
+
+        for (outlier, score) in &outliers {
+            println!(
+                "{sensor} {}: slot {outlier} has outlier spread \
+                (modified Z-score {score:.4})",
+                self.kind
             );
         }
 
@@ -365,19 +492,28 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
     async fn run(&self, client: &Client) -> Result<()> {
         let formatstr = "%Y-%m-%dT%H:%M:%S";
 
-        let which = if let Some(slot) = self.slot {
+        let mut which = if let Some(slot) = self.slot {
             format!(
                 "slot == {slot} && chassis_kind == \"{}\"",
                 self.chassis_kind
             )
         } else if let Some(ref serial) = self.serial {
             format!("chassis_serial == \"{serial}\"")
+        } else if let Some(ref variance) = self.variance {
+            if variance.0.len() == 0 {
+                bail!("must specify slots to take variance across");
+            }
+
+            format!(
+                "slot == {} && chassis_kind == \"{}\"",
+                variance.0[0], self.chassis_kind
+            )
         } else {
             bail!("must specify slot or serial number");
         };
 
         if self.list {
-            let time = Utc::now() - TimeDelta::seconds(60);
+            let time = Utc::now() - TimeDelta::seconds(600);
 
             let q = format!(
                 "get hardware_component:{} | \
@@ -392,7 +528,11 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
             return Ok(());
         }
 
-        let sensor = format!("sensor == \"{}\"", self.sensor.as_ref().unwrap());
+        let sensor = match self.sensor.as_ref() {
+            Some(sensor) => format!("sensor == \"{sensor}\""),
+            None => bail!("missing sensor name"),
+        };
+
         let default = TimeDelta::hours(24);
 
         let seconds = if let Some(seconds) = self.seconds {
@@ -453,35 +593,66 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
 
         let batchsize = TimeDelta::hours(self.batchsize.into());
 
-        let mut state = State::new(self.rollup);
+        let mut state = State::new(match (self.rollup, self.variance.as_ref()) {
+            (Some(minutes), None) => Rollup::Periodic(minutes * 60),
+            (None, Some(_)) => Rollup::All,
+            (None, None) => Rollup::None,
+            (Some(_), Some(_)) => panic!(),
+        });
 
         loop {
-            let e = if end - s > batchsize {
-                s + batchsize
-            } else {
-                end
-            };
+            loop {
+                let e = if end - s > batchsize {
+                    s + batchsize
+                } else {
+                    end
+                };
 
-            let time = format!(
-                "(timestamp >= @{} && timestamp < @{})",
-                s.format(formatstr),
-                e.format(formatstr)
-            );
+                let time = format!(
+                    "(timestamp >= @{} && timestamp < @{})",
+                    s.format(formatstr),
+                    e.format(formatstr)
+                );
 
-            let q = format!(
-                "get hardware_component:{} | \
+                let q = format!(
+                    "get hardware_component:{} | \
                 filter {time} && {which} && {sensor}",
-                self.kind
-            );
+                    self.kind
+                );
 
-            let result = self.query(client, &q).await?;
-            self.process(&mut state, &result.tables[0])?;
+                let result = self.query(client, &q).await?;
+                self.process(&mut state, &result.tables[0])?;
 
-            if e >= end {
-                break;
+                if e >= end {
+                    break;
+                }
+
+                s += batchsize;
             }
 
-            s += batchsize;
+            if let Some(variance) = self.variance.as_ref() {
+                state.slot_data.push(SlotData {
+                    min: Statistics::min(&state.data),
+                    mean: Statistics::mean(&state.data),
+                    max: Statistics::max(&state.data),
+                    std_dev: Statistics::std_dev(&state.data),
+                });
+
+                state.data = vec![];
+
+                if state.slot_data.len() == variance.0.len() {
+                    self.variances(&state, self.sensor.as_ref().unwrap())?;
+                    break;
+                } else {
+                    which = format!(
+                        "slot == {} && chassis_kind == \"{}\"",
+                        variance.0[state.slot_data.len()],
+                        self.chassis_kind
+                    );
+                }
+            } else {
+                break;
+            }
         }
 
         Ok(())

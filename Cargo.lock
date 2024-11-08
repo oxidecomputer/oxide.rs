@@ -2262,6 +2262,7 @@ dependencies = [
  "predicates",
  "pretty_assertions",
  "rand",
+ "range-parser",
  "ratatui",
  "rcgen",
  "reqwest",
@@ -2661,6 +2662,15 @@ checksum = "32cb0b9bc82b0a0876c2dd994a7e7a2683d3e7390ca40e6886785ef0c7e3ee31"
 dependencies = [
  "num-traits",
  "rand",
+]
+
+[[package]]
+name = "range-parser"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d26b5df187f049cc0264bed9ed314d5a5f7c13a2c3ec8b23b79723f938f39d71"
+dependencies = [
+ "thiserror",
 ]
 
 [[package]]
