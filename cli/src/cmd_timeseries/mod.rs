@@ -206,11 +206,11 @@ pub struct CmdTimeseriesRaw {
     all: bool,
 
     /// List all available sensors for a given slot and kind
-    #[clap(long, conflicts_with_all = &["start", "end", "duration", "all"])]
+    #[clap(long)]
     list: bool,
 
     /// Calculate variance across specified slots
-    #[clap(long, conflicts_with_all = &["which", "list"])]
+    #[clap(long, conflicts_with_all = &["which"])]
     variance: Option<Slots>,
 
     #[clap(conflicts_with = "list")]
@@ -528,8 +528,8 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
             return Ok(());
         }
 
-        let sensor = match self.sensor.as_ref() {
-            Some(sensor) => format!("sensor == \"{sensor}\""),
+        let sensor = match self.sensor {
+            Some(ref sensor) => format!("sensor == \"{}\"", sensor),
             None => bail!("missing sensor name"),
         };
 
@@ -641,7 +641,7 @@ impl crate::AuthenticatedCmd for CmdTimeseriesRaw {
                 state.data = vec![];
 
                 if state.slot_data.len() == variance.0.len() {
-                    self.variances(&state, self.sensor.as_ref().unwrap())?;
+                    self.variances(&state, &self.sensor.as_ref().unwrap())?;
                     break;
                 } else {
                     which = format!(
