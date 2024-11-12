@@ -469,7 +469,7 @@ impl CmdAuthStatus {
                     println_nopipe!("Logged in to {} as {}", host_env, user.id)
                 }
                 Err(e) => {
-                    log::debug!("error response for {} (env): {}", host_env, e);
+                    log::debug!("error response for {} (env): {:#}", host_env, e);
                     println_nopipe!("{}: {}", host_env, Self::error_msg(&e))
                 }
             };
@@ -494,7 +494,7 @@ impl CmdAuthStatus {
                         "Authenticated".to_string()
                     }
                     Err(e) => {
-                        log::debug!("error response for {}: {}", profile_info.host, e);
+                        log::debug!("error response for {}: {:#}", profile_info.host, e);
                         Self::error_msg(&e)
                     }
                 };
