@@ -904,7 +904,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#203bff4fd608e73d22ac969810c7e1f23fe946d5"
+source = "git+https://github.com/oxidecomputer/dropshot#32b50e1f26f69a5ffdfa9c37e03ab9b555829523"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -952,7 +952,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.12.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#203bff4fd608e73d22ac969810c7e1f23fe946d5"
+source = "git+https://github.com/oxidecomputer/dropshot#32b50e1f26f69a5ffdfa9c37e03ab9b555829523"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -1574,9 +1574,9 @@ dependencies = [
 
 [[package]]
 name = "hyper-util"
-version = "0.1.9"
+version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41296eb09f183ac68eec06e03cdbea2e759633d4067b2f6552fc2e009bcad08b"
+checksum = "df2dcfbe0677734ab2f3ffa7fa7bfd4706bfdc1ef393f2ee30184aed67e631b4"
 dependencies = [
  "bytes",
  "futures-channel",
@@ -3703,18 +3703,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.65"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d11abd9594d9b38965ef50805c5e469ca9cc6f197f883f717e0269a3057b3d5"
+checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.65"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae71770322cbd277e69d762a16c444af02aa0575ac0d174f0b9562d3b37f8602"
+checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
 dependencies = [
  "proc-macro2",
  "quote",
