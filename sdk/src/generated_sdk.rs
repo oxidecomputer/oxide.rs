@@ -50495,48 +50495,11 @@ pub trait ClientMetricsExt {
     ///    .await;
     /// ```
     fn silo_metric(&self) -> builder::SiloMetric;
-    /// Run timeseries query
-    ///
-    /// Queries are written in OxQL.
-    ///
-    /// Sends a `POST` request to `/v1/timeseries/query`
-    ///
-    /// ```ignore
-    /// let response = client.timeseries_query()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn timeseries_query(&self) -> builder::TimeseriesQuery;
-    /// List timeseries schemas
-    ///
-    /// Sends a `GET` request to `/v1/timeseries/schema`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// ```ignore
-    /// let response = client.timeseries_schema_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn timeseries_schema_list(&self) -> builder::TimeseriesSchemaList;
 }
 
 impl ClientMetricsExt for Client {
     fn silo_metric(&self) -> builder::SiloMetric {
         builder::SiloMetric::new(self)
-    }
-
-    fn timeseries_query(&self) -> builder::TimeseriesQuery {
-        builder::TimeseriesQuery::new(self)
-    }
-
-    fn timeseries_schema_list(&self) -> builder::TimeseriesSchemaList {
-        builder::TimeseriesSchemaList::new(self)
     }
 }
 
@@ -51926,11 +51889,48 @@ pub trait ClientSystemMetricsExt {
     ///    .await;
     /// ```
     fn system_metric(&self) -> builder::SystemMetric;
+    /// Run timeseries query
+    ///
+    /// Queries are written in OxQL.
+    ///
+    /// Sends a `POST` request to `/v1/system/timeseries/query`
+    ///
+    /// ```ignore
+    /// let response = client.system_timeseries_query()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_timeseries_query(&self) -> builder::SystemTimeseriesQuery;
+    /// List timeseries schemas
+    ///
+    /// Sends a `GET` request to `/v1/system/timeseries/schemas`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.system_timeseries_schema_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_timeseries_schema_list(&self) -> builder::SystemTimeseriesSchemaList;
 }
 
 impl ClientSystemMetricsExt for Client {
     fn system_metric(&self) -> builder::SystemMetric {
         builder::SystemMetric::new(self)
+    }
+
+    fn system_timeseries_query(&self) -> builder::SystemTimeseriesQuery {
+        builder::SystemTimeseriesQuery::new(self)
+    }
+
+    fn system_timeseries_schema_list(&self) -> builder::SystemTimeseriesSchemaList {
+        builder::SystemTimeseriesSchemaList::new(self)
     }
 }
 
@@ -71466,6 +71466,207 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemMetricsExt::system_timeseries_query`]
+    ///
+    /// [`ClientSystemMetricsExt::system_timeseries_query`]: super::ClientSystemMetricsExt::system_timeseries_query
+    #[derive(Debug, Clone)]
+    pub struct SystemTimeseriesQuery<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::TimeseriesQuery, String>,
+    }
+
+    impl<'a> SystemTimeseriesQuery<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::TimeseriesQuery::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeseriesQuery>,
+            <V as std::convert::TryInto<types::TimeseriesQuery>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `TimeseriesQuery` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::TimeseriesQuery) -> types::builder::TimeseriesQuery,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/timeseries/query`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::OxqlQueryResult>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/timeseries/query", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemMetricsExt::system_timeseries_schema_list`]
+    ///
+    /// [`ClientSystemMetricsExt::system_timeseries_schema_list`]: super::ClientSystemMetricsExt::system_timeseries_schema_list
+    #[derive(Debug, Clone)]
+    pub struct SystemTimeseriesSchemaList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> SystemTimeseriesSchemaList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/timeseries/schemas`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TimeseriesSchemaResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/timeseries/schemas", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/timeseries/schemas`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::TimeseriesSchema, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemSilosExt::silo_user_list`]
     ///
     /// [`ClientSystemSilosExt::silo_user_list`]: super::ClientSystemSilosExt::silo_user_list
@@ -72128,207 +72329,6 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
-        }
-    }
-
-    /// Builder for [`ClientMetricsExt::timeseries_query`]
-    ///
-    /// [`ClientMetricsExt::timeseries_query`]: super::ClientMetricsExt::timeseries_query
-    #[derive(Debug, Clone)]
-    pub struct TimeseriesQuery<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::TimeseriesQuery, String>,
-    }
-
-    impl<'a> TimeseriesQuery<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(types::builder::TimeseriesQuery::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::TimeseriesQuery>,
-            <V as std::convert::TryInto<types::TimeseriesQuery>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `TimeseriesQuery` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::TimeseriesQuery) -> types::builder::TimeseriesQuery,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/timeseries/query`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OxqlQueryResult>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/timeseries/query", client.baseurl,);
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientMetricsExt::timeseries_schema_list`]
-    ///
-    /// [`ClientMetricsExt::timeseries_schema_list`]: super::ClientMetricsExt::timeseries_schema_list
-    #[derive(Debug, Clone)]
-    pub struct TimeseriesSchemaList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> TimeseriesSchemaList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/timeseries/schema`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TimeseriesSchemaResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/timeseries/schema", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/timeseries/schema`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::TimeseriesSchema, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
         }
     }
 

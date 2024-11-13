@@ -230,14 +230,14 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
+            CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
+            CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
             CliCommand::SiloUtilizationList => Self::cli_silo_utilization_list(),
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
-            CliCommand::TimeseriesQuery => Self::cli_timeseries_query(),
-            CliCommand::TimeseriesSchemaList => Self::cli_timeseries_schema_list(),
             CliCommand::UserList => Self::cli_user_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
@@ -5399,6 +5399,45 @@ impl<T: CliConfig> Cli<T> {
             .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
+    pub fn cli_system_timeseries_query() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("query")
+                    .long("query")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
+                    .help("A timeseries query string, written in the Oximeter query language."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Run timeseries query")
+            .long_about("Queries are written in OxQL.")
+    }
+
+    pub fn cli_system_timeseries_schema_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List timeseries schemas")
+    }
+
     pub fn cli_silo_user_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5517,45 +5556,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the silo"),
             )
             .about("Fetch current utilization for given silo")
-    }
-
-    pub fn cli_timeseries_query() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("query")
-                    .long("query")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body")
-                    .help("A timeseries query string, written in the Oximeter query language."),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Run timeseries query")
-            .long_about("Queries are written in OxQL.")
-    }
-
-    pub fn cli_timeseries_schema_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List timeseries schemas")
     }
 
     pub fn cli_user_list() -> clap::Command {
@@ -6886,14 +6886,18 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloPolicyUpdate => self.execute_silo_policy_update(matches).await,
             CliCommand::SiloQuotasView => self.execute_silo_quotas_view(matches).await,
             CliCommand::SiloQuotasUpdate => self.execute_silo_quotas_update(matches).await,
+            CliCommand::SystemTimeseriesQuery => {
+                self.execute_system_timeseries_query(matches).await
+            }
+            CliCommand::SystemTimeseriesSchemaList => {
+                self.execute_system_timeseries_schema_list(matches).await
+            }
             CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
             CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
             CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
             CliCommand::UserBuiltinView => self.execute_user_builtin_view(matches).await,
             CliCommand::SiloUtilizationList => self.execute_silo_utilization_list(matches).await,
             CliCommand::SiloUtilizationView => self.execute_silo_utilization_view(matches).await,
-            CliCommand::TimeseriesQuery => self.execute_timeseries_query(matches).await,
-            CliCommand::TimeseriesSchemaList => self.execute_timeseries_schema_list(matches).await,
             CliCommand::UserList => self.execute_user_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
@@ -12746,6 +12750,73 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_timeseries_query(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_timeseries_query();
+        if let Some(value) = matches.get_one::<String>("query") {
+            request = request.body_map(|body| body.query(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_timeseries_query(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_timeseries_schema_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_timeseries_schema_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.config
+            .execute_system_timeseries_schema_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::TimeseriesSchemaResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::TimeseriesSchemaResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_silo_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12934,70 +13005,6 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_timeseries_query(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.timeseries_query();
-        if let Some(value) = matches.get_one::<String>("query") {
-            request = request.body_map(|body| body.query(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_timeseries_query(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_timeseries_schema_list(
-        &self,
-        matches: &clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.timeseries_schema_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config
-            .execute_timeseries_schema_list(matches, &mut request)?;
-        self.config
-            .list_start::<types::TimeseriesSchemaResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::TimeseriesSchemaResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
             }
         }
     }
@@ -15386,6 +15393,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_timeseries_query(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SystemTimeseriesQuery,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_timeseries_schema_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SystemTimeseriesSchemaList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_silo_user_list(
         &self,
         matches: &clap::ArgMatches,
@@ -15430,22 +15453,6 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUtilizationView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_timeseries_query(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::TimeseriesQuery,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_timeseries_schema_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::TimeseriesSchemaList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -15828,14 +15835,14 @@ pub enum CliCommand {
     SiloPolicyUpdate,
     SiloQuotasView,
     SiloQuotasUpdate,
+    SystemTimeseriesQuery,
+    SystemTimeseriesSchemaList,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
     UserBuiltinView,
     SiloUtilizationList,
     SiloUtilizationView,
-    TimeseriesQuery,
-    TimeseriesSchemaList,
     UserList,
     UtilizationView,
     VpcFirewallRulesView,
@@ -16041,14 +16048,14 @@ impl CliCommand {
             CliCommand::SiloPolicyUpdate,
             CliCommand::SiloQuotasView,
             CliCommand::SiloQuotasUpdate,
+            CliCommand::SystemTimeseriesQuery,
+            CliCommand::SystemTimeseriesSchemaList,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
             CliCommand::UserBuiltinView,
             CliCommand::SiloUtilizationList,
             CliCommand::SiloUtilizationView,
-            CliCommand::TimeseriesQuery,
-            CliCommand::TimeseriesSchemaList,
             CliCommand::UserList,
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
