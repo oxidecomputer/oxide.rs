@@ -15010,7 +15010,6 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "autoneg",
-    ///    "fec",
     ///    "lldp",
     ///    "mtu",
     ///    "speed"
@@ -15022,9 +15021,16 @@ pub mod types {
     ///    },
     ///    "fec": {
     ///      "description": "The forward error correction mode of the link.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/LinkFec"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/LinkFec"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -15077,7 +15083,8 @@ pub mod types {
         /// Whether or not to set autonegotiation
         pub autoneg: bool,
         /// The forward error correction mode of the link.
-        pub fec: LinkFec,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub fec: Option<LinkFec>,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
         pub lldp: LldpLinkConfigCreate,
         /// Maximum transmission unit for the link.
@@ -23654,7 +23661,6 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "autoneg",
-    ///    "fec",
     ///    "link_name",
     ///    "mtu",
     ///    "port_settings_id",
@@ -23668,9 +23674,16 @@ pub mod types {
     ///    },
     ///    "fec": {
     ///      "description": "The forward error correction mode of the link.",
-    ///      "allOf": [
+    ///      "oneOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/LinkFec"
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/LinkFec"
+    ///            }
+    ///          ]
     ///        }
     ///      ]
     ///    },
@@ -23726,7 +23739,8 @@ pub mod types {
         /// Whether or not the link has autonegotiation enabled.
         pub autoneg: bool,
         /// The forward error correction mode of the link.
-        pub fec: LinkFec,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub fec: Option<LinkFec>,
         /// The name of this link.
         pub link_name: String,
         /// The link-layer discovery protocol service configuration id for this
@@ -38948,7 +38962,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct LinkConfigCreate {
             autoneg: Result<bool, String>,
-            fec: Result<super::LinkFec, String>,
+            fec: Result<Option<super::LinkFec>, String>,
             lldp: Result<super::LldpLinkConfigCreate, String>,
             mtu: Result<u16, String>,
             speed: Result<super::LinkSpeed, String>,
@@ -38959,7 +38973,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     autoneg: Err("no value supplied for autoneg".to_string()),
-                    fec: Err("no value supplied for fec".to_string()),
+                    fec: Ok(Default::default()),
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
@@ -38981,7 +38995,7 @@ pub mod types {
             }
             pub fn fec<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::LinkFec>,
+                T: std::convert::TryInto<Option<super::LinkFec>>,
                 T::Error: std::fmt::Display,
             {
                 self.fec = value
@@ -45321,7 +45335,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortLinkConfig {
             autoneg: Result<bool, String>,
-            fec: Result<super::LinkFec, String>,
+            fec: Result<Option<super::LinkFec>, String>,
             link_name: Result<String, String>,
             lldp_link_config_id: Result<Option<uuid::Uuid>, String>,
             mtu: Result<u16, String>,
@@ -45334,7 +45348,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     autoneg: Err("no value supplied for autoneg".to_string()),
-                    fec: Err("no value supplied for fec".to_string()),
+                    fec: Ok(Default::default()),
                     link_name: Err("no value supplied for link_name".to_string()),
                     lldp_link_config_id: Ok(Default::default()),
                     mtu: Err("no value supplied for mtu".to_string()),
@@ -45358,7 +45372,7 @@ pub mod types {
             }
             pub fn fec<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::LinkFec>,
+                T: std::convert::TryInto<Option<super::LinkFec>>,
                 T::Error: std::fmt::Display,
             {
                 self.fec = value
