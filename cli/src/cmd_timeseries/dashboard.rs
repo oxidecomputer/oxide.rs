@@ -12,7 +12,7 @@ use crossterm::event::{Event, EventStream, KeyCode, KeyEvent, KeyEventKind, KeyM
 use futures::{FutureExt, StreamExt};
 use oxide::{
     types::{MetricType, Table as OxqlTable, Timeseries, TimeseriesQuery, ValueArray},
-    Client, ClientMetricsExt,
+    Client, ClientSystemMetricsExt,
 };
 use ratatui::{
     prelude::{Alignment, Constraint, Direction, Layout},
@@ -218,7 +218,7 @@ async fn client_query_loop(
             _ = &mut done => break,
             _ = interval.tick() => {
                 let request = client
-                    .timeseries_query()
+                    .system_timeseries_query()
                     .body(TimeseriesQuery { query: query.clone() });
                 match request.send().await {
                     Ok(response) => {

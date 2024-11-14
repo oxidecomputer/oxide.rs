@@ -95,7 +95,7 @@ pub struct CmdLinkAdd {
 
     /// The forward error correction mode of the link.
     #[arg(long, value_enum)]
-    pub fec: CliLinkFec,
+    pub fec: Option<CliLinkFec>,
 
     /// Maximum transmission unit for the link.
     #[arg(long, default_value_t = 1500u16)]
@@ -126,7 +126,7 @@ impl AuthenticatedCmd for CmdLinkAdd {
             });
         let link = LinkConfigCreate {
             autoneg: self.autoneg,
-            fec: self.fec.into(),
+            fec: self.fec.map(|fec| fec.into()),
             mtu: self.mtu,
             speed: self.speed.into(),
             lldp: LldpLinkConfigCreate {
