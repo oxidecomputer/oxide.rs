@@ -9,9 +9,10 @@ use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
-    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkSpeed, NameOrId, SwitchPort,
-    SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2, SwitchPortLinkConfig,
-    SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings, SwitchPortSettingsView,
+    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, NameOrId,
+    SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
+    SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings,
+    SwitchPortSettingsView,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -258,7 +259,7 @@ fn test_port_config() {
         link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
-            fec: None,
+            fec: Some(LinkFec::None),
             link_name: String::from("phy0"),
             lldp_link_config_id: None,
             mtu: 1500,
