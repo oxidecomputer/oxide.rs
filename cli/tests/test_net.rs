@@ -165,7 +165,7 @@ fn test_port_config() {
         link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
-            fec: LinkFec::None,
+            fec: None,
             link_name: String::from("phy0"),
             lldp_link_config_id: None,
             mtu: 1500,
@@ -259,7 +259,7 @@ fn test_port_config() {
         link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
-            fec: LinkFec::None,
+            fec: Some(LinkFec::None),
             link_name: String::from("phy0"),
             lldp_link_config_id: None,
             mtu: 1500,

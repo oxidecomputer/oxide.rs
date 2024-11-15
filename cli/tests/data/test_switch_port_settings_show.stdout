@@ -1,7 +1,7 @@
 switch0/qsfp0
 =============
-Autoneg  Fec   Speed
-false    None  Speed100G
+Autoneg  Fec     Speed
+false    <auto>  speed100_g
 
 Address          Lot            VLAN
 169.254.10.2/30  initial-infra  None
@@ -17,7 +17,7 @@ Destination  Nexthop     Vlan  Preference
 switch1/qsfp0
 =============
 Autoneg  Fec   Speed
-false    None  Speed100G
+false    none  speed100_g
 
 Address          Lot            VLAN
 169.254.20.2/30  initial-infra  None
