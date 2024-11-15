@@ -1248,7 +1248,13 @@ impl AuthenticatedCmd for CmdPortConfig {
                 )?;
 
                 for l in &config.links {
-                    writeln!(&mut tw, "{:?}\t{:?}\t{:?}", l.autoneg, l.fec, l.speed,)?;
+                    writeln!(
+                        &mut tw,
+                        "{}\t{}\t{}",
+                        l.autoneg,
+                        l.fec.map_or("<auto>".to_string(), |fec| fec.to_string()),
+                        l.speed,
+                    )?;
                 }
                 tw.flush()?;
                 println_nopipe!();
