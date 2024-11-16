@@ -15793,6 +15793,180 @@ pub mod types {
         }
     }
 
+    /// Information about LLDP advertisements from other network entities
+    /// directly connected to a switch port.  This structure contains both
+    /// metadata about when and where the neighbor was seen, as well as the
+    /// specific information the neighbor was advertising.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information about LLDP advertisements from other
+    /// network entities directly connected to a switch port.  This structure
+    /// contains both metadata about when and where the neighbor was seen, as
+    /// well as the specific information the neighbor was advertising.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "chassis_id",
+    ///    "first_seen",
+    ///    "last_seen",
+    ///    "link_name",
+    ///    "local_port",
+    ///    "management_ip"
+    ///  ],
+    ///  "properties": {
+    ///    "chassis_id": {
+    ///      "description": "The LLDP chassis identifier advertised by the
+    /// neighbor",
+    ///      "type": "string"
+    ///    },
+    ///    "first_seen": {
+    ///      "description": "Initial sighting of this LldpNeighbor",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "last_seen": {
+    ///      "description": "Most recent sighting of this LldpNeighbor",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "link_description": {
+    ///      "description": "The LLDP link description advertised by the
+    /// neighbor",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "link_name": {
+    ///      "description": "The LLDP link name advertised by the neighbor",
+    ///      "type": "string"
+    ///    },
+    ///    "local_port": {
+    ///      "description": "The port on which the neighbor was seen",
+    ///      "type": "string"
+    ///    },
+    ///    "management_ip": {
+    ///      "description": "The LLDP management IP(s) advertised by the
+    /// neighbor",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
+    ///    },
+    ///    "system_description": {
+    ///      "description": "The LLDP system description advertised by the
+    /// neighbor",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "system_name": {
+    ///      "description": "The LLDP system name advertised by the neighbor",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct LldpNeighbor {
+        /// The LLDP chassis identifier advertised by the neighbor
+        pub chassis_id: ::std::string::String,
+        /// Initial sighting of this LldpNeighbor
+        pub first_seen: chrono::DateTime<chrono::offset::Utc>,
+        /// Most recent sighting of this LldpNeighbor
+        pub last_seen: chrono::DateTime<chrono::offset::Utc>,
+        /// The LLDP link description advertised by the neighbor
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub link_description: ::std::option::Option<::std::string::String>,
+        /// The LLDP link name advertised by the neighbor
+        pub link_name: ::std::string::String,
+        /// The port on which the neighbor was seen
+        pub local_port: ::std::string::String,
+        /// The LLDP management IP(s) advertised by the neighbor
+        pub management_ip: ::std::vec::Vec<IpNet>,
+        /// The LLDP system description advertised by the neighbor
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_description: ::std::option::Option<::std::string::String>,
+        /// The LLDP system name advertised by the neighbor
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_name: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&LldpNeighbor> for LldpNeighbor {
+        fn from(value: &LldpNeighbor) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LldpNeighbor {
+        pub fn builder() -> builder::LldpNeighbor {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/LldpNeighbor"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct LldpNeighborResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<LldpNeighbor>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&LldpNeighborResultsPage> for LldpNeighborResultsPage {
+        fn from(value: &LldpNeighborResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LldpNeighborResultsPage {
+        pub fn builder() -> builder::LldpNeighborResultsPage {
+            Default::default()
+        }
+    }
+
     /// A loopback address is an address that is assigned to a rack switch but
     /// is not associated with any particular port.
     ///
@@ -40608,6 +40782,244 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct LldpNeighbor {
+            chassis_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            first_seen:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            last_seen:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            link_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            local_port: ::std::result::Result<::std::string::String, ::std::string::String>,
+            management_ip:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
+            system_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            system_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for LldpNeighbor {
+            fn default() -> Self {
+                Self {
+                    chassis_id: Err("no value supplied for chassis_id".to_string()),
+                    first_seen: Err("no value supplied for first_seen".to_string()),
+                    last_seen: Err("no value supplied for last_seen".to_string()),
+                    link_description: Ok(Default::default()),
+                    link_name: Err("no value supplied for link_name".to_string()),
+                    local_port: Err("no value supplied for local_port".to_string()),
+                    management_ip: Err("no value supplied for management_ip".to_string()),
+                    system_description: Ok(Default::default()),
+                    system_name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl LldpNeighbor {
+            pub fn chassis_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.chassis_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for chassis_id: {}", e));
+                self
+            }
+            pub fn first_seen<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.first_seen = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for first_seen: {}", e));
+                self
+            }
+            pub fn last_seen<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for last_seen: {}", e));
+                self
+            }
+            pub fn link_description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for link_description: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
+            pub fn local_port<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.local_port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_port: {}", e));
+                self
+            }
+            pub fn management_ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.management_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for management_ip: {}", e)
+                });
+                self
+            }
+            pub fn system_description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_description = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for system_description: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn system_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<LldpNeighbor> for super::LldpNeighbor {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LldpNeighbor,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    chassis_id: value.chassis_id?,
+                    first_seen: value.first_seen?,
+                    last_seen: value.last_seen?,
+                    link_description: value.link_description?,
+                    link_name: value.link_name?,
+                    local_port: value.local_port?,
+                    management_ip: value.management_ip?,
+                    system_description: value.system_description?,
+                    system_name: value.system_name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::LldpNeighbor> for LldpNeighbor {
+            fn from(value: super::LldpNeighbor) -> Self {
+                Self {
+                    chassis_id: Ok(value.chassis_id),
+                    first_seen: Ok(value.first_seen),
+                    last_seen: Ok(value.last_seen),
+                    link_description: Ok(value.link_description),
+                    link_name: Ok(value.link_name),
+                    local_port: Ok(value.local_port),
+                    management_ip: Ok(value.management_ip),
+                    system_description: Ok(value.system_description),
+                    system_name: Ok(value.system_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LldpNeighborResultsPage {
+            items:
+                ::std::result::Result<::std::vec::Vec<super::LldpNeighbor>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for LldpNeighborResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl LldpNeighborResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::LldpNeighbor>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<LldpNeighborResultsPage> for super::LldpNeighborResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LldpNeighborResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::LldpNeighborResultsPage> for LldpNeighborResultsPage {
+            fn from(value: super::LldpNeighborResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct LoopbackAddress {
             address: ::std::result::Result<super::IpNet, ::std::string::String>,
             address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
@@ -54038,6 +54450,77 @@ impl ClientSystemMetricsExt for Client {
 
 /// This provides rack-level network configuration.
 pub trait ClientSystemNetworkingExt {
+    /// Fetch the LLDP neighbors seen on a switch port
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+    /// {port}/lldp/neighbors`
+    ///
+    /// Arguments:
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_switch_port_lldp_neighbors()
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .port(port)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_lldp_neighbors(&self) -> builder::NetworkingSwitchPortLldpNeighbors;
+    /// Fetch the LLDP configuration for a switch port
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/hardware/switch-port/{port}/lldp/config`
+    ///
+    /// Arguments:
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// ```ignore
+    /// let response = client.networking_switch_port_lldp_config_view()
+    ///    .port(port)
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_lldp_config_view(
+        &self,
+    ) -> builder::NetworkingSwitchPortLldpConfigView;
+    /// Update the LLDP configuration for a switch port
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/hardware/switch-port/{port}/lldp/config`
+    ///
+    /// Arguments:
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_lldp_config_update()
+    ///    .port(port)
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_lldp_config_update(
+        &self,
+    ) -> builder::NetworkingSwitchPortLldpConfigUpdate;
     /// List address lots
     ///
     /// Sends a `GET` request to `/v1/system/networking/address-lot`
@@ -54422,6 +54905,22 @@ pub trait ClientSystemNetworkingExt {
 }
 
 impl ClientSystemNetworkingExt for Client {
+    fn networking_switch_port_lldp_neighbors(&self) -> builder::NetworkingSwitchPortLldpNeighbors {
+        builder::NetworkingSwitchPortLldpNeighbors::new(self)
+    }
+
+    fn networking_switch_port_lldp_config_view(
+        &self,
+    ) -> builder::NetworkingSwitchPortLldpConfigView {
+        builder::NetworkingSwitchPortLldpConfigView::new(self)
+    }
+
+    fn networking_switch_port_lldp_config_update(
+        &self,
+    ) -> builder::NetworkingSwitchPortLldpConfigUpdate {
+        builder::NetworkingSwitchPortLldpConfigUpdate::new(self)
+    }
+
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
         builder::NetworkingAddressLotList::new(self)
     }
@@ -66176,6 +66675,201 @@ pub mod builder {
         }
     }
 
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_neighbors`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_neighbors`]: super::ClientSystemNetworkingExt::networking_switch_port_lldp_neighbors
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortLldpNeighbors<'a> {
+        client: &'a super::Client,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+        port: Result<types::Name, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortLldpNeighbors<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+                port: Err("port was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// {port}/lldp/neighbors`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::LldpNeighborResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                rack_id,
+                switch_location,
+                port,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/rack-switch-port/{}/{}/{}/lldp/neighbors",
+                client.baseurl,
+                encode_path(&rack_id.to_string()),
+                encode_path(&switch_location.to_string()),
+                encode_path(&port.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/system/hardware/rack-switch-port/{rack_id}/{switch_location}/
+        /// {port}/lldp/neighbors`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::LldpNeighbor, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::rack_list`]
     ///
     /// [`ClientSystemHardwareExt::rack_list`]: super::ClientSystemHardwareExt::rack_list
@@ -67361,6 +68055,231 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_config_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_config_view`]: super::ClientSystemNetworkingExt::networking_switch_port_lldp_config_view
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortLldpConfigView<'a> {
+        client: &'a super::Client,
+        port: Result<types::Name, String>,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortLldpConfigView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                port: Err("port was not initialized".to_string()),
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/switch-port/{port}/lldp/config`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::LldpLinkConfig>, Error<types::Error>> {
+            let Self {
+                client,
+                port,
+                rack_id,
+                switch_location,
+            } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switch-port/{}/lldp/config",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_location",
+                    &switch_location,
+                ))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_config_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_switch_port_lldp_config_update`]: super::ClientSystemNetworkingExt::networking_switch_port_lldp_config_update
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortLldpConfigUpdate<'a> {
+        client: &'a super::Client,
+        port: Result<types::Name, String>,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+        body: Result<types::builder::LldpLinkConfig, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortLldpConfigUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                port: Err("port was not initialized".to_string()),
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::LldpLinkConfig>,
+            <V as std::convert::TryInto<types::LldpLinkConfig>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `LldpLinkConfig` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::LldpLinkConfig) -> types::builder::LldpLinkConfig,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/hardware/switch-port/{port}/lldp/config`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                port,
+                rack_id,
+                switch_location,
+                body,
+            } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::LldpLinkConfig::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switch-port/{}/lldp/config",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_location",
+                    &switch_location,
+                ))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
