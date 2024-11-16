@@ -15020,7 +15020,9 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "fec": {
-    ///      "description": "The forward error correction mode of the link.",
+    ///      "description": "The requested forward-error correction method.  If
+    /// this is not specified, the standard FEC for the underlying media will be
+    /// applied if it can be determined.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -15082,7 +15084,9 @@ pub mod types {
     pub struct LinkConfigCreate {
         /// Whether or not to set autonegotiation
         pub autoneg: bool,
-        /// The forward error correction mode of the link.
+        /// The requested forward-error correction method.  If this is not
+        /// specified, the standard FEC for the underlying media will be applied
+        /// if it can be determined.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub fec: Option<LinkFec>,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
@@ -23673,7 +23677,9 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "fec": {
-    ///      "description": "The forward error correction mode of the link.",
+    ///      "description": "The requested forward-error correction method.  If
+    /// this is not specified, the standard FEC for the underlying media will be
+    /// applied if it can be determined.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -23738,7 +23744,9 @@ pub mod types {
     pub struct SwitchPortLinkConfig {
         /// Whether or not the link has autonegotiation enabled.
         pub autoneg: bool,
-        /// The forward error correction mode of the link.
+        /// The requested forward-error correction method.  If this is not
+        /// specified, the standard FEC for the underlying media will be applied
+        /// if it can be determined.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub fec: Option<LinkFec>,
         /// The name of this link.
