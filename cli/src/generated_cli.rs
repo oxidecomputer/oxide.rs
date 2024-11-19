@@ -1588,6 +1588,20 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
+                clap::Arg::new("memory")
+                    .long("memory")
+                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .required_unless_present("json-body")
+                    .help("The amount of memory to assign to this instance."),
+            )
+            .arg(
+                clap::Arg::new("ncpus")
+                    .long("ncpus")
+                    .value_parser(clap::value_parser!(types::InstanceCpuCount))
+                    .required_unless_present("json-body")
+                    .help("The number of CPUs to assign to this instance."),
+            )
+            .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .value_parser(clap::value_parser!(types::NameOrId))
@@ -8251,6 +8265,14 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
+            request = request.body_map(|body| body.memory(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::InstanceCpuCount>("ncpus") {
+            request = request.body_map(|body| body.ncpus(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
