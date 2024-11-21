@@ -5946,8 +5946,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "private_key": {
-    ///      "description": "request signing private key (base64 encoded der
-    /// file)",
+    ///      "description": "request signing RSA private key in PKCS#1 format
+    /// (base64 encoded der file)",
     ///      "type": "string"
     ///    },
     ///    "public_cert": {
@@ -5963,7 +5963,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DerEncodedKeyPair {
-        /// request signing private key (base64 encoded der file)
+        /// request signing RSA private key in PKCS#1 format (base64 encoded der
+        /// file)
         pub private_key: String,
         /// request signing public certificate (base64 encoded der file)
         pub public_cert: String,
