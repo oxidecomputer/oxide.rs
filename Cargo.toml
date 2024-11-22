@@ -21,7 +21,7 @@ colored = "2.1.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
-dropshot = { git = "https://github.com/oxidecomputer/dropshot" }
+dropshot = "0.13.0"
 env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.31"
