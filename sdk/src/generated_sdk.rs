@@ -5946,8 +5946,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "private_key": {
-    ///      "description": "request signing private key (base64 encoded der
-    /// file)",
+    ///      "description": "request signing RSA private key in PKCS#1 format
+    /// (base64 encoded der file)",
     ///      "type": "string"
     ///    },
     ///    "public_cert": {
@@ -5963,7 +5963,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DerEncodedKeyPair {
-        /// request signing private key (base64 encoded der file)
+        /// request signing RSA private key in PKCS#1 format (base64 encoded der
+        /// file)
         pub private_key: String,
         /// request signing public certificate (base64 encoded der file)
         pub public_cert: String,
@@ -13021,6 +13022,10 @@ pub mod types {
     ///  "description": "Parameters of an `Instance` that can be reconfigured
     /// after creation.",
     ///  "type": "object",
+    ///  "required": [
+    ///    "memory",
+    ///    "ncpus"
+    ///  ],
     ///  "properties": {
     ///    "auto_restart_policy": {
     ///      "description": "Sets the auto-restart policy for this
@@ -13063,6 +13068,22 @@ pub mod types {
     ///          ]
     ///        }
     ///      ]
+    ///    },
+    ///    "memory": {
+    ///      "description": "The amount of memory to assign to this instance.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "ncpus": {
+    ///      "description": "The number of CPUs to assign to this instance.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/InstanceCpuCount"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -13094,6 +13115,10 @@ pub mod types {
         /// If not provided, unset the instance's boot disk.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub boot_disk: Option<NameOrId>,
+        /// The amount of memory to assign to this instance.
+        pub memory: ByteCount,
+        /// The number of CPUs to assign to this instance.
+        pub ncpus: InstanceCpuCount,
     }
 
     impl From<&InstanceUpdate> for InstanceUpdate {
@@ -15020,7 +15045,9 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "fec": {
-    ///      "description": "The forward error correction mode of the link.",
+    ///      "description": "The requested forward-error correction method.  If
+    /// this is not specified, the standard FEC for the underlying media will be
+    /// applied if it can be determined.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -15082,7 +15109,9 @@ pub mod types {
     pub struct LinkConfigCreate {
         /// Whether or not to set autonegotiation
         pub autoneg: bool,
-        /// The forward error correction mode of the link.
+        /// The requested forward-error correction method.  If this is not
+        /// specified, the standard FEC for the underlying media will be applied
+        /// if it can be determined.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub fec: Option<LinkFec>,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
@@ -23673,7 +23702,9 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "fec": {
-    ///      "description": "The forward error correction mode of the link.",
+    ///      "description": "The requested forward-error correction method.  If
+    /// this is not specified, the standard FEC for the underlying media will be
+    /// applied if it can be determined.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -23738,7 +23769,9 @@ pub mod types {
     pub struct SwitchPortLinkConfig {
         /// Whether or not the link has autonegotiation enabled.
         pub autoneg: bool,
-        /// The forward error correction mode of the link.
+        /// The requested forward-error correction method.  If this is not
+        /// specified, the standard FEC for the underlying media will be applied
+        /// if it can be determined.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub fec: Option<LinkFec>,
         /// The name of this link.
@@ -37205,6 +37238,8 @@ pub mod types {
         pub struct InstanceUpdate {
             auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
             boot_disk: Result<Option<super::NameOrId>, String>,
+            memory: Result<super::ByteCount, String>,
+            ncpus: Result<super::InstanceCpuCount, String>,
         }
 
         impl Default for InstanceUpdate {
@@ -37212,6 +37247,8 @@ pub mod types {
                 Self {
                     auto_restart_policy: Ok(Default::default()),
                     boot_disk: Ok(Default::default()),
+                    memory: Err("no value supplied for memory".to_string()),
+                    ncpus: Err("no value supplied for ncpus".to_string()),
                 }
             }
         }
@@ -37240,6 +37277,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
                 self
             }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn ncpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::InstanceCpuCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.ncpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
@@ -37248,6 +37305,8 @@ pub mod types {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
+                    memory: value.memory?,
+                    ncpus: value.ncpus?,
                 })
             }
         }
@@ -37257,6 +37316,8 @@ pub mod types {
                 Self {
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk: Ok(value.boot_disk),
+                    memory: Ok(value.memory),
+                    ncpus: Ok(value.ncpus),
                 }
             }
         }

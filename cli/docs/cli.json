@@ -2141,6 +2141,14 @@
               "help": "XXX"
             },
             {
+              "long": "memory",
+              "help": "The amount of memory to assign to this instance.; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
+            },
+            {
+              "long": "ncpus",
+              "help": "The number of CPUs to assign to this instance."
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
