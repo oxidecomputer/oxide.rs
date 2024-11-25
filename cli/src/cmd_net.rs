@@ -14,7 +14,7 @@ use colored::*;
 use futures::TryStreamExt;
 use oxide::{
     types::{
-        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeer,
+        Address, AddressConfig, BgpAnnounceSetCreate, BgpAnnouncementCreate, BgpPeerCombined,
         BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet, LinkConfigCreate, LinkFec,
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
         SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
@@ -149,7 +149,7 @@ impl AuthenticatedCmd for CmdLinkAdd {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -186,7 +186,7 @@ impl AuthenticatedCmd for CmdLinkDel {
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         settings.links.clear();
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -444,7 +444,7 @@ impl AuthenticatedCmd for CmdBgpFilter {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -501,7 +501,7 @@ impl AuthenticatedCmd for CmdBgpAuth {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -559,7 +559,7 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -682,7 +682,7 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
         }
 
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -748,7 +748,7 @@ impl AuthenticatedCmd for CmdStaticRouteDelete {
         }
 
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -842,7 +842,7 @@ impl AuthenticatedCmd for CmdAddrAdd {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -893,7 +893,7 @@ impl AuthenticatedCmd for CmdAddrDel {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -1061,7 +1061,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        let peer = BgpPeer {
+        let peer = BgpPeerCombined {
             addr: self.addr,
             allowed_import: if self.allowed_imports.is_empty() {
                 ImportExportPolicy::NoFiltering
@@ -1113,7 +1113,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -1161,7 +1161,7 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
             }
         }
         client
-            .networking_switch_port_settings_create()
+            .networking_switch_port_configuration_create()
             .body(settings)
             .send()
             .await?;
@@ -1211,8 +1211,8 @@ impl AuthenticatedCmd for CmdPortConfig {
         for p in &ports {
             if let Some(id) = p.port_settings_id {
                 let config = client
-                    .networking_switch_port_settings_view()
-                    .port(id)
+                    .networking_switch_port_configuration_view()
+                    .configuration(id)
                     .send()
                     .await?
                     .into_inner();
@@ -1621,7 +1621,7 @@ impl CmdPortStatus {
 //       modify-write operation.
 async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPortSettingsCreate> {
     let list = client
-        .networking_switch_port_settings_list()
+        .networking_switch_port_configuration_list()
         .stream()
         .try_collect::<Vec<_>>()
         .await?;
@@ -1634,8 +1634,8 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         .clone();
 
     let current = client
-        .networking_switch_port_settings_view()
-        .port(settings_id)
+        .networking_switch_port_configuration_view()
+        .configuration(settings_id)
         .send()
         .await
         .unwrap()
