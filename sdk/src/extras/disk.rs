@@ -19,6 +19,7 @@ pub mod builder {
     use crate::{Client, Error};
 
     use std::future::Future;
+    use std::mem;
     use std::sync::atomic::{AtomicBool, AtomicU64};
     use std::sync::Arc;
     use tokio::sync::{oneshot, watch};
@@ -107,7 +108,12 @@ pub mod builder {
             impl Future<Output = Result<(), DiskImportError>> + 'a,
             Error<crate::types::Error>,
         > {
-            Ok(self.execute_with_control()?.0)
+            let (fut, handle) = self.execute_with_control()?;
+
+            // Leak the handle so we don't cancel the request by dropping it.
+            mem::forget(handle);
+
+            Ok(fut)
         }
 
         /// Return a `Future` for the disk creation and a `DiskImportHandle` which
