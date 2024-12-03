@@ -90,8 +90,8 @@ pub mod types {
         /// The address lot this address is drawn from.
         pub address_lot: NameOrId,
         /// Optional VLAN ID for this address
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vlan_id: Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vlan_id: ::std::option::Option<u16>,
     }
 
     impl From<&Address> for Address {
@@ -136,7 +136,7 @@ pub mod types {
     )]
     pub struct AddressConfig {
         /// The set of addresses assigned to the port configuration.
-        pub addresses: Vec<Address>,
+        pub addresses: ::std::vec::Vec<Address>,
     }
 
     impl From<&AddressConfig> for AddressConfig {
@@ -216,7 +216,7 @@ pub mod types {
     )]
     pub struct AddressLot {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// Desired use of `AddressLot`
@@ -387,10 +387,10 @@ pub mod types {
     )]
     pub struct AddressLotBlockResultsPage {
         /// list of items on this page of results
-        pub items: Vec<AddressLotBlock>,
+        pub items: ::std::vec::Vec<AddressLotBlock>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&AddressLotBlockResultsPage> for AddressLotBlockResultsPage {
@@ -450,8 +450,8 @@ pub mod types {
     )]
     pub struct AddressLotCreate {
         /// The blocks to add along with the new address lot.
-        pub blocks: Vec<AddressLotBlockCreate>,
-        pub description: String,
+        pub blocks: ::std::vec::Vec<AddressLotBlockCreate>,
+        pub description: ::std::string::String,
         /// The kind of address lot to create.
         pub kind: AddressLotKind,
         pub name: Name,
@@ -508,7 +508,7 @@ pub mod types {
     )]
     pub struct AddressLotCreateResponse {
         /// The address lot blocks that were created.
-        pub blocks: Vec<AddressLotBlock>,
+        pub blocks: ::std::vec::Vec<AddressLotBlock>,
         /// The address lot that was created.
         pub lot: AddressLot,
     }
@@ -592,7 +592,7 @@ pub mod types {
 
     impl std::str::FromStr for AddressLotKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "infra" => Ok(Self::Infra),
                 "pool" => Ok(Self::Pool),
@@ -603,21 +603,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for AddressLotKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for AddressLotKind {
+    impl std::convert::TryFrom<&::std::string::String> for AddressLotKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for AddressLotKind {
+    impl std::convert::TryFrom<::std::string::String> for AddressLotKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -658,10 +662,10 @@ pub mod types {
     )]
     pub struct AddressLotResultsPage {
         /// list of items on this page of results
-        pub items: Vec<AddressLot>,
+        pub items: ::std::vec::Vec<AddressLot>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&AddressLotResultsPage> for AddressLotResultsPage {
@@ -704,7 +708,7 @@ pub mod types {
     )]
     pub struct AggregateBgpMessageHistory {
         /// BGP history organized by switch.
-        pub switch_histories: Vec<SwitchBgpHistory>,
+        pub switch_histories: ::std::vec::Vec<SwitchBgpHistory>,
     }
 
     impl From<&AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
@@ -888,7 +892,7 @@ pub mod types {
         ///
         /// All others are prevented from reaching rack services.
         #[serde(rename = "list")]
-        List(Vec<IpNet>),
+        List(::std::vec::Vec<IpNet>),
     }
 
     impl From<&AllowedSourceIps> for AllowedSourceIps {
@@ -897,8 +901,8 @@ pub mod types {
         }
     }
 
-    impl From<Vec<IpNet>> for AllowedSourceIps {
-        fn from(value: Vec<IpNet>) -> Self {
+    impl From<::std::vec::Vec<IpNet>> for AllowedSourceIps {
+        fn from(value: ::std::vec::Vec<IpNet>) -> Self {
             Self::List(value)
         }
     }
@@ -1004,7 +1008,7 @@ pub mod types {
 
     impl std::str::FromStr for AuthzScope {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "fleet" => Ok(Self::Fleet),
                 "silo" => Ok(Self::Silo),
@@ -1017,21 +1021,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for AuthzScope {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for AuthzScope {
+    impl std::convert::TryFrom<&::std::string::String> for AuthzScope {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for AuthzScope {
+    impl std::convert::TryFrom<::std::string::String> for AuthzScope {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -1070,9 +1078,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Baseboard {
-        pub part: String,
+        pub part: ::std::string::String,
         pub revision: u32,
-        pub serial: String,
+        pub serial: ::std::string::String,
     }
 
     impl From<&Baseboard> for Baseboard {
@@ -1139,7 +1147,7 @@ pub mod types {
 
     impl std::str::FromStr for BfdMode {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "single_hop" => Ok(Self::SingleHop),
                 "multi_hop" => Ok(Self::MultiHop),
@@ -1150,21 +1158,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for BfdMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for BfdMode {
+    impl std::convert::TryFrom<&::std::string::String> for BfdMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for BfdMode {
+    impl std::convert::TryFrom<::std::string::String> for BfdMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -1304,8 +1316,8 @@ pub mod types {
         pub detection_threshold: u8,
         /// Address the Oxide switch will listen on for BFD traffic. If `None`
         /// then the unspecified address (0.0.0.0 or ::) is used.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local: Option<std::net::IpAddr>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub local: ::std::option::Option<std::net::IpAddr>,
         /// Select either single-hop (RFC 5881) or multi-hop (RFC 5883)
         pub mode: BfdMode,
         /// Address of the remote peer to establish a BFD session with.
@@ -1420,7 +1432,7 @@ pub mod types {
 
     impl std::str::FromStr for BfdState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "admin_down" => Ok(Self::AdminDown),
                 "down" => Ok(Self::Down),
@@ -1433,21 +1445,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for BfdState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for BfdState {
+    impl std::convert::TryFrom<&::std::string::String> for BfdState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for BfdState {
+    impl std::convert::TryFrom<::std::string::String> for BfdState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -1507,8 +1523,8 @@ pub mod types {
     )]
     pub struct BfdStatus {
         pub detection_threshold: u8,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local: Option<std::net::IpAddr>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub local: ::std::option::Option<std::net::IpAddr>,
         pub mode: BfdMode,
         pub peer: std::net::IpAddr,
         pub required_rx: u64,
@@ -1584,7 +1600,7 @@ pub mod types {
     )]
     pub struct BgpAnnounceSet {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -1644,8 +1660,8 @@ pub mod types {
     )]
     pub struct BgpAnnounceSetCreate {
         /// The announcements in this set.
-        pub announcement: Vec<BgpAnnouncementCreate>,
-        pub description: String,
+        pub announcement: ::std::vec::Vec<BgpAnnouncementCreate>,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -1850,7 +1866,7 @@ pub mod types {
         /// The autonomous system number of this BGP configuration.
         pub asn: u32,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -1861,8 +1877,8 @@ pub mod types {
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vrf: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vrf: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&BgpConfig> for BgpConfig {
@@ -1939,12 +1955,12 @@ pub mod types {
         /// The autonomous system number of this BGP configuration.
         pub asn: u32,
         pub bgp_announce_set_id: NameOrId,
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vrf: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vrf: ::std::option::Option<Name>,
     }
 
     impl From<&BgpConfigCreate> for BgpConfigCreate {
@@ -1995,10 +2011,10 @@ pub mod types {
     )]
     pub struct BgpConfigResultsPage {
         /// list of items on this page of results
-        pub items: Vec<BgpConfig>,
+        pub items: ::std::vec::Vec<BgpConfig>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&BgpConfigResultsPage> for BgpConfigResultsPage {
@@ -2044,7 +2060,7 @@ pub mod types {
     )]
     pub struct BgpExported {
         /// Exported routes indexed by peer address.
-        pub exports: ::std::collections::HashMap<String, Vec<Ipv4Net>>,
+        pub exports: ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<Ipv4Net>>,
     }
 
     impl From<&BgpExported> for BgpExported {
@@ -2359,7 +2375,7 @@ pub mod types {
         /// this peer.
         pub bgp_config: NameOrId,
         /// Include the provided communities in updates sent to the peer.
-        pub communities: Vec<u32>,
+        pub communities: ::std::vec::Vec<u32>,
         /// How long to to wait between TCP connection retries (seconds).
         pub connect_retry: u32,
         /// How long to delay sending an open request after establishing a TCP
@@ -2377,28 +2393,28 @@ pub mod types {
         /// configuration this BGP peer configuration is a part of. For example
         /// this value could be phy0 to refer to a primary physical interface.
         /// Or it could be vlan47 to refer to a VLAN interface.
-        pub interface_name: String,
+        pub interface_name: ::std::string::String,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
         /// Apply a local preference to routes received from this peer.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub local_pref: Option<u32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub local_pref: ::std::option::Option<u32>,
         /// Use the given key for TCP-MD5 authentication with the peer.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub md5_auth_key: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5_auth_key: ::std::option::Option<::std::string::String>,
         /// Require messages from a peer have a minimum IP time to live field.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub min_ttl: Option<u8>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub min_ttl: ::std::option::Option<u8>,
         /// Apply the provided multi-exit discriminator (MED) updates sent to
         /// the peer.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub multi_exit_discriminator: Option<u32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub multi_exit_discriminator: ::std::option::Option<u32>,
         /// Require that a peer has a specified ASN.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub remote_asn: Option<u32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub remote_asn: ::std::option::Option<u32>,
         /// Associate a VLAN ID with a peer.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vlan_id: Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vlan_id: ::std::option::Option<u16>,
     }
 
     impl From<&BgpPeer> for BgpPeer {
@@ -2438,7 +2454,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpPeerConfig {
-        pub peers: Vec<BgpPeer>,
+        pub peers: ::std::vec::Vec<BgpPeer>,
     }
 
     impl From<&BgpPeerConfig> for BgpPeerConfig {
@@ -2579,7 +2595,7 @@ pub mod types {
 
     impl std::str::FromStr for BgpPeerState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "idle" => Ok(Self::Idle),
                 "connect" => Ok(Self::Connect),
@@ -2595,21 +2611,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for BgpPeerState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for BgpPeerState {
+    impl std::convert::TryFrom<&::std::string::String> for BgpPeerState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for BgpPeerState {
+    impl std::convert::TryFrom<::std::string::String> for BgpPeerState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -4397,9 +4417,9 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<i64> for BlockSize {
+    impl ::std::convert::TryFrom<i64> for BlockSize {
         type Error = self::error::ConversionError;
-        fn try_from(value: i64) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
             if ![512_i64, 2048_i64, 4096_i64].contains(&value) {
                 Err("invalid value".into())
             } else {
@@ -4409,7 +4429,7 @@ pub mod types {
     }
 
     impl<'de> ::serde::Deserialize<'de> for BlockSize {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
@@ -4461,29 +4481,29 @@ pub mod types {
     }
 
     impl std::str::FromStr for ByteCount {
-        type Err = <u64 as std::str::FromStr>::Err;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
+        type Err = <u64 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
         }
     }
 
     impl std::convert::TryFrom<&str> for ByteCount {
-        type Error = <u64 as std::str::FromStr>::Err;
-        fn try_from(value: &str) -> Result<Self, Self::Error> {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<&String> for ByteCount {
-        type Error = <u64 as std::str::FromStr>::Err;
-        fn try_from(value: &String) -> Result<Self, Self::Error> {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<String> for ByteCount {
-        type Error = <u64 as std::str::FromStr>::Err;
-        fn try_from(value: String) -> Result<Self, Self::Error> {
+        type Error = <u64 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -4563,9 +4583,9 @@ pub mod types {
     )]
     pub struct Certificate {
         /// PEM-formatted string containing public certificate chain
-        pub cert: String,
+        pub cert: ::std::string::String,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -4638,10 +4658,10 @@ pub mod types {
     )]
     pub struct CertificateCreate {
         /// PEM-formatted string containing public certificate chain
-        pub cert: String,
-        pub description: String,
+        pub cert: ::std::string::String,
+        pub description: ::std::string::String,
         /// PEM-formatted string containing private key
-        pub key: String,
+        pub key: ::std::string::String,
         pub name: Name,
         /// The service using this certificate
         pub service: ServiceUsingCertificate,
@@ -4695,10 +4715,10 @@ pub mod types {
     )]
     pub struct CertificateResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Certificate>,
+        pub items: ::std::vec::Vec<Certificate>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&CertificateResultsPage> for CertificateResultsPage {
@@ -4939,7 +4959,7 @@ pub mod types {
     )]
     pub struct CurrentUser {
         /// Human-readable name that can identify the user
-        pub display_name: String,
+        pub display_name: ::std::string::String,
         pub id: uuid::Uuid,
         /// Uuid of the silo to which this user belongs
         pub silo_id: uuid::Uuid,
@@ -5523,9 +5543,9 @@ pub mod types {
         #[serde(rename = "f64")]
         F64(f64),
         #[serde(rename = "string")]
-        String(String),
+        String(::std::string::String),
         #[serde(rename = "bytes")]
-        Bytes(Vec<u8>),
+        Bytes(::std::vec::Vec<u8>),
         #[serde(rename = "cumulative_i64")]
         CumulativeI64(Cumulativeint64),
         #[serde(rename = "cumulative_u64")]
@@ -5630,8 +5650,8 @@ pub mod types {
         }
     }
 
-    impl From<Vec<u8>> for Datum {
-        fn from(value: Vec<u8>) -> Self {
+    impl From<::std::vec::Vec<u8>> for Datum {
+        fn from(value: ::std::vec::Vec<u8>) -> Self {
             Self::Bytes(value)
         }
     }
@@ -5878,7 +5898,7 @@ pub mod types {
 
     impl std::str::FromStr for DatumType {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "bool" => Ok(Self::Bool),
                 "i8" => Ok(Self::I8),
@@ -5914,21 +5934,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for DatumType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for DatumType {
+    impl std::convert::TryFrom<&::std::string::String> for DatumType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for DatumType {
+    impl std::convert::TryFrom<::std::string::String> for DatumType {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -5965,9 +5989,9 @@ pub mod types {
     pub struct DerEncodedKeyPair {
         /// request signing RSA private key in PKCS#1 format (base64 encoded der
         /// file)
-        pub private_key: String,
+        pub private_key: ::std::string::String,
         /// request signing public certificate (base64 encoded der file)
-        pub public_cert: String,
+        pub public_cert: ::std::string::String,
     }
 
     impl From<&DerEncodedKeyPair> for DerEncodedKeyPair {
@@ -6014,8 +6038,8 @@ pub mod types {
     )]
     pub struct DeviceAccessTokenRequest {
         pub client_id: uuid::Uuid,
-        pub device_code: String,
-        pub grant_type: String,
+        pub device_code: ::std::string::String,
+        pub grant_type: ::std::string::String,
     }
 
     impl From<&DeviceAccessTokenRequest> for DeviceAccessTokenRequest {
@@ -6090,7 +6114,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DeviceAuthVerify {
-        pub user_code: String,
+        pub user_code: ::std::string::String,
     }
 
     impl From<&DeviceAuthVerify> for DeviceAuthVerify {
@@ -6140,7 +6164,7 @@ pub mod types {
     #[serde(tag = "type", content = "value")]
     pub enum Digest {
         #[serde(rename = "sha256")]
-        Sha256(String),
+        Sha256(::std::string::String),
     }
 
     impl From<&Digest> for Digest {
@@ -6242,20 +6266,20 @@ pub mod types {
     pub struct Disk {
         pub block_size: ByteCount,
         /// human-readable free-form text about a resource
-        pub description: String,
-        pub device_path: String,
+        pub description: ::std::string::String,
+        pub device_path: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// ID of image from which disk was created, if any
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub image_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub image_id: ::std::option::Option<uuid::Uuid>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: uuid::Uuid,
         pub size: ByteCount,
         /// ID of snapshot from which disk was created, if any
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub snapshot_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub snapshot_id: ::std::option::Option<uuid::Uuid>,
         pub state: DiskState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
@@ -6320,7 +6344,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DiskCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         /// The initial source for this disk
         pub disk_source: DiskSource,
         pub name: Name,
@@ -6407,7 +6431,7 @@ pub mod types {
 
     impl std::str::FromStr for DiskMetricName {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "activated" => Ok(Self::Activated),
                 "flush" => Ok(Self::Flush),
@@ -6422,21 +6446,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for DiskMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for DiskMetricName {
+    impl std::convert::TryFrom<&::std::string::String> for DiskMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for DiskMetricName {
+    impl std::convert::TryFrom<::std::string::String> for DiskMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -6520,10 +6548,10 @@ pub mod types {
     )]
     pub struct DiskResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Disk>,
+        pub items: ::std::vec::Vec<Disk>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&DiskResultsPage> for DiskResultsPage {
@@ -7024,18 +7052,18 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Distributiondouble {
-        pub bins: Vec<f64>,
-        pub counts: Vec<u64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub max: Option<f64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub min: Option<f64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p50: Option<Quantile>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p90: Option<Quantile>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p99: Option<Quantile>,
+        pub bins: ::std::vec::Vec<f64>,
+        pub counts: ::std::vec::Vec<u64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max: ::std::option::Option<f64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub min: ::std::option::Option<f64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p50: ::std::option::Option<Quantile>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p90: ::std::option::Option<Quantile>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p99: ::std::option::Option<Quantile>,
         pub squared_mean: f64,
         pub sum_of_samples: f64,
     }
@@ -7163,18 +7191,18 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Distributionint64 {
-        pub bins: Vec<i64>,
-        pub counts: Vec<u64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub max: Option<i64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub min: Option<i64>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p50: Option<Quantile>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p90: Option<Quantile>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub p99: Option<Quantile>,
+        pub bins: ::std::vec::Vec<i64>,
+        pub counts: ::std::vec::Vec<u64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub min: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p50: ::std::option::Option<Quantile>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p90: ::std::option::Option<Quantile>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub p99: ::std::option::Option<Quantile>,
         pub squared_mean: f64,
         pub sum_of_samples: i64,
     }
@@ -7226,8 +7254,8 @@ pub mod types {
     )]
     pub struct EphemeralIpCreate {
         /// Name or ID of the IP pool used to allocate an address
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub pool: Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pool: ::std::option::Option<NameOrId>,
     }
 
     impl From<&EphemeralIpCreate> for EphemeralIpCreate {
@@ -7272,10 +7300,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Error {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub error_code: Option<String>,
-        pub message: String,
-        pub request_id: String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub error_code: ::std::option::Option<::std::string::String>,
+        pub message: ::std::string::String,
+        pub request_id: ::std::string::String,
     }
 
     impl From<&Error> for Error {
@@ -7412,14 +7440,14 @@ pub mod types {
         #[serde(rename = "floating")]
         Floating {
             /// human-readable free-form text about a resource
-            description: String,
+            description: ::std::string::String,
             /// unique, immutable, system-controlled identifier for each
             /// resource
             id: uuid::Uuid,
             /// The ID of the instance that this Floating IP is attached to, if
             /// it is presently in use.
-            #[serde(default, skip_serializing_if = "Option::is_none")]
-            instance_id: Option<uuid::Uuid>,
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            instance_id: ::std::option::Option<uuid::Uuid>,
             /// The IP address held by this resource.
             ip: std::net::IpAddr,
             /// The ID of the IP pool this resource belongs to.
@@ -7517,8 +7545,8 @@ pub mod types {
         /// current silo's default pool if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
-            #[serde(default, skip_serializing_if = "Option::is_none")]
-            pool: Option<NameOrId>,
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            pool: ::std::option::Option<NameOrId>,
         },
         /// An IP address providing both inbound and outbound access. The
         /// address is an existing floating IP object assigned to the current
@@ -7571,10 +7599,10 @@ pub mod types {
     )]
     pub struct ExternalIpResultsPage {
         /// list of items on this page of results
-        pub items: Vec<ExternalIp>,
+        pub items: ::std::vec::Vec<ExternalIp>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&ExternalIpResultsPage> for ExternalIpResultsPage {
@@ -7625,9 +7653,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FieldSchema {
-        pub description: String,
+        pub description: ::std::string::String,
         pub field_type: FieldType,
-        pub name: String,
+        pub name: ::std::string::String,
         pub source: FieldSource,
     }
 
@@ -7696,7 +7724,7 @@ pub mod types {
 
     impl std::str::FromStr for FieldSource {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "target" => Ok(Self::Target),
                 "metric" => Ok(Self::Metric),
@@ -7707,21 +7735,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for FieldSource {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for FieldSource {
+    impl std::convert::TryFrom<&::std::string::String> for FieldSource {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for FieldSource {
+    impl std::convert::TryFrom<::std::string::String> for FieldSource {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -7819,7 +7851,7 @@ pub mod types {
 
     impl std::str::FromStr for FieldType {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "string" => Ok(Self::String),
                 "i8" => Ok(Self::I8),
@@ -7840,21 +7872,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for FieldType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for FieldType {
+    impl std::convert::TryFrom<&::std::string::String> for FieldType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for FieldType {
+    impl std::convert::TryFrom<::std::string::String> for FieldType {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -8108,7 +8144,7 @@ pub mod types {
     #[serde(tag = "type", content = "value")]
     pub enum FieldValue {
         #[serde(rename = "string")]
-        String(String),
+        String(::std::string::String),
         #[serde(rename = "i8")]
         I8(i8),
         #[serde(rename = "u8")]
@@ -8244,8 +8280,8 @@ pub mod types {
         /// name during finalization. If not specified, a snapshot for the disk
         /// will _not_ be created. A snapshot can be manually created once the
         /// disk transitions into the `Detached` state.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub snapshot_name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub snapshot_name: ::std::option::Option<Name>,
     }
 
     impl From<&FinalizeDisk> for FinalizeDisk {
@@ -8315,7 +8351,7 @@ pub mod types {
 
     impl std::str::FromStr for FleetRole {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "admin" => Ok(Self::Admin),
                 "collaborator" => Ok(Self::Collaborator),
@@ -8327,21 +8363,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for FleetRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for FleetRole {
+    impl std::convert::TryFrom<&::std::string::String> for FleetRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for FleetRole {
+    impl std::convert::TryFrom<::std::string::String> for FleetRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -8381,7 +8421,7 @@ pub mod types {
     )]
     pub struct FleetRolePolicy {
         /// Roles directly assigned on this resource
-        pub role_assignments: Vec<FleetRoleRoleAssignment>,
+        pub role_assignments: ::std::vec::Vec<FleetRoleRoleAssignment>,
     }
 
     impl From<&FleetRolePolicy> for FleetRolePolicy {
@@ -8537,13 +8577,13 @@ pub mod types {
     )]
     pub struct FloatingIp {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// The ID of the instance that this Floating IP is attached to, if it
         /// is presently in use.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub instance_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub instance_id: ::std::option::Option<uuid::Uuid>,
         /// The IP address held by this resource.
         pub ip: std::net::IpAddr,
         /// The ID of the IP pool this resource belongs to.
@@ -8683,18 +8723,18 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FloatingIpCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         /// An IP address to reserve for use as a floating IP. This field is
         /// optional: when not set, an address will be automatically chosen from
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ip: Option<std::net::IpAddr>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip: ::std::option::Option<std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub pool: Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pool: ::std::option::Option<NameOrId>,
     }
 
     impl From<&FloatingIpCreate> for FloatingIpCreate {
@@ -8758,7 +8798,7 @@ pub mod types {
 
     impl std::str::FromStr for FloatingIpParentKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "instance" => Ok(Self::Instance),
                 _ => Err("invalid value".into()),
@@ -8768,21 +8808,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for FloatingIpParentKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for FloatingIpParentKind {
+    impl std::convert::TryFrom<&::std::string::String> for FloatingIpParentKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for FloatingIpParentKind {
+    impl std::convert::TryFrom<::std::string::String> for FloatingIpParentKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -8823,10 +8867,10 @@ pub mod types {
     )]
     pub struct FloatingIpResultsPage {
         /// list of items on this page of results
-        pub items: Vec<FloatingIp>,
+        pub items: ::std::vec::Vec<FloatingIp>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&FloatingIpResultsPage> for FloatingIpResultsPage {
@@ -8878,10 +8922,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FloatingIpUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&FloatingIpUpdate> for FloatingIpUpdate {
@@ -8932,7 +8976,7 @@ pub mod types {
     )]
     pub struct Group {
         /// Human-readable name that can identify the group
-        pub display_name: String,
+        pub display_name: ::std::string::String,
         pub id: uuid::Uuid,
         /// Uuid of the silo to which this group belongs
         pub silo_id: uuid::Uuid,
@@ -8986,10 +9030,10 @@ pub mod types {
     )]
     pub struct GroupResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Group>,
+        pub items: ::std::vec::Vec<Group>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&GroupResultsPage> for GroupResultsPage {
@@ -9113,7 +9157,7 @@ pub mod types {
     )]
     pub struct Histogramdouble {
         /// The bins of the histogram.
-        pub bins: Vec<Bindouble>,
+        pub bins: ::std::vec::Vec<Bindouble>,
         pub max: f64,
         pub min: f64,
         /// The total number of samples in the histogram.
@@ -9251,7 +9295,7 @@ pub mod types {
     )]
     pub struct Histogramfloat {
         /// The bins of the histogram.
-        pub bins: Vec<Binfloat>,
+        pub bins: ::std::vec::Vec<Binfloat>,
         pub max: f32,
         pub min: f32,
         /// The total number of samples in the histogram.
@@ -9389,7 +9433,7 @@ pub mod types {
     )]
     pub struct Histogramint16 {
         /// The bins of the histogram.
-        pub bins: Vec<Binint16>,
+        pub bins: ::std::vec::Vec<Binint16>,
         /// The maximum value of all samples in the histogram.
         pub max: i16,
         /// The minimum value of all samples in the histogram.
@@ -9530,7 +9574,7 @@ pub mod types {
     )]
     pub struct Histogramint32 {
         /// The bins of the histogram.
-        pub bins: Vec<Binint32>,
+        pub bins: ::std::vec::Vec<Binint32>,
         /// The maximum value of all samples in the histogram.
         pub max: i32,
         /// The minimum value of all samples in the histogram.
@@ -9671,7 +9715,7 @@ pub mod types {
     )]
     pub struct Histogramint64 {
         /// The bins of the histogram.
-        pub bins: Vec<Binint64>,
+        pub bins: ::std::vec::Vec<Binint64>,
         /// The maximum value of all samples in the histogram.
         pub max: i64,
         /// The minimum value of all samples in the histogram.
@@ -9812,7 +9856,7 @@ pub mod types {
     )]
     pub struct Histogramint8 {
         /// The bins of the histogram.
-        pub bins: Vec<Binint8>,
+        pub bins: ::std::vec::Vec<Binint8>,
         /// The maximum value of all samples in the histogram.
         pub max: i8,
         /// The minimum value of all samples in the histogram.
@@ -9955,7 +9999,7 @@ pub mod types {
     )]
     pub struct Histogramuint16 {
         /// The bins of the histogram.
-        pub bins: Vec<Binuint16>,
+        pub bins: ::std::vec::Vec<Binuint16>,
         /// The maximum value of all samples in the histogram.
         pub max: u16,
         /// The minimum value of all samples in the histogram.
@@ -10098,7 +10142,7 @@ pub mod types {
     )]
     pub struct Histogramuint32 {
         /// The bins of the histogram.
-        pub bins: Vec<Binuint32>,
+        pub bins: ::std::vec::Vec<Binuint32>,
         /// The maximum value of all samples in the histogram.
         pub max: u32,
         /// The minimum value of all samples in the histogram.
@@ -10241,7 +10285,7 @@ pub mod types {
     )]
     pub struct Histogramuint64 {
         /// The bins of the histogram.
-        pub bins: Vec<Binuint64>,
+        pub bins: ::std::vec::Vec<Binuint64>,
         /// The maximum value of all samples in the histogram.
         pub max: u64,
         /// The minimum value of all samples in the histogram.
@@ -10384,7 +10428,7 @@ pub mod types {
     )]
     pub struct Histogramuint8 {
         /// The bins of the histogram.
-        pub bins: Vec<Binuint8>,
+        pub bins: ::std::vec::Vec<Binuint8>,
         /// The maximum value of all samples in the histogram.
         pub max: u8,
         /// The minimum value of all samples in the histogram.
@@ -10449,15 +10493,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct Hostname(String);
+    pub struct Hostname(::std::string::String);
     impl ::std::ops::Deref for Hostname {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<Hostname> for String {
+    impl From<Hostname> for ::std::string::String {
         fn from(value: Hostname) -> Self {
             value.0
         }
@@ -10471,7 +10515,7 @@ pub mod types {
 
     impl ::std::str::FromStr for Hostname {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 253usize {
                 return Err("longer than 253 characters".into());
             }
@@ -10496,31 +10540,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for Hostname {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for Hostname {
+    impl ::std::convert::TryFrom<&::std::string::String> for Hostname {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for Hostname {
+    impl ::std::convert::TryFrom<::std::string::String> for Hostname {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for Hostname {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -10585,7 +10633,7 @@ pub mod types {
 
     impl std::str::FromStr for IdSortMode {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "id_ascending" => Ok(Self::IdAscending),
                 _ => Err("invalid value".into()),
@@ -10595,21 +10643,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for IdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for IdSortMode {
+    impl std::convert::TryFrom<&::std::string::String> for IdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for IdSortMode {
+    impl std::convert::TryFrom<::std::string::String> for IdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -10677,7 +10729,7 @@ pub mod types {
     )]
     pub struct IdentityProvider {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -10738,10 +10790,10 @@ pub mod types {
     )]
     pub struct IdentityProviderResultsPage {
         /// list of items on this page of results
-        pub items: Vec<IdentityProvider>,
+        pub items: ::std::vec::Vec<IdentityProvider>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&IdentityProviderResultsPage> for IdentityProviderResultsPage {
@@ -10809,7 +10861,7 @@ pub mod types {
 
     impl std::str::FromStr for IdentityProviderType {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "saml" => Ok(Self::Saml),
                 _ => Err("invalid value".into()),
@@ -10819,21 +10871,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for IdentityProviderType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for IdentityProviderType {
+    impl std::convert::TryFrom<&::std::string::String> for IdentityProviderType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for IdentityProviderType {
+    impl std::convert::TryFrom<::std::string::String> for IdentityProviderType {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -10890,7 +10946,7 @@ pub mod types {
 
     impl std::str::FromStr for IdentityType {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "silo_user" => Ok(Self::SiloUser),
                 "silo_group" => Ok(Self::SiloGroup),
@@ -10901,21 +10957,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for IdentityType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for IdentityType {
+    impl std::convert::TryFrom<&::std::string::String> for IdentityType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for IdentityType {
+    impl std::convert::TryFrom<::std::string::String> for IdentityType {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -10973,9 +11033,9 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum IdpMetadataSource {
         #[serde(rename = "url")]
-        Url { url: String },
+        Url { url: ::std::string::String },
         #[serde(rename = "base64_encoded_xml")]
-        Base64EncodedXml { data: String },
+        Base64EncodedXml { data: ::std::string::String },
     }
 
     impl From<&IdpMetadataSource> for IdpMetadataSource {
@@ -11099,19 +11159,19 @@ pub mod types {
         /// size of blocks in bytes
         pub block_size: ByteCount,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// Hash of the image contents, if applicable
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub digest: Option<Digest>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub digest: ::std::option::Option<Digest>,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The family of the operating system like Debian, Ubuntu, etc.
-        pub os: String,
+        pub os: ::std::string::String,
         /// ID of the parent project if the image is a project image
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub project_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub project_id: ::std::option::Option<uuid::Uuid>,
         /// total size in bytes
         pub size: ByteCount,
         /// timestamp when this resource was created
@@ -11119,7 +11179,7 @@ pub mod types {
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         /// Version of the operating system
-        pub version: String,
+        pub version: ::std::string::String,
     }
 
     impl From<&Image> for Image {
@@ -11182,14 +11242,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ImageCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
         /// The family of the operating system (e.g. Debian, Ubuntu, etc.)
-        pub os: String,
+        pub os: ::std::string::String,
         /// The source of the image's contents.
         pub source: ImageSource,
         /// The version of the operating system (e.g. 18.04, 20.04, etc.)
-        pub version: String,
+        pub version: ::std::string::String,
     }
 
     impl From<&ImageCreate> for ImageCreate {
@@ -11240,10 +11300,10 @@ pub mod types {
     )]
     pub struct ImageResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Image>,
+        pub items: ::std::vec::Vec<Image>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&ImageResultsPage> for ImageResultsPage {
@@ -11357,7 +11417,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ImportBlocksBulkWrite {
-        pub base64_encoded_data: String,
+        pub base64_encoded_data: ::std::string::String,
         pub offset: u64,
     }
 
@@ -11431,7 +11491,7 @@ pub mod types {
         #[serde(rename = "no_filtering")]
         NoFiltering,
         #[serde(rename = "allow")]
-        Allow(Vec<IpNet>),
+        Allow(::std::vec::Vec<IpNet>),
     }
 
     impl From<&ImportExportPolicy> for ImportExportPolicy {
@@ -11440,8 +11500,8 @@ pub mod types {
         }
     }
 
-    impl From<Vec<IpNet>> for ImportExportPolicy {
-        fn from(value: Vec<IpNet>) -> Self {
+    impl From<::std::vec::Vec<IpNet>> for ImportExportPolicy {
+        fn from(value: ::std::vec::Vec<IpNet>) -> Self {
             Self::Allow(value)
         }
     }
@@ -11608,8 +11668,9 @@ pub mod types {
         /// If this is not present, then either the instance has never been
         /// automatically restarted, or the cooldown period has already expired,
         /// allowing the instance to be restarted immediately if it fails.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub auto_restart_cooldown_expiration: Option<chrono::DateTime<chrono::offset::Utc>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub auto_restart_cooldown_expiration:
+            ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
         /// `true` if this instance's auto-restart policy will permit the
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
@@ -11624,16 +11685,16 @@ pub mod types {
         /// allow it to be restarted. The value of the `auto_restart_enabled`
         /// field indicates whether the instance will be auto-restarted, based
         /// on its current policy or the default if it has no configured policy.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// the ID of the disk used to boot this Instance, if a specific one is
         /// assigned.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub boot_disk_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub boot_disk_id: ::std::option::Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// RFC1035-compliant hostname for the Instance.
-        pub hostname: String,
+        pub hostname: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// memory allocated for this Instance
@@ -11652,8 +11713,8 @@ pub mod types {
         ///
         /// If this is not present, then this instance has not been
         /// automatically restarted.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub time_last_auto_restarted: Option<chrono::DateTime<chrono::offset::Utc>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_last_auto_restarted: ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
@@ -11748,7 +11809,7 @@ pub mod types {
 
     impl std::str::FromStr for InstanceAutoRestartPolicy {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "never" => Ok(Self::Never),
                 "best_effort" => Ok(Self::BestEffort),
@@ -11759,21 +11820,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for InstanceAutoRestartPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for InstanceAutoRestartPolicy {
+    impl std::convert::TryFrom<&::std::string::String> for InstanceAutoRestartPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for InstanceAutoRestartPolicy {
+    impl std::convert::TryFrom<::std::string::String> for InstanceAutoRestartPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -11821,29 +11886,29 @@ pub mod types {
     }
 
     impl std::str::FromStr for InstanceCpuCount {
-        type Err = <u16 as std::str::FromStr>::Err;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
+        type Err = <u16 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
         }
     }
 
     impl std::convert::TryFrom<&str> for InstanceCpuCount {
-        type Error = <u16 as std::str::FromStr>::Err;
-        fn try_from(value: &str) -> Result<Self, Self::Error> {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<&String> for InstanceCpuCount {
-        type Error = <u16 as std::str::FromStr>::Err;
-        fn try_from(value: &String) -> Result<Self, Self::Error> {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<String> for InstanceCpuCount {
-        type Error = <u16 as std::str::FromStr>::Err;
-        fn try_from(value: String) -> Result<Self, Self::Error> {
+        type Error = <u16 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -12038,8 +12103,8 @@ pub mod types {
         /// configurable through other mechanisms, such as on a per-project
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// The disk this instance should boot into. This disk can either be
         /// attached if it already exists, or created, if it should be a new
         /// disk.
@@ -12055,20 +12120,20 @@ pub mod types {
         /// may result in an instance that only boots to the EFI shell until the
         /// desired disk is set as an explicit boot disk and the instance
         /// rebooted.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub boot_disk: Option<InstanceDiskAttachment>,
-        pub description: String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub boot_disk: ::std::option::Option<InstanceDiskAttachment>,
+        pub description: ::std::string::String,
         /// The disks to be created or attached for this instance.
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        pub disks: Vec<InstanceDiskAttachment>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub disks: ::std::vec::Vec<InstanceDiskAttachment>,
         /// The external IP addresses provided to this instance.
         ///
         /// By default, all instances have outbound connectivity, but no inbound
         /// connectivity. These external addresses can be used to provide a
         /// fixed, known IP address for making inbound connections to the
         /// instance.
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        pub external_ips: Vec<ExternalIpCreate>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub external_ips: ::std::vec::Vec<ExternalIpCreate>,
         /// The hostname to be assigned to the instance
         pub hostname: Hostname,
         /// The amount of RAM (in bytes) to be allocated to the instance
@@ -12085,8 +12150,8 @@ pub mod types {
         /// If not provided, all SSH public keys from the user's profile will be
         /// sent. If an empty list is provided, no public keys will be
         /// transmitted to the instance.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ssh_public_keys: Option<Vec<NameOrId>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ssh_public_keys: ::std::option::Option<::std::vec::Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
@@ -12094,7 +12159,7 @@ pub mod types {
         /// Must be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and
         /// / characters with padding). Maximum 32 KiB unencoded data.
         #[serde(default)]
-        pub user_data: String,
+        pub user_data: ::std::string::String,
     }
 
     impl From<&InstanceCreate> for InstanceCreate {
@@ -12194,7 +12259,7 @@ pub mod types {
         /// During instance creation, create and attach disks
         #[serde(rename = "create")]
         Create {
-            description: String,
+            description: ::std::string::String,
             /// The initial source for this disk
             disk_source: DiskSource,
             name: Name,
@@ -12319,7 +12384,7 @@ pub mod types {
     )]
     pub struct InstanceNetworkInterface {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// The Instance to which the interface belongs.
@@ -12341,8 +12406,8 @@ pub mod types {
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         /// A set of additional networks that this interface may send and
         /// receive traffic on.
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        pub transit_ips: Vec<IpNet>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC to which the interface belongs.
         pub vpc_id: uuid::Uuid,
     }
@@ -12442,7 +12507,7 @@ pub mod types {
         /// If more than one interface is provided, then the first will be
         /// designated the primary interface for the instance.
         #[serde(rename = "create")]
-        Create(Vec<InstanceNetworkInterfaceCreate>),
+        Create(::std::vec::Vec<InstanceNetworkInterfaceCreate>),
         #[serde(rename = "default")]
         Default,
         #[serde(rename = "none")]
@@ -12455,8 +12520,8 @@ pub mod types {
         }
     }
 
-    impl From<Vec<InstanceNetworkInterfaceCreate>> for InstanceNetworkInterfaceAttachment {
-        fn from(value: Vec<InstanceNetworkInterfaceCreate>) -> Self {
+    impl From<::std::vec::Vec<InstanceNetworkInterfaceCreate>> for InstanceNetworkInterfaceAttachment {
+        fn from(value: ::std::vec::Vec<InstanceNetworkInterfaceCreate>) -> Self {
             Self::Create(value)
         }
     }
@@ -12516,11 +12581,11 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceNetworkInterfaceCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         /// The IP address for the interface. One will be auto-assigned if not
         /// provided.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ip: Option<std::net::IpAddr>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip: ::std::option::Option<std::net::IpAddr>,
         pub name: Name,
         /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
@@ -12576,10 +12641,10 @@ pub mod types {
     )]
     pub struct InstanceNetworkInterfaceResultsPage {
         /// list of items on this page of results
-        pub items: Vec<InstanceNetworkInterface>,
+        pub items: ::std::vec::Vec<InstanceNetworkInterface>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&InstanceNetworkInterfaceResultsPage> for InstanceNetworkInterfaceResultsPage {
@@ -12658,10 +12723,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceNetworkInterfaceUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
         /// Make a secondary interface the instance's primary interface.
         ///
         /// If applied to a secondary interface, that interface will become the
@@ -12677,8 +12742,8 @@ pub mod types {
         pub primary: bool,
         /// A set of additional networks that this interface may send and
         /// receive traffic on.
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        pub transit_ips: Vec<IpNet>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<IpNet>,
     }
 
     impl From<&InstanceNetworkInterfaceUpdate> for InstanceNetworkInterfaceUpdate {
@@ -12729,10 +12794,10 @@ pub mod types {
     )]
     pub struct InstanceResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Instance>,
+        pub items: ::std::vec::Vec<Instance>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&InstanceResultsPage> for InstanceResultsPage {
@@ -12790,7 +12855,7 @@ pub mod types {
         /// The bytes starting from the requested offset up to either the end of
         /// the buffer or the request's `max_bytes`. Provided as a u8 array
         /// rather than a string, as it may not be UTF-8.
-        pub data: Vec<u8>,
+        pub data: ::std::vec::Vec<u8>,
         /// The absolute offset since boot (suitable for use as `byte_offset` in
         /// a subsequent request) of the last byte returned in `data`.
         pub last_byte_offset: u64,
@@ -12975,7 +13040,7 @@ pub mod types {
 
     impl std::str::FromStr for InstanceState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "creating" => Ok(Self::Creating),
                 "starting" => Ok(Self::Starting),
@@ -12994,21 +13059,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for InstanceState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for InstanceState {
+    impl std::convert::TryFrom<&::std::string::String> for InstanceState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for InstanceState {
+    impl std::convert::TryFrom<::std::string::String> for InstanceState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -13107,14 +13176,14 @@ pub mod types {
         /// configurable through other mechanisms, such as on a per-project
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub auto_restart_policy: Option<InstanceAutoRestartPolicy>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// Name or ID of the disk the instance should be instructed to boot
         /// from.
         ///
         /// If not provided, unset the instance's boot disk.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub boot_disk: Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub boot_disk: ::std::option::Option<NameOrId>,
         /// The amount of memory to assign to this instance.
         pub memory: ByteCount,
         /// The number of CPUs to assign to this instance.
@@ -13195,7 +13264,7 @@ pub mod types {
     )]
     pub struct InternetGateway {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -13247,7 +13316,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGatewayCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -13331,7 +13400,7 @@ pub mod types {
         /// The associated IP address,
         pub address: std::net::IpAddr,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// The associated internet gateway.
@@ -13389,7 +13458,7 @@ pub mod types {
     )]
     pub struct InternetGatewayIpAddressCreate {
         pub address: std::net::IpAddr,
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -13441,10 +13510,10 @@ pub mod types {
     )]
     pub struct InternetGatewayIpAddressResultsPage {
         /// list of items on this page of results
-        pub items: Vec<InternetGatewayIpAddress>,
+        pub items: ::std::vec::Vec<InternetGatewayIpAddress>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&InternetGatewayIpAddressResultsPage> for InternetGatewayIpAddressResultsPage {
@@ -13525,7 +13594,7 @@ pub mod types {
     )]
     pub struct InternetGatewayIpPool {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// The associated internet gateway.
@@ -13583,7 +13652,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGatewayIpPoolCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub ip_pool: NameOrId,
         pub name: Name,
     }
@@ -13636,10 +13705,10 @@ pub mod types {
     )]
     pub struct InternetGatewayIpPoolResultsPage {
         /// list of items on this page of results
-        pub items: Vec<InternetGatewayIpPool>,
+        pub items: ::std::vec::Vec<InternetGatewayIpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&InternetGatewayIpPoolResultsPage> for InternetGatewayIpPoolResultsPage {
@@ -13690,10 +13759,10 @@ pub mod types {
     )]
     pub struct InternetGatewayResultsPage {
         /// list of items on this page of results
-        pub items: Vec<InternetGateway>,
+        pub items: ::std::vec::Vec<InternetGateway>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&InternetGatewayResultsPage> for InternetGatewayResultsPage {
@@ -13757,7 +13826,7 @@ pub mod types {
 
     impl std::str::FromStr for IpNet {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if let Ok(v) = value.parse() {
                 Ok(Self::V4(v))
             } else if let Ok(v) = value.parse() {
@@ -13770,21 +13839,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for IpNet {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for IpNet {
+    impl std::convert::TryFrom<&::std::string::String> for IpNet {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for IpNet {
+    impl std::convert::TryFrom<::std::string::String> for IpNet {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -13866,7 +13939,7 @@ pub mod types {
     )]
     pub struct IpPool {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -13916,7 +13989,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -14071,10 +14144,10 @@ pub mod types {
     )]
     pub struct IpPoolRangeResultsPage {
         /// list of items on this page of results
-        pub items: Vec<IpPoolRange>,
+        pub items: ::std::vec::Vec<IpPoolRange>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&IpPoolRangeResultsPage> for IpPoolRangeResultsPage {
@@ -14125,10 +14198,10 @@ pub mod types {
     )]
     pub struct IpPoolResultsPage {
         /// list of items on this page of results
-        pub items: Vec<IpPool>,
+        pub items: ::std::vec::Vec<IpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&IpPoolResultsPage> for IpPoolResultsPage {
@@ -14237,10 +14310,10 @@ pub mod types {
     )]
     pub struct IpPoolSiloLinkResultsPage {
         /// list of items on this page of results
-        pub items: Vec<IpPoolSiloLink>,
+        pub items: ::std::vec::Vec<IpPoolSiloLink>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&IpPoolSiloLinkResultsPage> for IpPoolSiloLinkResultsPage {
@@ -14339,10 +14412,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&IpPoolUpdate> for IpPoolUpdate {
@@ -14502,15 +14575,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct Ipv4Net(String);
+    pub struct Ipv4Net(::std::string::String);
     impl ::std::ops::Deref for Ipv4Net {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<Ipv4Net> for String {
+    impl From<Ipv4Net> for ::std::string::String {
         fn from(value: Ipv4Net) -> Self {
             value.0
         }
@@ -14524,7 +14597,7 @@ pub mod types {
 
     impl ::std::str::FromStr for Ipv4Net {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
                 "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.\
                  ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/\
@@ -14546,31 +14619,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for Ipv4Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for Ipv4Net {
+    impl ::std::convert::TryFrom<&::std::string::String> for Ipv4Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for Ipv4Net {
+    impl ::std::convert::TryFrom<::std::string::String> for Ipv4Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for Ipv4Net {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -14723,15 +14800,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct Ipv6Net(String);
+    pub struct Ipv6Net(::std::string::String);
     impl ::std::ops::Deref for Ipv6Net {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<Ipv6Net> for String {
+    impl From<Ipv6Net> for ::std::string::String {
         fn from(value: Ipv6Net) -> Self {
             value.0
         }
@@ -14745,7 +14822,7 @@ pub mod types {
 
     impl ::std::str::FromStr for Ipv6Net {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
                 "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:\
                  |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:\
@@ -14783,31 +14860,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for Ipv6Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for Ipv6Net {
+    impl ::std::convert::TryFrom<&::std::string::String> for Ipv6Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for Ipv6Net {
+    impl ::std::convert::TryFrom<::std::string::String> for Ipv6Net {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for Ipv6Net {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -14900,12 +14981,12 @@ pub mod types {
     pub struct Ipv6Utilization {
         /// The number of IPv6 addresses allocated from this pool. A 128-bit
         /// integer string to match the capacity field.
-        pub allocated: String,
+        pub allocated: ::std::string::String,
         /// The total number of IPv6 addresses in the pool, i.e., the sum of the
         /// lengths of the IPv6 ranges. An IPv6 range can contain up to 2^128
         /// addresses, so we represent this value in JSON as a numeric string
         /// with a custom "uint128" format.
-        pub capacity: String,
+        pub capacity: ::std::string::String,
     }
 
     impl From<&Ipv6Utilization> for Ipv6Utilization {
@@ -14951,15 +15032,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct L4PortRange(String);
+    pub struct L4PortRange(::std::string::String);
     impl ::std::ops::Deref for L4PortRange {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<L4PortRange> for String {
+    impl From<L4PortRange> for ::std::string::String {
         fn from(value: L4PortRange) -> Self {
             value.0
         }
@@ -14973,7 +15054,7 @@ pub mod types {
 
     impl ::std::str::FromStr for L4PortRange {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 11usize {
                 return Err("longer than 11 characters".into());
             }
@@ -14993,31 +15074,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for L4PortRange {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for L4PortRange {
+    impl ::std::convert::TryFrom<&::std::string::String> for L4PortRange {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for L4PortRange {
+    impl ::std::convert::TryFrom<::std::string::String> for L4PortRange {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for L4PortRange {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -15112,8 +15197,8 @@ pub mod types {
         /// The requested forward-error correction method.  If this is not
         /// specified, the standard FEC for the underlying media will be applied
         /// if it can be determined.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub fec: Option<LinkFec>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub fec: ::std::option::Option<LinkFec>,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
         pub lldp: LldpLinkConfigCreate,
         /// Maximum transmission unit for the link.
@@ -15121,8 +15206,8 @@ pub mod types {
         /// The speed of the link.
         pub speed: LinkSpeed,
         /// Optional tx_eq settings
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub tx_eq: Option<TxEqConfig>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub tx_eq: ::std::option::Option<TxEqConfig>,
     }
 
     impl From<&LinkConfigCreate> for LinkConfigCreate {
@@ -15213,7 +15298,7 @@ pub mod types {
 
     impl std::str::FromStr for LinkFec {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "firecode" => Ok(Self::Firecode),
                 "none" => Ok(Self::None),
@@ -15225,21 +15310,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for LinkFec {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for LinkFec {
+    impl std::convert::TryFrom<&::std::string::String> for LinkFec {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for LinkFec {
+    impl std::convert::TryFrom<::std::string::String> for LinkFec {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -15386,7 +15475,7 @@ pub mod types {
 
     impl std::str::FromStr for LinkSpeed {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "speed0_g" => Ok(Self::Speed0G),
                 "speed1_g" => Ok(Self::Speed1G),
@@ -15404,21 +15493,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for LinkSpeed {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for LinkSpeed {
+    impl std::convert::TryFrom<&::std::string::String> for LinkSpeed {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for LinkSpeed {
+    impl std::convert::TryFrom<::std::string::String> for LinkSpeed {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -15505,27 +15598,27 @@ pub mod types {
     )]
     pub struct LldpLinkConfig {
         /// The LLDP chassis identifier TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub chassis_id: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub chassis_id: ::std::option::Option<::std::string::String>,
         /// Whether or not the LLDP service is enabled.
         pub enabled: bool,
         /// The id of this LLDP service instance.
         pub id: uuid::Uuid,
         /// The LLDP link description TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub link_description: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub link_description: ::std::option::Option<::std::string::String>,
         /// The LLDP link name TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub link_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub management_ip: Option<IpNet>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub management_ip: ::std::option::Option<IpNet>,
         /// The LLDP system description TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub system_description: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_description: ::std::option::Option<::std::string::String>,
         /// The LLDP system name TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub system_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_name: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&LldpLinkConfig> for LldpLinkConfig {
@@ -15608,25 +15701,25 @@ pub mod types {
     )]
     pub struct LldpLinkConfigCreate {
         /// The LLDP chassis identifier TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub chassis_id: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub chassis_id: ::std::option::Option<::std::string::String>,
         /// Whether or not LLDP is enabled.
         pub enabled: bool,
         /// The LLDP link description TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub link_description: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub link_description: ::std::option::Option<::std::string::String>,
         /// The LLDP link name TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub link_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub management_ip: Option<std::net::IpAddr>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub management_ip: ::std::option::Option<std::net::IpAddr>,
         /// The LLDP system description TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub system_description: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_description: ::std::option::Option<::std::string::String>,
         /// The LLDP system name TLV.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub system_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_name: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&LldpLinkConfigCreate> for LldpLinkConfigCreate {
@@ -15705,7 +15798,7 @@ pub mod types {
         /// The id of the rack where this loopback address is assigned.
         pub rack_id: uuid::Uuid,
         /// Switch location where this loopback address is assigned.
-        pub switch_location: String,
+        pub switch_location: ::std::string::String,
     }
 
     impl From<&LoopbackAddress> for LoopbackAddress {
@@ -15852,10 +15945,10 @@ pub mod types {
     )]
     pub struct LoopbackAddressResultsPage {
         /// list of items on this page of results
-        pub items: Vec<LoopbackAddress>,
+        pub items: ::std::vec::Vec<LoopbackAddress>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&LoopbackAddressResultsPage> for LoopbackAddressResultsPage {
@@ -15899,15 +15992,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct MacAddr(String);
+    pub struct MacAddr(::std::string::String);
     impl ::std::ops::Deref for MacAddr {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<MacAddr> for String {
+    impl From<MacAddr> for ::std::string::String {
         fn from(value: MacAddr) -> Self {
             value.0
         }
@@ -15921,7 +16014,7 @@ pub mod types {
 
     impl ::std::str::FromStr for MacAddr {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 17usize {
                 return Err("longer than 17 characters".into());
             }
@@ -15943,31 +16036,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for MacAddr {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for MacAddr {
+    impl ::std::convert::TryFrom<&::std::string::String> for MacAddr {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for MacAddr {
+    impl ::std::convert::TryFrom<::std::string::String> for MacAddr {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for MacAddr {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -16056,10 +16153,10 @@ pub mod types {
     )]
     pub struct MeasurementResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Measurement>,
+        pub items: ::std::vec::Vec<Measurement>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&MeasurementResultsPage> for MeasurementResultsPage {
@@ -16154,7 +16251,7 @@ pub mod types {
 
     impl std::str::FromStr for MetricType {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "gauge" => Ok(Self::Gauge),
                 "delta" => Ok(Self::Delta),
@@ -16166,21 +16263,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for MetricType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for MetricType {
+    impl std::convert::TryFrom<&::std::string::String> for MetricType {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for MetricType {
+    impl std::convert::TryFrom<::std::string::String> for MetricType {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -16215,8 +16316,8 @@ pub mod types {
     )]
     pub struct MissingDatum {
         pub datum_type: DatumType,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub start_time: Option<chrono::DateTime<chrono::offset::Utc>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub start_time: ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
     }
 
     impl From<&MissingDatum> for MissingDatum {
@@ -16265,15 +16366,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct Name(String);
+    pub struct Name(::std::string::String);
     impl ::std::ops::Deref for Name {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<Name> for String {
+    impl From<Name> for ::std::string::String {
         fn from(value: Name) -> Self {
             value.0
         }
@@ -16287,7 +16388,7 @@ pub mod types {
 
     impl ::std::str::FromStr for Name {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
                 return Err("longer than 63 characters".into());
             }
@@ -16301,31 +16402,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for Name {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for Name {
+    impl ::std::convert::TryFrom<&::std::string::String> for Name {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for Name {
+    impl ::std::convert::TryFrom<::std::string::String> for Name {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for Name {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -16378,7 +16483,7 @@ pub mod types {
 
     impl std::str::FromStr for NameOrId {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if let Ok(v) = value.parse() {
                 Ok(Self::Id(v))
             } else if let Ok(v) = value.parse() {
@@ -16391,21 +16496,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for NameOrId {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for NameOrId {
+    impl std::convert::TryFrom<&::std::string::String> for NameOrId {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for NameOrId {
+    impl std::convert::TryFrom<::std::string::String> for NameOrId {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -16508,7 +16617,7 @@ pub mod types {
 
     impl std::str::FromStr for NameOrIdSortMode {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "name_ascending" => Ok(Self::NameAscending),
                 "name_descending" => Ok(Self::NameDescending),
@@ -16520,21 +16629,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for NameOrIdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for NameOrIdSortMode {
+    impl std::convert::TryFrom<&::std::string::String> for NameOrIdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for NameOrIdSortMode {
+    impl std::convert::TryFrom<::std::string::String> for NameOrIdSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -16596,7 +16709,7 @@ pub mod types {
 
     impl std::str::FromStr for NameSortMode {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "name_ascending" => Ok(Self::NameAscending),
                 _ => Err("invalid value".into()),
@@ -16606,21 +16719,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for NameSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for NameSortMode {
+    impl std::convert::TryFrom<&::std::string::String> for NameSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for NameSortMode {
+    impl std::convert::TryFrom<::std::string::String> for NameSortMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -16700,8 +16817,8 @@ pub mod types {
         pub primary: bool,
         pub slot: u8,
         pub subnet: IpNet,
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        pub transit_ips: Vec<IpNet>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<IpNet>,
         pub vni: Vni,
     }
 
@@ -16840,7 +16957,7 @@ pub mod types {
     )]
     pub struct OxqlQueryResult {
         /// Tables resulting from the query, each containing timeseries.
-        pub tables: Vec<Table>,
+        pub tables: ::std::vec::Vec<Table>,
     }
 
     impl From<&OxqlQueryResult> for OxqlQueryResult {
@@ -16909,7 +17026,7 @@ pub mod types {
 
     impl std::str::FromStr for PaginationOrder {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "ascending" => Ok(Self::Ascending),
                 "descending" => Ok(Self::Descending),
@@ -16920,21 +17037,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for PaginationOrder {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for PaginationOrder {
+    impl std::convert::TryFrom<&::std::string::String> for PaginationOrder {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for PaginationOrder {
+    impl std::convert::TryFrom<::std::string::String> for PaginationOrder {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -16963,15 +17084,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct Password(String);
+    pub struct Password(::std::string::String);
     impl ::std::ops::Deref for Password {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<Password> for String {
+    impl From<Password> for ::std::string::String {
         fn from(value: Password) -> Self {
             value.0
         }
@@ -16985,7 +17106,7 @@ pub mod types {
 
     impl ::std::str::FromStr for Password {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 512usize {
                 return Err("longer than 512 characters".into());
             }
@@ -16995,31 +17116,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for Password {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for Password {
+    impl ::std::convert::TryFrom<&::std::string::String> for Password {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for Password {
+    impl ::std::convert::TryFrom<::std::string::String> for Password {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for Password {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -17116,20 +17241,20 @@ pub mod types {
         pub form_factor: PhysicalDiskKind,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        pub model: String,
+        pub model: ::std::string::String,
         /// The operator-defined policy for a physical disk.
         pub policy: PhysicalDiskPolicy,
-        pub serial: String,
+        pub serial: ::std::string::String,
         /// The sled to which this disk is attached, if any.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub sled_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sled_id: ::std::option::Option<uuid::Uuid>,
         /// The current state Nexus believes the disk to be in.
         pub state: PhysicalDiskState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub vendor: String,
+        pub vendor: ::std::string::String,
     }
 
     impl From<&PhysicalDisk> for PhysicalDisk {
@@ -17196,7 +17321,7 @@ pub mod types {
 
     impl std::str::FromStr for PhysicalDiskKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "m2" => Ok(Self::M2),
                 "u2" => Ok(Self::U2),
@@ -17207,21 +17332,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for PhysicalDiskKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for PhysicalDiskKind {
+    impl std::convert::TryFrom<&::std::string::String> for PhysicalDiskKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for PhysicalDiskKind {
+    impl std::convert::TryFrom<::std::string::String> for PhysicalDiskKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -17311,7 +17440,7 @@ pub mod types {
 
     impl std::str::FromStr for PhysicalDiskPolicy {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "in_service" => Ok(Self::InService),
                 "expunged" => Ok(Self::Expunged),
@@ -17322,21 +17451,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for PhysicalDiskPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for PhysicalDiskPolicy {
+    impl std::convert::TryFrom<&::std::string::String> for PhysicalDiskPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for PhysicalDiskPolicy {
+    impl std::convert::TryFrom<::std::string::String> for PhysicalDiskPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -17377,10 +17510,10 @@ pub mod types {
     )]
     pub struct PhysicalDiskResultsPage {
         /// list of items on this page of results
-        pub items: Vec<PhysicalDisk>,
+        pub items: ::std::vec::Vec<PhysicalDisk>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&PhysicalDiskResultsPage> for PhysicalDiskResultsPage {
@@ -17469,7 +17602,7 @@ pub mod types {
 
     impl std::str::FromStr for PhysicalDiskState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "active" => Ok(Self::Active),
                 "decommissioned" => Ok(Self::Decommissioned),
@@ -17480,21 +17613,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for PhysicalDiskState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for PhysicalDiskState {
+    impl std::convert::TryFrom<&::std::string::String> for PhysicalDiskState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for PhysicalDiskState {
+    impl std::convert::TryFrom<::std::string::String> for PhysicalDiskState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -17591,7 +17728,7 @@ pub mod types {
 
     impl std::str::FromStr for PingStatus {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "ok" => Ok(Self::Ok),
                 _ => Err("invalid value".into()),
@@ -17601,21 +17738,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for PingStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for PingStatus {
+    impl std::convert::TryFrom<&::std::string::String> for PingStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for PingStatus {
+    impl std::convert::TryFrom<::std::string::String> for PingStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -17664,10 +17805,11 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Points {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub start_times: Option<Vec<chrono::DateTime<chrono::offset::Utc>>>,
-        pub timestamps: Vec<chrono::DateTime<chrono::offset::Utc>>,
-        pub values: Vec<Values>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub start_times:
+            ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+        pub timestamps: ::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>,
+        pub values: ::std::vec::Vec<Values>,
     }
 
     impl From<&Points> for Points {
@@ -17743,7 +17885,7 @@ pub mod types {
     )]
     pub struct Probe {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -17813,9 +17955,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProbeCreate {
-        pub description: String,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ip_pool: Option<NameOrId>,
+        pub description: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip_pool: ::std::option::Option<NameOrId>,
         pub name: Name,
         pub sled: uuid::Uuid,
     }
@@ -17944,7 +18086,7 @@ pub mod types {
 
     impl std::str::FromStr for ProbeExternalIpKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "snat" => Ok(Self::Snat),
                 "floating" => Ok(Self::Floating),
@@ -17956,21 +18098,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for ProbeExternalIpKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for ProbeExternalIpKind {
+    impl std::convert::TryFrom<&::std::string::String> for ProbeExternalIpKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for ProbeExternalIpKind {
+    impl std::convert::TryFrom<::std::string::String> for ProbeExternalIpKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -18018,7 +18164,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProbeInfo {
-        pub external_ips: Vec<ProbeExternalIp>,
+        pub external_ips: ::std::vec::Vec<ProbeExternalIp>,
         pub id: uuid::Uuid,
         pub interface: NetworkInterface,
         pub name: Name,
@@ -18073,10 +18219,10 @@ pub mod types {
     )]
     pub struct ProbeInfoResultsPage {
         /// list of items on this page of results
-        pub items: Vec<ProbeInfo>,
+        pub items: ::std::vec::Vec<ProbeInfo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&ProbeInfoResultsPage> for ProbeInfoResultsPage {
@@ -18145,7 +18291,7 @@ pub mod types {
     )]
     pub struct Project {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -18195,7 +18341,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProjectCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -18247,10 +18393,10 @@ pub mod types {
     )]
     pub struct ProjectResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Project>,
+        pub items: ::std::vec::Vec<Project>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&ProjectResultsPage> for ProjectResultsPage {
@@ -18320,7 +18466,7 @@ pub mod types {
 
     impl std::str::FromStr for ProjectRole {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "admin" => Ok(Self::Admin),
                 "collaborator" => Ok(Self::Collaborator),
@@ -18332,21 +18478,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for ProjectRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for ProjectRole {
+    impl std::convert::TryFrom<&::std::string::String> for ProjectRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for ProjectRole {
+    impl std::convert::TryFrom<::std::string::String> for ProjectRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -18386,7 +18536,7 @@ pub mod types {
     )]
     pub struct ProjectRolePolicy {
         /// Roles directly assigned on this resource
-        pub role_assignments: Vec<ProjectRoleRoleAssignment>,
+        pub role_assignments: ::std::vec::Vec<ProjectRoleRoleAssignment>,
     }
 
     impl From<&ProjectRolePolicy> for ProjectRolePolicy {
@@ -18496,10 +18646,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProjectUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&ProjectUpdate> for ProjectUpdate {
@@ -18707,10 +18857,10 @@ pub mod types {
     )]
     pub struct RackResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Rack>,
+        pub items: ::std::vec::Vec<Rack>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&RackResultsPage> for RackResultsPage {
@@ -18752,7 +18902,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Role {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: RoleName,
     }
 
@@ -18794,15 +18944,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct RoleName(String);
+    pub struct RoleName(::std::string::String);
     impl ::std::ops::Deref for RoleName {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<RoleName> for String {
+    impl From<RoleName> for ::std::string::String {
         fn from(value: RoleName) -> Self {
             value.0
         }
@@ -18816,7 +18966,7 @@ pub mod types {
 
     impl ::std::str::FromStr for RoleName {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
                 return Err("longer than 63 characters".into());
             }
@@ -18833,31 +18983,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for RoleName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for RoleName {
+    impl ::std::convert::TryFrom<&::std::string::String> for RoleName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for RoleName {
+    impl ::std::convert::TryFrom<::std::string::String> for RoleName {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for RoleName {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -18901,10 +19055,10 @@ pub mod types {
     )]
     pub struct RoleResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Role>,
+        pub items: ::std::vec::Vec<Role>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&RoleResultsPage> for RoleResultsPage {
@@ -18979,11 +19133,11 @@ pub mod types {
         pub gw: std::net::IpAddr,
         /// Local preference for route. Higher preference indictes precedence
         /// within and across protocols.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub rib_priority: Option<u8>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rib_priority: ::std::option::Option<u8>,
         /// VLAN id the gateway is reachable over.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vid: Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vid: ::std::option::Option<u16>,
     }
 
     impl From<&Route> for Route {
@@ -19027,7 +19181,7 @@ pub mod types {
     )]
     pub struct RouteConfig {
         /// The set of routes assigned to a switch port.
-        pub routes: Vec<Route>,
+        pub routes: ::std::vec::Vec<Route>,
     }
 
     impl From<&RouteConfig> for RouteConfig {
@@ -19435,7 +19589,7 @@ pub mod types {
     )]
     pub struct RouterRoute {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// Selects which traffic this routing rule will apply to
         pub destination: RouteDestination,
         /// unique, immutable, system-controlled identifier for each resource
@@ -19513,7 +19667,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouterRouteCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         /// Selects which traffic this routing rule will apply to.
         pub destination: RouteDestination,
         pub name: Name,
@@ -19639,7 +19793,7 @@ pub mod types {
 
     impl std::str::FromStr for RouterRouteKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "default" => Ok(Self::Default),
                 "vpc_subnet" => Ok(Self::VpcSubnet),
@@ -19652,21 +19806,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for RouterRouteKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for RouterRouteKind {
+    impl std::convert::TryFrom<&::std::string::String> for RouterRouteKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for RouterRouteKind {
+    impl std::convert::TryFrom<::std::string::String> for RouterRouteKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -19707,10 +19865,10 @@ pub mod types {
     )]
     pub struct RouterRouteResultsPage {
         /// list of items on this page of results
-        pub items: Vec<RouterRoute>,
+        pub items: ::std::vec::Vec<RouterRoute>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&RouterRouteResultsPage> for RouterRouteResultsPage {
@@ -19784,12 +19942,12 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouterRouteUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
         /// Selects which traffic this routing rule will apply to.
         pub destination: RouteDestination,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
         /// The location that matched packets should be forwarded to.
         pub target: RouteTarget,
     }
@@ -19907,29 +20065,29 @@ pub mod types {
     )]
     pub struct SamlIdentityProvider {
         /// Service provider endpoint where the response will be sent
-        pub acs_url: String,
+        pub acs_url: ::std::string::String,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// If set, attributes with this name will be considered to denote a
         /// user's group membership, where the values will be the group names.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub group_attribute_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub group_attribute_name: ::std::option::Option<::std::string::String>,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// IdP's entity id
-        pub idp_entity_id: String,
+        pub idp_entity_id: ::std::string::String,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Optional request signing public certificate (base64 encoded der
         /// file)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub public_cert: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub public_cert: ::std::option::Option<::std::string::String>,
         /// Service provider endpoint where the idp should send log out requests
-        pub slo_url: String,
+        pub slo_url: ::std::string::String,
         /// SP's client id
-        pub sp_client_id: String,
+        pub sp_client_id: ::std::string::String,
         /// Customer's technical contact for saml configuration
-        pub technical_contact_email: String,
+        pub technical_contact_email: ::std::string::String,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -20038,27 +20196,27 @@ pub mod types {
     )]
     pub struct SamlIdentityProviderCreate {
         /// service provider endpoint where the response will be sent
-        pub acs_url: String,
-        pub description: String,
+        pub acs_url: ::std::string::String,
+        pub description: ::std::string::String,
         /// If set, SAML attributes with this name will be considered to denote
         /// a user's group membership, where the attribute value(s) should be a
         /// comma-separated list of group names.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub group_attribute_name: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub group_attribute_name: ::std::option::Option<::std::string::String>,
         /// idp's entity id
-        pub idp_entity_id: String,
+        pub idp_entity_id: ::std::string::String,
         /// the source of an identity provider metadata descriptor
         pub idp_metadata_source: IdpMetadataSource,
         pub name: Name,
         /// request signing key pair
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub signing_keypair: Option<DerEncodedKeyPair>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub signing_keypair: ::std::option::Option<DerEncodedKeyPair>,
         /// service provider endpoint where the idp should send log out requests
-        pub slo_url: String,
+        pub slo_url: ::std::string::String,
         /// sp's client id
-        pub sp_client_id: String,
+        pub sp_client_id: ::std::string::String,
         /// customer's technical contact for saml configuration
-        pub technical_contact_email: String,
+        pub technical_contact_email: ::std::string::String,
     }
 
     impl From<&SamlIdentityProviderCreate> for SamlIdentityProviderCreate {
@@ -20128,7 +20286,7 @@ pub mod types {
 
     impl std::str::FromStr for ServiceUsingCertificate {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "external_api" => Ok(Self::ExternalApi),
                 _ => Err("invalid value".into()),
@@ -20138,21 +20296,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for ServiceUsingCertificate {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for ServiceUsingCertificate {
+    impl std::convert::TryFrom<&::std::string::String> for ServiceUsingCertificate {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for ServiceUsingCertificate {
+    impl std::convert::TryFrom<::std::string::String> for ServiceUsingCertificate {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -20242,7 +20404,7 @@ pub mod types {
     )]
     pub struct Silo {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// A silo where discoverable is false can be retrieved only by its id -
         /// it will not be part of the "list all silos" output.
         pub discoverable: bool,
@@ -20254,7 +20416,7 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        pub mapped_fleet_roles: ::std::collections::HashMap<String, Vec<FleetRole>>,
+        pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -20367,9 +20529,9 @@ pub mod types {
         /// Note that if configuring a SAML based identity provider,
         /// group_attribute_name must be set for users to be considered part of
         /// a group. See `SamlIdentityProviderCreate` for more information.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub admin_group_name: Option<String>,
-        pub description: String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub admin_group_name: ::std::option::Option<::std::string::String>,
+        pub description: ::std::string::String,
         pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
         /// Mapping of which Fleet roles are conferred by each Silo role
@@ -20377,7 +20539,7 @@ pub mod types {
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
         #[serde(default, skip_serializing_if = "::std::collections::HashMap::is_empty")]
-        pub mapped_fleet_roles: ::std::collections::HashMap<String, Vec<FleetRole>>,
+        pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
         pub name: Name,
         /// Limits the amount of provisionable CPU, memory, and storage in the
         /// Silo. CPU and memory are only consumed by running instances, while
@@ -20386,7 +20548,7 @@ pub mod types {
         pub quotas: SiloQuotasCreate,
         /// Initial TLS certificates to be used for the new Silo's console and
         /// API endpoints.  These should be valid for the Silo's DNS name(s).
-        pub tls_certificates: Vec<CertificateCreate>,
+        pub tls_certificates: ::std::vec::Vec<CertificateCreate>,
     }
 
     impl From<&SiloCreate> for SiloCreate {
@@ -20477,7 +20639,7 @@ pub mod types {
 
     impl std::str::FromStr for SiloIdentityMode {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "saml_jit" => Ok(Self::SamlJit),
                 "local_only" => Ok(Self::LocalOnly),
@@ -20488,21 +20650,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SiloIdentityMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SiloIdentityMode {
+    impl std::convert::TryFrom<&::std::string::String> for SiloIdentityMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SiloIdentityMode {
+    impl std::convert::TryFrom<::std::string::String> for SiloIdentityMode {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -20568,7 +20734,7 @@ pub mod types {
     )]
     pub struct SiloIpPool {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
@@ -20631,10 +20797,10 @@ pub mod types {
     )]
     pub struct SiloIpPoolResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SiloIpPool>,
+        pub items: ::std::vec::Vec<SiloIpPool>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SiloIpPoolResultsPage> for SiloIpPoolResultsPage {
@@ -20824,10 +20990,10 @@ pub mod types {
     )]
     pub struct SiloQuotasResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SiloQuotas>,
+        pub items: ::std::vec::Vec<SiloQuotas>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SiloQuotasResultsPage> for SiloQuotasResultsPage {
@@ -20904,15 +21070,15 @@ pub mod types {
     pub struct SiloQuotasUpdate {
         /// The amount of virtual CPUs available for running instances in the
         /// Silo
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub cpus: Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cpus: ::std::option::Option<i64>,
         /// The amount of RAM (in bytes) available for running instances in the
         /// Silo
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub memory: Option<ByteCount>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub memory: ::std::option::Option<ByteCount>,
         /// The amount of storage (in bytes) available for disks or snapshots
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub storage: Option<ByteCount>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub storage: ::std::option::Option<ByteCount>,
     }
 
     impl From<&SiloQuotasUpdate> for SiloQuotasUpdate {
@@ -20963,10 +21129,10 @@ pub mod types {
     )]
     pub struct SiloResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Silo>,
+        pub items: ::std::vec::Vec<Silo>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SiloResultsPage> for SiloResultsPage {
@@ -21036,7 +21202,7 @@ pub mod types {
 
     impl std::str::FromStr for SiloRole {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "admin" => Ok(Self::Admin),
                 "collaborator" => Ok(Self::Collaborator),
@@ -21048,21 +21214,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SiloRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SiloRole {
+    impl std::convert::TryFrom<&::std::string::String> for SiloRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SiloRole {
+    impl std::convert::TryFrom<::std::string::String> for SiloRole {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -21102,7 +21272,7 @@ pub mod types {
     )]
     pub struct SiloRolePolicy {
         /// Roles directly assigned on this resource
-        pub role_assignments: Vec<SiloRoleRoleAssignment>,
+        pub role_assignments: ::std::vec::Vec<SiloRoleRoleAssignment>,
     }
 
     impl From<&SiloRolePolicy> for SiloRolePolicy {
@@ -21285,10 +21455,10 @@ pub mod types {
     )]
     pub struct SiloUtilizationResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SiloUtilization>,
+        pub items: ::std::vec::Vec<SiloUtilization>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SiloUtilizationResultsPage> for SiloUtilizationResultsPage {
@@ -21538,8 +21708,8 @@ pub mod types {
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub memory: i64,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub migration_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub migration_id: ::std::option::Option<uuid::Uuid>,
         pub name: Name,
         pub ncpus: i64,
         pub project_name: Name,
@@ -21599,10 +21769,10 @@ pub mod types {
     )]
     pub struct SledInstanceResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SledInstance>,
+        pub items: ::std::vec::Vec<SledInstance>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SledInstanceResultsPage> for SledInstanceResultsPage {
@@ -21772,7 +21942,7 @@ pub mod types {
 
     impl std::str::FromStr for SledProvisionPolicy {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "provisionable" => Ok(Self::Provisionable),
                 "non_provisionable" => Ok(Self::NonProvisionable),
@@ -21783,21 +21953,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SledProvisionPolicy {
+    impl std::convert::TryFrom<&::std::string::String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SledProvisionPolicy {
+    impl std::convert::TryFrom<::std::string::String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -21937,10 +22111,10 @@ pub mod types {
     )]
     pub struct SledResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Sled>,
+        pub items: ::std::vec::Vec<Sled>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SledResultsPage> for SledResultsPage {
@@ -22029,7 +22203,7 @@ pub mod types {
 
     impl std::str::FromStr for SledState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "active" => Ok(Self::Active),
                 "decommissioned" => Ok(Self::Decommissioned),
@@ -22040,21 +22214,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SledState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SledState {
+    impl std::convert::TryFrom<&::std::string::String> for SledState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SledState {
+    impl std::convert::TryFrom<::std::string::String> for SledState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -22131,7 +22309,7 @@ pub mod types {
     )]
     pub struct Snapshot {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         pub disk_id: uuid::Uuid,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
@@ -22194,7 +22372,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SnapshotCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         /// The disk to be snapshotted
         pub disk: NameOrId,
         pub name: Name,
@@ -22248,10 +22426,10 @@ pub mod types {
     )]
     pub struct SnapshotResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Snapshot>,
+        pub items: ::std::vec::Vec<Snapshot>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SnapshotResultsPage> for SnapshotResultsPage {
@@ -22325,7 +22503,7 @@ pub mod types {
 
     impl std::str::FromStr for SnapshotState {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "creating" => Ok(Self::Creating),
                 "ready" => Ok(Self::Ready),
@@ -22338,21 +22516,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SnapshotState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SnapshotState {
+    impl std::convert::TryFrom<&::std::string::String> for SnapshotState {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SnapshotState {
+    impl std::convert::TryFrom<::std::string::String> for SnapshotState {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -22423,13 +22605,13 @@ pub mod types {
     )]
     pub struct SshKey {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
-        pub public_key: String,
+        pub public_key: ::std::string::String,
         /// The user to whom this key belongs
         pub silo_user_id: uuid::Uuid,
         /// timestamp when this resource was created
@@ -22483,10 +22665,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SshKeyCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
         /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
-        pub public_key: String,
+        pub public_key: ::std::string::String,
     }
 
     impl From<&SshKeyCreate> for SshKeyCreate {
@@ -22537,10 +22719,10 @@ pub mod types {
     )]
     pub struct SshKeyResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SshKey>,
+        pub items: ::std::vec::Vec<SshKey>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SshKeyResultsPage> for SshKeyResultsPage {
@@ -22664,7 +22846,7 @@ pub mod types {
     )]
     pub struct SwitchBgpHistory {
         /// Message history indexed by peer address.
-        pub history: ::std::collections::HashMap<String, BgpMessageHistory>,
+        pub history: ::std::collections::HashMap<::std::string::String, BgpMessageHistory>,
         /// Switch this message history is associated with.
         pub switch: SwitchLocation,
     }
@@ -22736,7 +22918,7 @@ pub mod types {
         /// A unique identifier for this switch interface.
         pub id: uuid::Uuid,
         /// The name of this switch interface.
-        pub interface_name: String,
+        pub interface_name: ::std::string::String,
         /// The switch interface kind.
         pub kind: SwitchInterfaceKind2,
         /// The port settings object this switch interface configuration belongs
@@ -22995,7 +23177,7 @@ pub mod types {
 
     impl std::str::FromStr for SwitchInterfaceKind2 {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "primary" => Ok(Self::Primary),
                 "vlan" => Ok(Self::Vlan),
@@ -23007,21 +23189,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SwitchInterfaceKind2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SwitchInterfaceKind2 {
+    impl std::convert::TryFrom<&::std::string::String> for SwitchInterfaceKind2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SwitchInterfaceKind2 {
+    impl std::convert::TryFrom<::std::string::String> for SwitchInterfaceKind2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -23128,7 +23314,7 @@ pub mod types {
 
     impl std::str::FromStr for SwitchLocation {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "switch0" => Ok(Self::Switch0),
                 "switch1" => Ok(Self::Switch1),
@@ -23139,21 +23325,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SwitchLocation {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SwitchLocation {
+    impl std::convert::TryFrom<&::std::string::String> for SwitchLocation {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SwitchLocation {
+    impl std::convert::TryFrom<::std::string::String> for SwitchLocation {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -23212,15 +23402,15 @@ pub mod types {
         /// The id of the switch port.
         pub id: uuid::Uuid,
         /// The name of this switch port.
-        pub port_name: String,
+        pub port_name: ::std::string::String,
         /// The primary settings group of this switch port. Will be `None` until
         /// this switch port is configured.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub port_settings_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub port_settings_id: ::std::option::Option<uuid::Uuid>,
         /// The rack this switch port belongs to.
         pub rack_id: uuid::Uuid,
         /// The switch location of this switch port.
-        pub switch_location: String,
+        pub switch_location: ::std::string::String,
     }
 
     impl From<&SwitchPort> for SwitchPort {
@@ -23297,12 +23487,12 @@ pub mod types {
         /// The id of the address lot block this address is drawn from.
         pub address_lot_block_id: uuid::Uuid,
         /// The interface name this address belongs to.
-        pub interface_name: String,
+        pub interface_name: ::std::string::String,
         /// The port settings object this address configuration belongs to.
         pub port_settings_id: uuid::Uuid,
         /// An optional VLAN ID
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vlan_id: Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vlan_id: ::std::option::Option<u16>,
     }
 
     impl From<&SwitchPortAddressConfig> for SwitchPortAddressConfig {
@@ -23539,7 +23729,7 @@ pub mod types {
 
     impl std::str::FromStr for SwitchPortGeometry {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "qsfp28x1" => Ok(Self::Qsfp28x1),
                 "qsfp28x2" => Ok(Self::Qsfp28x2),
@@ -23551,21 +23741,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SwitchPortGeometry {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SwitchPortGeometry {
+    impl std::convert::TryFrom<&::std::string::String> for SwitchPortGeometry {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SwitchPortGeometry {
+    impl std::convert::TryFrom<::std::string::String> for SwitchPortGeometry {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -23649,7 +23843,7 @@ pub mod types {
 
     impl std::str::FromStr for SwitchPortGeometry2 {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "qsfp28x1" => Ok(Self::Qsfp28x1),
                 "qsfp28x2" => Ok(Self::Qsfp28x2),
@@ -23661,21 +23855,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SwitchPortGeometry2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SwitchPortGeometry2 {
+    impl std::convert::TryFrom<&::std::string::String> for SwitchPortGeometry2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SwitchPortGeometry2 {
+    impl std::convert::TryFrom<::std::string::String> for SwitchPortGeometry2 {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -23772,14 +23970,14 @@ pub mod types {
         /// The requested forward-error correction method.  If this is not
         /// specified, the standard FEC for the underlying media will be applied
         /// if it can be determined.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub fec: Option<LinkFec>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub fec: ::std::option::Option<LinkFec>,
         /// The name of this link.
-        pub link_name: String,
+        pub link_name: ::std::string::String,
         /// The link-layer discovery protocol service configuration id for this
         /// link.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub lldp_link_config_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub lldp_link_config_id: ::std::option::Option<uuid::Uuid>,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
@@ -23787,8 +23985,8 @@ pub mod types {
         /// The configured speed of the link.
         pub speed: LinkSpeed,
         /// The tx_eq configuration id for this link.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub tx_eq_config_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub tx_eq_config_id: ::std::option::Option<uuid::Uuid>,
     }
 
     impl From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
@@ -23839,10 +24037,10 @@ pub mod types {
     )]
     pub struct SwitchPortResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SwitchPort>,
+        pub items: ::std::vec::Vec<SwitchPort>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SwitchPortResultsPage> for SwitchPortResultsPage {
@@ -23932,16 +24130,16 @@ pub mod types {
         /// The route's gateway address.
         pub gw: IpNet,
         /// The interface name this route configuration is assigned to.
-        pub interface_name: String,
+        pub interface_name: ::std::string::String,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: uuid::Uuid,
         /// RIB Priority indicating priority within and across protocols.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub rib_priority: Option<u8>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rib_priority: ::std::option::Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
         /// reachable over an 802.1Q tagged L2 segment.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub vlan_id: Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub vlan_id: ::std::option::Option<u16>,
     }
 
     impl From<&SwitchPortRouteConfig> for SwitchPortRouteConfig {
@@ -24012,7 +24210,7 @@ pub mod types {
     )]
     pub struct SwitchPortSettings {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -24122,21 +24320,22 @@ pub mod types {
     )]
     pub struct SwitchPortSettingsCreate {
         /// Addresses indexed by interface name.
-        pub addresses: ::std::collections::HashMap<String, AddressConfig>,
+        pub addresses: ::std::collections::HashMap<::std::string::String, AddressConfig>,
         /// BGP peers indexed by interface name.
-        pub bgp_peers: ::std::collections::HashMap<String, BgpPeerConfig>,
-        pub description: String,
-        pub groups: Vec<NameOrId>,
+        pub bgp_peers: ::std::collections::HashMap<::std::string::String, BgpPeerConfig>,
+        pub description: ::std::string::String,
+        pub groups: ::std::vec::Vec<NameOrId>,
         /// Interfaces indexed by link name.
-        pub interfaces: ::std::collections::HashMap<String, SwitchInterfaceConfigCreate>,
+        pub interfaces:
+            ::std::collections::HashMap<::std::string::String, SwitchInterfaceConfigCreate>,
         /// Links indexed by phy name. On ports that are not broken out, this is
         /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
         /// phy0-phy3, etc.
-        pub links: ::std::collections::HashMap<String, LinkConfigCreate>,
+        pub links: ::std::collections::HashMap<::std::string::String, LinkConfigCreate>,
         pub name: Name,
         pub port_config: SwitchPortConfigCreate,
         /// Routes indexed by interface name.
-        pub routes: ::std::collections::HashMap<String, RouteConfig>,
+        pub routes: ::std::collections::HashMap<::std::string::String, RouteConfig>,
     }
 
     impl From<&SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
@@ -24245,10 +24444,10 @@ pub mod types {
     )]
     pub struct SwitchPortSettingsResultsPage {
         /// list of items on this page of results
-        pub items: Vec<SwitchPortSettings>,
+        pub items: ::std::vec::Vec<SwitchPortSettings>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
@@ -24390,29 +24589,29 @@ pub mod types {
     )]
     pub struct SwitchPortSettingsView {
         /// Layer 3 IP address settings.
-        pub addresses: Vec<SwitchPortAddressConfig>,
+        pub addresses: ::std::vec::Vec<SwitchPortAddressConfig>,
         /// BGP peer settings.
-        pub bgp_peers: Vec<BgpPeer>,
+        pub bgp_peers: ::std::vec::Vec<BgpPeer>,
         /// Switch port settings included from other switch port settings
         /// groups.
-        pub groups: Vec<SwitchPortSettingsGroups>,
+        pub groups: ::std::vec::Vec<SwitchPortSettingsGroups>,
         /// Layer 3 interface settings.
-        pub interfaces: Vec<SwitchInterfaceConfig>,
+        pub interfaces: ::std::vec::Vec<SwitchInterfaceConfig>,
         /// Link-layer discovery protocol (LLDP) settings.
-        pub link_lldp: Vec<LldpLinkConfig>,
+        pub link_lldp: ::std::vec::Vec<LldpLinkConfig>,
         /// Layer 2 link settings.
-        pub links: Vec<SwitchPortLinkConfig>,
+        pub links: ::std::vec::Vec<SwitchPortLinkConfig>,
         /// Layer 1 physical port settings.
         pub port: SwitchPortConfig,
         /// IP route settings.
-        pub routes: Vec<SwitchPortRouteConfig>,
+        pub routes: ::std::vec::Vec<SwitchPortRouteConfig>,
         /// The primary switch port settings handle.
         pub settings: SwitchPortSettings,
         /// TX equalization settings.  These are optional, and most links will
         /// not need them.
-        pub tx_eq: Vec<Option<TxEqConfig>>,
+        pub tx_eq: ::std::vec::Vec<::std::option::Option<TxEqConfig>>,
         /// Vlan interface settings.
-        pub vlan_interfaces: Vec<SwitchVlanInterfaceConfig>,
+        pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
     }
 
     impl From<&SwitchPortSettingsView> for SwitchPortSettingsView {
@@ -24463,10 +24662,10 @@ pub mod types {
     )]
     pub struct SwitchResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Switch>,
+        pub items: ::std::vec::Vec<Switch>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&SwitchResultsPage> for SwitchResultsPage {
@@ -24593,7 +24792,7 @@ pub mod types {
 
     impl std::str::FromStr for SystemMetricName {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "virtual_disk_space_provisioned" => Ok(Self::VirtualDiskSpaceProvisioned),
                 "cpus_provisioned" => Ok(Self::CpusProvisioned),
@@ -24605,21 +24804,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for SystemMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SystemMetricName {
+    impl std::convert::TryFrom<&::std::string::String> for SystemMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SystemMetricName {
+    impl std::convert::TryFrom<::std::string::String> for SystemMetricName {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -24658,8 +24861,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Table {
-        pub name: String,
-        pub timeseries: ::std::collections::HashMap<String, Timeseries>,
+        pub name: ::std::string::String,
+        pub timeseries: ::std::collections::HashMap<::std::string::String, Timeseries>,
     }
 
     impl From<&Table> for Table {
@@ -24709,7 +24912,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Timeseries {
-        pub fields: ::std::collections::HashMap<String, FieldValue>,
+        pub fields: ::std::collections::HashMap<::std::string::String, FieldValue>,
         pub points: Points,
     }
 
@@ -24753,8 +24956,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TimeseriesDescription {
-        pub metric: String,
-        pub target: String,
+        pub metric: ::std::string::String,
+        pub target: ::std::string::String,
     }
 
     impl From<&TimeseriesDescription> for TimeseriesDescription {
@@ -24799,15 +25002,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct TimeseriesName(String);
+    pub struct TimeseriesName(::std::string::String);
     impl ::std::ops::Deref for TimeseriesName {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<TimeseriesName> for String {
+    impl From<TimeseriesName> for ::std::string::String {
         fn from(value: TimeseriesName) -> Self {
             value.0
         }
@@ -24821,7 +25024,7 @@ pub mod types {
 
     impl ::std::str::FromStr for TimeseriesName {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
                 "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)$",
             )
@@ -24840,31 +25043,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for TimeseriesName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for TimeseriesName {
+    impl ::std::convert::TryFrom<&::std::string::String> for TimeseriesName {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for TimeseriesName {
+    impl ::std::convert::TryFrom<::std::string::String> for TimeseriesName {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for TimeseriesName {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -24899,7 +25106,7 @@ pub mod types {
     )]
     pub struct TimeseriesQuery {
         /// A timeseries query string, written in the Oximeter query language.
-        pub query: String,
+        pub query: ::std::string::String,
     }
 
     impl From<&TimeseriesQuery> for TimeseriesQuery {
@@ -25035,10 +25242,10 @@ pub mod types {
     )]
     pub struct TimeseriesSchemaResultsPage {
         /// list of items on this page of results
-        pub items: Vec<TimeseriesSchema>,
+        pub items: ::std::vec::Vec<TimeseriesSchema>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&TimeseriesSchemaResultsPage> for TimeseriesSchemaResultsPage {
@@ -25114,20 +25321,20 @@ pub mod types {
     )]
     pub struct TxEqConfig {
         /// Main tap
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub main: Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub main: ::std::option::Option<i32>,
         /// Post-cursor tap1
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub post1: Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub post1: ::std::option::Option<i32>,
         /// Post-cursor tap2
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub post2: Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub post2: ::std::option::Option<i32>,
         /// Pre-cursor tap1
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub pre1: Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pre1: ::std::option::Option<i32>,
         /// Pre-cursor tap2
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub pre2: Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pre2: ::std::option::Option<i32>,
     }
 
     impl From<&TxEqConfig> for TxEqConfig {
@@ -25221,8 +25428,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct UninitializedSledId {
-        pub part: String,
-        pub serial: String,
+        pub part: ::std::string::String,
+        pub serial: ::std::string::String,
     }
 
     impl From<&UninitializedSledId> for UninitializedSledId {
@@ -25273,10 +25480,10 @@ pub mod types {
     )]
     pub struct UninitializedSledResultsPage {
         /// list of items on this page of results
-        pub items: Vec<UninitializedSled>,
+        pub items: ::std::vec::Vec<UninitializedSled>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&UninitializedSledResultsPage> for UninitializedSledResultsPage {
@@ -25394,7 +25601,7 @@ pub mod types {
 
     impl std::str::FromStr for Units {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "count" => Ok(Self::Count),
                 "bytes" => Ok(Self::Bytes),
@@ -25413,21 +25620,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for Units {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for Units {
+    impl std::convert::TryFrom<&::std::string::String> for Units {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for Units {
+    impl std::convert::TryFrom<::std::string::String> for Units {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -25468,7 +25679,7 @@ pub mod types {
     )]
     pub struct User {
         /// Human-readable name that can identify the user
-        pub display_name: String,
+        pub display_name: ::std::string::String,
         pub id: uuid::Uuid,
         /// Uuid of the silo to which this user belongs
         pub silo_id: uuid::Uuid,
@@ -25545,7 +25756,7 @@ pub mod types {
     )]
     pub struct UserBuiltin {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
@@ -25604,10 +25815,10 @@ pub mod types {
     )]
     pub struct UserBuiltinResultsPage {
         /// list of items on this page of results
-        pub items: Vec<UserBuiltin>,
+        pub items: ::std::vec::Vec<UserBuiltin>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&UserBuiltinResultsPage> for UserBuiltinResultsPage {
@@ -25711,15 +25922,15 @@ pub mod types {
         PartialOrd,
         schemars :: JsonSchema,
     )]
-    pub struct UserId(String);
+    pub struct UserId(::std::string::String);
     impl ::std::ops::Deref for UserId {
-        type Target = String;
-        fn deref(&self) -> &String {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl From<UserId> for String {
+    impl From<UserId> for ::std::string::String {
         fn from(value: UserId) -> Self {
             value.0
         }
@@ -25733,7 +25944,7 @@ pub mod types {
 
     impl ::std::str::FromStr for UserId {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if value.len() > 63usize {
                 return Err("longer than 63 characters".into());
             }
@@ -25747,31 +25958,35 @@ pub mod types {
 
     impl ::std::convert::TryFrom<&str> for UserId {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&String> for UserId {
+    impl ::std::convert::TryFrom<&::std::string::String> for UserId {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<String> for UserId {
+    impl ::std::convert::TryFrom<::std::string::String> for UserId {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
     impl<'de> ::serde::Deserialize<'de> for UserId {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
         {
-            String::deserialize(deserializer)?
+            ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
@@ -25886,10 +26101,10 @@ pub mod types {
     )]
     pub struct UserResultsPage {
         /// list of items on this page of results
-        pub items: Vec<User>,
+        pub items: ::std::vec::Vec<User>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&UserResultsPage> for UserResultsPage {
@@ -26195,17 +26410,17 @@ pub mod types {
     #[serde(tag = "type", content = "values")]
     pub enum ValueArray {
         #[serde(rename = "integer")]
-        Integer(Vec<Option<i64>>),
+        Integer(::std::vec::Vec<::std::option::Option<i64>>),
         #[serde(rename = "double")]
-        Double(Vec<Option<f64>>),
+        Double(::std::vec::Vec<::std::option::Option<f64>>),
         #[serde(rename = "boolean")]
-        Boolean(Vec<Option<bool>>),
+        Boolean(::std::vec::Vec<::std::option::Option<bool>>),
         #[serde(rename = "string")]
-        String(Vec<Option<String>>),
+        String(::std::vec::Vec<::std::option::Option<::std::string::String>>),
         #[serde(rename = "integer_distribution")]
-        IntegerDistribution(Vec<Option<Distributionint64>>),
+        IntegerDistribution(::std::vec::Vec<::std::option::Option<Distributionint64>>),
         #[serde(rename = "double_distribution")]
-        DoubleDistribution(Vec<Option<Distributiondouble>>),
+        DoubleDistribution(::std::vec::Vec<::std::option::Option<Distributiondouble>>),
     }
 
     impl From<&ValueArray> for ValueArray {
@@ -26214,38 +26429,38 @@ pub mod types {
         }
     }
 
-    impl From<Vec<Option<i64>>> for ValueArray {
-        fn from(value: Vec<Option<i64>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<i64>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<i64>>) -> Self {
             Self::Integer(value)
         }
     }
 
-    impl From<Vec<Option<f64>>> for ValueArray {
-        fn from(value: Vec<Option<f64>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<f64>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<f64>>) -> Self {
             Self::Double(value)
         }
     }
 
-    impl From<Vec<Option<bool>>> for ValueArray {
-        fn from(value: Vec<Option<bool>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<bool>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<bool>>) -> Self {
             Self::Boolean(value)
         }
     }
 
-    impl From<Vec<Option<String>>> for ValueArray {
-        fn from(value: Vec<Option<String>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<::std::string::String>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<::std::string::String>>) -> Self {
             Self::String(value)
         }
     }
 
-    impl From<Vec<Option<Distributionint64>>> for ValueArray {
-        fn from(value: Vec<Option<Distributionint64>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<Distributionint64>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<Distributionint64>>) -> Self {
             Self::IntegerDistribution(value)
         }
     }
 
-    impl From<Vec<Option<Distributiondouble>>> for ValueArray {
-        fn from(value: Vec<Option<Distributiondouble>>) -> Self {
+    impl From<::std::vec::Vec<::std::option::Option<Distributiondouble>>> for ValueArray {
+        fn from(value: ::std::vec::Vec<::std::option::Option<Distributiondouble>>) -> Self {
             Self::DoubleDistribution(value)
         }
     }
@@ -26414,29 +26629,29 @@ pub mod types {
     }
 
     impl std::str::FromStr for Vni {
-        type Err = <u32 as std::str::FromStr>::Err;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
+        type Err = <u32 as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
         }
     }
 
     impl std::convert::TryFrom<&str> for Vni {
-        type Error = <u32 as std::str::FromStr>::Err;
-        fn try_from(value: &str) -> Result<Self, Self::Error> {
+        type Error = <u32 as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<&String> for Vni {
-        type Error = <u32 as std::str::FromStr>::Err;
-        fn try_from(value: &String) -> Result<Self, Self::Error> {
+        type Error = <u32 as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl std::convert::TryFrom<String> for Vni {
-        type Error = <u32 as std::str::FromStr>::Err;
-        fn try_from(value: String) -> Result<Self, Self::Error> {
+        type Error = <u32 as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
@@ -26533,7 +26748,7 @@ pub mod types {
     )]
     pub struct Vpc {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// The name used for the VPC in DNS.
         pub dns_name: Name,
         /// unique, immutable, system-controlled identifier for each resource
@@ -26613,7 +26828,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub dns_name: Name,
         /// The IPv6 prefix for this VPC
         ///
@@ -26621,8 +26836,8 @@ pub mod types {
         /// range, which should be a Unique Local Address in the range
         /// `fd00::/48`. The default VPC Subnet will have the first `/64` range
         /// from this prefix.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ipv6_prefix: Option<Ipv6Net>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ipv6_prefix: ::std::option::Option<Ipv6Net>,
         pub name: Name,
     }
 
@@ -26754,7 +26969,7 @@ pub mod types {
         /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// Whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
         /// Reductions on the scope of the rule
@@ -26768,7 +26983,7 @@ pub mod types {
         /// Whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
         /// Determine the set of instances that the rule applies to
-        pub targets: Vec<VpcFirewallRuleTarget>,
+        pub targets: ::std::vec::Vec<VpcFirewallRuleTarget>,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -26840,7 +27055,7 @@ pub mod types {
 
     impl std::str::FromStr for VpcFirewallRuleAction {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "allow" => Ok(Self::Allow),
                 "deny" => Ok(Self::Deny),
@@ -26851,21 +27066,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for VpcFirewallRuleAction {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for VpcFirewallRuleAction {
+    impl std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleAction {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for VpcFirewallRuleAction {
+    impl std::convert::TryFrom<::std::string::String> for VpcFirewallRuleAction {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -26921,7 +27140,7 @@ pub mod types {
 
     impl std::str::FromStr for VpcFirewallRuleDirection {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "inbound" => Ok(Self::Inbound),
                 "outbound" => Ok(Self::Outbound),
@@ -26932,21 +27151,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for VpcFirewallRuleDirection {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for VpcFirewallRuleDirection {
+    impl std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleDirection {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for VpcFirewallRuleDirection {
+    impl std::convert::TryFrom<::std::string::String> for VpcFirewallRuleDirection {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -27016,15 +27239,15 @@ pub mod types {
         /// If present, host filters match the "other end" of traffic from the
         /// target’s perspective: for an inbound rule, they match the source of
         /// traffic. For an outbound rule, they match the destination.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub hosts: Option<Vec<VpcFirewallRuleHostFilter>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub hosts: ::std::option::Option<::std::vec::Vec<VpcFirewallRuleHostFilter>>,
         /// If present, the destination ports or port ranges this rule applies
         /// to.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ports: Option<Vec<L4PortRange>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ports: ::std::option::Option<::std::vec::Vec<L4PortRange>>,
         /// If present, the networking protocols this rule applies to.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub protocols: Option<Vec<VpcFirewallRuleProtocol>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub protocols: ::std::option::Option<::std::vec::Vec<VpcFirewallRuleProtocol>>,
     }
 
     impl From<&VpcFirewallRuleFilter> for VpcFirewallRuleFilter {
@@ -27251,7 +27474,7 @@ pub mod types {
 
     impl std::str::FromStr for VpcFirewallRuleProtocol {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "TCP" => Ok(Self::Tcp),
                 "UDP" => Ok(Self::Udp),
@@ -27263,21 +27486,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for VpcFirewallRuleProtocol {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for VpcFirewallRuleProtocol {
+    impl std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleProtocol {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for VpcFirewallRuleProtocol {
+    impl std::convert::TryFrom<::std::string::String> for VpcFirewallRuleProtocol {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -27333,7 +27560,7 @@ pub mod types {
 
     impl std::str::FromStr for VpcFirewallRuleStatus {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "disabled" => Ok(Self::Disabled),
                 "enabled" => Ok(Self::Enabled),
@@ -27344,21 +27571,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for VpcFirewallRuleStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for VpcFirewallRuleStatus {
+    impl std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for VpcFirewallRuleStatus {
+    impl std::convert::TryFrom<::std::string::String> for VpcFirewallRuleStatus {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -27611,7 +27842,7 @@ pub mod types {
         /// Whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
         /// Human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// Whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
         /// Reductions on the scope of the rule
@@ -27623,7 +27854,7 @@ pub mod types {
         /// Whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
         /// Determine the set of instances that the rule applies to
-        pub targets: Vec<VpcFirewallRuleTarget>,
+        pub targets: ::std::vec::Vec<VpcFirewallRuleTarget>,
     }
 
     impl From<&VpcFirewallRuleUpdate> for VpcFirewallRuleUpdate {
@@ -27666,7 +27897,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcFirewallRuleUpdateParams {
-        pub rules: Vec<VpcFirewallRuleUpdate>,
+        pub rules: ::std::vec::Vec<VpcFirewallRuleUpdate>,
     }
 
     impl From<&VpcFirewallRuleUpdateParams> for VpcFirewallRuleUpdateParams {
@@ -27707,7 +27938,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcFirewallRules {
-        pub rules: Vec<VpcFirewallRule>,
+        pub rules: ::std::vec::Vec<VpcFirewallRule>,
     }
 
     impl From<&VpcFirewallRules> for VpcFirewallRules {
@@ -27758,10 +27989,10 @@ pub mod types {
     )]
     pub struct VpcResultsPage {
         /// list of items on this page of results
-        pub items: Vec<Vpc>,
+        pub items: ::std::vec::Vec<Vpc>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&VpcResultsPage> for VpcResultsPage {
@@ -27842,7 +28073,7 @@ pub mod types {
     )]
     pub struct VpcRouter {
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub kind: VpcRouterKind,
@@ -27895,7 +28126,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcRouterCreate {
-        pub description: String,
+        pub description: ::std::string::String,
         pub name: Name,
     }
 
@@ -27962,7 +28193,7 @@ pub mod types {
 
     impl std::str::FromStr for VpcRouterKind {
         type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "system" => Ok(Self::System),
                 "custom" => Ok(Self::Custom),
@@ -27973,21 +28204,25 @@ pub mod types {
 
     impl std::convert::TryFrom<&str> for VpcRouterKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for VpcRouterKind {
+    impl std::convert::TryFrom<&::std::string::String> for VpcRouterKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for VpcRouterKind {
+    impl std::convert::TryFrom<::std::string::String> for VpcRouterKind {
         type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
@@ -28028,10 +28263,10 @@ pub mod types {
     )]
     pub struct VpcRouterResultsPage {
         /// list of items on this page of results
-        pub items: Vec<VpcRouter>,
+        pub items: ::std::vec::Vec<VpcRouter>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&VpcRouterResultsPage> for VpcRouterResultsPage {
@@ -28083,10 +28318,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcRouterUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&VpcRouterUpdate> for VpcRouterUpdate {
@@ -28191,10 +28426,10 @@ pub mod types {
     )]
     pub struct VpcSubnet {
         /// ID for an attached custom router.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub custom_router_id: Option<uuid::Uuid>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub custom_router_id: ::std::option::Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
-        pub description: String,
+        pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// The IPv4 subnet CIDR block.
@@ -28305,9 +28540,9 @@ pub mod types {
         /// Custom routers apply in addition to the VPC-wide *system* router,
         /// and have higher priority than the system router for an otherwise
         /// equal-prefix-length match.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub custom_router: Option<NameOrId>,
-        pub description: String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub custom_router: ::std::option::Option<NameOrId>,
+        pub description: ::std::string::String,
         /// The IPv4 address range for this subnet.
         ///
         /// It must be allocated from an RFC 1918 private address range, and
@@ -28319,8 +28554,8 @@ pub mod types {
         /// with the prefix equal to the parent VPC's prefix. A random `/64`
         /// block will be assigned if one is not provided. It must not overlap
         /// with any existing subnet in the VPC.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ipv6_block: Option<Ipv6Net>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ipv6_block: ::std::option::Option<Ipv6Net>,
         pub name: Name,
     }
 
@@ -28372,10 +28607,10 @@ pub mod types {
     )]
     pub struct VpcSubnetResultsPage {
         /// list of items on this page of results
-        pub items: Vec<VpcSubnet>,
+        pub items: ::std::vec::Vec<VpcSubnet>,
         /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
     }
 
     impl From<&VpcSubnetResultsPage> for VpcSubnetResultsPage {
@@ -28445,12 +28680,12 @@ pub mod types {
     pub struct VpcSubnetUpdate {
         /// An optional router, used to direct packets sent from hosts in this
         /// subnet to any destination address.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub custom_router: Option<NameOrId>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub custom_router: ::std::option::Option<NameOrId>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&VpcSubnetUpdate> for VpcSubnetUpdate {
@@ -28516,12 +28751,12 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub dns_name: Option<Name>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub dns_name: ::std::option::Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
     }
 
     impl From<&VpcUpdate> for VpcUpdate {
@@ -28540,9 +28775,9 @@ pub mod types {
     pub mod builder {
         #[derive(Clone, Debug)]
         pub struct Address {
-            address: Result<super::IpNet, String>,
-            address_lot: Result<super::NameOrId, String>,
-            vlan_id: Result<Option<u16>, String>,
+            address: ::std::result::Result<super::IpNet, ::std::string::String>,
+            address_lot: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl Default for Address {
@@ -28578,7 +28813,7 @@ pub mod types {
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u16>>,
+                T: std::convert::TryInto<::std::option::Option<u16>>,
                 T::Error: std::fmt::Display,
             {
                 self.vlan_id = value
@@ -28588,9 +28823,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Address> for super::Address {
+        impl ::std::convert::TryFrom<Address> for super::Address {
             type Error = super::error::ConversionError;
-            fn try_from(value: Address) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Address,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     address_lot: value.address_lot?,
@@ -28611,7 +28848,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressConfig {
-            addresses: Result<Vec<super::Address>, String>,
+            addresses:
+                ::std::result::Result<::std::vec::Vec<super::Address>, ::std::string::String>,
         }
 
         impl Default for AddressConfig {
@@ -28625,7 +28863,7 @@ pub mod types {
         impl AddressConfig {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Address>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Address>>,
                 T::Error: std::fmt::Display,
             {
                 self.addresses = value
@@ -28635,9 +28873,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressConfig> for super::AddressConfig {
+        impl ::std::convert::TryFrom<AddressConfig> for super::AddressConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: AddressConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AddressConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addresses: value.addresses?,
                 })
@@ -28654,12 +28894,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLot {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            kind: Result<super::AddressLotKind, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            kind: ::std::result::Result<super::AddressLotKind, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for AddressLot {
@@ -28678,7 +28920,7 @@ pub mod types {
         impl AddressLot {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -28738,9 +28980,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLot> for super::AddressLot {
+        impl ::std::convert::TryFrom<AddressLot> for super::AddressLot {
             type Error = super::error::ConversionError;
-            fn try_from(value: AddressLot) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AddressLot,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -28767,9 +29011,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotBlock {
-            first_address: Result<std::net::IpAddr, String>,
-            id: Result<uuid::Uuid, String>,
-            last_address: Result<std::net::IpAddr, String>,
+            first_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            last_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
         }
 
         impl Default for AddressLotBlock {
@@ -28815,9 +29059,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotBlock> for super::AddressLotBlock {
+        impl ::std::convert::TryFrom<AddressLotBlock> for super::AddressLotBlock {
             type Error = super::error::ConversionError;
-            fn try_from(value: AddressLotBlock) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AddressLotBlock,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     first_address: value.first_address?,
                     id: value.id?,
@@ -28838,8 +29084,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotBlockCreate {
-            first_address: Result<std::net::IpAddr, String>,
-            last_address: Result<std::net::IpAddr, String>,
+            first_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            last_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
         }
 
         impl Default for AddressLotBlockCreate {
@@ -28874,11 +29120,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotBlockCreate> for super::AddressLotBlockCreate {
+        impl ::std::convert::TryFrom<AddressLotBlockCreate> for super::AddressLotBlockCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: AddressLotBlockCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     first_address: value.first_address?,
                     last_address: value.last_address?,
@@ -28897,8 +29143,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotBlockResultsPage {
-            items: Result<Vec<super::AddressLotBlock>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::AddressLotBlock>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for AddressLotBlockResultsPage {
@@ -28913,7 +29165,7 @@ pub mod types {
         impl AddressLotBlockResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::AddressLotBlock>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::AddressLotBlock>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -28923,7 +29175,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -28933,11 +29185,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotBlockResultsPage> for super::AddressLotBlockResultsPage {
+        impl ::std::convert::TryFrom<AddressLotBlockResultsPage> for super::AddressLotBlockResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: AddressLotBlockResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -28956,10 +29208,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotCreate {
-            blocks: Result<Vec<super::AddressLotBlockCreate>, String>,
-            description: Result<String, String>,
-            kind: Result<super::AddressLotKind, String>,
-            name: Result<super::Name, String>,
+            blocks: ::std::result::Result<
+                ::std::vec::Vec<super::AddressLotBlockCreate>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            kind: ::std::result::Result<super::AddressLotKind, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for AddressLotCreate {
@@ -28976,7 +29231,7 @@ pub mod types {
         impl AddressLotCreate {
             pub fn blocks<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::AddressLotBlockCreate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::AddressLotBlockCreate>>,
                 T::Error: std::fmt::Display,
             {
                 self.blocks = value
@@ -28986,7 +29241,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -29016,9 +29271,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotCreate> for super::AddressLotCreate {
+        impl ::std::convert::TryFrom<AddressLotCreate> for super::AddressLotCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: AddressLotCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AddressLotCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     blocks: value.blocks?,
                     description: value.description?,
@@ -29041,8 +29298,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotCreateResponse {
-            blocks: Result<Vec<super::AddressLotBlock>, String>,
-            lot: Result<super::AddressLot, String>,
+            blocks: ::std::result::Result<
+                ::std::vec::Vec<super::AddressLotBlock>,
+                ::std::string::String,
+            >,
+            lot: ::std::result::Result<super::AddressLot, ::std::string::String>,
         }
 
         impl Default for AddressLotCreateResponse {
@@ -29057,7 +29317,7 @@ pub mod types {
         impl AddressLotCreateResponse {
             pub fn blocks<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::AddressLotBlock>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::AddressLotBlock>>,
                 T::Error: std::fmt::Display,
             {
                 self.blocks = value
@@ -29077,11 +29337,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotCreateResponse> for super::AddressLotCreateResponse {
+        impl ::std::convert::TryFrom<AddressLotCreateResponse> for super::AddressLotCreateResponse {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: AddressLotCreateResponse,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     blocks: value.blocks?,
                     lot: value.lot?,
@@ -29100,8 +29360,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotResultsPage {
-            items: Result<Vec<super::AddressLot>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::AddressLot>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for AddressLotResultsPage {
@@ -29116,7 +29379,7 @@ pub mod types {
         impl AddressLotResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::AddressLot>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::AddressLot>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -29126,7 +29389,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -29136,11 +29399,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AddressLotResultsPage> for super::AddressLotResultsPage {
+        impl ::std::convert::TryFrom<AddressLotResultsPage> for super::AddressLotResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: AddressLotResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -29159,7 +29422,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AggregateBgpMessageHistory {
-            switch_histories: Result<Vec<super::SwitchBgpHistory>, String>,
+            switch_histories: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchBgpHistory>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for AggregateBgpMessageHistory {
@@ -29173,7 +29439,7 @@ pub mod types {
         impl AggregateBgpMessageHistory {
             pub fn switch_histories<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchBgpHistory>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchBgpHistory>>,
                 T::Error: std::fmt::Display,
             {
                 self.switch_histories = value.try_into().map_err(|e| {
@@ -29186,11 +29452,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AggregateBgpMessageHistory> for super::AggregateBgpMessageHistory {
+        impl ::std::convert::TryFrom<AggregateBgpMessageHistory> for super::AggregateBgpMessageHistory {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: AggregateBgpMessageHistory,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     switch_histories: value.switch_histories?,
                 })
@@ -29207,9 +29473,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AllowList {
-            allowed_ips: Result<super::AllowedSourceIps, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            allowed_ips: ::std::result::Result<super::AllowedSourceIps, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for AllowList {
@@ -29255,9 +29523,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AllowList> for super::AllowList {
+        impl ::std::convert::TryFrom<AllowList> for super::AllowList {
             type Error = super::error::ConversionError;
-            fn try_from(value: AllowList) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AllowList,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allowed_ips: value.allowed_ips?,
                     time_created: value.time_created?,
@@ -29278,7 +29548,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AllowListUpdate {
-            allowed_ips: Result<super::AllowedSourceIps, String>,
+            allowed_ips: ::std::result::Result<super::AllowedSourceIps, ::std::string::String>,
         }
 
         impl Default for AllowListUpdate {
@@ -29302,9 +29572,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AllowListUpdate> for super::AllowListUpdate {
+        impl ::std::convert::TryFrom<AllowListUpdate> for super::AllowListUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: AllowListUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: AllowListUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allowed_ips: value.allowed_ips?,
                 })
@@ -29321,9 +29593,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Baseboard {
-            part: Result<String, String>,
-            revision: Result<u32, String>,
-            serial: Result<String, String>,
+            part: ::std::result::Result<::std::string::String, ::std::string::String>,
+            revision: ::std::result::Result<u32, ::std::string::String>,
+            serial: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for Baseboard {
@@ -29339,7 +29611,7 @@ pub mod types {
         impl Baseboard {
             pub fn part<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.part = value
@@ -29359,7 +29631,7 @@ pub mod types {
             }
             pub fn serial<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.serial = value
@@ -29369,9 +29641,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Baseboard> for super::Baseboard {
+        impl ::std::convert::TryFrom<Baseboard> for super::Baseboard {
             type Error = super::error::ConversionError;
-            fn try_from(value: Baseboard) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Baseboard,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     part: value.part?,
                     revision: value.revision?,
@@ -29392,8 +29666,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BfdSessionDisable {
-            remote: Result<std::net::IpAddr, String>,
-            switch: Result<super::Name, String>,
+            remote: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            switch: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for BfdSessionDisable {
@@ -29428,9 +29702,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BfdSessionDisable> for super::BfdSessionDisable {
+        impl ::std::convert::TryFrom<BfdSessionDisable> for super::BfdSessionDisable {
             type Error = super::error::ConversionError;
-            fn try_from(value: BfdSessionDisable) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BfdSessionDisable,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     remote: value.remote?,
                     switch: value.switch?,
@@ -29449,12 +29725,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BfdSessionEnable {
-            detection_threshold: Result<u8, String>,
-            local: Result<Option<std::net::IpAddr>, String>,
-            mode: Result<super::BfdMode, String>,
-            remote: Result<std::net::IpAddr, String>,
-            required_rx: Result<u64, String>,
-            switch: Result<super::Name, String>,
+            detection_threshold: ::std::result::Result<u8, ::std::string::String>,
+            local: ::std::result::Result<
+                ::std::option::Option<std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
+            remote: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            required_rx: ::std::result::Result<u64, ::std::string::String>,
+            switch: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for BfdSessionEnable {
@@ -29488,7 +29767,7 @@ pub mod types {
             }
             pub fn local<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T: std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
                 T::Error: std::fmt::Display,
             {
                 self.local = value
@@ -29538,9 +29817,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BfdSessionEnable> for super::BfdSessionEnable {
+        impl ::std::convert::TryFrom<BfdSessionEnable> for super::BfdSessionEnable {
             type Error = super::error::ConversionError;
-            fn try_from(value: BfdSessionEnable) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BfdSessionEnable,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     detection_threshold: value.detection_threshold?,
                     local: value.local?,
@@ -29567,13 +29848,16 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BfdStatus {
-            detection_threshold: Result<u8, String>,
-            local: Result<Option<std::net::IpAddr>, String>,
-            mode: Result<super::BfdMode, String>,
-            peer: Result<std::net::IpAddr, String>,
-            required_rx: Result<u64, String>,
-            state: Result<super::BfdState, String>,
-            switch: Result<super::Name, String>,
+            detection_threshold: ::std::result::Result<u8, ::std::string::String>,
+            local: ::std::result::Result<
+                ::std::option::Option<std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
+            peer: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            required_rx: ::std::result::Result<u64, ::std::string::String>,
+            state: ::std::result::Result<super::BfdState, ::std::string::String>,
+            switch: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for BfdStatus {
@@ -29608,7 +29892,7 @@ pub mod types {
             }
             pub fn local<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T: std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
                 T::Error: std::fmt::Display,
             {
                 self.local = value
@@ -29668,9 +29952,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BfdStatus> for super::BfdStatus {
+        impl ::std::convert::TryFrom<BfdStatus> for super::BfdStatus {
             type Error = super::error::ConversionError;
-            fn try_from(value: BfdStatus) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BfdStatus,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     detection_threshold: value.detection_threshold?,
                     local: value.local?,
@@ -29699,11 +29985,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpAnnounceSet {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for BgpAnnounceSet {
@@ -29721,7 +30009,7 @@ pub mod types {
         impl BgpAnnounceSet {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -29771,9 +30059,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpAnnounceSet> for super::BgpAnnounceSet {
+        impl ::std::convert::TryFrom<BgpAnnounceSet> for super::BgpAnnounceSet {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpAnnounceSet) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpAnnounceSet,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -29798,9 +30088,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpAnnounceSetCreate {
-            announcement: Result<Vec<super::BgpAnnouncementCreate>, String>,
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            announcement: ::std::result::Result<
+                ::std::vec::Vec<super::BgpAnnouncementCreate>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for BgpAnnounceSetCreate {
@@ -29816,7 +30109,7 @@ pub mod types {
         impl BgpAnnounceSetCreate {
             pub fn announcement<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::BgpAnnouncementCreate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::BgpAnnouncementCreate>>,
                 T::Error: std::fmt::Display,
             {
                 self.announcement = value.try_into().map_err(|e| {
@@ -29826,7 +30119,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -29846,11 +30139,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpAnnounceSetCreate> for super::BgpAnnounceSetCreate {
+        impl ::std::convert::TryFrom<BgpAnnounceSetCreate> for super::BgpAnnounceSetCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: BgpAnnounceSetCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     announcement: value.announcement?,
                     description: value.description?,
@@ -29871,9 +30164,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpAnnouncement {
-            address_lot_block_id: Result<uuid::Uuid, String>,
-            announce_set_id: Result<uuid::Uuid, String>,
-            network: Result<super::IpNet, String>,
+            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            announce_set_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            network: ::std::result::Result<super::IpNet, ::std::string::String>,
         }
 
         impl Default for BgpAnnouncement {
@@ -29924,9 +30217,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpAnnouncement> for super::BgpAnnouncement {
+        impl ::std::convert::TryFrom<BgpAnnouncement> for super::BgpAnnouncement {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpAnnouncement) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpAnnouncement,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address_lot_block_id: value.address_lot_block_id?,
                     announce_set_id: value.announce_set_id?,
@@ -29947,8 +30242,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpAnnouncementCreate {
-            address_lot_block: Result<super::NameOrId, String>,
-            network: Result<super::IpNet, String>,
+            address_lot_block: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            network: ::std::result::Result<super::IpNet, ::std::string::String>,
         }
 
         impl Default for BgpAnnouncementCreate {
@@ -29986,11 +30281,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpAnnouncementCreate> for super::BgpAnnouncementCreate {
+        impl ::std::convert::TryFrom<BgpAnnouncementCreate> for super::BgpAnnouncementCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: BgpAnnouncementCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address_lot_block: value.address_lot_block?,
                     network: value.network?,
@@ -30009,13 +30304,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpConfig {
-            asn: Result<u32, String>,
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vrf: Result<Option<String>, String>,
+            asn: ::std::result::Result<u32, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vrf: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for BgpConfig {
@@ -30045,7 +30345,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -30095,7 +30395,7 @@ pub mod types {
             }
             pub fn vrf<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.vrf = value
@@ -30105,9 +30405,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpConfig> for super::BgpConfig {
+        impl ::std::convert::TryFrom<BgpConfig> for super::BgpConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     asn: value.asn?,
                     description: value.description?,
@@ -30136,11 +30438,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpConfigCreate {
-            asn: Result<u32, String>,
-            bgp_announce_set_id: Result<super::NameOrId, String>,
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
-            vrf: Result<Option<super::Name>, String>,
+            asn: ::std::result::Result<u32, ::std::string::String>,
+            bgp_announce_set_id: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            vrf: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for BgpConfigCreate {
@@ -30183,7 +30485,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -30203,7 +30505,7 @@ pub mod types {
             }
             pub fn vrf<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.vrf = value
@@ -30213,9 +30515,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpConfigCreate> for super::BgpConfigCreate {
+        impl ::std::convert::TryFrom<BgpConfigCreate> for super::BgpConfigCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpConfigCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpConfigCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     asn: value.asn?,
                     bgp_announce_set_id: value.bgp_announce_set_id?,
@@ -30240,8 +30544,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpConfigResultsPage {
-            items: Result<Vec<super::BgpConfig>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::BgpConfig>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for BgpConfigResultsPage {
@@ -30256,7 +30563,7 @@ pub mod types {
         impl BgpConfigResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::BgpConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::BgpConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -30266,7 +30573,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -30276,11 +30583,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpConfigResultsPage> for super::BgpConfigResultsPage {
+        impl ::std::convert::TryFrom<BgpConfigResultsPage> for super::BgpConfigResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: BgpConfigResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -30299,7 +30606,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpExported {
-            exports: Result<::std::collections::HashMap<String, Vec<super::Ipv4Net>>, String>,
+            exports: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, ::std::vec::Vec<super::Ipv4Net>>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for BgpExported {
@@ -30313,7 +30623,12 @@ pub mod types {
         impl BgpExported {
             pub fn exports<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, Vec<super::Ipv4Net>>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<
+                        ::std::string::String,
+                        ::std::vec::Vec<super::Ipv4Net>,
+                    >,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.exports = value
@@ -30323,9 +30638,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpExported> for super::BgpExported {
+        impl ::std::convert::TryFrom<BgpExported> for super::BgpExported {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpExported) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpExported,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     exports: value.exports?,
                 })
@@ -30342,10 +30659,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpImportedRouteIpv4 {
-            id: Result<u32, String>,
-            nexthop: Result<std::net::Ipv4Addr, String>,
-            prefix: Result<super::Ipv4Net, String>,
-            switch: Result<super::SwitchLocation, String>,
+            id: ::std::result::Result<u32, ::std::string::String>,
+            nexthop: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
+            prefix: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
         }
 
         impl Default for BgpImportedRouteIpv4 {
@@ -30402,11 +30719,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpImportedRouteIpv4> for super::BgpImportedRouteIpv4 {
+        impl ::std::convert::TryFrom<BgpImportedRouteIpv4> for super::BgpImportedRouteIpv4 {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: BgpImportedRouteIpv4,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     nexthop: value.nexthop?,
@@ -30429,24 +30746,28 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeer {
-            addr: Result<std::net::IpAddr, String>,
-            allowed_export: Result<super::ImportExportPolicy, String>,
-            allowed_import: Result<super::ImportExportPolicy, String>,
-            bgp_config: Result<super::NameOrId, String>,
-            communities: Result<Vec<u32>, String>,
-            connect_retry: Result<u32, String>,
-            delay_open: Result<u32, String>,
-            enforce_first_as: Result<bool, String>,
-            hold_time: Result<u32, String>,
-            idle_hold_time: Result<u32, String>,
-            interface_name: Result<String, String>,
-            keepalive: Result<u32, String>,
-            local_pref: Result<Option<u32>, String>,
-            md5_auth_key: Result<Option<String>, String>,
-            min_ttl: Result<Option<u8>, String>,
-            multi_exit_discriminator: Result<Option<u32>, String>,
-            remote_asn: Result<Option<u32>, String>,
-            vlan_id: Result<Option<u16>, String>,
+            addr: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            allowed_export: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
+            allowed_import: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
+            bgp_config: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            communities: ::std::result::Result<::std::vec::Vec<u32>, ::std::string::String>,
+            connect_retry: ::std::result::Result<u32, ::std::string::String>,
+            delay_open: ::std::result::Result<u32, ::std::string::String>,
+            enforce_first_as: ::std::result::Result<bool, ::std::string::String>,
+            hold_time: ::std::result::Result<u32, ::std::string::String>,
+            idle_hold_time: ::std::result::Result<u32, ::std::string::String>,
+            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            keepalive: ::std::result::Result<u32, ::std::string::String>,
+            local_pref: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+            md5_auth_key: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            min_ttl: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
+            multi_exit_discriminator:
+                ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+            remote_asn: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+            vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl Default for BgpPeer {
@@ -30517,7 +30838,7 @@ pub mod types {
             }
             pub fn communities<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u32>>,
+                T: std::convert::TryInto<::std::vec::Vec<u32>>,
                 T::Error: std::fmt::Display,
             {
                 self.communities = value
@@ -30580,7 +30901,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -30600,7 +30921,7 @@ pub mod types {
             }
             pub fn local_pref<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u32>>,
+                T: std::convert::TryInto<::std::option::Option<u32>>,
                 T::Error: std::fmt::Display,
             {
                 self.local_pref = value
@@ -30610,7 +30931,7 @@ pub mod types {
             }
             pub fn md5_auth_key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.md5_auth_key = value.try_into().map_err(|e| {
@@ -30620,7 +30941,7 @@ pub mod types {
             }
             pub fn min_ttl<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u8>>,
+                T: std::convert::TryInto<::std::option::Option<u8>>,
                 T::Error: std::fmt::Display,
             {
                 self.min_ttl = value
@@ -30630,7 +30951,7 @@ pub mod types {
             }
             pub fn multi_exit_discriminator<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u32>>,
+                T: std::convert::TryInto<::std::option::Option<u32>>,
                 T::Error: std::fmt::Display,
             {
                 self.multi_exit_discriminator = value.try_into().map_err(|e| {
@@ -30643,7 +30964,7 @@ pub mod types {
             }
             pub fn remote_asn<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u32>>,
+                T: std::convert::TryInto<::std::option::Option<u32>>,
                 T::Error: std::fmt::Display,
             {
                 self.remote_asn = value
@@ -30653,7 +30974,7 @@ pub mod types {
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u16>>,
+                T: std::convert::TryInto<::std::option::Option<u16>>,
                 T::Error: std::fmt::Display,
             {
                 self.vlan_id = value
@@ -30663,9 +30984,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpPeer> for super::BgpPeer {
+        impl ::std::convert::TryFrom<BgpPeer> for super::BgpPeer {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpPeer) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpPeer,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addr: value.addr?,
                     allowed_export: value.allowed_export?,
@@ -30716,7 +31039,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeerConfig {
-            peers: Result<Vec<super::BgpPeer>, String>,
+            peers: ::std::result::Result<::std::vec::Vec<super::BgpPeer>, ::std::string::String>,
         }
 
         impl Default for BgpPeerConfig {
@@ -30730,7 +31053,7 @@ pub mod types {
         impl BgpPeerConfig {
             pub fn peers<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::BgpPeer>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::BgpPeer>>,
                 T::Error: std::fmt::Display,
             {
                 self.peers = value
@@ -30740,9 +31063,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+        impl ::std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpPeerConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpPeerConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     peers: value.peers?,
                 })
@@ -30759,12 +31084,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeerStatus {
-            addr: Result<std::net::IpAddr, String>,
-            local_asn: Result<u32, String>,
-            remote_asn: Result<u32, String>,
-            state: Result<super::BgpPeerState, String>,
-            state_duration_millis: Result<u64, String>,
-            switch: Result<super::SwitchLocation, String>,
+            addr: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            local_asn: ::std::result::Result<u32, ::std::string::String>,
+            remote_asn: ::std::result::Result<u32, ::std::string::String>,
+            state: ::std::result::Result<super::BgpPeerState, ::std::string::String>,
+            state_duration_millis: ::std::result::Result<u64, ::std::string::String>,
+            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
         }
 
         impl Default for BgpPeerStatus {
@@ -30848,9 +31173,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpPeerStatus> for super::BgpPeerStatus {
+        impl ::std::convert::TryFrom<BgpPeerStatus> for super::BgpPeerStatus {
             type Error = super::error::ConversionError;
-            fn try_from(value: BgpPeerStatus) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: BgpPeerStatus,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addr: value.addr?,
                     local_asn: value.local_asn?,
@@ -30877,8 +31204,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Bindouble {
-            count: Result<u64, String>,
-            range: Result<super::BinRangedouble, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangedouble, ::std::string::String>,
         }
 
         impl Default for Bindouble {
@@ -30913,9 +31240,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Bindouble> for super::Bindouble {
+        impl ::std::convert::TryFrom<Bindouble> for super::Bindouble {
             type Error = super::error::ConversionError;
-            fn try_from(value: Bindouble) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Bindouble,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -30934,8 +31263,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binfloat {
-            count: Result<u64, String>,
-            range: Result<super::BinRangefloat, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangefloat, ::std::string::String>,
         }
 
         impl Default for Binfloat {
@@ -30970,9 +31299,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binfloat> for super::Binfloat {
+        impl ::std::convert::TryFrom<Binfloat> for super::Binfloat {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binfloat) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binfloat,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -30991,8 +31322,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binint16 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeint16, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeint16, ::std::string::String>,
         }
 
         impl Default for Binint16 {
@@ -31027,9 +31358,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binint16> for super::Binint16 {
+        impl ::std::convert::TryFrom<Binint16> for super::Binint16 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binint16) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binint16,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31048,8 +31381,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binint32 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeint32, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeint32, ::std::string::String>,
         }
 
         impl Default for Binint32 {
@@ -31084,9 +31417,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binint32> for super::Binint32 {
+        impl ::std::convert::TryFrom<Binint32> for super::Binint32 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binint32) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binint32,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31105,8 +31440,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binint64 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeint64, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeint64, ::std::string::String>,
         }
 
         impl Default for Binint64 {
@@ -31141,9 +31476,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binint64> for super::Binint64 {
+        impl ::std::convert::TryFrom<Binint64> for super::Binint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31162,8 +31499,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binint8 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeint8, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeint8, ::std::string::String>,
         }
 
         impl Default for Binint8 {
@@ -31198,9 +31535,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binint8> for super::Binint8 {
+        impl ::std::convert::TryFrom<Binint8> for super::Binint8 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binint8) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binint8,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31219,8 +31558,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binuint16 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeuint16, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeuint16, ::std::string::String>,
         }
 
         impl Default for Binuint16 {
@@ -31255,9 +31594,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binuint16> for super::Binuint16 {
+        impl ::std::convert::TryFrom<Binuint16> for super::Binuint16 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binuint16) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binuint16,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31276,8 +31617,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binuint32 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeuint32, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeuint32, ::std::string::String>,
         }
 
         impl Default for Binuint32 {
@@ -31312,9 +31653,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binuint32> for super::Binuint32 {
+        impl ::std::convert::TryFrom<Binuint32> for super::Binuint32 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binuint32) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binuint32,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31333,8 +31676,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binuint64 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeuint64, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeuint64, ::std::string::String>,
         }
 
         impl Default for Binuint64 {
@@ -31369,9 +31712,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binuint64> for super::Binuint64 {
+        impl ::std::convert::TryFrom<Binuint64> for super::Binuint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binuint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binuint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31390,8 +31735,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Binuint8 {
-            count: Result<u64, String>,
-            range: Result<super::BinRangeuint8, String>,
+            count: ::std::result::Result<u64, ::std::string::String>,
+            range: ::std::result::Result<super::BinRangeuint8, ::std::string::String>,
         }
 
         impl Default for Binuint8 {
@@ -31426,9 +31771,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Binuint8> for super::Binuint8 {
+        impl ::std::convert::TryFrom<Binuint8> for super::Binuint8 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Binuint8) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Binuint8,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     count: value.count?,
                     range: value.range?,
@@ -31447,13 +31794,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Certificate {
-            cert: Result<String, String>,
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            service: Result<super::ServiceUsingCertificate, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            cert: ::std::result::Result<::std::string::String, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            service: ::std::result::Result<super::ServiceUsingCertificate, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Certificate {
@@ -31473,7 +31822,7 @@ pub mod types {
         impl Certificate {
             pub fn cert<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.cert = value
@@ -31483,7 +31832,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -31543,9 +31892,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Certificate> for super::Certificate {
+        impl ::std::convert::TryFrom<Certificate> for super::Certificate {
             type Error = super::error::ConversionError;
-            fn try_from(value: Certificate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Certificate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cert: value.cert?,
                     description: value.description?,
@@ -31574,11 +31925,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct CertificateCreate {
-            cert: Result<String, String>,
-            description: Result<String, String>,
-            key: Result<String, String>,
-            name: Result<super::Name, String>,
-            service: Result<super::ServiceUsingCertificate, String>,
+            cert: ::std::result::Result<::std::string::String, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            key: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            service: ::std::result::Result<super::ServiceUsingCertificate, ::std::string::String>,
         }
 
         impl Default for CertificateCreate {
@@ -31596,7 +31947,7 @@ pub mod types {
         impl CertificateCreate {
             pub fn cert<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.cert = value
@@ -31606,7 +31957,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -31616,7 +31967,7 @@ pub mod types {
             }
             pub fn key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.key = value
@@ -31646,9 +31997,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<CertificateCreate> for super::CertificateCreate {
+        impl ::std::convert::TryFrom<CertificateCreate> for super::CertificateCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: CertificateCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: CertificateCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cert: value.cert?,
                     description: value.description?,
@@ -31673,8 +32026,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct CertificateResultsPage {
-            items: Result<Vec<super::Certificate>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::Certificate>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for CertificateResultsPage {
@@ -31689,7 +32046,7 @@ pub mod types {
         impl CertificateResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Certificate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Certificate>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -31699,7 +32056,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -31709,11 +32066,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<CertificateResultsPage> for super::CertificateResultsPage {
+        impl ::std::convert::TryFrom<CertificateResultsPage> for super::CertificateResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: CertificateResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -31732,8 +32089,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativedouble {
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            value: Result<f64, String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            value: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl Default for Cumulativedouble {
@@ -31768,9 +32126,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Cumulativedouble> for super::Cumulativedouble {
+        impl ::std::convert::TryFrom<Cumulativedouble> for super::Cumulativedouble {
             type Error = super::error::ConversionError;
-            fn try_from(value: Cumulativedouble) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Cumulativedouble,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     start_time: value.start_time?,
                     value: value.value?,
@@ -31789,8 +32149,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativefloat {
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            value: Result<f32, String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            value: ::std::result::Result<f32, ::std::string::String>,
         }
 
         impl Default for Cumulativefloat {
@@ -31825,9 +32186,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Cumulativefloat> for super::Cumulativefloat {
+        impl ::std::convert::TryFrom<Cumulativefloat> for super::Cumulativefloat {
             type Error = super::error::ConversionError;
-            fn try_from(value: Cumulativefloat) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Cumulativefloat,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     start_time: value.start_time?,
                     value: value.value?,
@@ -31846,8 +32209,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativeint64 {
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            value: Result<i64, String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            value: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Cumulativeint64 {
@@ -31882,9 +32246,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Cumulativeint64> for super::Cumulativeint64 {
+        impl ::std::convert::TryFrom<Cumulativeint64> for super::Cumulativeint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Cumulativeint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Cumulativeint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     start_time: value.start_time?,
                     value: value.value?,
@@ -31903,8 +32269,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativeuint64 {
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            value: Result<u64, String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            value: ::std::result::Result<u64, ::std::string::String>,
         }
 
         impl Default for Cumulativeuint64 {
@@ -31939,9 +32306,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Cumulativeuint64> for super::Cumulativeuint64 {
+        impl ::std::convert::TryFrom<Cumulativeuint64> for super::Cumulativeuint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Cumulativeuint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Cumulativeuint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     start_time: value.start_time?,
                     value: value.value?,
@@ -31960,10 +32329,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct CurrentUser {
-            display_name: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            silo_id: Result<uuid::Uuid, String>,
-            silo_name: Result<super::Name, String>,
+            display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for CurrentUser {
@@ -31980,7 +32349,7 @@ pub mod types {
         impl CurrentUser {
             pub fn display_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.display_name = value.try_into().map_err(|e| {
@@ -32020,9 +32389,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<CurrentUser> for super::CurrentUser {
+        impl ::std::convert::TryFrom<CurrentUser> for super::CurrentUser {
             type Error = super::error::ConversionError;
-            fn try_from(value: CurrentUser) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: CurrentUser,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     display_name: value.display_name?,
                     id: value.id?,
@@ -32045,8 +32416,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DerEncodedKeyPair {
-            private_key: Result<String, String>,
-            public_cert: Result<String, String>,
+            private_key: ::std::result::Result<::std::string::String, ::std::string::String>,
+            public_cert: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for DerEncodedKeyPair {
@@ -32061,7 +32432,7 @@ pub mod types {
         impl DerEncodedKeyPair {
             pub fn private_key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.private_key = value
@@ -32071,7 +32442,7 @@ pub mod types {
             }
             pub fn public_cert<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.public_cert = value
@@ -32081,9 +32452,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DerEncodedKeyPair> for super::DerEncodedKeyPair {
+        impl ::std::convert::TryFrom<DerEncodedKeyPair> for super::DerEncodedKeyPair {
             type Error = super::error::ConversionError;
-            fn try_from(value: DerEncodedKeyPair) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DerEncodedKeyPair,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     private_key: value.private_key?,
                     public_cert: value.public_cert?,
@@ -32102,9 +32475,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DeviceAccessTokenRequest {
-            client_id: Result<uuid::Uuid, String>,
-            device_code: Result<String, String>,
-            grant_type: Result<String, String>,
+            client_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            device_code: ::std::result::Result<::std::string::String, ::std::string::String>,
+            grant_type: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for DeviceAccessTokenRequest {
@@ -32130,7 +32503,7 @@ pub mod types {
             }
             pub fn device_code<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.device_code = value
@@ -32140,7 +32513,7 @@ pub mod types {
             }
             pub fn grant_type<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.grant_type = value
@@ -32150,11 +32523,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DeviceAccessTokenRequest> for super::DeviceAccessTokenRequest {
+        impl ::std::convert::TryFrom<DeviceAccessTokenRequest> for super::DeviceAccessTokenRequest {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: DeviceAccessTokenRequest,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     client_id: value.client_id?,
                     device_code: value.device_code?,
@@ -32175,7 +32548,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DeviceAuthRequest {
-            client_id: Result<uuid::Uuid, String>,
+            client_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for DeviceAuthRequest {
@@ -32199,9 +32572,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DeviceAuthRequest> for super::DeviceAuthRequest {
+        impl ::std::convert::TryFrom<DeviceAuthRequest> for super::DeviceAuthRequest {
             type Error = super::error::ConversionError;
-            fn try_from(value: DeviceAuthRequest) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DeviceAuthRequest,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     client_id: value.client_id?,
                 })
@@ -32218,7 +32593,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DeviceAuthVerify {
-            user_code: Result<String, String>,
+            user_code: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for DeviceAuthVerify {
@@ -32232,7 +32607,7 @@ pub mod types {
         impl DeviceAuthVerify {
             pub fn user_code<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.user_code = value
@@ -32242,9 +32617,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DeviceAuthVerify> for super::DeviceAuthVerify {
+        impl ::std::convert::TryFrom<DeviceAuthVerify> for super::DeviceAuthVerify {
             type Error = super::error::ConversionError;
-            fn try_from(value: DeviceAuthVerify) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DeviceAuthVerify,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     user_code: value.user_code?,
                 })
@@ -32261,18 +32638,22 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Disk {
-            block_size: Result<super::ByteCount, String>,
-            description: Result<String, String>,
-            device_path: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            image_id: Result<Option<uuid::Uuid>, String>,
-            name: Result<super::Name, String>,
-            project_id: Result<uuid::Uuid, String>,
-            size: Result<super::ByteCount, String>,
-            snapshot_id: Result<Option<uuid::Uuid>, String>,
-            state: Result<super::DiskState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            device_path: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            image_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            snapshot_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            state: ::std::result::Result<super::DiskState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Disk {
@@ -32307,7 +32688,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -32317,7 +32698,7 @@ pub mod types {
             }
             pub fn device_path<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.device_path = value
@@ -32337,7 +32718,7 @@ pub mod types {
             }
             pub fn image_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.image_id = value
@@ -32377,7 +32758,7 @@ pub mod types {
             }
             pub fn snapshot_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.snapshot_id = value
@@ -32417,9 +32798,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Disk> for super::Disk {
+        impl ::std::convert::TryFrom<Disk> for super::Disk {
             type Error = super::error::ConversionError;
-            fn try_from(value: Disk) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Disk) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     block_size: value.block_size?,
                     description: value.description?,
@@ -32458,10 +32839,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DiskCreate {
-            description: Result<String, String>,
-            disk_source: Result<super::DiskSource, String>,
-            name: Result<super::Name, String>,
-            size: Result<super::ByteCount, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disk_source: ::std::result::Result<super::DiskSource, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            size: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
         impl Default for DiskCreate {
@@ -32478,7 +32859,7 @@ pub mod types {
         impl DiskCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -32518,9 +32899,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DiskCreate> for super::DiskCreate {
+        impl ::std::convert::TryFrom<DiskCreate> for super::DiskCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: DiskCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DiskCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     disk_source: value.disk_source?,
@@ -32543,7 +32926,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DiskPath {
-            disk: Result<super::NameOrId, String>,
+            disk: ::std::result::Result<super::NameOrId, ::std::string::String>,
         }
 
         impl Default for DiskPath {
@@ -32567,9 +32950,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DiskPath> for super::DiskPath {
+        impl ::std::convert::TryFrom<DiskPath> for super::DiskPath {
             type Error = super::error::ConversionError;
-            fn try_from(value: DiskPath) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DiskPath,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self { disk: value.disk? })
             }
         }
@@ -32584,8 +32969,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DiskResultsPage {
-            items: Result<Vec<super::Disk>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Disk>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for DiskResultsPage {
@@ -32600,7 +32988,7 @@ pub mod types {
         impl DiskResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Disk>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Disk>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -32610,7 +32998,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -32620,9 +33008,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<DiskResultsPage> for super::DiskResultsPage {
+        impl ::std::convert::TryFrom<DiskResultsPage> for super::DiskResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: DiskResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: DiskResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -32641,15 +33031,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Distributiondouble {
-            bins: Result<Vec<f64>, String>,
-            counts: Result<Vec<u64>, String>,
-            max: Result<Option<f64>, String>,
-            min: Result<Option<f64>, String>,
-            p50: Result<Option<super::Quantile>, String>,
-            p90: Result<Option<super::Quantile>, String>,
-            p99: Result<Option<super::Quantile>, String>,
-            squared_mean: Result<f64, String>,
-            sum_of_samples: Result<f64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<f64>, ::std::string::String>,
+            counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
+            max: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            min: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p50: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            p90: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            p99: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl Default for Distributiondouble {
@@ -32671,7 +33070,7 @@ pub mod types {
         impl Distributiondouble {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<f64>>,
+                T: std::convert::TryInto<::std::vec::Vec<f64>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -32681,7 +33080,7 @@ pub mod types {
             }
             pub fn counts<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u64>>,
+                T: std::convert::TryInto<::std::vec::Vec<u64>>,
                 T::Error: std::fmt::Display,
             {
                 self.counts = value
@@ -32691,7 +33090,7 @@ pub mod types {
             }
             pub fn max<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<f64>>,
+                T: std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: std::fmt::Display,
             {
                 self.max = value
@@ -32701,7 +33100,7 @@ pub mod types {
             }
             pub fn min<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<f64>>,
+                T: std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: std::fmt::Display,
             {
                 self.min = value
@@ -32711,7 +33110,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p50 = value
@@ -32721,7 +33120,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p90 = value
@@ -32731,7 +33130,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p99 = value
@@ -32761,9 +33160,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Distributiondouble> for super::Distributiondouble {
+        impl ::std::convert::TryFrom<Distributiondouble> for super::Distributiondouble {
             type Error = super::error::ConversionError;
-            fn try_from(value: Distributiondouble) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Distributiondouble,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     counts: value.counts?,
@@ -32796,15 +33197,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Distributionint64 {
-            bins: Result<Vec<i64>, String>,
-            counts: Result<Vec<u64>, String>,
-            max: Result<Option<i64>, String>,
-            min: Result<Option<i64>, String>,
-            p50: Result<Option<super::Quantile>, String>,
-            p90: Result<Option<super::Quantile>, String>,
-            p99: Result<Option<super::Quantile>, String>,
-            squared_mean: Result<f64, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<i64>, ::std::string::String>,
+            counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
+            max: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            min: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            p50: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            p90: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            p99: ::std::result::Result<
+                ::std::option::Option<super::Quantile>,
+                ::std::string::String,
+            >,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Distributionint64 {
@@ -32826,7 +33236,7 @@ pub mod types {
         impl Distributionint64 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<i64>>,
+                T: std::convert::TryInto<::std::vec::Vec<i64>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -32836,7 +33246,7 @@ pub mod types {
             }
             pub fn counts<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u64>>,
+                T: std::convert::TryInto<::std::vec::Vec<u64>>,
                 T::Error: std::fmt::Display,
             {
                 self.counts = value
@@ -32846,7 +33256,7 @@ pub mod types {
             }
             pub fn max<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i64>>,
+                T: std::convert::TryInto<::std::option::Option<i64>>,
                 T::Error: std::fmt::Display,
             {
                 self.max = value
@@ -32856,7 +33266,7 @@ pub mod types {
             }
             pub fn min<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i64>>,
+                T: std::convert::TryInto<::std::option::Option<i64>>,
                 T::Error: std::fmt::Display,
             {
                 self.min = value
@@ -32866,7 +33276,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p50 = value
@@ -32876,7 +33286,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p90 = value
@@ -32886,7 +33296,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Quantile>>,
+                T: std::convert::TryInto<::std::option::Option<super::Quantile>>,
                 T::Error: std::fmt::Display,
             {
                 self.p99 = value
@@ -32916,9 +33326,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Distributionint64> for super::Distributionint64 {
+        impl ::std::convert::TryFrom<Distributionint64> for super::Distributionint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Distributionint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Distributionint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     counts: value.counts?,
@@ -32951,7 +33363,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct EphemeralIpCreate {
-            pool: Result<Option<super::NameOrId>, String>,
+            pool: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for EphemeralIpCreate {
@@ -32965,7 +33380,7 @@ pub mod types {
         impl EphemeralIpCreate {
             pub fn pool<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.pool = value
@@ -32975,9 +33390,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<EphemeralIpCreate> for super::EphemeralIpCreate {
+        impl ::std::convert::TryFrom<EphemeralIpCreate> for super::EphemeralIpCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: EphemeralIpCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: EphemeralIpCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self { pool: value.pool? })
             }
         }
@@ -32992,9 +33409,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Error {
-            error_code: Result<Option<String>, String>,
-            message: Result<String, String>,
-            request_id: Result<String, String>,
+            error_code: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            message: ::std::result::Result<::std::string::String, ::std::string::String>,
+            request_id: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for Error {
@@ -33010,7 +33430,7 @@ pub mod types {
         impl Error {
             pub fn error_code<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.error_code = value
@@ -33020,7 +33440,7 @@ pub mod types {
             }
             pub fn message<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.message = value
@@ -33030,7 +33450,7 @@ pub mod types {
             }
             pub fn request_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.request_id = value
@@ -33040,9 +33460,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Error> for super::Error {
+        impl ::std::convert::TryFrom<Error> for super::Error {
             type Error = super::error::ConversionError;
-            fn try_from(value: Error) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Error,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     error_code: value.error_code?,
                     message: value.message?,
@@ -33063,8 +33485,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ExternalIpResultsPage {
-            items: Result<Vec<super::ExternalIp>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::ExternalIp>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for ExternalIpResultsPage {
@@ -33079,7 +33504,7 @@ pub mod types {
         impl ExternalIpResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::ExternalIp>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::ExternalIp>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -33089,7 +33514,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -33099,11 +33524,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ExternalIpResultsPage> for super::ExternalIpResultsPage {
+        impl ::std::convert::TryFrom<ExternalIpResultsPage> for super::ExternalIpResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: ExternalIpResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -33122,10 +33547,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FieldSchema {
-            description: Result<String, String>,
-            field_type: Result<super::FieldType, String>,
-            name: Result<String, String>,
-            source: Result<super::FieldSource, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            field_type: ::std::result::Result<super::FieldType, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            source: ::std::result::Result<super::FieldSource, ::std::string::String>,
         }
 
         impl Default for FieldSchema {
@@ -33142,7 +33567,7 @@ pub mod types {
         impl FieldSchema {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -33162,7 +33587,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -33182,9 +33607,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FieldSchema> for super::FieldSchema {
+        impl ::std::convert::TryFrom<FieldSchema> for super::FieldSchema {
             type Error = super::error::ConversionError;
-            fn try_from(value: FieldSchema) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FieldSchema,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     field_type: value.field_type?,
@@ -33207,7 +33634,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FinalizeDisk {
-            snapshot_name: Result<Option<super::Name>, String>,
+            snapshot_name:
+                ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for FinalizeDisk {
@@ -33221,7 +33649,7 @@ pub mod types {
         impl FinalizeDisk {
             pub fn snapshot_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.snapshot_name = value.try_into().map_err(|e| {
@@ -33231,9 +33659,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FinalizeDisk> for super::FinalizeDisk {
+        impl ::std::convert::TryFrom<FinalizeDisk> for super::FinalizeDisk {
             type Error = super::error::ConversionError;
-            fn try_from(value: FinalizeDisk) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FinalizeDisk,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     snapshot_name: value.snapshot_name?,
                 })
@@ -33250,7 +33680,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FleetRolePolicy {
-            role_assignments: Result<Vec<super::FleetRoleRoleAssignment>, String>,
+            role_assignments: ::std::result::Result<
+                ::std::vec::Vec<super::FleetRoleRoleAssignment>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for FleetRolePolicy {
@@ -33264,7 +33697,7 @@ pub mod types {
         impl FleetRolePolicy {
             pub fn role_assignments<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::FleetRoleRoleAssignment>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::FleetRoleRoleAssignment>>,
                 T::Error: std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
@@ -33277,9 +33710,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FleetRolePolicy> for super::FleetRolePolicy {
+        impl ::std::convert::TryFrom<FleetRolePolicy> for super::FleetRolePolicy {
             type Error = super::error::ConversionError;
-            fn try_from(value: FleetRolePolicy) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FleetRolePolicy,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
@@ -33296,9 +33731,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FleetRoleRoleAssignment {
-            identity_id: Result<uuid::Uuid, String>,
-            identity_type: Result<super::IdentityType, String>,
-            role_name: Result<super::FleetRole, String>,
+            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
+            role_name: ::std::result::Result<super::FleetRole, ::std::string::String>,
         }
 
         impl Default for FleetRoleRoleAssignment {
@@ -33344,11 +33779,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FleetRoleRoleAssignment> for super::FleetRoleRoleAssignment {
+        impl ::std::convert::TryFrom<FleetRoleRoleAssignment> for super::FleetRoleRoleAssignment {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: FleetRoleRoleAssignment,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     identity_id: value.identity_id?,
                     identity_type: value.identity_type?,
@@ -33369,15 +33804,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIp {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            instance_id: Result<Option<uuid::Uuid>, String>,
-            ip: Result<std::net::IpAddr, String>,
-            ip_pool_id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            project_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            instance_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for FloatingIp {
@@ -33399,7 +33837,7 @@ pub mod types {
         impl FloatingIp {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -33419,7 +33857,7 @@ pub mod types {
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.instance_id = value
@@ -33489,9 +33927,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FloatingIp> for super::FloatingIp {
+        impl ::std::convert::TryFrom<FloatingIp> for super::FloatingIp {
             type Error = super::error::ConversionError;
-            fn try_from(value: FloatingIp) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FloatingIp,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -33524,8 +33964,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpAttach {
-            kind: Result<super::FloatingIpParentKind, String>,
-            parent: Result<super::NameOrId, String>,
+            kind: ::std::result::Result<super::FloatingIpParentKind, ::std::string::String>,
+            parent: ::std::result::Result<super::NameOrId, ::std::string::String>,
         }
 
         impl Default for FloatingIpAttach {
@@ -33560,9 +34000,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FloatingIpAttach> for super::FloatingIpAttach {
+        impl ::std::convert::TryFrom<FloatingIpAttach> for super::FloatingIpAttach {
             type Error = super::error::ConversionError;
-            fn try_from(value: FloatingIpAttach) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FloatingIpAttach,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     kind: value.kind?,
                     parent: value.parent?,
@@ -33581,10 +34023,16 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            description: Result<String, String>,
-            ip: Result<Option<std::net::IpAddr>, String>,
-            name: Result<super::Name, String>,
-            pool: Result<Option<super::NameOrId>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip: ::std::result::Result<
+                ::std::option::Option<std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for FloatingIpCreate {
@@ -33601,7 +34049,7 @@ pub mod types {
         impl FloatingIpCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -33611,7 +34059,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T: std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
                 T::Error: std::fmt::Display,
             {
                 self.ip = value
@@ -33631,7 +34079,7 @@ pub mod types {
             }
             pub fn pool<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.pool = value
@@ -33641,9 +34089,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FloatingIpCreate> for super::FloatingIpCreate {
+        impl ::std::convert::TryFrom<FloatingIpCreate> for super::FloatingIpCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: FloatingIpCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FloatingIpCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     ip: value.ip?,
@@ -33666,8 +34116,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpResultsPage {
-            items: Result<Vec<super::FloatingIp>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::FloatingIp>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for FloatingIpResultsPage {
@@ -33682,7 +34135,7 @@ pub mod types {
         impl FloatingIpResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::FloatingIp>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::FloatingIp>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -33692,7 +34145,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -33702,11 +34155,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FloatingIpResultsPage> for super::FloatingIpResultsPage {
+        impl ::std::convert::TryFrom<FloatingIpResultsPage> for super::FloatingIpResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: FloatingIpResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -33725,8 +34178,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for FloatingIpUpdate {
@@ -33741,7 +34197,7 @@ pub mod types {
         impl FloatingIpUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -33751,7 +34207,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -33761,9 +34217,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<FloatingIpUpdate> for super::FloatingIpUpdate {
+        impl ::std::convert::TryFrom<FloatingIpUpdate> for super::FloatingIpUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: FloatingIpUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: FloatingIpUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -33782,9 +34240,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Group {
-            display_name: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            silo_id: Result<uuid::Uuid, String>,
+            display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for Group {
@@ -33800,7 +34258,7 @@ pub mod types {
         impl Group {
             pub fn display_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.display_name = value.try_into().map_err(|e| {
@@ -33830,9 +34288,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Group> for super::Group {
+        impl ::std::convert::TryFrom<Group> for super::Group {
             type Error = super::error::ConversionError;
-            fn try_from(value: Group) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Group,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     display_name: value.display_name?,
                     id: value.id?,
@@ -33853,8 +34313,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct GroupResultsPage {
-            items: Result<Vec<super::Group>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Group>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for GroupResultsPage {
@@ -33869,7 +34332,7 @@ pub mod types {
         impl GroupResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Group>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Group>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -33879,7 +34342,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -33889,9 +34352,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<GroupResultsPage> for super::GroupResultsPage {
+        impl ::std::convert::TryFrom<GroupResultsPage> for super::GroupResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: GroupResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: GroupResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -33910,16 +34375,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramdouble {
-            bins: Result<Vec<super::Bindouble>, String>,
-            max: Result<f64, String>,
-            min: Result<f64, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<f64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Bindouble>, ::std::string::String>,
+            max: ::std::result::Result<f64, ::std::string::String>,
+            min: ::std::result::Result<f64, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl Default for Histogramdouble {
@@ -33942,7 +34408,7 @@ pub mod types {
         impl Histogramdouble {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Bindouble>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Bindouble>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34042,9 +34508,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramdouble> for super::Histogramdouble {
+        impl ::std::convert::TryFrom<Histogramdouble> for super::Histogramdouble {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramdouble) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramdouble,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34079,16 +34547,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramfloat {
-            bins: Result<Vec<super::Binfloat>, String>,
-            max: Result<f32, String>,
-            min: Result<f32, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<f64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binfloat>, ::std::string::String>,
+            max: ::std::result::Result<f32, ::std::string::String>,
+            min: ::std::result::Result<f32, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl Default for Histogramfloat {
@@ -34111,7 +34580,7 @@ pub mod types {
         impl Histogramfloat {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binfloat>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binfloat>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34211,9 +34680,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramfloat> for super::Histogramfloat {
+        impl ::std::convert::TryFrom<Histogramfloat> for super::Histogramfloat {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramfloat) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramfloat,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34248,16 +34719,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramint16 {
-            bins: Result<Vec<super::Binint16>, String>,
-            max: Result<i16, String>,
-            min: Result<i16, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binint16>, ::std::string::String>,
+            max: ::std::result::Result<i16, ::std::string::String>,
+            min: ::std::result::Result<i16, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramint16 {
@@ -34280,7 +34752,7 @@ pub mod types {
         impl Histogramint16 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binint16>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binint16>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34380,9 +34852,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramint16> for super::Histogramint16 {
+        impl ::std::convert::TryFrom<Histogramint16> for super::Histogramint16 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramint16) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramint16,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34417,16 +34891,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramint32 {
-            bins: Result<Vec<super::Binint32>, String>,
-            max: Result<i32, String>,
-            min: Result<i32, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binint32>, ::std::string::String>,
+            max: ::std::result::Result<i32, ::std::string::String>,
+            min: ::std::result::Result<i32, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramint32 {
@@ -34449,7 +34924,7 @@ pub mod types {
         impl Histogramint32 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binint32>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binint32>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34549,9 +35024,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramint32> for super::Histogramint32 {
+        impl ::std::convert::TryFrom<Histogramint32> for super::Histogramint32 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramint32) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramint32,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34586,16 +35063,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramint64 {
-            bins: Result<Vec<super::Binint64>, String>,
-            max: Result<i64, String>,
-            min: Result<i64, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binint64>, ::std::string::String>,
+            max: ::std::result::Result<i64, ::std::string::String>,
+            min: ::std::result::Result<i64, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramint64 {
@@ -34618,7 +35096,7 @@ pub mod types {
         impl Histogramint64 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binint64>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binint64>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34718,9 +35196,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramint64> for super::Histogramint64 {
+        impl ::std::convert::TryFrom<Histogramint64> for super::Histogramint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34755,16 +35235,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramint8 {
-            bins: Result<Vec<super::Binint8>, String>,
-            max: Result<i8, String>,
-            min: Result<i8, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binint8>, ::std::string::String>,
+            max: ::std::result::Result<i8, ::std::string::String>,
+            min: ::std::result::Result<i8, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramint8 {
@@ -34787,7 +35268,7 @@ pub mod types {
         impl Histogramint8 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binint8>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binint8>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -34887,9 +35368,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramint8> for super::Histogramint8 {
+        impl ::std::convert::TryFrom<Histogramint8> for super::Histogramint8 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramint8) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramint8,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -34924,16 +35407,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramuint16 {
-            bins: Result<Vec<super::Binuint16>, String>,
-            max: Result<u16, String>,
-            min: Result<u16, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binuint16>, ::std::string::String>,
+            max: ::std::result::Result<u16, ::std::string::String>,
+            min: ::std::result::Result<u16, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramuint16 {
@@ -34956,7 +35440,7 @@ pub mod types {
         impl Histogramuint16 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binuint16>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binuint16>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -35056,9 +35540,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramuint16> for super::Histogramuint16 {
+        impl ::std::convert::TryFrom<Histogramuint16> for super::Histogramuint16 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramuint16) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramuint16,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -35093,16 +35579,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramuint32 {
-            bins: Result<Vec<super::Binuint32>, String>,
-            max: Result<u32, String>,
-            min: Result<u32, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binuint32>, ::std::string::String>,
+            max: ::std::result::Result<u32, ::std::string::String>,
+            min: ::std::result::Result<u32, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramuint32 {
@@ -35125,7 +35612,7 @@ pub mod types {
         impl Histogramuint32 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binuint32>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binuint32>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -35225,9 +35712,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramuint32> for super::Histogramuint32 {
+        impl ::std::convert::TryFrom<Histogramuint32> for super::Histogramuint32 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramuint32) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramuint32,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -35262,16 +35751,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramuint64 {
-            bins: Result<Vec<super::Binuint64>, String>,
-            max: Result<u64, String>,
-            min: Result<u64, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binuint64>, ::std::string::String>,
+            max: ::std::result::Result<u64, ::std::string::String>,
+            min: ::std::result::Result<u64, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramuint64 {
@@ -35294,7 +35784,7 @@ pub mod types {
         impl Histogramuint64 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binuint64>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binuint64>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -35394,9 +35884,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramuint64> for super::Histogramuint64 {
+        impl ::std::convert::TryFrom<Histogramuint64> for super::Histogramuint64 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramuint64) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramuint64,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -35431,16 +35923,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Histogramuint8 {
-            bins: Result<Vec<super::Binuint8>, String>,
-            max: Result<u8, String>,
-            min: Result<u8, String>,
-            n_samples: Result<u64, String>,
-            p50: Result<super::Quantile, String>,
-            p90: Result<super::Quantile, String>,
-            p99: Result<super::Quantile, String>,
-            squared_mean: Result<f64, String>,
-            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            sum_of_samples: Result<i64, String>,
+            bins: ::std::result::Result<::std::vec::Vec<super::Binuint8>, ::std::string::String>,
+            max: ::std::result::Result<u8, ::std::string::String>,
+            min: ::std::result::Result<u8, ::std::string::String>,
+            n_samples: ::std::result::Result<u64, ::std::string::String>,
+            p50: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p90: ::std::result::Result<super::Quantile, ::std::string::String>,
+            p99: ::std::result::Result<super::Quantile, ::std::string::String>,
+            squared_mean: ::std::result::Result<f64, ::std::string::String>,
+            start_time:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
         impl Default for Histogramuint8 {
@@ -35463,7 +35956,7 @@ pub mod types {
         impl Histogramuint8 {
             pub fn bins<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Binuint8>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Binuint8>>,
                 T::Error: std::fmt::Display,
             {
                 self.bins = value
@@ -35563,9 +36056,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Histogramuint8> for super::Histogramuint8 {
+        impl ::std::convert::TryFrom<Histogramuint8> for super::Histogramuint8 {
             type Error = super::error::ConversionError;
-            fn try_from(value: Histogramuint8) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Histogramuint8,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
                     max: value.max?,
@@ -35600,12 +36095,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IdentityProvider {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            provider_type: Result<super::IdentityProviderType, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            provider_type:
+                ::std::result::Result<super::IdentityProviderType, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for IdentityProvider {
@@ -35624,7 +36122,7 @@ pub mod types {
         impl IdentityProvider {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -35684,9 +36182,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IdentityProvider> for super::IdentityProvider {
+        impl ::std::convert::TryFrom<IdentityProvider> for super::IdentityProvider {
             type Error = super::error::ConversionError;
-            fn try_from(value: IdentityProvider) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IdentityProvider,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -35713,8 +36213,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IdentityProviderResultsPage {
-            items: Result<Vec<super::IdentityProvider>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::IdentityProvider>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for IdentityProviderResultsPage {
@@ -35729,7 +36235,7 @@ pub mod types {
         impl IdentityProviderResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IdentityProvider>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IdentityProvider>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -35739,7 +36245,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -35749,11 +36255,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IdentityProviderResultsPage> for super::IdentityProviderResultsPage {
+        impl ::std::convert::TryFrom<IdentityProviderResultsPage> for super::IdentityProviderResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: IdentityProviderResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -35772,17 +36278,21 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Image {
-            block_size: Result<super::ByteCount, String>,
-            description: Result<String, String>,
-            digest: Result<Option<super::Digest>, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            os: Result<String, String>,
-            project_id: Result<Option<uuid::Uuid>, String>,
-            size: Result<super::ByteCount, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            version: Result<String, String>,
+            block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            digest:
+                ::std::result::Result<::std::option::Option<super::Digest>, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            os: ::std::result::Result<::std::string::String, ::std::string::String>,
+            project_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for Image {
@@ -35816,7 +36326,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -35826,7 +36336,7 @@ pub mod types {
             }
             pub fn digest<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Digest>>,
+                T: std::convert::TryInto<::std::option::Option<super::Digest>>,
                 T::Error: std::fmt::Display,
             {
                 self.digest = value
@@ -35856,7 +36366,7 @@ pub mod types {
             }
             pub fn os<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.os = value
@@ -35866,7 +36376,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.project_id = value
@@ -35906,7 +36416,7 @@ pub mod types {
             }
             pub fn version<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.version = value
@@ -35916,9 +36426,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Image> for super::Image {
+        impl ::std::convert::TryFrom<Image> for super::Image {
             type Error = super::error::ConversionError;
-            fn try_from(value: Image) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Image,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     block_size: value.block_size?,
                     description: value.description?,
@@ -35955,11 +36467,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ImageCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
-            os: Result<String, String>,
-            source: Result<super::ImageSource, String>,
-            version: Result<String, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            os: ::std::result::Result<::std::string::String, ::std::string::String>,
+            source: ::std::result::Result<super::ImageSource, ::std::string::String>,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for ImageCreate {
@@ -35977,7 +36489,7 @@ pub mod types {
         impl ImageCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -35997,7 +36509,7 @@ pub mod types {
             }
             pub fn os<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.os = value
@@ -36017,7 +36529,7 @@ pub mod types {
             }
             pub fn version<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.version = value
@@ -36027,9 +36539,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ImageCreate> for super::ImageCreate {
+        impl ::std::convert::TryFrom<ImageCreate> for super::ImageCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: ImageCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ImageCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -36054,8 +36568,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ImageResultsPage {
-            items: Result<Vec<super::Image>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Image>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for ImageResultsPage {
@@ -36070,7 +36587,7 @@ pub mod types {
         impl ImageResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Image>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Image>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -36080,7 +36597,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -36090,9 +36607,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ImageResultsPage> for super::ImageResultsPage {
+        impl ::std::convert::TryFrom<ImageResultsPage> for super::ImageResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: ImageResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ImageResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -36111,8 +36630,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ImportBlocksBulkWrite {
-            base64_encoded_data: Result<String, String>,
-            offset: Result<u64, String>,
+            base64_encoded_data:
+                ::std::result::Result<::std::string::String, ::std::string::String>,
+            offset: ::std::result::Result<u64, ::std::string::String>,
         }
 
         impl Default for ImportBlocksBulkWrite {
@@ -36129,7 +36649,7 @@ pub mod types {
         impl ImportBlocksBulkWrite {
             pub fn base64_encoded_data<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.base64_encoded_data = value.try_into().map_err(|e| {
@@ -36152,11 +36672,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ImportBlocksBulkWrite> for super::ImportBlocksBulkWrite {
+        impl ::std::convert::TryFrom<ImportBlocksBulkWrite> for super::ImportBlocksBulkWrite {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: ImportBlocksBulkWrite,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     base64_encoded_data: value.base64_encoded_data?,
                     offset: value.offset?,
@@ -36175,23 +36695,35 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Instance {
-            auto_restart_cooldown_expiration:
-                Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-            auto_restart_enabled: Result<bool, String>,
-            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
-            boot_disk_id: Result<Option<uuid::Uuid>, String>,
-            description: Result<String, String>,
-            hostname: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            memory: Result<super::ByteCount, String>,
-            name: Result<super::Name, String>,
-            ncpus: Result<super::InstanceCpuCount, String>,
-            project_id: Result<uuid::Uuid, String>,
-            run_state: Result<super::InstanceState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_last_auto_restarted: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_run_state_updated: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            auto_restart_cooldown_expiration: ::std::result::Result<
+                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            auto_restart_enabled: ::std::result::Result<bool, ::std::string::String>,
+            auto_restart_policy: ::std::result::Result<
+                ::std::option::Option<super::InstanceAutoRestartPolicy>,
+                ::std::string::String,
+            >,
+            boot_disk_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            hostname: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
+            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            run_state: ::std::result::Result<super::InstanceState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_last_auto_restarted: ::std::result::Result<
+                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_run_state_updated:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Instance {
@@ -36224,7 +36756,9 @@ pub mod types {
         impl Instance {
             pub fn auto_restart_cooldown_expiration<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.auto_restart_cooldown_expiration = value.try_into().map_err(|e| {
@@ -36250,7 +36784,7 @@ pub mod types {
             }
             pub fn auto_restart_policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T: std::convert::TryInto<::std::option::Option<super::InstanceAutoRestartPolicy>>,
                 T::Error: std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
@@ -36263,7 +36797,7 @@ pub mod types {
             }
             pub fn boot_disk_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.boot_disk_id = value.try_into().map_err(|e| {
@@ -36273,7 +36807,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -36283,7 +36817,7 @@ pub mod types {
             }
             pub fn hostname<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.hostname = value
@@ -36363,7 +36897,9 @@ pub mod types {
             }
             pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.time_last_auto_restarted = value.try_into().map_err(|e| {
@@ -36399,9 +36935,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Instance> for super::Instance {
+        impl ::std::convert::TryFrom<Instance> for super::Instance {
             type Error = super::error::ConversionError;
-            fn try_from(value: Instance) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Instance,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     auto_restart_cooldown_expiration: value.auto_restart_cooldown_expiration?,
                     auto_restart_enabled: value.auto_restart_enabled?,
@@ -36448,19 +36986,37 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
-            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
-            boot_disk: Result<Option<super::InstanceDiskAttachment>, String>,
-            description: Result<String, String>,
-            disks: Result<Vec<super::InstanceDiskAttachment>, String>,
-            external_ips: Result<Vec<super::ExternalIpCreate>, String>,
-            hostname: Result<super::Hostname, String>,
-            memory: Result<super::ByteCount, String>,
-            name: Result<super::Name, String>,
-            ncpus: Result<super::InstanceCpuCount, String>,
-            network_interfaces: Result<super::InstanceNetworkInterfaceAttachment, String>,
-            ssh_public_keys: Result<Option<Vec<super::NameOrId>>, String>,
-            start: Result<bool, String>,
-            user_data: Result<String, String>,
+            auto_restart_policy: ::std::result::Result<
+                ::std::option::Option<super::InstanceAutoRestartPolicy>,
+                ::std::string::String,
+            >,
+            boot_disk: ::std::result::Result<
+                ::std::option::Option<super::InstanceDiskAttachment>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disks: ::std::result::Result<
+                ::std::vec::Vec<super::InstanceDiskAttachment>,
+                ::std::string::String,
+            >,
+            external_ips: ::std::result::Result<
+                ::std::vec::Vec<super::ExternalIpCreate>,
+                ::std::string::String,
+            >,
+            hostname: ::std::result::Result<super::Hostname, ::std::string::String>,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
+            network_interfaces: ::std::result::Result<
+                super::InstanceNetworkInterfaceAttachment,
+                ::std::string::String,
+            >,
+            ssh_public_keys: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::NameOrId>>,
+                ::std::string::String,
+            >,
+            start: ::std::result::Result<bool, ::std::string::String>,
+            user_data: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for InstanceCreate {
@@ -36486,7 +37042,7 @@ pub mod types {
         impl InstanceCreate {
             pub fn auto_restart_policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T: std::convert::TryInto<::std::option::Option<super::InstanceAutoRestartPolicy>>,
                 T::Error: std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
@@ -36499,7 +37055,7 @@ pub mod types {
             }
             pub fn boot_disk<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::InstanceDiskAttachment>>,
+                T: std::convert::TryInto<::std::option::Option<super::InstanceDiskAttachment>>,
                 T::Error: std::fmt::Display,
             {
                 self.boot_disk = value
@@ -36509,7 +37065,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -36519,7 +37075,7 @@ pub mod types {
             }
             pub fn disks<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::InstanceDiskAttachment>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::InstanceDiskAttachment>>,
                 T::Error: std::fmt::Display,
             {
                 self.disks = value
@@ -36529,7 +37085,7 @@ pub mod types {
             }
             pub fn external_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::ExternalIpCreate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::ExternalIpCreate>>,
                 T::Error: std::fmt::Display,
             {
                 self.external_ips = value.try_into().map_err(|e| {
@@ -36592,7 +37148,7 @@ pub mod types {
             }
             pub fn ssh_public_keys<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<Vec<super::NameOrId>>>,
+                T: std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::NameOrId>>>,
                 T::Error: std::fmt::Display,
             {
                 self.ssh_public_keys = value.try_into().map_err(|e| {
@@ -36612,7 +37168,7 @@ pub mod types {
             }
             pub fn user_data<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.user_data = value
@@ -36622,9 +37178,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceCreate> for super::InstanceCreate {
+        impl ::std::convert::TryFrom<InstanceCreate> for super::InstanceCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: InstanceCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: InstanceCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
@@ -36665,18 +37223,21 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterface {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            instance_id: Result<uuid::Uuid, String>,
-            ip: Result<std::net::IpAddr, String>,
-            mac: Result<super::MacAddr, String>,
-            name: Result<super::Name, String>,
-            primary: Result<bool, String>,
-            subnet_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            transit_ips: Result<Vec<super::IpNet>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            instance_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            primary: ::std::result::Result<bool, ::std::string::String>,
+            subnet_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
+            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for InstanceNetworkInterface {
@@ -36701,7 +37262,7 @@ pub mod types {
         impl InstanceNetworkInterface {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -36801,7 +37362,7 @@ pub mod types {
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
                 T::Error: std::fmt::Display,
             {
                 self.transit_ips = value
@@ -36821,11 +37382,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceNetworkInterface> for super::InstanceNetworkInterface {
+        impl ::std::convert::TryFrom<InstanceNetworkInterface> for super::InstanceNetworkInterface {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InstanceNetworkInterface,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -36864,11 +37425,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterfaceCreate {
-            description: Result<String, String>,
-            ip: Result<Option<std::net::IpAddr>, String>,
-            name: Result<super::Name, String>,
-            subnet_name: Result<super::Name, String>,
-            vpc_name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip: ::std::result::Result<
+                ::std::option::Option<std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            subnet_name: ::std::result::Result<super::Name, ::std::string::String>,
+            vpc_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for InstanceNetworkInterfaceCreate {
@@ -36886,7 +37450,7 @@ pub mod types {
         impl InstanceNetworkInterfaceCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -36896,7 +37460,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T: std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
                 T::Error: std::fmt::Display,
             {
                 self.ip = value
@@ -36936,13 +37500,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceNetworkInterfaceCreate>
+        impl ::std::convert::TryFrom<InstanceNetworkInterfaceCreate>
             for super::InstanceNetworkInterfaceCreate
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InstanceNetworkInterfaceCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     ip: value.ip?,
@@ -36967,8 +37531,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterfaceResultsPage {
-            items: Result<Vec<super::InstanceNetworkInterface>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::InstanceNetworkInterface>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for InstanceNetworkInterfaceResultsPage {
@@ -36983,7 +37553,7 @@ pub mod types {
         impl InstanceNetworkInterfaceResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::InstanceNetworkInterface>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::InstanceNetworkInterface>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -36993,7 +37563,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -37003,13 +37573,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceNetworkInterfaceResultsPage>
+        impl ::std::convert::TryFrom<InstanceNetworkInterfaceResultsPage>
             for super::InstanceNetworkInterfaceResultsPage
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InstanceNetworkInterfaceResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -37028,10 +37598,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterfaceUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
-            primary: Result<bool, String>,
-            transit_ips: Result<Vec<super::IpNet>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+            primary: ::std::result::Result<bool, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
         }
 
         impl Default for InstanceNetworkInterfaceUpdate {
@@ -37048,7 +37622,7 @@ pub mod types {
         impl InstanceNetworkInterfaceUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37058,7 +37632,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -37078,7 +37652,7 @@ pub mod types {
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
                 T::Error: std::fmt::Display,
             {
                 self.transit_ips = value
@@ -37088,13 +37662,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceNetworkInterfaceUpdate>
+        impl ::std::convert::TryFrom<InstanceNetworkInterfaceUpdate>
             for super::InstanceNetworkInterfaceUpdate
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InstanceNetworkInterfaceUpdate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -37117,8 +37691,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceResultsPage {
-            items: Result<Vec<super::Instance>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Instance>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for InstanceResultsPage {
@@ -37133,7 +37710,7 @@ pub mod types {
         impl InstanceResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Instance>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Instance>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -37143,7 +37720,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -37153,9 +37730,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceResultsPage> for super::InstanceResultsPage {
+        impl ::std::convert::TryFrom<InstanceResultsPage> for super::InstanceResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: InstanceResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: InstanceResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -37174,8 +37753,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceSerialConsoleData {
-            data: Result<Vec<u8>, String>,
-            last_byte_offset: Result<u64, String>,
+            data: ::std::result::Result<::std::vec::Vec<u8>, ::std::string::String>,
+            last_byte_offset: ::std::result::Result<u64, ::std::string::String>,
         }
 
         impl Default for InstanceSerialConsoleData {
@@ -37190,7 +37769,7 @@ pub mod types {
         impl InstanceSerialConsoleData {
             pub fn data<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u8>>,
+                T: std::convert::TryInto<::std::vec::Vec<u8>>,
                 T::Error: std::fmt::Display,
             {
                 self.data = value
@@ -37213,11 +37792,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceSerialConsoleData> for super::InstanceSerialConsoleData {
+        impl ::std::convert::TryFrom<InstanceSerialConsoleData> for super::InstanceSerialConsoleData {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InstanceSerialConsoleData,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     data: value.data?,
                     last_byte_offset: value.last_byte_offset?,
@@ -37236,10 +37815,16 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceUpdate {
-            auto_restart_policy: Result<Option<super::InstanceAutoRestartPolicy>, String>,
-            boot_disk: Result<Option<super::NameOrId>, String>,
-            memory: Result<super::ByteCount, String>,
-            ncpus: Result<super::InstanceCpuCount, String>,
+            auto_restart_policy: ::std::result::Result<
+                ::std::option::Option<super::InstanceAutoRestartPolicy>,
+                ::std::string::String,
+            >,
+            boot_disk: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
         }
 
         impl Default for InstanceUpdate {
@@ -37256,7 +37841,7 @@ pub mod types {
         impl InstanceUpdate {
             pub fn auto_restart_policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::InstanceAutoRestartPolicy>>,
+                T: std::convert::TryInto<::std::option::Option<super::InstanceAutoRestartPolicy>>,
                 T::Error: std::fmt::Display,
             {
                 self.auto_restart_policy = value.try_into().map_err(|e| {
@@ -37269,7 +37854,7 @@ pub mod types {
             }
             pub fn boot_disk<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.boot_disk = value
@@ -37299,9 +37884,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
+        impl ::std::convert::TryFrom<InstanceUpdate> for super::InstanceUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: InstanceUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: InstanceUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
@@ -37324,12 +37911,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGateway {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for InternetGateway {
@@ -37348,7 +37937,7 @@ pub mod types {
         impl InternetGateway {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37408,9 +37997,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGateway> for super::InternetGateway {
+        impl ::std::convert::TryFrom<InternetGateway> for super::InternetGateway {
             type Error = super::error::ConversionError;
-            fn try_from(value: InternetGateway) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: InternetGateway,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -37437,8 +38028,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for InternetGatewayCreate {
@@ -37453,7 +38044,7 @@ pub mod types {
         impl InternetGatewayCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37473,11 +38064,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayCreate> for super::InternetGatewayCreate {
+        impl ::std::convert::TryFrom<InternetGatewayCreate> for super::InternetGatewayCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -37496,13 +38087,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpAddress {
-            address: Result<std::net::IpAddr, String>,
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            internet_gateway_id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            internet_gateway_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for InternetGatewayIpAddress {
@@ -37534,7 +38127,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37597,11 +38190,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpAddress> for super::InternetGatewayIpAddress {
+        impl ::std::convert::TryFrom<InternetGatewayIpAddress> for super::InternetGatewayIpAddress {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpAddress,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     description: value.description?,
@@ -37630,9 +38223,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpAddressCreate {
-            address: Result<std::net::IpAddr, String>,
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for InternetGatewayIpAddressCreate {
@@ -37658,7 +38251,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37678,13 +38271,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpAddressCreate>
+        impl ::std::convert::TryFrom<InternetGatewayIpAddressCreate>
             for super::InternetGatewayIpAddressCreate
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpAddressCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     description: value.description?,
@@ -37705,8 +38298,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpAddressResultsPage {
-            items: Result<Vec<super::InternetGatewayIpAddress>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::InternetGatewayIpAddress>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for InternetGatewayIpAddressResultsPage {
@@ -37721,7 +38320,7 @@ pub mod types {
         impl InternetGatewayIpAddressResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::InternetGatewayIpAddress>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::InternetGatewayIpAddress>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -37731,7 +38330,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -37741,13 +38340,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpAddressResultsPage>
+        impl ::std::convert::TryFrom<InternetGatewayIpAddressResultsPage>
             for super::InternetGatewayIpAddressResultsPage
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpAddressResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -37766,13 +38365,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpPool {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            internet_gateway_id: Result<uuid::Uuid, String>,
-            ip_pool_id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            internet_gateway_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for InternetGatewayIpPool {
@@ -37794,7 +38395,7 @@ pub mod types {
         impl InternetGatewayIpPool {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37867,11 +38468,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpPool> for super::InternetGatewayIpPool {
+        impl ::std::convert::TryFrom<InternetGatewayIpPool> for super::InternetGatewayIpPool {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpPool,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -37900,9 +38501,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpPoolCreate {
-            description: Result<String, String>,
-            ip_pool: Result<super::NameOrId, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip_pool: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for InternetGatewayIpPoolCreate {
@@ -37918,7 +38519,7 @@ pub mod types {
         impl InternetGatewayIpPoolCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -37948,11 +38549,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpPoolCreate> for super::InternetGatewayIpPoolCreate {
+        impl ::std::convert::TryFrom<InternetGatewayIpPoolCreate> for super::InternetGatewayIpPoolCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpPoolCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     ip_pool: value.ip_pool?,
@@ -37973,8 +38574,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpPoolResultsPage {
-            items: Result<Vec<super::InternetGatewayIpPool>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::InternetGatewayIpPool>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for InternetGatewayIpPoolResultsPage {
@@ -37989,7 +38596,7 @@ pub mod types {
         impl InternetGatewayIpPoolResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::InternetGatewayIpPool>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::InternetGatewayIpPool>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -37999,7 +38606,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -38009,13 +38616,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayIpPoolResultsPage>
+        impl ::std::convert::TryFrom<InternetGatewayIpPoolResultsPage>
             for super::InternetGatewayIpPoolResultsPage
         {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayIpPoolResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -38034,8 +38641,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayResultsPage {
-            items: Result<Vec<super::InternetGateway>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::InternetGateway>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for InternetGatewayResultsPage {
@@ -38050,7 +38663,7 @@ pub mod types {
         impl InternetGatewayResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::InternetGateway>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::InternetGateway>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -38060,7 +38673,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -38070,11 +38683,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<InternetGatewayResultsPage> for super::InternetGatewayResultsPage {
+        impl ::std::convert::TryFrom<InternetGatewayResultsPage> for super::InternetGatewayResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: InternetGatewayResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -38093,11 +38706,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPool {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for IpPool {
@@ -38115,7 +38730,7 @@ pub mod types {
         impl IpPool {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -38165,9 +38780,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPool> for super::IpPool {
+        impl ::std::convert::TryFrom<IpPool> for super::IpPool {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPool) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPool,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -38192,8 +38809,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for IpPoolCreate {
@@ -38208,7 +38825,7 @@ pub mod types {
         impl IpPoolCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -38228,9 +38845,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolCreate> for super::IpPoolCreate {
+        impl ::std::convert::TryFrom<IpPoolCreate> for super::IpPoolCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -38249,8 +38868,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolLinkSilo {
-            is_default: Result<bool, String>,
-            silo: Result<super::NameOrId, String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            silo: ::std::result::Result<super::NameOrId, ::std::string::String>,
         }
 
         impl Default for IpPoolLinkSilo {
@@ -38285,9 +38904,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolLinkSilo> for super::IpPoolLinkSilo {
+        impl ::std::convert::TryFrom<IpPoolLinkSilo> for super::IpPoolLinkSilo {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolLinkSilo) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolLinkSilo,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     is_default: value.is_default?,
                     silo: value.silo?,
@@ -38306,10 +38927,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolRange {
-            id: Result<uuid::Uuid, String>,
-            ip_pool_id: Result<uuid::Uuid, String>,
-            range: Result<super::IpRange, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            range: ::std::result::Result<super::IpRange, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for IpPoolRange {
@@ -38366,9 +38988,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolRange> for super::IpPoolRange {
+        impl ::std::convert::TryFrom<IpPoolRange> for super::IpPoolRange {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolRange) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolRange,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     ip_pool_id: value.ip_pool_id?,
@@ -38391,8 +39015,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolRangeResultsPage {
-            items: Result<Vec<super::IpPoolRange>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::IpPoolRange>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for IpPoolRangeResultsPage {
@@ -38407,7 +39035,7 @@ pub mod types {
         impl IpPoolRangeResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpPoolRange>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpPoolRange>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -38417,7 +39045,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -38427,11 +39055,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolRangeResultsPage> for super::IpPoolRangeResultsPage {
+        impl ::std::convert::TryFrom<IpPoolRangeResultsPage> for super::IpPoolRangeResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: IpPoolRangeResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -38450,8 +39078,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolResultsPage {
-            items: Result<Vec<super::IpPool>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::IpPool>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for IpPoolResultsPage {
@@ -38466,7 +39097,7 @@ pub mod types {
         impl IpPoolResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpPool>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpPool>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -38476,7 +39107,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -38486,9 +39117,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolResultsPage> for super::IpPoolResultsPage {
+        impl ::std::convert::TryFrom<IpPoolResultsPage> for super::IpPoolResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -38507,9 +39140,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolSiloLink {
-            ip_pool_id: Result<uuid::Uuid, String>,
-            is_default: Result<bool, String>,
-            silo_id: Result<uuid::Uuid, String>,
+            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for IpPoolSiloLink {
@@ -38555,9 +39188,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolSiloLink> for super::IpPoolSiloLink {
+        impl ::std::convert::TryFrom<IpPoolSiloLink> for super::IpPoolSiloLink {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolSiloLink) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolSiloLink,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     ip_pool_id: value.ip_pool_id?,
                     is_default: value.is_default?,
@@ -38578,8 +39213,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolSiloLinkResultsPage {
-            items: Result<Vec<super::IpPoolSiloLink>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::IpPoolSiloLink>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for IpPoolSiloLinkResultsPage {
@@ -38594,7 +39235,7 @@ pub mod types {
         impl IpPoolSiloLinkResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpPoolSiloLink>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpPoolSiloLink>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -38604,7 +39245,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -38614,11 +39255,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolSiloLinkResultsPage> for super::IpPoolSiloLinkResultsPage {
+        impl ::std::convert::TryFrom<IpPoolSiloLinkResultsPage> for super::IpPoolSiloLinkResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: IpPoolSiloLinkResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -38637,7 +39278,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolSiloUpdate {
-            is_default: Result<bool, String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
         }
 
         impl Default for IpPoolSiloUpdate {
@@ -38661,9 +39302,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolSiloUpdate> for super::IpPoolSiloUpdate {
+        impl ::std::convert::TryFrom<IpPoolSiloUpdate> for super::IpPoolSiloUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolSiloUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolSiloUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     is_default: value.is_default?,
                 })
@@ -38680,8 +39323,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for IpPoolUpdate {
@@ -38696,7 +39342,7 @@ pub mod types {
         impl IpPoolUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -38706,7 +39352,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -38716,9 +39362,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolUpdate> for super::IpPoolUpdate {
+        impl ::std::convert::TryFrom<IpPoolUpdate> for super::IpPoolUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -38737,8 +39385,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolUtilization {
-            ipv4: Result<super::Ipv4Utilization, String>,
-            ipv6: Result<super::Ipv6Utilization, String>,
+            ipv4: ::std::result::Result<super::Ipv4Utilization, ::std::string::String>,
+            ipv6: ::std::result::Result<super::Ipv6Utilization, ::std::string::String>,
         }
 
         impl Default for IpPoolUtilization {
@@ -38773,9 +39421,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolUtilization> for super::IpPoolUtilization {
+        impl ::std::convert::TryFrom<IpPoolUtilization> for super::IpPoolUtilization {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolUtilization) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: IpPoolUtilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     ipv4: value.ipv4?,
                     ipv6: value.ipv6?,
@@ -38794,8 +39444,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv4Range {
-            first: Result<std::net::Ipv4Addr, String>,
-            last: Result<std::net::Ipv4Addr, String>,
+            first: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
+            last: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
         }
 
         impl Default for Ipv4Range {
@@ -38830,9 +39480,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Ipv4Range> for super::Ipv4Range {
+        impl ::std::convert::TryFrom<Ipv4Range> for super::Ipv4Range {
             type Error = super::error::ConversionError;
-            fn try_from(value: Ipv4Range) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Ipv4Range,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     first: value.first?,
                     last: value.last?,
@@ -38851,8 +39503,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv4Utilization {
-            allocated: Result<u32, String>,
-            capacity: Result<u32, String>,
+            allocated: ::std::result::Result<u32, ::std::string::String>,
+            capacity: ::std::result::Result<u32, ::std::string::String>,
         }
 
         impl Default for Ipv4Utilization {
@@ -38887,9 +39539,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Ipv4Utilization> for super::Ipv4Utilization {
+        impl ::std::convert::TryFrom<Ipv4Utilization> for super::Ipv4Utilization {
             type Error = super::error::ConversionError;
-            fn try_from(value: Ipv4Utilization) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Ipv4Utilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allocated: value.allocated?,
                     capacity: value.capacity?,
@@ -38908,8 +39562,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv6Range {
-            first: Result<std::net::Ipv6Addr, String>,
-            last: Result<std::net::Ipv6Addr, String>,
+            first: ::std::result::Result<std::net::Ipv6Addr, ::std::string::String>,
+            last: ::std::result::Result<std::net::Ipv6Addr, ::std::string::String>,
         }
 
         impl Default for Ipv6Range {
@@ -38944,9 +39598,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Ipv6Range> for super::Ipv6Range {
+        impl ::std::convert::TryFrom<Ipv6Range> for super::Ipv6Range {
             type Error = super::error::ConversionError;
-            fn try_from(value: Ipv6Range) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Ipv6Range,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     first: value.first?,
                     last: value.last?,
@@ -38965,8 +39621,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv6Utilization {
-            allocated: Result<String, String>,
-            capacity: Result<String, String>,
+            allocated: ::std::result::Result<::std::string::String, ::std::string::String>,
+            capacity: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for Ipv6Utilization {
@@ -38981,7 +39637,7 @@ pub mod types {
         impl Ipv6Utilization {
             pub fn allocated<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.allocated = value
@@ -38991,7 +39647,7 @@ pub mod types {
             }
             pub fn capacity<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.capacity = value
@@ -39001,9 +39657,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Ipv6Utilization> for super::Ipv6Utilization {
+        impl ::std::convert::TryFrom<Ipv6Utilization> for super::Ipv6Utilization {
             type Error = super::error::ConversionError;
-            fn try_from(value: Ipv6Utilization) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Ipv6Utilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allocated: value.allocated?,
                     capacity: value.capacity?,
@@ -39022,12 +39680,16 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LinkConfigCreate {
-            autoneg: Result<bool, String>,
-            fec: Result<Option<super::LinkFec>, String>,
-            lldp: Result<super::LldpLinkConfigCreate, String>,
-            mtu: Result<u16, String>,
-            speed: Result<super::LinkSpeed, String>,
-            tx_eq: Result<Option<super::TxEqConfig>, String>,
+            autoneg: ::std::result::Result<bool, ::std::string::String>,
+            fec:
+                ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
+            lldp: ::std::result::Result<super::LldpLinkConfigCreate, ::std::string::String>,
+            mtu: ::std::result::Result<u16, ::std::string::String>,
+            speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
+            tx_eq: ::std::result::Result<
+                ::std::option::Option<super::TxEqConfig>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for LinkConfigCreate {
@@ -39056,7 +39718,7 @@ pub mod types {
             }
             pub fn fec<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::LinkFec>>,
+                T: std::convert::TryInto<::std::option::Option<super::LinkFec>>,
                 T::Error: std::fmt::Display,
             {
                 self.fec = value
@@ -39096,7 +39758,7 @@ pub mod types {
             }
             pub fn tx_eq<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::TxEqConfig>>,
+                T: std::convert::TryInto<::std::option::Option<super::TxEqConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.tx_eq = value
@@ -39106,9 +39768,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LinkConfigCreate> for super::LinkConfigCreate {
+        impl ::std::convert::TryFrom<LinkConfigCreate> for super::LinkConfigCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: LinkConfigCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: LinkConfigCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
@@ -39135,14 +39799,30 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LldpLinkConfig {
-            chassis_id: Result<Option<String>, String>,
-            enabled: Result<bool, String>,
-            id: Result<uuid::Uuid, String>,
-            link_description: Result<Option<String>, String>,
-            link_name: Result<Option<String>, String>,
-            management_ip: Result<Option<super::IpNet>, String>,
-            system_description: Result<Option<String>, String>,
-            system_name: Result<Option<String>, String>,
+            chassis_id: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            enabled: ::std::result::Result<bool, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            link_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            link_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            management_ip:
+                ::std::result::Result<::std::option::Option<super::IpNet>, ::std::string::String>,
+            system_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            system_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for LldpLinkConfig {
@@ -39163,7 +39843,7 @@ pub mod types {
         impl LldpLinkConfig {
             pub fn chassis_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.chassis_id = value
@@ -39193,7 +39873,7 @@ pub mod types {
             }
             pub fn link_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_description = value.try_into().map_err(|e| {
@@ -39206,7 +39886,7 @@ pub mod types {
             }
             pub fn link_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_name = value
@@ -39216,7 +39896,7 @@ pub mod types {
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::IpNet>>,
+                T: std::convert::TryInto<::std::option::Option<super::IpNet>>,
                 T::Error: std::fmt::Display,
             {
                 self.management_ip = value.try_into().map_err(|e| {
@@ -39226,7 +39906,7 @@ pub mod types {
             }
             pub fn system_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.system_description = value.try_into().map_err(|e| {
@@ -39239,7 +39919,7 @@ pub mod types {
             }
             pub fn system_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.system_name = value
@@ -39249,9 +39929,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LldpLinkConfig> for super::LldpLinkConfig {
+        impl ::std::convert::TryFrom<LldpLinkConfig> for super::LldpLinkConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: LldpLinkConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: LldpLinkConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     chassis_id: value.chassis_id?,
                     enabled: value.enabled?,
@@ -39282,13 +39964,31 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LldpLinkConfigCreate {
-            chassis_id: Result<Option<String>, String>,
-            enabled: Result<bool, String>,
-            link_description: Result<Option<String>, String>,
-            link_name: Result<Option<String>, String>,
-            management_ip: Result<Option<std::net::IpAddr>, String>,
-            system_description: Result<Option<String>, String>,
-            system_name: Result<Option<String>, String>,
+            chassis_id: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            enabled: ::std::result::Result<bool, ::std::string::String>,
+            link_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            link_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            management_ip: ::std::result::Result<
+                ::std::option::Option<std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            system_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            system_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for LldpLinkConfigCreate {
@@ -39308,7 +40008,7 @@ pub mod types {
         impl LldpLinkConfigCreate {
             pub fn chassis_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.chassis_id = value
@@ -39328,7 +40028,7 @@ pub mod types {
             }
             pub fn link_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_description = value.try_into().map_err(|e| {
@@ -39341,7 +40041,7 @@ pub mod types {
             }
             pub fn link_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_name = value
@@ -39351,7 +40051,7 @@ pub mod types {
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T: std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
                 T::Error: std::fmt::Display,
             {
                 self.management_ip = value.try_into().map_err(|e| {
@@ -39361,7 +40061,7 @@ pub mod types {
             }
             pub fn system_description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.system_description = value.try_into().map_err(|e| {
@@ -39374,7 +40074,7 @@ pub mod types {
             }
             pub fn system_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.system_name = value
@@ -39384,11 +40084,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LldpLinkConfigCreate> for super::LldpLinkConfigCreate {
+        impl ::std::convert::TryFrom<LldpLinkConfigCreate> for super::LldpLinkConfigCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: LldpLinkConfigCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     chassis_id: value.chassis_id?,
                     enabled: value.enabled?,
@@ -39417,11 +40117,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LoopbackAddress {
-            address: Result<super::IpNet, String>,
-            address_lot_block_id: Result<uuid::Uuid, String>,
-            id: Result<uuid::Uuid, String>,
-            rack_id: Result<uuid::Uuid, String>,
-            switch_location: Result<String, String>,
+            address: ::std::result::Result<super::IpNet, ::std::string::String>,
+            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for LoopbackAddress {
@@ -39484,7 +40184,7 @@ pub mod types {
             }
             pub fn switch_location<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.switch_location = value.try_into().map_err(|e| {
@@ -39494,9 +40194,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LoopbackAddress> for super::LoopbackAddress {
+        impl ::std::convert::TryFrom<LoopbackAddress> for super::LoopbackAddress {
             type Error = super::error::ConversionError;
-            fn try_from(value: LoopbackAddress) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: LoopbackAddress,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     address_lot_block_id: value.address_lot_block_id?,
@@ -39521,12 +40223,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LoopbackAddressCreate {
-            address: Result<std::net::IpAddr, String>,
-            address_lot: Result<super::NameOrId, String>,
-            anycast: Result<bool, String>,
-            mask: Result<u8, String>,
-            rack_id: Result<uuid::Uuid, String>,
-            switch_location: Result<super::Name, String>,
+            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            address_lot: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            anycast: ::std::result::Result<bool, ::std::string::String>,
+            mask: ::std::result::Result<u8, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            switch_location: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for LoopbackAddressCreate {
@@ -39605,11 +40307,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LoopbackAddressCreate> for super::LoopbackAddressCreate {
+        impl ::std::convert::TryFrom<LoopbackAddressCreate> for super::LoopbackAddressCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: LoopbackAddressCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     address_lot: value.address_lot?,
@@ -39636,8 +40338,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LoopbackAddressResultsPage {
-            items: Result<Vec<super::LoopbackAddress>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::LoopbackAddress>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for LoopbackAddressResultsPage {
@@ -39652,7 +40360,7 @@ pub mod types {
         impl LoopbackAddressResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::LoopbackAddress>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::LoopbackAddress>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -39662,7 +40370,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -39672,11 +40380,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LoopbackAddressResultsPage> for super::LoopbackAddressResultsPage {
+        impl ::std::convert::TryFrom<LoopbackAddressResultsPage> for super::LoopbackAddressResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: LoopbackAddressResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -39695,8 +40403,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Measurement {
-            datum: Result<super::Datum, String>,
-            timestamp: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            datum: ::std::result::Result<super::Datum, ::std::string::String>,
+            timestamp:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Measurement {
@@ -39731,9 +40440,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Measurement> for super::Measurement {
+        impl ::std::convert::TryFrom<Measurement> for super::Measurement {
             type Error = super::error::ConversionError;
-            fn try_from(value: Measurement) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Measurement,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     datum: value.datum?,
                     timestamp: value.timestamp?,
@@ -39752,8 +40463,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct MeasurementResultsPage {
-            items: Result<Vec<super::Measurement>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::Measurement>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for MeasurementResultsPage {
@@ -39768,7 +40483,7 @@ pub mod types {
         impl MeasurementResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Measurement>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Measurement>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -39778,7 +40493,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -39788,11 +40503,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<MeasurementResultsPage> for super::MeasurementResultsPage {
+        impl ::std::convert::TryFrom<MeasurementResultsPage> for super::MeasurementResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: MeasurementResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -39811,8 +40526,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct MissingDatum {
-            datum_type: Result<super::DatumType, String>,
-            start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+            datum_type: ::std::result::Result<super::DatumType, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for MissingDatum {
@@ -39837,7 +40555,9 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.start_time = value
@@ -39847,9 +40567,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<MissingDatum> for super::MissingDatum {
+        impl ::std::convert::TryFrom<MissingDatum> for super::MissingDatum {
             type Error = super::error::ConversionError;
-            fn try_from(value: MissingDatum) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: MissingDatum,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     datum_type: value.datum_type?,
                     start_time: value.start_time?,
@@ -39868,16 +40590,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct NetworkInterface {
-            id: Result<uuid::Uuid, String>,
-            ip: Result<std::net::IpAddr, String>,
-            kind: Result<super::NetworkInterfaceKind, String>,
-            mac: Result<super::MacAddr, String>,
-            name: Result<super::Name, String>,
-            primary: Result<bool, String>,
-            slot: Result<u8, String>,
-            subnet: Result<super::IpNet, String>,
-            transit_ips: Result<Vec<super::IpNet>, String>,
-            vni: Result<super::Vni, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            kind: ::std::result::Result<super::NetworkInterfaceKind, ::std::string::String>,
+            mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            primary: ::std::result::Result<bool, ::std::string::String>,
+            slot: ::std::result::Result<u8, ::std::string::String>,
+            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
+            vni: ::std::result::Result<super::Vni, ::std::string::String>,
         }
 
         impl Default for NetworkInterface {
@@ -39980,7 +40703,7 @@ pub mod types {
             }
             pub fn transit_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpNet>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
                 T::Error: std::fmt::Display,
             {
                 self.transit_ips = value
@@ -40000,9 +40723,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<NetworkInterface> for super::NetworkInterface {
+        impl ::std::convert::TryFrom<NetworkInterface> for super::NetworkInterface {
             type Error = super::error::ConversionError;
-            fn try_from(value: NetworkInterface) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: NetworkInterface,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     ip: value.ip?,
@@ -40037,7 +40762,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
-            tables: Result<Vec<super::Table>, String>,
+            tables: ::std::result::Result<::std::vec::Vec<super::Table>, ::std::string::String>,
         }
 
         impl Default for OxqlQueryResult {
@@ -40051,7 +40776,7 @@ pub mod types {
         impl OxqlQueryResult {
             pub fn tables<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Table>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Table>>,
                 T::Error: std::fmt::Display,
             {
                 self.tables = value
@@ -40061,9 +40786,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<OxqlQueryResult> for super::OxqlQueryResult {
+        impl ::std::convert::TryFrom<OxqlQueryResult> for super::OxqlQueryResult {
             type Error = super::error::ConversionError;
-            fn try_from(value: OxqlQueryResult) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: OxqlQueryResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     tables: value.tables?,
                 })
@@ -40080,16 +40807,19 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
-            form_factor: Result<super::PhysicalDiskKind, String>,
-            id: Result<uuid::Uuid, String>,
-            model: Result<String, String>,
-            policy: Result<super::PhysicalDiskPolicy, String>,
-            serial: Result<String, String>,
-            sled_id: Result<Option<uuid::Uuid>, String>,
-            state: Result<super::PhysicalDiskState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vendor: Result<String, String>,
+            form_factor: ::std::result::Result<super::PhysicalDiskKind, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            model: ::std::result::Result<::std::string::String, ::std::string::String>,
+            policy: ::std::result::Result<super::PhysicalDiskPolicy, ::std::string::String>,
+            serial: ::std::result::Result<::std::string::String, ::std::string::String>,
+            sled_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            state: ::std::result::Result<super::PhysicalDiskState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vendor: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for PhysicalDisk {
@@ -40132,7 +40862,7 @@ pub mod types {
             }
             pub fn model<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.model = value
@@ -40152,7 +40882,7 @@ pub mod types {
             }
             pub fn serial<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.serial = value
@@ -40162,7 +40892,7 @@ pub mod types {
             }
             pub fn sled_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.sled_id = value
@@ -40202,7 +40932,7 @@ pub mod types {
             }
             pub fn vendor<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.vendor = value
@@ -40212,9 +40942,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<PhysicalDisk> for super::PhysicalDisk {
+        impl ::std::convert::TryFrom<PhysicalDisk> for super::PhysicalDisk {
             type Error = super::error::ConversionError;
-            fn try_from(value: PhysicalDisk) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: PhysicalDisk,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     form_factor: value.form_factor?,
                     id: value.id?,
@@ -40249,8 +40981,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct PhysicalDiskResultsPage {
-            items: Result<Vec<super::PhysicalDisk>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::PhysicalDisk>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for PhysicalDiskResultsPage {
@@ -40265,7 +41001,7 @@ pub mod types {
         impl PhysicalDiskResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::PhysicalDisk>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::PhysicalDisk>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -40275,7 +41011,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -40285,11 +41021,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<PhysicalDiskResultsPage> for super::PhysicalDiskResultsPage {
+        impl ::std::convert::TryFrom<PhysicalDiskResultsPage> for super::PhysicalDiskResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: PhysicalDiskResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -40308,7 +41044,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ping {
-            status: Result<super::PingStatus, String>,
+            status: ::std::result::Result<super::PingStatus, ::std::string::String>,
         }
 
         impl Default for Ping {
@@ -40332,9 +41068,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Ping> for super::Ping {
+        impl ::std::convert::TryFrom<Ping> for super::Ping {
             type Error = super::error::ConversionError;
-            fn try_from(value: Ping) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Ping) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     status: value.status?,
                 })
@@ -40351,9 +41087,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Points {
-            start_times: Result<Option<Vec<chrono::DateTime<chrono::offset::Utc>>>, String>,
-            timestamps: Result<Vec<chrono::DateTime<chrono::offset::Utc>>, String>,
-            values: Result<Vec<super::Values>, String>,
+            start_times: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                ::std::string::String,
+            >,
+            timestamps: ::std::result::Result<
+                ::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            values: ::std::result::Result<::std::vec::Vec<super::Values>, ::std::string::String>,
         }
 
         impl Default for Points {
@@ -40369,7 +41111,9 @@ pub mod types {
         impl Points {
             pub fn start_times<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<Vec<chrono::DateTime<chrono::offset::Utc>>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.start_times = value
@@ -40379,7 +41123,7 @@ pub mod types {
             }
             pub fn timestamps<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                T: std::convert::TryInto<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
                 T::Error: std::fmt::Display,
             {
                 self.timestamps = value
@@ -40389,7 +41133,7 @@ pub mod types {
             }
             pub fn values<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Values>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Values>>,
                 T::Error: std::fmt::Display,
             {
                 self.values = value
@@ -40399,9 +41143,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Points> for super::Points {
+        impl ::std::convert::TryFrom<Points> for super::Points {
             type Error = super::error::ConversionError;
-            fn try_from(value: Points) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Points,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     start_times: value.start_times?,
                     timestamps: value.timestamps?,
@@ -40422,12 +41168,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Probe {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            sled: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Probe {
@@ -40446,7 +41194,7 @@ pub mod types {
         impl Probe {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -40506,9 +41254,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Probe> for super::Probe {
+        impl ::std::convert::TryFrom<Probe> for super::Probe {
             type Error = super::error::ConversionError;
-            fn try_from(value: Probe) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Probe,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -40535,10 +41285,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProbeCreate {
-            description: Result<String, String>,
-            ip_pool: Result<Option<super::NameOrId>, String>,
-            name: Result<super::Name, String>,
-            sled: Result<uuid::Uuid, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip_pool: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for ProbeCreate {
@@ -40555,7 +41308,7 @@ pub mod types {
         impl ProbeCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -40565,7 +41318,7 @@ pub mod types {
             }
             pub fn ip_pool<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.ip_pool = value
@@ -40595,9 +41348,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProbeCreate> for super::ProbeCreate {
+        impl ::std::convert::TryFrom<ProbeCreate> for super::ProbeCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProbeCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProbeCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     ip_pool: value.ip_pool?,
@@ -40620,10 +41375,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProbeExternalIp {
-            first_port: Result<u16, String>,
-            ip: Result<std::net::IpAddr, String>,
-            kind: Result<super::ProbeExternalIpKind, String>,
-            last_port: Result<u16, String>,
+            first_port: ::std::result::Result<u16, ::std::string::String>,
+            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            kind: ::std::result::Result<super::ProbeExternalIpKind, ::std::string::String>,
+            last_port: ::std::result::Result<u16, ::std::string::String>,
         }
 
         impl Default for ProbeExternalIp {
@@ -40680,9 +41435,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProbeExternalIp> for super::ProbeExternalIp {
+        impl ::std::convert::TryFrom<ProbeExternalIp> for super::ProbeExternalIp {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProbeExternalIp) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProbeExternalIp,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     first_port: value.first_port?,
                     ip: value.ip?,
@@ -40705,11 +41462,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProbeInfo {
-            external_ips: Result<Vec<super::ProbeExternalIp>, String>,
-            id: Result<uuid::Uuid, String>,
-            interface: Result<super::NetworkInterface, String>,
-            name: Result<super::Name, String>,
-            sled: Result<uuid::Uuid, String>,
+            external_ips: ::std::result::Result<
+                ::std::vec::Vec<super::ProbeExternalIp>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            interface: ::std::result::Result<super::NetworkInterface, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for ProbeInfo {
@@ -40727,7 +41487,7 @@ pub mod types {
         impl ProbeInfo {
             pub fn external_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::ProbeExternalIp>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::ProbeExternalIp>>,
                 T::Error: std::fmt::Display,
             {
                 self.external_ips = value.try_into().map_err(|e| {
@@ -40777,9 +41537,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProbeInfo> for super::ProbeInfo {
+        impl ::std::convert::TryFrom<ProbeInfo> for super::ProbeInfo {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProbeInfo) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProbeInfo,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     external_ips: value.external_ips?,
                     id: value.id?,
@@ -40804,8 +41566,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProbeInfoResultsPage {
-            items: Result<Vec<super::ProbeInfo>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::ProbeInfo>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for ProbeInfoResultsPage {
@@ -40820,7 +41585,7 @@ pub mod types {
         impl ProbeInfoResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::ProbeInfo>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::ProbeInfo>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -40830,7 +41595,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -40840,11 +41605,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProbeInfoResultsPage> for super::ProbeInfoResultsPage {
+        impl ::std::convert::TryFrom<ProbeInfoResultsPage> for super::ProbeInfoResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: ProbeInfoResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -40863,11 +41628,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Project {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Project {
@@ -40885,7 +41652,7 @@ pub mod types {
         impl Project {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -40935,9 +41702,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Project> for super::Project {
+        impl ::std::convert::TryFrom<Project> for super::Project {
             type Error = super::error::ConversionError;
-            fn try_from(value: Project) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Project,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -40962,8 +41731,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for ProjectCreate {
@@ -40978,7 +41747,7 @@ pub mod types {
         impl ProjectCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -40998,9 +41767,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProjectCreate> for super::ProjectCreate {
+        impl ::std::convert::TryFrom<ProjectCreate> for super::ProjectCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProjectCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProjectCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -41019,8 +41790,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectResultsPage {
-            items: Result<Vec<super::Project>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Project>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for ProjectResultsPage {
@@ -41035,7 +41809,7 @@ pub mod types {
         impl ProjectResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Project>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Project>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -41045,7 +41819,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -41055,9 +41829,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProjectResultsPage> for super::ProjectResultsPage {
+        impl ::std::convert::TryFrom<ProjectResultsPage> for super::ProjectResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProjectResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProjectResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -41076,7 +41852,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectRolePolicy {
-            role_assignments: Result<Vec<super::ProjectRoleRoleAssignment>, String>,
+            role_assignments: ::std::result::Result<
+                ::std::vec::Vec<super::ProjectRoleRoleAssignment>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for ProjectRolePolicy {
@@ -41090,7 +41869,7 @@ pub mod types {
         impl ProjectRolePolicy {
             pub fn role_assignments<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::ProjectRoleRoleAssignment>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::ProjectRoleRoleAssignment>>,
                 T::Error: std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
@@ -41103,9 +41882,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProjectRolePolicy> for super::ProjectRolePolicy {
+        impl ::std::convert::TryFrom<ProjectRolePolicy> for super::ProjectRolePolicy {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProjectRolePolicy) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProjectRolePolicy,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
@@ -41122,9 +41903,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectRoleRoleAssignment {
-            identity_id: Result<uuid::Uuid, String>,
-            identity_type: Result<super::IdentityType, String>,
-            role_name: Result<super::ProjectRole, String>,
+            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
+            role_name: ::std::result::Result<super::ProjectRole, ::std::string::String>,
         }
 
         impl Default for ProjectRoleRoleAssignment {
@@ -41170,11 +41951,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProjectRoleRoleAssignment> for super::ProjectRoleRoleAssignment {
+        impl ::std::convert::TryFrom<ProjectRoleRoleAssignment> for super::ProjectRoleRoleAssignment {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: ProjectRoleRoleAssignment,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     identity_id: value.identity_id?,
                     identity_type: value.identity_type?,
@@ -41195,8 +41976,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for ProjectUpdate {
@@ -41211,7 +41995,7 @@ pub mod types {
         impl ProjectUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -41221,7 +42005,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -41231,9 +42015,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<ProjectUpdate> for super::ProjectUpdate {
+        impl ::std::convert::TryFrom<ProjectUpdate> for super::ProjectUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: ProjectUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: ProjectUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -41252,10 +42038,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Quantile {
-            desired_marker_positions: Result<[f64; 5usize], String>,
-            marker_heights: Result<[f64; 5usize], String>,
-            marker_positions: Result<[u64; 5usize], String>,
-            p: Result<f64, String>,
+            desired_marker_positions: ::std::result::Result<[f64; 5usize], ::std::string::String>,
+            marker_heights: ::std::result::Result<[f64; 5usize], ::std::string::String>,
+            marker_positions: ::std::result::Result<[u64; 5usize], ::std::string::String>,
+            p: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl Default for Quantile {
@@ -41320,9 +42106,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Quantile> for super::Quantile {
+        impl ::std::convert::TryFrom<Quantile> for super::Quantile {
             type Error = super::error::ConversionError;
-            fn try_from(value: Quantile) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Quantile,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     desired_marker_positions: value.desired_marker_positions?,
                     marker_heights: value.marker_heights?,
@@ -41345,9 +42133,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Rack {
-            id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Rack {
@@ -41393,9 +42183,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Rack> for super::Rack {
+        impl ::std::convert::TryFrom<Rack> for super::Rack {
             type Error = super::error::ConversionError;
-            fn try_from(value: Rack) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Rack) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     time_created: value.time_created?,
@@ -41416,8 +42206,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RackResultsPage {
-            items: Result<Vec<super::Rack>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Rack>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for RackResultsPage {
@@ -41432,7 +42225,7 @@ pub mod types {
         impl RackResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Rack>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Rack>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -41442,7 +42235,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -41452,9 +42245,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RackResultsPage> for super::RackResultsPage {
+        impl ::std::convert::TryFrom<RackResultsPage> for super::RackResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: RackResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RackResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -41473,8 +42268,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Role {
-            description: Result<String, String>,
-            name: Result<super::RoleName, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::RoleName, ::std::string::String>,
         }
 
         impl Default for Role {
@@ -41489,7 +42284,7 @@ pub mod types {
         impl Role {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -41509,9 +42304,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Role> for super::Role {
+        impl ::std::convert::TryFrom<Role> for super::Role {
             type Error = super::error::ConversionError;
-            fn try_from(value: Role) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Role) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -41530,8 +42325,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RoleResultsPage {
-            items: Result<Vec<super::Role>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Role>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for RoleResultsPage {
@@ -41546,7 +42344,7 @@ pub mod types {
         impl RoleResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Role>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Role>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -41556,7 +42354,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -41566,9 +42364,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RoleResultsPage> for super::RoleResultsPage {
+        impl ::std::convert::TryFrom<RoleResultsPage> for super::RoleResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: RoleResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RoleResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -41587,10 +42387,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Route {
-            dst: Result<super::IpNet, String>,
-            gw: Result<std::net::IpAddr, String>,
-            rib_priority: Result<Option<u8>, String>,
-            vid: Result<Option<u16>, String>,
+            dst: ::std::result::Result<super::IpNet, ::std::string::String>,
+            gw: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
+            vid: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl Default for Route {
@@ -41627,7 +42427,7 @@ pub mod types {
             }
             pub fn rib_priority<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u8>>,
+                T: std::convert::TryInto<::std::option::Option<u8>>,
                 T::Error: std::fmt::Display,
             {
                 self.rib_priority = value.try_into().map_err(|e| {
@@ -41637,7 +42437,7 @@ pub mod types {
             }
             pub fn vid<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u16>>,
+                T: std::convert::TryInto<::std::option::Option<u16>>,
                 T::Error: std::fmt::Display,
             {
                 self.vid = value
@@ -41647,9 +42447,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Route> for super::Route {
+        impl ::std::convert::TryFrom<Route> for super::Route {
             type Error = super::error::ConversionError;
-            fn try_from(value: Route) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Route,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
@@ -41672,7 +42474,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouteConfig {
-            routes: Result<Vec<super::Route>, String>,
+            routes: ::std::result::Result<::std::vec::Vec<super::Route>, ::std::string::String>,
         }
 
         impl Default for RouteConfig {
@@ -41686,7 +42488,7 @@ pub mod types {
         impl RouteConfig {
             pub fn routes<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Route>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Route>>,
                 T::Error: std::fmt::Display,
             {
                 self.routes = value
@@ -41696,9 +42498,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RouteConfig> for super::RouteConfig {
+        impl ::std::convert::TryFrom<RouteConfig> for super::RouteConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: RouteConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RouteConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     routes: value.routes?,
                 })
@@ -41715,15 +42519,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouterRoute {
-            description: Result<String, String>,
-            destination: Result<super::RouteDestination, String>,
-            id: Result<uuid::Uuid, String>,
-            kind: Result<super::RouterRouteKind, String>,
-            name: Result<super::Name, String>,
-            target: Result<super::RouteTarget, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_router_id: Result<uuid::Uuid, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            destination: ::std::result::Result<super::RouteDestination, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            kind: ::std::result::Result<super::RouterRouteKind, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            target: ::std::result::Result<super::RouteTarget, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vpc_router_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for RouterRoute {
@@ -41745,7 +42551,7 @@ pub mod types {
         impl RouterRoute {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -41835,9 +42641,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RouterRoute> for super::RouterRoute {
+        impl ::std::convert::TryFrom<RouterRoute> for super::RouterRoute {
             type Error = super::error::ConversionError;
-            fn try_from(value: RouterRoute) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RouterRoute,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     destination: value.destination?,
@@ -41870,10 +42678,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouterRouteCreate {
-            description: Result<String, String>,
-            destination: Result<super::RouteDestination, String>,
-            name: Result<super::Name, String>,
-            target: Result<super::RouteTarget, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            destination: ::std::result::Result<super::RouteDestination, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            target: ::std::result::Result<super::RouteTarget, ::std::string::String>,
         }
 
         impl Default for RouterRouteCreate {
@@ -41890,7 +42698,7 @@ pub mod types {
         impl RouterRouteCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -41930,9 +42738,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RouterRouteCreate> for super::RouterRouteCreate {
+        impl ::std::convert::TryFrom<RouterRouteCreate> for super::RouterRouteCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: RouterRouteCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RouterRouteCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     destination: value.destination?,
@@ -41955,8 +42765,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouterRouteResultsPage {
-            items: Result<Vec<super::RouterRoute>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::RouterRoute>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for RouterRouteResultsPage {
@@ -41971,7 +42785,7 @@ pub mod types {
         impl RouterRouteResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::RouterRoute>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::RouterRoute>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -41981,7 +42795,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -41991,11 +42805,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RouterRouteResultsPage> for super::RouterRouteResultsPage {
+        impl ::std::convert::TryFrom<RouterRouteResultsPage> for super::RouterRouteResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: RouterRouteResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -42014,10 +42828,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouterRouteUpdate {
-            description: Result<Option<String>, String>,
-            destination: Result<super::RouteDestination, String>,
-            name: Result<Option<super::Name>, String>,
-            target: Result<super::RouteTarget, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            destination: ::std::result::Result<super::RouteDestination, ::std::string::String>,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+            target: ::std::result::Result<super::RouteTarget, ::std::string::String>,
         }
 
         impl Default for RouterRouteUpdate {
@@ -42034,7 +42851,7 @@ pub mod types {
         impl RouterRouteUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42054,7 +42871,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -42074,9 +42891,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<RouterRouteUpdate> for super::RouterRouteUpdate {
+        impl ::std::convert::TryFrom<RouterRouteUpdate> for super::RouterRouteUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: RouterRouteUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: RouterRouteUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     destination: value.destination?,
@@ -42099,18 +42918,27 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SamlIdentityProvider {
-            acs_url: Result<String, String>,
-            description: Result<String, String>,
-            group_attribute_name: Result<Option<String>, String>,
-            id: Result<uuid::Uuid, String>,
-            idp_entity_id: Result<String, String>,
-            name: Result<super::Name, String>,
-            public_cert: Result<Option<String>, String>,
-            slo_url: Result<String, String>,
-            sp_client_id: Result<String, String>,
-            technical_contact_email: Result<String, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            acs_url: ::std::result::Result<::std::string::String, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            group_attribute_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            idp_entity_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            public_cert: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            slo_url: ::std::result::Result<::std::string::String, ::std::string::String>,
+            sp_client_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            technical_contact_email:
+                ::std::result::Result<::std::string::String, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for SamlIdentityProvider {
@@ -42137,7 +42965,7 @@ pub mod types {
         impl SamlIdentityProvider {
             pub fn acs_url<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.acs_url = value
@@ -42147,7 +42975,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42157,7 +42985,7 @@ pub mod types {
             }
             pub fn group_attribute_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.group_attribute_name = value.try_into().map_err(|e| {
@@ -42180,7 +43008,7 @@ pub mod types {
             }
             pub fn idp_entity_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.idp_entity_id = value.try_into().map_err(|e| {
@@ -42200,7 +43028,7 @@ pub mod types {
             }
             pub fn public_cert<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.public_cert = value
@@ -42210,7 +43038,7 @@ pub mod types {
             }
             pub fn slo_url<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.slo_url = value
@@ -42220,7 +43048,7 @@ pub mod types {
             }
             pub fn sp_client_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.sp_client_id = value.try_into().map_err(|e| {
@@ -42230,7 +43058,7 @@ pub mod types {
             }
             pub fn technical_contact_email<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.technical_contact_email = value.try_into().map_err(|e| {
@@ -42263,11 +43091,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SamlIdentityProvider> for super::SamlIdentityProvider {
+        impl ::std::convert::TryFrom<SamlIdentityProvider> for super::SamlIdentityProvider {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SamlIdentityProvider,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     acs_url: value.acs_url?,
                     description: value.description?,
@@ -42306,16 +43134,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SamlIdentityProviderCreate {
-            acs_url: Result<String, String>,
-            description: Result<String, String>,
-            group_attribute_name: Result<Option<String>, String>,
-            idp_entity_id: Result<String, String>,
-            idp_metadata_source: Result<super::IdpMetadataSource, String>,
-            name: Result<super::Name, String>,
-            signing_keypair: Result<Option<super::DerEncodedKeyPair>, String>,
-            slo_url: Result<String, String>,
-            sp_client_id: Result<String, String>,
-            technical_contact_email: Result<String, String>,
+            acs_url: ::std::result::Result<::std::string::String, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            group_attribute_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            idp_entity_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            idp_metadata_source:
+                ::std::result::Result<super::IdpMetadataSource, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            signing_keypair: ::std::result::Result<
+                ::std::option::Option<super::DerEncodedKeyPair>,
+                ::std::string::String,
+            >,
+            slo_url: ::std::result::Result<::std::string::String, ::std::string::String>,
+            sp_client_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            technical_contact_email:
+                ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for SamlIdentityProviderCreate {
@@ -42342,7 +43178,7 @@ pub mod types {
         impl SamlIdentityProviderCreate {
             pub fn acs_url<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.acs_url = value
@@ -42352,7 +43188,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42362,7 +43198,7 @@ pub mod types {
             }
             pub fn group_attribute_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.group_attribute_name = value.try_into().map_err(|e| {
@@ -42375,7 +43211,7 @@ pub mod types {
             }
             pub fn idp_entity_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.idp_entity_id = value.try_into().map_err(|e| {
@@ -42408,7 +43244,7 @@ pub mod types {
             }
             pub fn signing_keypair<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::DerEncodedKeyPair>>,
+                T: std::convert::TryInto<::std::option::Option<super::DerEncodedKeyPair>>,
                 T::Error: std::fmt::Display,
             {
                 self.signing_keypair = value.try_into().map_err(|e| {
@@ -42418,7 +43254,7 @@ pub mod types {
             }
             pub fn slo_url<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.slo_url = value
@@ -42428,7 +43264,7 @@ pub mod types {
             }
             pub fn sp_client_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.sp_client_id = value.try_into().map_err(|e| {
@@ -42438,7 +43274,7 @@ pub mod types {
             }
             pub fn technical_contact_email<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.technical_contact_email = value.try_into().map_err(|e| {
@@ -42451,11 +43287,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SamlIdentityProviderCreate> for super::SamlIdentityProviderCreate {
+        impl ::std::convert::TryFrom<SamlIdentityProviderCreate> for super::SamlIdentityProviderCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SamlIdentityProviderCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     acs_url: value.acs_url?,
                     description: value.description?,
@@ -42490,15 +43326,19 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Silo {
-            description: Result<String, String>,
-            discoverable: Result<bool, String>,
-            id: Result<uuid::Uuid, String>,
-            identity_mode: Result<super::SiloIdentityMode, String>,
-            mapped_fleet_roles:
-                Result<::std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            discoverable: ::std::result::Result<bool, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
+            mapped_fleet_roles: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Silo {
@@ -42519,7 +43359,7 @@ pub mod types {
         impl Silo {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42560,7 +43400,7 @@ pub mod types {
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    ::std::collections::HashMap<String, Vec<super::FleetRole>>,
+                    ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -42604,9 +43444,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Silo> for super::Silo {
+        impl ::std::convert::TryFrom<Silo> for super::Silo {
             type Error = super::error::ConversionError;
-            fn try_from(value: Silo) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Silo) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     discoverable: value.discoverable?,
@@ -42637,15 +43477,23 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloCreate {
-            admin_group_name: Result<Option<String>, String>,
-            description: Result<String, String>,
-            discoverable: Result<bool, String>,
-            identity_mode: Result<super::SiloIdentityMode, String>,
-            mapped_fleet_roles:
-                Result<::std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
-            name: Result<super::Name, String>,
-            quotas: Result<super::SiloQuotasCreate, String>,
-            tls_certificates: Result<Vec<super::CertificateCreate>, String>,
+            admin_group_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            discoverable: ::std::result::Result<bool, ::std::string::String>,
+            identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
+            mapped_fleet_roles: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            quotas: ::std::result::Result<super::SiloQuotasCreate, ::std::string::String>,
+            tls_certificates: ::std::result::Result<
+                ::std::vec::Vec<super::CertificateCreate>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloCreate {
@@ -42666,7 +43514,7 @@ pub mod types {
         impl SiloCreate {
             pub fn admin_group_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.admin_group_name = value.try_into().map_err(|e| {
@@ -42679,7 +43527,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42710,7 +43558,7 @@ pub mod types {
             pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    ::std::collections::HashMap<String, Vec<super::FleetRole>>,
+                    ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -42744,7 +43592,7 @@ pub mod types {
             }
             pub fn tls_certificates<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::CertificateCreate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::CertificateCreate>>,
                 T::Error: std::fmt::Display,
             {
                 self.tls_certificates = value.try_into().map_err(|e| {
@@ -42757,9 +43605,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloCreate> for super::SiloCreate {
+        impl ::std::convert::TryFrom<SiloCreate> for super::SiloCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     admin_group_name: value.admin_group_name?,
                     description: value.description?,
@@ -42790,12 +43640,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloIpPool {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            is_default: Result<bool, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            is_default: ::std::result::Result<bool, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for SiloIpPool {
@@ -42814,7 +43666,7 @@ pub mod types {
         impl SiloIpPool {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -42874,9 +43726,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloIpPool> for super::SiloIpPool {
+        impl ::std::convert::TryFrom<SiloIpPool> for super::SiloIpPool {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloIpPool) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloIpPool,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -42903,8 +43757,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloIpPoolResultsPage {
-            items: Result<Vec<super::SiloIpPool>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::SiloIpPool>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloIpPoolResultsPage {
@@ -42919,7 +43776,7 @@ pub mod types {
         impl SiloIpPoolResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SiloIpPool>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SiloIpPool>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -42929,7 +43786,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -42939,11 +43796,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloIpPoolResultsPage> for super::SiloIpPoolResultsPage {
+        impl ::std::convert::TryFrom<SiloIpPoolResultsPage> for super::SiloIpPoolResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SiloIpPoolResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -42962,10 +43819,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloQuotas {
-            cpus: Result<i64, String>,
-            memory: Result<super::ByteCount, String>,
-            silo_id: Result<uuid::Uuid, String>,
-            storage: Result<super::ByteCount, String>,
+            cpus: ::std::result::Result<i64, ::std::string::String>,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            storage: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
         impl Default for SiloQuotas {
@@ -43022,9 +43879,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloQuotas> for super::SiloQuotas {
+        impl ::std::convert::TryFrom<SiloQuotas> for super::SiloQuotas {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloQuotas) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloQuotas,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cpus: value.cpus?,
                     memory: value.memory?,
@@ -43047,9 +43906,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloQuotasCreate {
-            cpus: Result<i64, String>,
-            memory: Result<super::ByteCount, String>,
-            storage: Result<super::ByteCount, String>,
+            cpus: ::std::result::Result<i64, ::std::string::String>,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            storage: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
         impl Default for SiloQuotasCreate {
@@ -43095,9 +43954,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloQuotasCreate> for super::SiloQuotasCreate {
+        impl ::std::convert::TryFrom<SiloQuotasCreate> for super::SiloQuotasCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloQuotasCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloQuotasCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cpus: value.cpus?,
                     memory: value.memory?,
@@ -43118,8 +43979,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloQuotasResultsPage {
-            items: Result<Vec<super::SiloQuotas>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::SiloQuotas>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloQuotasResultsPage {
@@ -43134,7 +43998,7 @@ pub mod types {
         impl SiloQuotasResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SiloQuotas>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SiloQuotas>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -43144,7 +44008,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -43154,11 +44018,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloQuotasResultsPage> for super::SiloQuotasResultsPage {
+        impl ::std::convert::TryFrom<SiloQuotasResultsPage> for super::SiloQuotasResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SiloQuotasResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -43177,9 +44041,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloQuotasUpdate {
-            cpus: Result<Option<i64>, String>,
-            memory: Result<Option<super::ByteCount>, String>,
-            storage: Result<Option<super::ByteCount>, String>,
+            cpus: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            memory: ::std::result::Result<
+                ::std::option::Option<super::ByteCount>,
+                ::std::string::String,
+            >,
+            storage: ::std::result::Result<
+                ::std::option::Option<super::ByteCount>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloQuotasUpdate {
@@ -43195,7 +44065,7 @@ pub mod types {
         impl SiloQuotasUpdate {
             pub fn cpus<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i64>>,
+                T: std::convert::TryInto<::std::option::Option<i64>>,
                 T::Error: std::fmt::Display,
             {
                 self.cpus = value
@@ -43205,7 +44075,7 @@ pub mod types {
             }
             pub fn memory<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::ByteCount>>,
+                T: std::convert::TryInto<::std::option::Option<super::ByteCount>>,
                 T::Error: std::fmt::Display,
             {
                 self.memory = value
@@ -43215,7 +44085,7 @@ pub mod types {
             }
             pub fn storage<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::ByteCount>>,
+                T: std::convert::TryInto<::std::option::Option<super::ByteCount>>,
                 T::Error: std::fmt::Display,
             {
                 self.storage = value
@@ -43225,9 +44095,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloQuotasUpdate> for super::SiloQuotasUpdate {
+        impl ::std::convert::TryFrom<SiloQuotasUpdate> for super::SiloQuotasUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloQuotasUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloQuotasUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cpus: value.cpus?,
                     memory: value.memory?,
@@ -43248,8 +44120,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloResultsPage {
-            items: Result<Vec<super::Silo>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Silo>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloResultsPage {
@@ -43264,7 +44139,7 @@ pub mod types {
         impl SiloResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Silo>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Silo>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -43274,7 +44149,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -43284,9 +44159,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloResultsPage> for super::SiloResultsPage {
+        impl ::std::convert::TryFrom<SiloResultsPage> for super::SiloResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -43305,7 +44182,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloRolePolicy {
-            role_assignments: Result<Vec<super::SiloRoleRoleAssignment>, String>,
+            role_assignments: ::std::result::Result<
+                ::std::vec::Vec<super::SiloRoleRoleAssignment>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloRolePolicy {
@@ -43319,7 +44199,7 @@ pub mod types {
         impl SiloRolePolicy {
             pub fn role_assignments<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SiloRoleRoleAssignment>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SiloRoleRoleAssignment>>,
                 T::Error: std::fmt::Display,
             {
                 self.role_assignments = value.try_into().map_err(|e| {
@@ -43332,9 +44212,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloRolePolicy> for super::SiloRolePolicy {
+        impl ::std::convert::TryFrom<SiloRolePolicy> for super::SiloRolePolicy {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloRolePolicy) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloRolePolicy,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
@@ -43351,9 +44233,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloRoleRoleAssignment {
-            identity_id: Result<uuid::Uuid, String>,
-            identity_type: Result<super::IdentityType, String>,
-            role_name: Result<super::SiloRole, String>,
+            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
+            role_name: ::std::result::Result<super::SiloRole, ::std::string::String>,
         }
 
         impl Default for SiloRoleRoleAssignment {
@@ -43399,11 +44281,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloRoleRoleAssignment> for super::SiloRoleRoleAssignment {
+        impl ::std::convert::TryFrom<SiloRoleRoleAssignment> for super::SiloRoleRoleAssignment {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SiloRoleRoleAssignment,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     identity_id: value.identity_id?,
                     identity_type: value.identity_type?,
@@ -43424,10 +44306,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloUtilization {
-            allocated: Result<super::VirtualResourceCounts, String>,
-            provisioned: Result<super::VirtualResourceCounts, String>,
-            silo_id: Result<uuid::Uuid, String>,
-            silo_name: Result<super::Name, String>,
+            allocated: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
+            provisioned: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for SiloUtilization {
@@ -43484,9 +44366,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloUtilization> for super::SiloUtilization {
+        impl ::std::convert::TryFrom<SiloUtilization> for super::SiloUtilization {
             type Error = super::error::ConversionError;
-            fn try_from(value: SiloUtilization) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SiloUtilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allocated: value.allocated?,
                     provisioned: value.provisioned?,
@@ -43509,8 +44393,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloUtilizationResultsPage {
-            items: Result<Vec<super::SiloUtilization>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SiloUtilization>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SiloUtilizationResultsPage {
@@ -43525,7 +44415,7 @@ pub mod types {
         impl SiloUtilizationResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SiloUtilization>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SiloUtilization>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -43535,7 +44425,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -43545,11 +44435,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SiloUtilizationResultsPage> for super::SiloUtilizationResultsPage {
+        impl ::std::convert::TryFrom<SiloUtilizationResultsPage> for super::SiloUtilizationResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SiloUtilizationResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -43568,15 +44458,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Sled {
-            baseboard: Result<super::Baseboard, String>,
-            id: Result<uuid::Uuid, String>,
-            policy: Result<super::SledPolicy, String>,
-            rack_id: Result<uuid::Uuid, String>,
-            state: Result<super::SledState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            usable_hardware_threads: Result<u32, String>,
-            usable_physical_ram: Result<super::ByteCount, String>,
+            baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            policy: ::std::result::Result<super::SledPolicy, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            state: ::std::result::Result<super::SledState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            usable_hardware_threads: ::std::result::Result<u32, ::std::string::String>,
+            usable_physical_ram: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
         impl Default for Sled {
@@ -43698,9 +44590,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Sled> for super::Sled {
+        impl ::std::convert::TryFrom<Sled> for super::Sled {
             type Error = super::error::ConversionError;
-            fn try_from(value: Sled) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Sled) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
@@ -43733,7 +44625,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledId {
-            id: Result<uuid::Uuid, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for SledId {
@@ -43757,9 +44649,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledId> for super::SledId {
+        impl ::std::convert::TryFrom<SledId> for super::SledId {
             type Error = super::error::ConversionError;
-            fn try_from(value: SledId) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SledId,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self { id: value.id? })
             }
         }
@@ -43772,17 +44666,20 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledInstance {
-            active_sled_id: Result<uuid::Uuid, String>,
-            id: Result<uuid::Uuid, String>,
-            memory: Result<i64, String>,
-            migration_id: Result<Option<uuid::Uuid>, String>,
-            name: Result<super::Name, String>,
-            ncpus: Result<i64, String>,
-            project_name: Result<super::Name, String>,
-            silo_name: Result<super::Name, String>,
-            state: Result<super::InstanceState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            active_sled_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            memory: ::std::result::Result<i64, ::std::string::String>,
+            migration_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            ncpus: ::std::result::Result<i64, ::std::string::String>,
+            project_name: ::std::result::Result<super::Name, ::std::string::String>,
+            silo_name: ::std::result::Result<super::Name, ::std::string::String>,
+            state: ::std::result::Result<super::InstanceState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for SledInstance {
@@ -43836,7 +44733,7 @@ pub mod types {
             }
             pub fn migration_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.migration_id = value.try_into().map_err(|e| {
@@ -43916,9 +44813,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledInstance> for super::SledInstance {
+        impl ::std::convert::TryFrom<SledInstance> for super::SledInstance {
             type Error = super::error::ConversionError;
-            fn try_from(value: SledInstance) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SledInstance,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     active_sled_id: value.active_sled_id?,
                     id: value.id?,
@@ -43955,8 +44854,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledInstanceResultsPage {
-            items: Result<Vec<super::SledInstance>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::SledInstance>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SledInstanceResultsPage {
@@ -43971,7 +44874,7 @@ pub mod types {
         impl SledInstanceResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SledInstance>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SledInstance>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -43981,7 +44884,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -43991,11 +44894,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledInstanceResultsPage> for super::SledInstanceResultsPage {
+        impl ::std::convert::TryFrom<SledInstanceResultsPage> for super::SledInstanceResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SledInstanceResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -44014,7 +44917,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledProvisionPolicyParams {
-            state: Result<super::SledProvisionPolicy, String>,
+            state: ::std::result::Result<super::SledProvisionPolicy, ::std::string::String>,
         }
 
         impl Default for SledProvisionPolicyParams {
@@ -44038,11 +44941,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionPolicyParams> for super::SledProvisionPolicyParams {
+        impl ::std::convert::TryFrom<SledProvisionPolicyParams> for super::SledProvisionPolicyParams {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SledProvisionPolicyParams,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     state: value.state?,
                 })
@@ -44059,8 +44962,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledProvisionPolicyResponse {
-            new_state: Result<super::SledProvisionPolicy, String>,
-            old_state: Result<super::SledProvisionPolicy, String>,
+            new_state: ::std::result::Result<super::SledProvisionPolicy, ::std::string::String>,
+            old_state: ::std::result::Result<super::SledProvisionPolicy, ::std::string::String>,
         }
 
         impl Default for SledProvisionPolicyResponse {
@@ -44095,11 +44998,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionPolicyResponse> for super::SledProvisionPolicyResponse {
+        impl ::std::convert::TryFrom<SledProvisionPolicyResponse> for super::SledProvisionPolicyResponse {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SledProvisionPolicyResponse,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     new_state: value.new_state?,
                     old_state: value.old_state?,
@@ -44118,8 +45021,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledResultsPage {
-            items: Result<Vec<super::Sled>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Sled>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SledResultsPage {
@@ -44134,7 +45040,7 @@ pub mod types {
         impl SledResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Sled>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Sled>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -44144,7 +45050,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -44154,9 +45060,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledResultsPage> for super::SledResultsPage {
+        impl ::std::convert::TryFrom<SledResultsPage> for super::SledResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: SledResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SledResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -44175,15 +45083,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Snapshot {
-            description: Result<String, String>,
-            disk_id: Result<uuid::Uuid, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            project_id: Result<uuid::Uuid, String>,
-            size: Result<super::ByteCount, String>,
-            state: Result<super::SnapshotState, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disk_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            size: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            state: ::std::result::Result<super::SnapshotState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Snapshot {
@@ -44205,7 +45115,7 @@ pub mod types {
         impl Snapshot {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -44295,9 +45205,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Snapshot> for super::Snapshot {
+        impl ::std::convert::TryFrom<Snapshot> for super::Snapshot {
             type Error = super::error::ConversionError;
-            fn try_from(value: Snapshot) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Snapshot,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     disk_id: value.disk_id?,
@@ -44330,9 +45242,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SnapshotCreate {
-            description: Result<String, String>,
-            disk: Result<super::NameOrId, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disk: ::std::result::Result<super::NameOrId, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for SnapshotCreate {
@@ -44348,7 +45260,7 @@ pub mod types {
         impl SnapshotCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -44378,9 +45290,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SnapshotCreate> for super::SnapshotCreate {
+        impl ::std::convert::TryFrom<SnapshotCreate> for super::SnapshotCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: SnapshotCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SnapshotCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     disk: value.disk?,
@@ -44401,8 +45315,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SnapshotResultsPage {
-            items: Result<Vec<super::Snapshot>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Snapshot>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SnapshotResultsPage {
@@ -44417,7 +45334,7 @@ pub mod types {
         impl SnapshotResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Snapshot>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Snapshot>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -44427,7 +45344,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -44437,9 +45354,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SnapshotResultsPage> for super::SnapshotResultsPage {
+        impl ::std::convert::TryFrom<SnapshotResultsPage> for super::SnapshotResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: SnapshotResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SnapshotResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -44458,13 +45377,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SshKey {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            public_key: Result<String, String>,
-            silo_user_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            public_key: ::std::result::Result<::std::string::String, ::std::string::String>,
+            silo_user_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for SshKey {
@@ -44484,7 +45405,7 @@ pub mod types {
         impl SshKey {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -44514,7 +45435,7 @@ pub mod types {
             }
             pub fn public_key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.public_key = value
@@ -44554,9 +45475,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SshKey> for super::SshKey {
+        impl ::std::convert::TryFrom<SshKey> for super::SshKey {
             type Error = super::error::ConversionError;
-            fn try_from(value: SshKey) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SshKey,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -44585,9 +45508,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SshKeyCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
-            public_key: Result<String, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            public_key: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for SshKeyCreate {
@@ -44603,7 +45526,7 @@ pub mod types {
         impl SshKeyCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -44623,7 +45546,7 @@ pub mod types {
             }
             pub fn public_key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.public_key = value
@@ -44633,9 +45556,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SshKeyCreate> for super::SshKeyCreate {
+        impl ::std::convert::TryFrom<SshKeyCreate> for super::SshKeyCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: SshKeyCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SshKeyCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -44656,8 +45581,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SshKeyResultsPage {
-            items: Result<Vec<super::SshKey>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::SshKey>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SshKeyResultsPage {
@@ -44672,7 +45600,7 @@ pub mod types {
         impl SshKeyResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SshKey>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SshKey>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -44682,7 +45610,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -44692,9 +45620,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SshKeyResultsPage> for super::SshKeyResultsPage {
+        impl ::std::convert::TryFrom<SshKeyResultsPage> for super::SshKeyResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: SshKeyResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SshKeyResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -44713,11 +45643,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Switch {
-            baseboard: Result<super::Baseboard, String>,
-            id: Result<uuid::Uuid, String>,
-            rack_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Switch {
@@ -44785,9 +45717,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Switch> for super::Switch {
+        impl ::std::convert::TryFrom<Switch> for super::Switch {
             type Error = super::error::ConversionError;
-            fn try_from(value: Switch) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Switch,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
@@ -44812,8 +45746,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchBgpHistory {
-            history: Result<::std::collections::HashMap<String, super::BgpMessageHistory>, String>,
-            switch: Result<super::SwitchLocation, String>,
+            history: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::BgpMessageHistory>,
+                ::std::string::String,
+            >,
+            switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
         }
 
         impl Default for SwitchBgpHistory {
@@ -44829,7 +45766,7 @@ pub mod types {
             pub fn history<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    ::std::collections::HashMap<String, super::BgpMessageHistory>,
+                    ::std::collections::HashMap<::std::string::String, super::BgpMessageHistory>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -44850,9 +45787,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchBgpHistory> for super::SwitchBgpHistory {
+        impl ::std::convert::TryFrom<SwitchBgpHistory> for super::SwitchBgpHistory {
             type Error = super::error::ConversionError;
-            fn try_from(value: SwitchBgpHistory) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SwitchBgpHistory,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     history: value.history?,
                     switch: value.switch?,
@@ -44871,11 +45810,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfig {
-            id: Result<uuid::Uuid, String>,
-            interface_name: Result<String, String>,
-            kind: Result<super::SwitchInterfaceKind2, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
-            v6_enabled: Result<bool, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            kind: ::std::result::Result<super::SwitchInterfaceKind2, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            v6_enabled: ::std::result::Result<bool, ::std::string::String>,
         }
 
         impl Default for SwitchInterfaceConfig {
@@ -44903,7 +45842,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -44946,11 +45885,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchInterfaceConfig> for super::SwitchInterfaceConfig {
+        impl ::std::convert::TryFrom<SwitchInterfaceConfig> for super::SwitchInterfaceConfig {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchInterfaceConfig,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     interface_name: value.interface_name?,
@@ -44975,8 +45914,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfigCreate {
-            kind: Result<super::SwitchInterfaceKind, String>,
-            v6_enabled: Result<bool, String>,
+            kind: ::std::result::Result<super::SwitchInterfaceKind, ::std::string::String>,
+            v6_enabled: ::std::result::Result<bool, ::std::string::String>,
         }
 
         impl Default for SwitchInterfaceConfigCreate {
@@ -45011,11 +45950,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchInterfaceConfigCreate> for super::SwitchInterfaceConfigCreate {
+        impl ::std::convert::TryFrom<SwitchInterfaceConfigCreate> for super::SwitchInterfaceConfigCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchInterfaceConfigCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     kind: value.kind?,
                     v6_enabled: value.v6_enabled?,
@@ -45034,11 +45973,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPort {
-            id: Result<uuid::Uuid, String>,
-            port_name: Result<String, String>,
-            port_settings_id: Result<Option<uuid::Uuid>, String>,
-            rack_id: Result<uuid::Uuid, String>,
-            switch_location: Result<String, String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            port_settings_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for SwitchPort {
@@ -45066,7 +46006,7 @@ pub mod types {
             }
             pub fn port_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.port_name = value
@@ -45076,7 +46016,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -45099,7 +46039,7 @@ pub mod types {
             }
             pub fn switch_location<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.switch_location = value.try_into().map_err(|e| {
@@ -45109,9 +46049,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPort> for super::SwitchPort {
+        impl ::std::convert::TryFrom<SwitchPort> for super::SwitchPort {
             type Error = super::error::ConversionError;
-            fn try_from(value: SwitchPort) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SwitchPort,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
                     port_name: value.port_name?,
@@ -45136,11 +46078,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortAddressConfig {
-            address: Result<super::IpNet, String>,
-            address_lot_block_id: Result<uuid::Uuid, String>,
-            interface_name: Result<String, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
-            vlan_id: Result<Option<u16>, String>,
+            address: ::std::result::Result<super::IpNet, ::std::string::String>,
+            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl Default for SwitchPortAddressConfig {
@@ -45183,7 +46125,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -45206,7 +46148,7 @@ pub mod types {
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u16>>,
+                T: std::convert::TryInto<::std::option::Option<u16>>,
                 T::Error: std::fmt::Display,
             {
                 self.vlan_id = value
@@ -45216,11 +46158,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortAddressConfig> for super::SwitchPortAddressConfig {
+        impl ::std::convert::TryFrom<SwitchPortAddressConfig> for super::SwitchPortAddressConfig {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortAddressConfig,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     address_lot_block_id: value.address_lot_block_id?,
@@ -45245,7 +46187,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortApplySettings {
-            port_settings: Result<super::NameOrId, String>,
+            port_settings: ::std::result::Result<super::NameOrId, ::std::string::String>,
         }
 
         impl Default for SwitchPortApplySettings {
@@ -45269,11 +46211,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortApplySettings> for super::SwitchPortApplySettings {
+        impl ::std::convert::TryFrom<SwitchPortApplySettings> for super::SwitchPortApplySettings {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortApplySettings,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     port_settings: value.port_settings?,
                 })
@@ -45290,8 +46232,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortConfig {
-            geometry: Result<super::SwitchPortGeometry2, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
+            geometry: ::std::result::Result<super::SwitchPortGeometry2, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for SwitchPortConfig {
@@ -45329,9 +46271,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortConfig> for super::SwitchPortConfig {
+        impl ::std::convert::TryFrom<SwitchPortConfig> for super::SwitchPortConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: SwitchPortConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SwitchPortConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     geometry: value.geometry?,
                     port_settings_id: value.port_settings_id?,
@@ -45350,7 +46294,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortConfigCreate {
-            geometry: Result<super::SwitchPortGeometry, String>,
+            geometry: ::std::result::Result<super::SwitchPortGeometry, ::std::string::String>,
         }
 
         impl Default for SwitchPortConfigCreate {
@@ -45374,11 +46318,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortConfigCreate> for super::SwitchPortConfigCreate {
+        impl ::std::convert::TryFrom<SwitchPortConfigCreate> for super::SwitchPortConfigCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortConfigCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     geometry: value.geometry?,
                 })
@@ -45395,14 +46339,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortLinkConfig {
-            autoneg: Result<bool, String>,
-            fec: Result<Option<super::LinkFec>, String>,
-            link_name: Result<String, String>,
-            lldp_link_config_id: Result<Option<uuid::Uuid>, String>,
-            mtu: Result<u16, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
-            speed: Result<super::LinkSpeed, String>,
-            tx_eq_config_id: Result<Option<uuid::Uuid>, String>,
+            autoneg: ::std::result::Result<bool, ::std::string::String>,
+            fec:
+                ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
+            link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            lldp_link_config_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            mtu: ::std::result::Result<u16, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
+            tx_eq_config_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
         }
 
         impl Default for SwitchPortLinkConfig {
@@ -45433,7 +46380,7 @@ pub mod types {
             }
             pub fn fec<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::LinkFec>>,
+                T: std::convert::TryInto<::std::option::Option<super::LinkFec>>,
                 T::Error: std::fmt::Display,
             {
                 self.fec = value
@@ -45443,7 +46390,7 @@ pub mod types {
             }
             pub fn link_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.link_name = value
@@ -45453,7 +46400,7 @@ pub mod types {
             }
             pub fn lldp_link_config_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.lldp_link_config_id = value.try_into().map_err(|e| {
@@ -45499,7 +46446,7 @@ pub mod types {
             }
             pub fn tx_eq_config_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.tx_eq_config_id = value.try_into().map_err(|e| {
@@ -45509,11 +46456,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortLinkConfig> for super::SwitchPortLinkConfig {
+        impl ::std::convert::TryFrom<SwitchPortLinkConfig> for super::SwitchPortLinkConfig {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortLinkConfig,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
@@ -45544,8 +46491,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortResultsPage {
-            items: Result<Vec<super::SwitchPort>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::SwitchPort>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SwitchPortResultsPage {
@@ -45560,7 +46510,7 @@ pub mod types {
         impl SwitchPortResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPort>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPort>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -45570,7 +46520,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -45580,11 +46530,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortResultsPage> for super::SwitchPortResultsPage {
+        impl ::std::convert::TryFrom<SwitchPortResultsPage> for super::SwitchPortResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -45603,12 +46553,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortRouteConfig {
-            dst: Result<super::IpNet, String>,
-            gw: Result<super::IpNet, String>,
-            interface_name: Result<String, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
-            rib_priority: Result<Option<u8>, String>,
-            vlan_id: Result<Option<u16>, String>,
+            dst: ::std::result::Result<super::IpNet, ::std::string::String>,
+            gw: ::std::result::Result<super::IpNet, ::std::string::String>,
+            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
+            vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
         impl Default for SwitchPortRouteConfig {
@@ -45647,7 +46597,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -45670,7 +46620,7 @@ pub mod types {
             }
             pub fn rib_priority<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u8>>,
+                T: std::convert::TryInto<::std::option::Option<u8>>,
                 T::Error: std::fmt::Display,
             {
                 self.rib_priority = value.try_into().map_err(|e| {
@@ -45680,7 +46630,7 @@ pub mod types {
             }
             pub fn vlan_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<u16>>,
+                T: std::convert::TryInto<::std::option::Option<u16>>,
                 T::Error: std::fmt::Display,
             {
                 self.vlan_id = value
@@ -45690,11 +46640,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortRouteConfig> for super::SwitchPortRouteConfig {
+        impl ::std::convert::TryFrom<SwitchPortRouteConfig> for super::SwitchPortRouteConfig {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortRouteConfig,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
@@ -45721,11 +46671,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettings {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for SwitchPortSettings {
@@ -45743,7 +46695,7 @@ pub mod types {
         impl SwitchPortSettings {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -45793,9 +46745,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettings> for super::SwitchPortSettings {
+        impl ::std::convert::TryFrom<SwitchPortSettings> for super::SwitchPortSettings {
             type Error = super::error::ConversionError;
-            fn try_from(value: SwitchPortSettings) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SwitchPortSettings,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -45820,18 +46774,34 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsCreate {
-            addresses: Result<::std::collections::HashMap<String, super::AddressConfig>, String>,
-            bgp_peers: Result<::std::collections::HashMap<String, super::BgpPeerConfig>, String>,
-            description: Result<String, String>,
-            groups: Result<Vec<super::NameOrId>, String>,
-            interfaces: Result<
-                ::std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
-                String,
+            addresses: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::AddressConfig>,
+                ::std::string::String,
             >,
-            links: Result<::std::collections::HashMap<String, super::LinkConfigCreate>, String>,
-            name: Result<super::Name, String>,
-            port_config: Result<super::SwitchPortConfigCreate, String>,
-            routes: Result<::std::collections::HashMap<String, super::RouteConfig>, String>,
+            bgp_peers: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::BgpPeerConfig>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            groups: ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
+            interfaces: ::std::result::Result<
+                ::std::collections::HashMap<
+                    ::std::string::String,
+                    super::SwitchInterfaceConfigCreate,
+                >,
+                ::std::string::String,
+            >,
+            links: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::LinkConfigCreate>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            port_config:
+                ::std::result::Result<super::SwitchPortConfigCreate, ::std::string::String>,
+            routes: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::RouteConfig>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SwitchPortSettingsCreate {
@@ -45853,7 +46823,9 @@ pub mod types {
         impl SwitchPortSettingsCreate {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, super::AddressConfig>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<::std::string::String, super::AddressConfig>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.addresses = value
@@ -45863,7 +46835,9 @@ pub mod types {
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, super::BgpPeerConfig>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<::std::string::String, super::BgpPeerConfig>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.bgp_peers = value
@@ -45873,7 +46847,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -45883,7 +46857,7 @@ pub mod types {
             }
             pub fn groups<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::NameOrId>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.groups = value
@@ -45894,7 +46868,10 @@ pub mod types {
             pub fn interfaces<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    ::std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
+                    ::std::collections::HashMap<
+                        ::std::string::String,
+                        super::SwitchInterfaceConfigCreate,
+                    >,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -45906,7 +46883,7 @@ pub mod types {
             pub fn links<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    ::std::collections::HashMap<String, super::LinkConfigCreate>,
+                    ::std::collections::HashMap<::std::string::String, super::LinkConfigCreate>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -45937,7 +46914,9 @@ pub mod types {
             }
             pub fn routes<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, super::RouteConfig>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<::std::string::String, super::RouteConfig>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.routes = value
@@ -45947,11 +46926,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettingsCreate> for super::SwitchPortSettingsCreate {
+        impl ::std::convert::TryFrom<SwitchPortSettingsCreate> for super::SwitchPortSettingsCreate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortSettingsCreate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addresses: value.addresses?,
                     bgp_peers: value.bgp_peers?,
@@ -45984,8 +46963,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsGroups {
-            port_settings_group_id: Result<uuid::Uuid, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
+            port_settings_group_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for SwitchPortSettingsGroups {
@@ -46028,11 +47007,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettingsGroups> for super::SwitchPortSettingsGroups {
+        impl ::std::convert::TryFrom<SwitchPortSettingsGroups> for super::SwitchPortSettingsGroups {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortSettingsGroups,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     port_settings_group_id: value.port_settings_group_id?,
                     port_settings_id: value.port_settings_id?,
@@ -46051,8 +47030,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsResultsPage {
-            items: Result<Vec<super::SwitchPortSettings>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortSettings>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SwitchPortSettingsResultsPage {
@@ -46067,7 +47052,7 @@ pub mod types {
         impl SwitchPortSettingsResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortSettings>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettings>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -46077,7 +47062,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -46087,11 +47072,13 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettingsResultsPage> for super::SwitchPortSettingsResultsPage {
+        impl ::std::convert::TryFrom<SwitchPortSettingsResultsPage>
+            for super::SwitchPortSettingsResultsPage
+        {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortSettingsResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -46110,17 +47097,42 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsView {
-            addresses: Result<Vec<super::SwitchPortAddressConfig>, String>,
-            bgp_peers: Result<Vec<super::BgpPeer>, String>,
-            groups: Result<Vec<super::SwitchPortSettingsGroups>, String>,
-            interfaces: Result<Vec<super::SwitchInterfaceConfig>, String>,
-            link_lldp: Result<Vec<super::LldpLinkConfig>, String>,
-            links: Result<Vec<super::SwitchPortLinkConfig>, String>,
-            port: Result<super::SwitchPortConfig, String>,
-            routes: Result<Vec<super::SwitchPortRouteConfig>, String>,
-            settings: Result<super::SwitchPortSettings, String>,
-            tx_eq: Result<Vec<Option<super::TxEqConfig>>, String>,
-            vlan_interfaces: Result<Vec<super::SwitchVlanInterfaceConfig>, String>,
+            addresses: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortAddressConfig>,
+                ::std::string::String,
+            >,
+            bgp_peers:
+                ::std::result::Result<::std::vec::Vec<super::BgpPeer>, ::std::string::String>,
+            groups: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortSettingsGroups>,
+                ::std::string::String,
+            >,
+            interfaces: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchInterfaceConfig>,
+                ::std::string::String,
+            >,
+            link_lldp: ::std::result::Result<
+                ::std::vec::Vec<super::LldpLinkConfig>,
+                ::std::string::String,
+            >,
+            links: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortLinkConfig>,
+                ::std::string::String,
+            >,
+            port: ::std::result::Result<super::SwitchPortConfig, ::std::string::String>,
+            routes: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortRouteConfig>,
+                ::std::string::String,
+            >,
+            settings: ::std::result::Result<super::SwitchPortSettings, ::std::string::String>,
+            tx_eq: ::std::result::Result<
+                ::std::vec::Vec<::std::option::Option<super::TxEqConfig>>,
+                ::std::string::String,
+            >,
+            vlan_interfaces: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchVlanInterfaceConfig>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SwitchPortSettingsView {
@@ -46144,7 +47156,7 @@ pub mod types {
         impl SwitchPortSettingsView {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortAddressConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPortAddressConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.addresses = value
@@ -46154,7 +47166,7 @@ pub mod types {
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::BgpPeer>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::BgpPeer>>,
                 T::Error: std::fmt::Display,
             {
                 self.bgp_peers = value
@@ -46164,7 +47176,7 @@ pub mod types {
             }
             pub fn groups<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortSettingsGroups>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettingsGroups>>,
                 T::Error: std::fmt::Display,
             {
                 self.groups = value
@@ -46174,7 +47186,7 @@ pub mod types {
             }
             pub fn interfaces<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchInterfaceConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchInterfaceConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.interfaces = value
@@ -46184,7 +47196,7 @@ pub mod types {
             }
             pub fn link_lldp<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::LldpLinkConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::LldpLinkConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.link_lldp = value
@@ -46194,7 +47206,7 @@ pub mod types {
             }
             pub fn links<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortLinkConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPortLinkConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.links = value
@@ -46214,7 +47226,7 @@ pub mod types {
             }
             pub fn routes<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortRouteConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchPortRouteConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.routes = value
@@ -46234,7 +47246,7 @@ pub mod types {
             }
             pub fn tx_eq<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<Option<super::TxEqConfig>>>,
+                T: std::convert::TryInto<::std::vec::Vec<::std::option::Option<super::TxEqConfig>>>,
                 T::Error: std::fmt::Display,
             {
                 self.tx_eq = value
@@ -46244,7 +47256,7 @@ pub mod types {
             }
             pub fn vlan_interfaces<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchVlanInterfaceConfig>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::SwitchVlanInterfaceConfig>>,
                 T::Error: std::fmt::Display,
             {
                 self.vlan_interfaces = value.try_into().map_err(|e| {
@@ -46254,11 +47266,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettingsView> for super::SwitchPortSettingsView {
+        impl ::std::convert::TryFrom<SwitchPortSettingsView> for super::SwitchPortSettingsView {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchPortSettingsView,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addresses: value.addresses?,
                     bgp_peers: value.bgp_peers?,
@@ -46295,8 +47307,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchResultsPage {
-            items: Result<Vec<super::Switch>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Switch>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for SwitchResultsPage {
@@ -46311,7 +47326,7 @@ pub mod types {
         impl SwitchResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Switch>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Switch>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -46321,7 +47336,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -46331,9 +47346,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchResultsPage> for super::SwitchResultsPage {
+        impl ::std::convert::TryFrom<SwitchResultsPage> for super::SwitchResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: SwitchResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: SwitchResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -46352,8 +47369,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchVlanInterfaceConfig {
-            interface_config_id: Result<uuid::Uuid, String>,
-            vlan_id: Result<u16, String>,
+            interface_config_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            vlan_id: ::std::result::Result<u16, ::std::string::String>,
         }
 
         impl Default for SwitchVlanInterfaceConfig {
@@ -46393,11 +47410,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchVlanInterfaceConfig> for super::SwitchVlanInterfaceConfig {
+        impl ::std::convert::TryFrom<SwitchVlanInterfaceConfig> for super::SwitchVlanInterfaceConfig {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: SwitchVlanInterfaceConfig,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     interface_config_id: value.interface_config_id?,
                     vlan_id: value.vlan_id?,
@@ -46416,8 +47433,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Table {
-            name: Result<String, String>,
-            timeseries: Result<::std::collections::HashMap<String, super::Timeseries>, String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            timeseries: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::Timeseries>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for Table {
@@ -46432,7 +47452,7 @@ pub mod types {
         impl Table {
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -46442,7 +47462,9 @@ pub mod types {
             }
             pub fn timeseries<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, super::Timeseries>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<::std::string::String, super::Timeseries>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.timeseries = value
@@ -46452,9 +47474,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Table> for super::Table {
+        impl ::std::convert::TryFrom<Table> for super::Table {
             type Error = super::error::ConversionError;
-            fn try_from(value: Table) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Table,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     name: value.name?,
                     timeseries: value.timeseries?,
@@ -46473,8 +47497,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Timeseries {
-            fields: Result<::std::collections::HashMap<String, super::FieldValue>, String>,
-            points: Result<super::Points, String>,
+            fields: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, super::FieldValue>,
+                ::std::string::String,
+            >,
+            points: ::std::result::Result<super::Points, ::std::string::String>,
         }
 
         impl Default for Timeseries {
@@ -46489,7 +47516,9 @@ pub mod types {
         impl Timeseries {
             pub fn fields<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<::std::collections::HashMap<String, super::FieldValue>>,
+                T: std::convert::TryInto<
+                    ::std::collections::HashMap<::std::string::String, super::FieldValue>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.fields = value
@@ -46509,9 +47538,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Timeseries> for super::Timeseries {
+        impl ::std::convert::TryFrom<Timeseries> for super::Timeseries {
             type Error = super::error::ConversionError;
-            fn try_from(value: Timeseries) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Timeseries,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     fields: value.fields?,
                     points: value.points?,
@@ -46530,8 +47561,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesDescription {
-            metric: Result<String, String>,
-            target: Result<String, String>,
+            metric: ::std::result::Result<::std::string::String, ::std::string::String>,
+            target: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for TimeseriesDescription {
@@ -46546,7 +47577,7 @@ pub mod types {
         impl TimeseriesDescription {
             pub fn metric<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.metric = value
@@ -46556,7 +47587,7 @@ pub mod types {
             }
             pub fn target<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.target = value
@@ -46566,11 +47597,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<TimeseriesDescription> for super::TimeseriesDescription {
+        impl ::std::convert::TryFrom<TimeseriesDescription> for super::TimeseriesDescription {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: TimeseriesDescription,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     metric: value.metric?,
                     target: value.target?,
@@ -46589,7 +47620,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesQuery {
-            query: Result<String, String>,
+            query: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for TimeseriesQuery {
@@ -46603,7 +47634,7 @@ pub mod types {
         impl TimeseriesQuery {
             pub fn query<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.query = value
@@ -46613,9 +47644,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<TimeseriesQuery> for super::TimeseriesQuery {
+        impl ::std::convert::TryFrom<TimeseriesQuery> for super::TimeseriesQuery {
             type Error = super::error::ConversionError;
-            fn try_from(value: TimeseriesQuery) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: TimeseriesQuery,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     query: value.query?,
                 })
@@ -46632,14 +47665,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesSchema {
-            authz_scope: Result<super::AuthzScope, String>,
-            created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            datum_type: Result<super::DatumType, String>,
-            description: Result<super::TimeseriesDescription, String>,
-            field_schema: Result<Vec<super::FieldSchema>, String>,
-            timeseries_name: Result<super::TimeseriesName, String>,
-            units: Result<super::Units, String>,
-            version: Result<std::num::NonZeroU8, String>,
+            authz_scope: ::std::result::Result<super::AuthzScope, ::std::string::String>,
+            created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            datum_type: ::std::result::Result<super::DatumType, ::std::string::String>,
+            description: ::std::result::Result<super::TimeseriesDescription, ::std::string::String>,
+            field_schema: ::std::result::Result<Vec<super::FieldSchema>, ::std::string::String>,
+            timeseries_name: ::std::result::Result<super::TimeseriesName, ::std::string::String>,
+            units: ::std::result::Result<super::Units, ::std::string::String>,
+            version: ::std::result::Result<std::num::NonZeroU8, ::std::string::String>,
         }
 
         impl Default for TimeseriesSchema {
@@ -46740,9 +47774,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<TimeseriesSchema> for super::TimeseriesSchema {
+        impl ::std::convert::TryFrom<TimeseriesSchema> for super::TimeseriesSchema {
             type Error = super::error::ConversionError;
-            fn try_from(value: TimeseriesSchema) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: TimeseriesSchema,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     authz_scope: value.authz_scope?,
                     created: value.created?,
@@ -46773,8 +47809,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesSchemaResultsPage {
-            items: Result<Vec<super::TimeseriesSchema>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::TimeseriesSchema>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for TimeseriesSchemaResultsPage {
@@ -46789,7 +47831,7 @@ pub mod types {
         impl TimeseriesSchemaResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::TimeseriesSchema>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::TimeseriesSchema>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -46799,7 +47841,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -46809,11 +47851,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<TimeseriesSchemaResultsPage> for super::TimeseriesSchemaResultsPage {
+        impl ::std::convert::TryFrom<TimeseriesSchemaResultsPage> for super::TimeseriesSchemaResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: TimeseriesSchemaResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -46832,11 +47874,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TxEqConfig {
-            main: Result<Option<i32>, String>,
-            post1: Result<Option<i32>, String>,
-            post2: Result<Option<i32>, String>,
-            pre1: Result<Option<i32>, String>,
-            pre2: Result<Option<i32>, String>,
+            main: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            post1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            post2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            pre1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            pre2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
         }
 
         impl Default for TxEqConfig {
@@ -46854,7 +47896,7 @@ pub mod types {
         impl TxEqConfig {
             pub fn main<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i32>>,
+                T: std::convert::TryInto<::std::option::Option<i32>>,
                 T::Error: std::fmt::Display,
             {
                 self.main = value
@@ -46864,7 +47906,7 @@ pub mod types {
             }
             pub fn post1<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i32>>,
+                T: std::convert::TryInto<::std::option::Option<i32>>,
                 T::Error: std::fmt::Display,
             {
                 self.post1 = value
@@ -46874,7 +47916,7 @@ pub mod types {
             }
             pub fn post2<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i32>>,
+                T: std::convert::TryInto<::std::option::Option<i32>>,
                 T::Error: std::fmt::Display,
             {
                 self.post2 = value
@@ -46884,7 +47926,7 @@ pub mod types {
             }
             pub fn pre1<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i32>>,
+                T: std::convert::TryInto<::std::option::Option<i32>>,
                 T::Error: std::fmt::Display,
             {
                 self.pre1 = value
@@ -46894,7 +47936,7 @@ pub mod types {
             }
             pub fn pre2<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<i32>>,
+                T: std::convert::TryInto<::std::option::Option<i32>>,
                 T::Error: std::fmt::Display,
             {
                 self.pre2 = value
@@ -46904,9 +47946,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<TxEqConfig> for super::TxEqConfig {
+        impl ::std::convert::TryFrom<TxEqConfig> for super::TxEqConfig {
             type Error = super::error::ConversionError;
-            fn try_from(value: TxEqConfig) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: TxEqConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     main: value.main?,
                     post1: value.post1?,
@@ -46931,9 +47975,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UninitializedSled {
-            baseboard: Result<super::Baseboard, String>,
-            cubby: Result<u16, String>,
-            rack_id: Result<uuid::Uuid, String>,
+            baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
+            cubby: ::std::result::Result<u16, ::std::string::String>,
+            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for UninitializedSled {
@@ -46979,9 +48023,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UninitializedSled> for super::UninitializedSled {
+        impl ::std::convert::TryFrom<UninitializedSled> for super::UninitializedSled {
             type Error = super::error::ConversionError;
-            fn try_from(value: UninitializedSled) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: UninitializedSled,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     cubby: value.cubby?,
@@ -47002,8 +48048,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UninitializedSledId {
-            part: Result<String, String>,
-            serial: Result<String, String>,
+            part: ::std::result::Result<::std::string::String, ::std::string::String>,
+            serial: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl Default for UninitializedSledId {
@@ -47018,7 +48064,7 @@ pub mod types {
         impl UninitializedSledId {
             pub fn part<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.part = value
@@ -47028,7 +48074,7 @@ pub mod types {
             }
             pub fn serial<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.serial = value
@@ -47038,9 +48084,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UninitializedSledId> for super::UninitializedSledId {
+        impl ::std::convert::TryFrom<UninitializedSledId> for super::UninitializedSledId {
             type Error = super::error::ConversionError;
-            fn try_from(value: UninitializedSledId) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: UninitializedSledId,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     part: value.part?,
                     serial: value.serial?,
@@ -47059,8 +48107,14 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UninitializedSledResultsPage {
-            items: Result<Vec<super::UninitializedSled>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::UninitializedSled>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for UninitializedSledResultsPage {
@@ -47075,7 +48129,7 @@ pub mod types {
         impl UninitializedSledResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::UninitializedSled>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::UninitializedSled>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -47085,7 +48139,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -47095,11 +48149,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UninitializedSledResultsPage> for super::UninitializedSledResultsPage {
+        impl ::std::convert::TryFrom<UninitializedSledResultsPage> for super::UninitializedSledResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: UninitializedSledResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -47118,9 +48172,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct User {
-            display_name: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            silo_id: Result<uuid::Uuid, String>,
+            display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for User {
@@ -47136,7 +48190,7 @@ pub mod types {
         impl User {
             pub fn display_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.display_name = value.try_into().map_err(|e| {
@@ -47166,9 +48220,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<User> for super::User {
+        impl ::std::convert::TryFrom<User> for super::User {
             type Error = super::error::ConversionError;
-            fn try_from(value: User) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: User) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     display_name: value.display_name?,
                     id: value.id?,
@@ -47189,11 +48243,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UserBuiltin {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for UserBuiltin {
@@ -47211,7 +48267,7 @@ pub mod types {
         impl UserBuiltin {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -47261,9 +48317,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UserBuiltin> for super::UserBuiltin {
+        impl ::std::convert::TryFrom<UserBuiltin> for super::UserBuiltin {
             type Error = super::error::ConversionError;
-            fn try_from(value: UserBuiltin) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: UserBuiltin,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -47288,8 +48346,12 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UserBuiltinResultsPage {
-            items: Result<Vec<super::UserBuiltin>, String>,
-            next_page: Result<Option<String>, String>,
+            items:
+                ::std::result::Result<::std::vec::Vec<super::UserBuiltin>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for UserBuiltinResultsPage {
@@ -47304,7 +48366,7 @@ pub mod types {
         impl UserBuiltinResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::UserBuiltin>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::UserBuiltin>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -47314,7 +48376,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -47324,11 +48386,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UserBuiltinResultsPage> for super::UserBuiltinResultsPage {
+        impl ::std::convert::TryFrom<UserBuiltinResultsPage> for super::UserBuiltinResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: UserBuiltinResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -47347,8 +48409,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UserCreate {
-            external_id: Result<super::UserId, String>,
-            password: Result<super::UserPassword, String>,
+            external_id: ::std::result::Result<super::UserId, ::std::string::String>,
+            password: ::std::result::Result<super::UserPassword, ::std::string::String>,
         }
 
         impl Default for UserCreate {
@@ -47383,9 +48445,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UserCreate> for super::UserCreate {
+        impl ::std::convert::TryFrom<UserCreate> for super::UserCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: UserCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: UserCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     external_id: value.external_id?,
                     password: value.password?,
@@ -47404,8 +48468,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UserResultsPage {
-            items: Result<Vec<super::User>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::User>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for UserResultsPage {
@@ -47420,7 +48487,7 @@ pub mod types {
         impl UserResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::User>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::User>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -47430,7 +48497,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -47440,9 +48507,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UserResultsPage> for super::UserResultsPage {
+        impl ::std::convert::TryFrom<UserResultsPage> for super::UserResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: UserResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: UserResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -47461,8 +48530,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct UsernamePasswordCredentials {
-            password: Result<super::Password, String>,
-            username: Result<super::UserId, String>,
+            password: ::std::result::Result<super::Password, ::std::string::String>,
+            username: ::std::result::Result<super::UserId, ::std::string::String>,
         }
 
         impl Default for UsernamePasswordCredentials {
@@ -47497,11 +48566,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<UsernamePasswordCredentials> for super::UsernamePasswordCredentials {
+        impl ::std::convert::TryFrom<UsernamePasswordCredentials> for super::UsernamePasswordCredentials {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: UsernamePasswordCredentials,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     password: value.password?,
                     username: value.username?,
@@ -47520,8 +48589,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Utilization {
-            capacity: Result<super::VirtualResourceCounts, String>,
-            provisioned: Result<super::VirtualResourceCounts, String>,
+            capacity: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
+            provisioned: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
         }
 
         impl Default for Utilization {
@@ -47556,9 +48625,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Utilization> for super::Utilization {
+        impl ::std::convert::TryFrom<Utilization> for super::Utilization {
             type Error = super::error::ConversionError;
-            fn try_from(value: Utilization) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Utilization,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     capacity: value.capacity?,
                     provisioned: value.provisioned?,
@@ -47577,8 +48648,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Values {
-            metric_type: Result<super::MetricType, String>,
-            values: Result<super::ValueArray, String>,
+            metric_type: ::std::result::Result<super::MetricType, ::std::string::String>,
+            values: ::std::result::Result<super::ValueArray, ::std::string::String>,
         }
 
         impl Default for Values {
@@ -47613,9 +48684,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Values> for super::Values {
+        impl ::std::convert::TryFrom<Values> for super::Values {
             type Error = super::error::ConversionError;
-            fn try_from(value: Values) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: Values,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     metric_type: value.metric_type?,
                     values: value.values?,
@@ -47634,9 +48707,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VirtualResourceCounts {
-            cpus: Result<i64, String>,
-            memory: Result<super::ByteCount, String>,
-            storage: Result<super::ByteCount, String>,
+            cpus: ::std::result::Result<i64, ::std::string::String>,
+            memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            storage: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
         impl Default for VirtualResourceCounts {
@@ -47682,11 +48755,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VirtualResourceCounts> for super::VirtualResourceCounts {
+        impl ::std::convert::TryFrom<VirtualResourceCounts> for super::VirtualResourceCounts {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VirtualResourceCounts,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     cpus: value.cpus?,
                     memory: value.memory?,
@@ -47707,15 +48780,17 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Vpc {
-            description: Result<String, String>,
-            dns_name: Result<super::Name, String>,
-            id: Result<uuid::Uuid, String>,
-            ipv6_prefix: Result<super::Ipv6Net, String>,
-            name: Result<super::Name, String>,
-            project_id: Result<uuid::Uuid, String>,
-            system_router_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            dns_name: ::std::result::Result<super::Name, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ipv6_prefix: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            system_router_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
         }
 
         impl Default for Vpc {
@@ -47737,7 +48812,7 @@ pub mod types {
         impl Vpc {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -47830,9 +48905,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<Vpc> for super::Vpc {
+        impl ::std::convert::TryFrom<Vpc> for super::Vpc {
             type Error = super::error::ConversionError;
-            fn try_from(value: Vpc) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: Vpc) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     dns_name: value.dns_name?,
@@ -47865,10 +48940,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcCreate {
-            description: Result<String, String>,
-            dns_name: Result<super::Name, String>,
-            ipv6_prefix: Result<Option<super::Ipv6Net>, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            dns_name: ::std::result::Result<super::Name, ::std::string::String>,
+            ipv6_prefix:
+                ::std::result::Result<::std::option::Option<super::Ipv6Net>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for VpcCreate {
@@ -47885,7 +48961,7 @@ pub mod types {
         impl VpcCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -47905,7 +48981,7 @@ pub mod types {
             }
             pub fn ipv6_prefix<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Ipv6Net>>,
+                T: std::convert::TryInto<::std::option::Option<super::Ipv6Net>>,
                 T::Error: std::fmt::Display,
             {
                 self.ipv6_prefix = value
@@ -47925,9 +49001,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcCreate> for super::VpcCreate {
+        impl ::std::convert::TryFrom<VpcCreate> for super::VpcCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     dns_name: value.dns_name?,
@@ -47950,18 +49028,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcFirewallRule {
-            action: Result<super::VpcFirewallRuleAction, String>,
-            description: Result<String, String>,
-            direction: Result<super::VpcFirewallRuleDirection, String>,
-            filters: Result<super::VpcFirewallRuleFilter, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            priority: Result<u16, String>,
-            status: Result<super::VpcFirewallRuleStatus, String>,
-            targets: Result<Vec<super::VpcFirewallRuleTarget>, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
+            action: ::std::result::Result<super::VpcFirewallRuleAction, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            direction:
+                ::std::result::Result<super::VpcFirewallRuleDirection, ::std::string::String>,
+            filters: ::std::result::Result<super::VpcFirewallRuleFilter, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            priority: ::std::result::Result<u16, ::std::string::String>,
+            status: ::std::result::Result<super::VpcFirewallRuleStatus, ::std::string::String>,
+            targets: ::std::result::Result<
+                ::std::vec::Vec<super::VpcFirewallRuleTarget>,
+                ::std::string::String,
+            >,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for VpcFirewallRule {
@@ -47996,7 +49080,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48066,7 +49150,7 @@ pub mod types {
             }
             pub fn targets<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcFirewallRuleTarget>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcFirewallRuleTarget>>,
                 T::Error: std::fmt::Display,
             {
                 self.targets = value
@@ -48106,9 +49190,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcFirewallRule> for super::VpcFirewallRule {
+        impl ::std::convert::TryFrom<VpcFirewallRule> for super::VpcFirewallRule {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcFirewallRule) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcFirewallRule,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     action: value.action?,
                     description: value.description?,
@@ -48147,9 +49233,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleFilter {
-            hosts: Result<Option<Vec<super::VpcFirewallRuleHostFilter>>, String>,
-            ports: Result<Option<Vec<super::L4PortRange>>, String>,
-            protocols: Result<Option<Vec<super::VpcFirewallRuleProtocol>>, String>,
+            hosts: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::VpcFirewallRuleHostFilter>>,
+                ::std::string::String,
+            >,
+            ports: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::L4PortRange>>,
+                ::std::string::String,
+            >,
+            protocols: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::VpcFirewallRuleProtocol>>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcFirewallRuleFilter {
@@ -48165,7 +49260,9 @@ pub mod types {
         impl VpcFirewallRuleFilter {
             pub fn hosts<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<Vec<super::VpcFirewallRuleHostFilter>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::VpcFirewallRuleHostFilter>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.hosts = value
@@ -48175,7 +49272,9 @@ pub mod types {
             }
             pub fn ports<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<Vec<super::L4PortRange>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::L4PortRange>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.ports = value
@@ -48185,7 +49284,9 @@ pub mod types {
             }
             pub fn protocols<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<Vec<super::VpcFirewallRuleProtocol>>>,
+                T: std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::VpcFirewallRuleProtocol>>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.protocols = value
@@ -48195,11 +49296,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcFirewallRuleFilter> for super::VpcFirewallRuleFilter {
+        impl ::std::convert::TryFrom<VpcFirewallRuleFilter> for super::VpcFirewallRuleFilter {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VpcFirewallRuleFilter,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     hosts: value.hosts?,
                     ports: value.ports?,
@@ -48220,14 +49321,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleUpdate {
-            action: Result<super::VpcFirewallRuleAction, String>,
-            description: Result<String, String>,
-            direction: Result<super::VpcFirewallRuleDirection, String>,
-            filters: Result<super::VpcFirewallRuleFilter, String>,
-            name: Result<super::Name, String>,
-            priority: Result<u16, String>,
-            status: Result<super::VpcFirewallRuleStatus, String>,
-            targets: Result<Vec<super::VpcFirewallRuleTarget>, String>,
+            action: ::std::result::Result<super::VpcFirewallRuleAction, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            direction:
+                ::std::result::Result<super::VpcFirewallRuleDirection, ::std::string::String>,
+            filters: ::std::result::Result<super::VpcFirewallRuleFilter, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            priority: ::std::result::Result<u16, ::std::string::String>,
+            status: ::std::result::Result<super::VpcFirewallRuleStatus, ::std::string::String>,
+            targets: ::std::result::Result<
+                ::std::vec::Vec<super::VpcFirewallRuleTarget>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcFirewallRuleUpdate {
@@ -48258,7 +49363,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48318,7 +49423,7 @@ pub mod types {
             }
             pub fn targets<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcFirewallRuleTarget>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcFirewallRuleTarget>>,
                 T::Error: std::fmt::Display,
             {
                 self.targets = value
@@ -48328,11 +49433,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcFirewallRuleUpdate> for super::VpcFirewallRuleUpdate {
+        impl ::std::convert::TryFrom<VpcFirewallRuleUpdate> for super::VpcFirewallRuleUpdate {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VpcFirewallRuleUpdate,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     action: value.action?,
                     description: value.description?,
@@ -48363,7 +49468,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleUpdateParams {
-            rules: Result<Vec<super::VpcFirewallRuleUpdate>, String>,
+            rules: ::std::result::Result<
+                ::std::vec::Vec<super::VpcFirewallRuleUpdate>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcFirewallRuleUpdateParams {
@@ -48377,7 +49485,7 @@ pub mod types {
         impl VpcFirewallRuleUpdateParams {
             pub fn rules<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcFirewallRuleUpdate>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcFirewallRuleUpdate>>,
                 T::Error: std::fmt::Display,
             {
                 self.rules = value
@@ -48387,11 +49495,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcFirewallRuleUpdateParams> for super::VpcFirewallRuleUpdateParams {
+        impl ::std::convert::TryFrom<VpcFirewallRuleUpdateParams> for super::VpcFirewallRuleUpdateParams {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VpcFirewallRuleUpdateParams,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     rules: value.rules?,
                 })
@@ -48408,7 +49516,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcFirewallRules {
-            rules: Result<Vec<super::VpcFirewallRule>, String>,
+            rules: ::std::result::Result<
+                ::std::vec::Vec<super::VpcFirewallRule>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcFirewallRules {
@@ -48422,7 +49533,7 @@ pub mod types {
         impl VpcFirewallRules {
             pub fn rules<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcFirewallRule>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcFirewallRule>>,
                 T::Error: std::fmt::Display,
             {
                 self.rules = value
@@ -48432,9 +49543,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcFirewallRules> for super::VpcFirewallRules {
+        impl ::std::convert::TryFrom<VpcFirewallRules> for super::VpcFirewallRules {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcFirewallRules) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcFirewallRules,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     rules: value.rules?,
                 })
@@ -48451,8 +49564,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcResultsPage {
-            items: Result<Vec<super::Vpc>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::Vpc>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcResultsPage {
@@ -48467,7 +49583,7 @@ pub mod types {
         impl VpcResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::Vpc>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::Vpc>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -48477,7 +49593,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -48487,9 +49603,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcResultsPage> for super::VpcResultsPage {
+        impl ::std::convert::TryFrom<VpcResultsPage> for super::VpcResultsPage {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcResultsPage) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -48508,13 +49626,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcRouter {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            kind: Result<super::VpcRouterKind, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            kind: ::std::result::Result<super::VpcRouterKind, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for VpcRouter {
@@ -48534,7 +49654,7 @@ pub mod types {
         impl VpcRouter {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48604,9 +49724,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcRouter> for super::VpcRouter {
+        impl ::std::convert::TryFrom<VpcRouter> for super::VpcRouter {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcRouter) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcRouter,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
@@ -48635,8 +49757,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcRouterCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for VpcRouterCreate {
@@ -48651,7 +49773,7 @@ pub mod types {
         impl VpcRouterCreate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48671,9 +49793,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcRouterCreate> for super::VpcRouterCreate {
+        impl ::std::convert::TryFrom<VpcRouterCreate> for super::VpcRouterCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcRouterCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcRouterCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -48692,8 +49816,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcRouterResultsPage {
-            items: Result<Vec<super::VpcRouter>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::VpcRouter>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcRouterResultsPage {
@@ -48708,7 +49835,7 @@ pub mod types {
         impl VpcRouterResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcRouter>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcRouter>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -48718,7 +49845,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -48728,11 +49855,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcRouterResultsPage> for super::VpcRouterResultsPage {
+        impl ::std::convert::TryFrom<VpcRouterResultsPage> for super::VpcRouterResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VpcRouterResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -48751,8 +49878,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcRouterUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for VpcRouterUpdate {
@@ -48767,7 +49897,7 @@ pub mod types {
         impl VpcRouterUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48777,7 +49907,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -48787,9 +49917,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcRouterUpdate> for super::VpcRouterUpdate {
+        impl ::std::convert::TryFrom<VpcRouterUpdate> for super::VpcRouterUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcRouterUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcRouterUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     name: value.name?,
@@ -48808,15 +49940,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnet {
-            custom_router_id: Result<Option<uuid::Uuid>, String>,
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            ipv4_block: Result<super::Ipv4Net, String>,
-            ipv6_block: Result<super::Ipv6Net, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
+            custom_router_id:
+                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ipv4_block: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
+            ipv6_block: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_modified:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
         }
 
         impl Default for VpcSubnet {
@@ -48838,7 +49973,7 @@ pub mod types {
         impl VpcSubnet {
             pub fn custom_router_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T: std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.custom_router_id = value.try_into().map_err(|e| {
@@ -48851,7 +49986,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -48931,9 +50066,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcSubnet> for super::VpcSubnet {
+        impl ::std::convert::TryFrom<VpcSubnet> for super::VpcSubnet {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcSubnet) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcSubnet,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     custom_router_id: value.custom_router_id?,
                     description: value.description?,
@@ -48966,11 +50103,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnetCreate {
-            custom_router: Result<Option<super::NameOrId>, String>,
-            description: Result<String, String>,
-            ipv4_block: Result<super::Ipv4Net, String>,
-            ipv6_block: Result<Option<super::Ipv6Net>, String>,
-            name: Result<super::Name, String>,
+            custom_router: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ipv4_block: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
+            ipv6_block:
+                ::std::result::Result<::std::option::Option<super::Ipv6Net>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl Default for VpcSubnetCreate {
@@ -48988,7 +50129,7 @@ pub mod types {
         impl VpcSubnetCreate {
             pub fn custom_router<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.custom_router = value.try_into().map_err(|e| {
@@ -48998,7 +50139,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<::std::string::String>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -49018,7 +50159,7 @@ pub mod types {
             }
             pub fn ipv6_block<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Ipv6Net>>,
+                T: std::convert::TryInto<::std::option::Option<super::Ipv6Net>>,
                 T::Error: std::fmt::Display,
             {
                 self.ipv6_block = value
@@ -49038,9 +50179,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcSubnetCreate> for super::VpcSubnetCreate {
+        impl ::std::convert::TryFrom<VpcSubnetCreate> for super::VpcSubnetCreate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcSubnetCreate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcSubnetCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     custom_router: value.custom_router?,
                     description: value.description?,
@@ -49065,8 +50208,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnetResultsPage {
-            items: Result<Vec<super::VpcSubnet>, String>,
-            next_page: Result<Option<String>, String>,
+            items: ::std::result::Result<::std::vec::Vec<super::VpcSubnet>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
         }
 
         impl Default for VpcSubnetResultsPage {
@@ -49081,7 +50227,7 @@ pub mod types {
         impl VpcSubnetResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::VpcSubnet>>,
+                T: std::convert::TryInto<::std::vec::Vec<super::VpcSubnet>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -49091,7 +50237,7 @@ pub mod types {
             }
             pub fn next_page<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.next_page = value
@@ -49101,11 +50247,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcSubnetResultsPage> for super::VpcSubnetResultsPage {
+        impl ::std::convert::TryFrom<VpcSubnetResultsPage> for super::VpcSubnetResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
                 value: VpcSubnetResultsPage,
-            ) -> Result<Self, super::error::ConversionError> {
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
@@ -49124,9 +50270,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnetUpdate {
-            custom_router: Result<Option<super::NameOrId>, String>,
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
+            custom_router: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for VpcSubnetUpdate {
@@ -49142,7 +50294,7 @@ pub mod types {
         impl VpcSubnetUpdate {
             pub fn custom_router<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T: std::convert::TryInto<::std::option::Option<super::NameOrId>>,
                 T::Error: std::fmt::Display,
             {
                 self.custom_router = value.try_into().map_err(|e| {
@@ -49152,7 +50304,7 @@ pub mod types {
             }
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -49162,7 +50314,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -49172,9 +50324,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcSubnetUpdate> for super::VpcSubnetUpdate {
+        impl ::std::convert::TryFrom<VpcSubnetUpdate> for super::VpcSubnetUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcSubnetUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcSubnetUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     custom_router: value.custom_router?,
                     description: value.description?,
@@ -49195,9 +50349,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcUpdate {
-            description: Result<Option<String>, String>,
-            dns_name: Result<Option<super::Name>, String>,
-            name: Result<Option<super::Name>, String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            dns_name:
+                ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
         }
 
         impl Default for VpcUpdate {
@@ -49213,7 +50371,7 @@ pub mod types {
         impl VpcUpdate {
             pub fn description<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<::std::option::Option<::std::string::String>>,
                 T::Error: std::fmt::Display,
             {
                 self.description = value
@@ -49223,7 +50381,7 @@ pub mod types {
             }
             pub fn dns_name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.dns_name = value
@@ -49233,7 +50391,7 @@ pub mod types {
             }
             pub fn name<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<super::Name>>,
+                T: std::convert::TryInto<::std::option::Option<super::Name>>,
                 T::Error: std::fmt::Display,
             {
                 self.name = value
@@ -49243,9 +50401,11 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<VpcUpdate> for super::VpcUpdate {
+        impl ::std::convert::TryFrom<VpcUpdate> for super::VpcUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(value: VpcUpdate) -> Result<Self, super::error::ConversionError> {
+            fn try_from(
+                value: VpcUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
                     dns_name: value.dns_name?,
@@ -54011,7 +55171,7 @@ pub mod builder {
     pub struct ProbeList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -54039,12 +55199,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -54520,7 +55679,7 @@ pub mod builder {
     pub struct CertificateList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -54546,12 +55705,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -54865,7 +56023,7 @@ pub mod builder {
     pub struct DiskList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -54893,12 +56051,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -55681,7 +56838,7 @@ pub mod builder {
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
@@ -55755,12 +56912,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -55916,7 +57072,7 @@ pub mod builder {
     pub struct FloatingIpList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -55944,12 +57100,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -56647,7 +57802,7 @@ pub mod builder {
     pub struct GroupList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -56673,12 +57828,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -56855,7 +58009,7 @@ pub mod builder {
     pub struct ImageList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -56883,12 +58037,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -57443,7 +58596,7 @@ pub mod builder {
     pub struct InstanceList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -57471,12 +58624,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -57976,7 +59128,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -58015,12 +59167,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -58990,7 +60141,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -59029,12 +60180,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -59341,7 +60491,7 @@ pub mod builder {
         client: &'a super::Client,
         gateway: Result<Option<types::NameOrId>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -59383,12 +60533,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -59820,7 +60969,7 @@ pub mod builder {
         client: &'a super::Client,
         gateway: Result<Option<types::NameOrId>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -59862,12 +61011,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -60297,7 +61445,7 @@ pub mod builder {
     pub struct InternetGatewayList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -60327,12 +61475,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -60818,7 +61965,7 @@ pub mod builder {
     pub struct ProjectIpPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -60844,12 +61991,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -61205,7 +62351,7 @@ pub mod builder {
     pub struct CurrentUserGroups<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -61231,12 +62377,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -61353,7 +62498,7 @@ pub mod builder {
     pub struct CurrentUserSshKeyList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -61379,12 +62524,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -61693,7 +62837,7 @@ pub mod builder {
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
@@ -61756,12 +62900,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -61915,7 +63058,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<Option<types::NameOrId>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -61955,12 +63098,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -62714,7 +63856,7 @@ pub mod builder {
     pub struct ProjectList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -62740,12 +63882,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -63297,7 +64438,7 @@ pub mod builder {
     pub struct SnapshotList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -63325,12 +64466,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -63719,7 +64859,7 @@ pub mod builder {
     pub struct PhysicalDiskList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -63745,12 +64885,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -63927,7 +65066,7 @@ pub mod builder {
     pub struct RackList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -63953,12 +65092,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -64135,7 +65273,7 @@ pub mod builder {
     pub struct SledList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -64161,12 +65299,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -64415,7 +65552,7 @@ pub mod builder {
         client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -64452,12 +65589,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -64582,7 +65718,7 @@ pub mod builder {
         client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -64619,12 +65755,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -64850,7 +65985,7 @@ pub mod builder {
     pub struct SledListUninitialized<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SledListUninitialized<'a> {
@@ -64874,12 +66009,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -64981,7 +66115,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
         switch_port_id: Result<Option<uuid::Uuid>, String>,
     }
@@ -65009,12 +66143,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -65473,7 +66606,7 @@ pub mod builder {
     pub struct SwitchList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -65499,12 +66632,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -65681,7 +66813,7 @@ pub mod builder {
     pub struct SiloIdentityProviderList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -65709,12 +66841,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -66292,7 +67423,7 @@ pub mod builder {
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -66318,12 +67449,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -66716,7 +67846,7 @@ pub mod builder {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> IpPoolRangeList<'a> {
@@ -66751,12 +67881,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -67011,7 +68140,7 @@ pub mod builder {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -67048,12 +68177,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -67551,7 +68679,7 @@ pub mod builder {
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> IpPoolServiceRangeList<'a> {
@@ -67575,12 +68703,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -67801,7 +68928,7 @@ pub mod builder {
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
@@ -67864,12 +68991,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -68022,7 +69148,7 @@ pub mod builder {
     pub struct NetworkingAddressLotList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -68048,12 +69174,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -68309,7 +69434,7 @@ pub mod builder {
         client: &'a super::Client,
         address_lot: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -68346,12 +69471,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -68737,7 +69861,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/networking/bfd-status`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BfdStatus>>, Error<types::Error>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BfdStatus>>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/system/networking/bfd-status", client.baseurl,);
             #[allow(unused_mut)]
@@ -68771,7 +69895,7 @@ pub mod builder {
     pub struct NetworkingBgpConfigList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -68797,12 +69921,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -69048,7 +70171,7 @@ pub mod builder {
     pub struct NetworkingBgpAnnounceSetList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -69074,12 +70197,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -69097,7 +70219,8 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/networking/bgp-announce-set`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BgpAnnounceSet>>, Error<types::Error>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpAnnounceSet>>, Error<types::Error>>
+        {
             let Self {
                 client,
                 limit,
@@ -69316,7 +70439,8 @@ pub mod builder {
         /// `/v1/system/networking/bgp-announce-set/{announce_set}/announcement`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpAnnouncement>>, Error<types::Error>>
+        {
             let Self {
                 client,
                 announce_set,
@@ -69488,7 +70612,8 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BgpImportedRouteIpv4>>, Error<types::Error>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpImportedRouteIpv4>>, Error<types::Error>>
+        {
             let Self { client, asn } = self;
             let asn = asn.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-routes-ipv4", client.baseurl,);
@@ -69535,7 +70660,8 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/networking/bgp-status`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<Vec<types::BgpPeerStatus>>, Error<types::Error>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::BgpPeerStatus>>, Error<types::Error>>
+        {
             let Self { client } = self;
             let url = format!("{}/v1/system/networking/bgp-status", client.baseurl,);
             #[allow(unused_mut)]
@@ -69570,7 +70696,7 @@ pub mod builder {
     pub struct NetworkingLoopbackAddressList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -69596,12 +70722,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -69906,7 +71031,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortSettingsList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         port_settings: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -69934,12 +71059,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -70410,7 +71534,7 @@ pub mod builder {
     pub struct RoleList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> RoleList<'a> {
@@ -70434,12 +71558,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -70538,7 +71661,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct RoleView<'a> {
         client: &'a super::Client,
-        role_name: Result<String, String>,
+        role_name: Result<::std::string::String, String>,
     }
 
     impl<'a> RoleView<'a> {
@@ -70551,11 +71674,11 @@ pub mod builder {
 
         pub fn role_name<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.role_name = value
-                .try_into()
-                .map_err(|_| "conversion to `String` for role_name failed".to_string());
+            self.role_name = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for role_name failed".to_string()
+            });
             self
         }
 
@@ -70599,7 +71722,7 @@ pub mod builder {
     pub struct SystemQuotasList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -70625,12 +71748,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -70747,7 +71869,7 @@ pub mod builder {
     pub struct SiloList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -70773,12 +71895,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -71085,7 +72206,7 @@ pub mod builder {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -71122,12 +72243,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -71619,7 +72739,7 @@ pub mod builder {
     pub struct SystemTimeseriesSchemaList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SystemTimeseriesSchemaList<'a> {
@@ -71643,12 +72763,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -71749,7 +72868,7 @@ pub mod builder {
     pub struct SiloUserList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -71777,12 +72896,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -71996,7 +73114,7 @@ pub mod builder {
     pub struct UserBuiltinList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameSortMode>, String>,
     }
 
@@ -72022,12 +73140,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -72204,7 +73321,7 @@ pub mod builder {
     pub struct SiloUtilizationList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -72230,12 +73347,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -72415,7 +73531,7 @@ pub mod builder {
         client: &'a super::Client,
         group: Result<Option<uuid::Uuid>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
@@ -72453,12 +73569,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -72820,7 +73935,7 @@ pub mod builder {
     pub struct VpcRouterRouteList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -72852,12 +73967,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -73535,7 +74649,7 @@ pub mod builder {
     pub struct VpcRouterList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -73565,12 +74679,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -74158,7 +75271,7 @@ pub mod builder {
     pub struct VpcSubnetList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -74188,12 +75301,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -74782,7 +75894,7 @@ pub mod builder {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -74823,12 +75935,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 
@@ -74989,7 +76100,7 @@ pub mod builder {
     pub struct VpcList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -75017,12 +76128,11 @@ pub mod builder {
 
         pub fn page_token<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<::std::string::String>,
         {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
             self
         }
 

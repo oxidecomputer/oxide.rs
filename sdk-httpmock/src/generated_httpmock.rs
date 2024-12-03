@@ -11572,7 +11572,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BfdStatus>) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BfdStatus>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -11889,7 +11889,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpAnnounceSet>) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpAnnounceSet>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12070,7 +12070,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpAnnouncement>) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpAnnouncement>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12239,7 +12239,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpImportedRouteIpv4>) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpImportedRouteIpv4>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12294,7 +12294,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &Vec<types::BgpPeerStatus>) -> Self {
+        pub fn ok(self, value: &::std::vec::Vec<types::BgpPeerStatus>) -> Self {
             Self(
                 self.0
                     .status(200u16)
