@@ -910,6 +910,81 @@
           ]
         },
         {
+          "name": "system",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "timeseries",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "query",
+                  "about": "Run timeseries query",
+                  "long_about": "Queries are written in OxQL.",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "query",
+                      "help": "A timeseries query string, written in the Oximeter query language."
+                    }
+                  ]
+                },
+                {
+                  "name": "schema",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "list",
+                      "about": "List timeseries schemas",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "timeseries",
           "args": [
             {
@@ -941,8 +1016,8 @@
             },
             {
               "name": "query",
-              "about": "Run timeseries query",
-              "long_about": "Queries are written in OxQL.",
+              "about": "Run project-scoped timeseries query",
+              "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
                 {
                   "long": "json-body",
@@ -958,35 +1033,12 @@
                   "global": true
                 },
                 {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
                   "long": "query",
                   "help": "A timeseries query string, written in the Oximeter query language."
-                }
-              ]
-            },
-            {
-              "name": "schema",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ],
-              "subcommands": [
-                {
-                  "name": "list",
-                  "about": "List timeseries schemas",
-                  "args": [
-                    {
-                      "long": "limit",
-                      "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
                 }
               ]
             }
