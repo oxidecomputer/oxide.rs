@@ -50976,6 +50976,25 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn logout(&self) -> builder::Logout;
+    /// Run project-scoped timeseries query
+    ///
+    /// Queries are written in OxQL. Project must be specified by name or ID in
+    /// URL query parameter. The OxQL query will only return timeseries data
+    /// from the specified project.
+    ///
+    /// Sends a `POST` request to `/v1/timeseries/query`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.timeseries_query()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn timeseries_query(&self) -> builder::TimeseriesQuery;
 }
 
 impl ClientHiddenExt for Client {
@@ -51009,6 +51028,10 @@ impl ClientHiddenExt for Client {
 
     fn logout(&self) -> builder::Logout {
         builder::Logout::new(self)
+    }
+
+    fn timeseries_query(&self) -> builder::TimeseriesQuery {
+        builder::TimeseriesQuery::new(self)
     }
 }
 
@@ -73507,6 +73530,97 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::timeseries_query`]
+    ///
+    /// [`ClientHiddenExt::timeseries_query`]: super::ClientHiddenExt::timeseries_query
+    #[derive(Debug, Clone)]
+    pub struct TimeseriesQuery<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::TimeseriesQuery, String>,
+    }
+
+    impl<'a> TimeseriesQuery<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(types::builder::TimeseriesQuery::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeseriesQuery>,
+            <V as std::convert::TryInto<types::TimeseriesQuery>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `TimeseriesQuery` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::TimeseriesQuery) -> types::builder::TimeseriesQuery,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/timeseries/query`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::OxqlQueryResult>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/timeseries/query", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
