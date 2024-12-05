@@ -577,8 +577,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProbeView => Some("experimental probe view"),
 
         // Metrics-related subcommands
-        CliCommand::SystemTimeseriesQuery => Some("experimental timeseries query"),
-        CliCommand::SystemTimeseriesSchemaList => Some("experimental timeseries schema list"),
+        CliCommand::TimeseriesQuery => Some("experimental timeseries query"),
+        CliCommand::SystemTimeseriesQuery => Some("experimental system timeseries query"),
+        CliCommand::SystemTimeseriesSchemaList => {
+            Some("experimental system timeseries schema list")
+        }
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
