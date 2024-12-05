@@ -99,15 +99,17 @@ pub mod builder {
             self
         }
 
-        /// Return a `Future` for the disk creation and a `DiskImportHandle` which
-        /// can be used to track upload progress and cancel the job.
+        /// Return a `Future` for the disk creation.
         pub fn execute(
             self,
         ) -> Result<
             impl Future<Output = Result<(), DiskImportError>> + 'a,
             Error<crate::types::Error>,
         > {
-            Ok(self.execute_with_control()?.0)
+            let (progress_tx, _progress_rx) = watch::channel(0);
+            let importer = super::types::DiskImport::try_from((self, progress_tx))?;
+
+            Ok(importer.run())
         }
 
         /// Return a `Future` for the disk creation and a `DiskImportHandle` which
@@ -270,6 +272,20 @@ pub mod types {
             };
 
             if let Err(e) = result {
+                if let Err(cleanup_err) = self.cleanup().await {
+                    return Err(DiskImportError::Wrapped {
+                        err: cleanup_err.into(),
+                        source: e.into(),
+                    });
+                }
+                return Err(e);
+            }
+
+            Ok(())
+        }
+
+        pub async fn run(self) -> Result<(), DiskImportError> {
+            if let Err(e) = self.do_disk_import().await {
                 if let Err(cleanup_err) = self.cleanup().await {
                     return Err(DiskImportError::Wrapped {
                         err: cleanup_err.into(),
