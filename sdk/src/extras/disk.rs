@@ -19,7 +19,6 @@ pub mod builder {
     use crate::{Client, Error};
 
     use std::future::Future;
-    use std::mem;
     use std::sync::atomic::{AtomicBool, AtomicU64};
     use std::sync::Arc;
     use tokio::sync::{oneshot, watch};
@@ -100,20 +99,17 @@ pub mod builder {
             self
         }
 
-        /// Return a `Future` for the disk creation and a `DiskImportHandle` which
-        /// can be used to track upload progress and cancel the job.
+        /// Return a `Future` for the disk creation.
         pub fn execute(
             self,
         ) -> Result<
             impl Future<Output = Result<(), DiskImportError>> + 'a,
             Error<crate::types::Error>,
         > {
-            let (fut, handle) = self.execute_with_control()?;
+            let (progress_tx, _progress_rx) = watch::channel(0);
+            let importer = super::types::DiskImport::try_from((self, progress_tx))?;
 
-            // Leak the handle so we don't cancel the request by dropping it.
-            mem::forget(handle);
-
-            Ok(fut)
+            Ok(importer.run())
         }
 
         /// Return a `Future` for the disk creation and a `DiskImportHandle` which
@@ -276,6 +272,20 @@ pub mod types {
             };
 
             if let Err(e) = result {
+                if let Err(cleanup_err) = self.cleanup().await {
+                    return Err(DiskImportError::Wrapped {
+                        err: cleanup_err.into(),
+                        source: e.into(),
+                    });
+                }
+                return Err(e);
+            }
+
+            Ok(())
+        }
+
+        pub async fn run(self) -> Result<(), DiskImportError> {
+            if let Err(e) = self.do_disk_import().await {
                 if let Err(cleanup_err) = self.cleanup().await {
                     return Err(DiskImportError::Wrapped {
                         err: cleanup_err.into(),
