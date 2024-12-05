@@ -11,7 +11,7 @@ impl<T: CliConfig> Cli<T> {
         Self { client, config }
     }
 
-    pub fn get_command(cmd: CliCommand) -> clap::Command {
+    pub fn get_command(cmd: CliCommand) -> ::clap::Command {
         match cmd {
             CliCommand::DeviceAuthRequest => Self::cli_device_auth_request(),
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
@@ -269,26 +269,26 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub fn cli_device_auth_request() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_device_auth_request() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("client-id")
+                ::clap::Arg::new("client-id")
                     .long("client-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Start an OAuth 2.0 Device Authorization Grant")
@@ -299,26 +299,26 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_device_auth_confirm() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_device_auth_confirm() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("user-code")
+                ::clap::Arg::new("user-code")
                     .long("user-code")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Confirm an OAuth 2.0 Device Authorization Grant")
@@ -329,38 +329,38 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_device_access_token() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_device_access_token() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("client-id")
+                ::clap::Arg::new("client-id")
                     .long("client-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("device-code")
+                ::clap::Arg::new("device-code")
                     .long("device-code")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("grant-type")
+                ::clap::Arg::new("grant-type")
                     .long("grant-type")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Request a device access token")
@@ -370,27 +370,27 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_probe_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_probe_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -402,125 +402,125 @@ impl<T: CliConfig> Cli<T> {
             .about("List instrumentation probes")
     }
 
-    pub fn cli_probe_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_probe_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("ip-pool")
+                ::clap::Arg::new("ip-pool")
                     .long("ip-pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sled")
+                ::clap::Arg::new("sled")
                     .long("sled")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create instrumentation probe")
     }
 
-    pub fn cli_probe_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_probe_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("probe")
+                ::clap::Arg::new("probe")
                     .long("probe")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the probe"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .about("View instrumentation probe")
     }
 
-    pub fn cli_probe_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_probe_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("probe")
+                ::clap::Arg::new("probe")
                     .long("probe")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the probe"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Delete instrumentation probe")
     }
 
-    pub fn cli_login_saml() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_login_saml() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("provider-name")
+                ::clap::Arg::new("provider-name")
                     .long("provider-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("silo-name")
+                ::clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true),
             )
             .about("Authenticate a user via SAML")
     }
 
-    pub fn cli_certificate_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_certificate_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -537,39 +537,39 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_certificate_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_certificate_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("cert")
+                ::clap::Arg::new("cert")
                     .long("cert")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("PEM-formatted string containing public certificate chain"),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("key")
+                ::clap::Arg::new("key")
                     .long("key")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("PEM-formatted string containing private key"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("service")
+                ::clap::Arg::new("service")
                     .long("service")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::ServiceUsingCertificate::ExternalApi.to_string(),
                         ]),
                         |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
@@ -578,17 +578,17 @@ impl<T: CliConfig> Cli<T> {
                     .help("The service using this certificate"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create new system-wide x.509 certificate")
@@ -598,12 +598,12 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_certificate_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_certificate_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("certificate")
+                ::clap::Arg::new("certificate")
                     .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
@@ -611,12 +611,12 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Returns the details of a specific certificate")
     }
 
-    pub fn cli_certificate_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_certificate_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("certificate")
+                ::clap::Arg::new("certificate")
                     .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the certificate"),
             )
@@ -624,27 +624,27 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
-    pub fn cli_disk_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -656,147 +656,147 @@ impl<T: CliConfig> Cli<T> {
             .about("List disks")
     }
 
-    pub fn cli_disk_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("size")
+                ::clap::Arg::new("size")
                     .long("size")
-                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .value_parser(::clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
                     .help("The total size of the Disk (in bytes)"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create a disk")
     }
 
-    pub fn cli_disk_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch disk")
     }
 
-    pub fn cli_disk_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete disk")
     }
 
-    pub fn cli_disk_bulk_write_import() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_bulk_write_import() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("base64-encoded-data")
+                ::clap::Arg::new("base64-encoded-data")
                     .long("base64-encoded-data")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("offset")
+                ::clap::Arg::new("offset")
                     .long("offset")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Import blocks into disk")
     }
 
-    pub fn cli_disk_bulk_write_import_start() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_bulk_write_import_start() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -804,19 +804,19 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Start the process of importing blocks into a disk")
     }
 
-    pub fn cli_disk_bulk_write_import_stop() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_bulk_write_import_stop() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -824,26 +824,26 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Stop the process of importing blocks into a disk")
     }
 
-    pub fn cli_disk_finalize_import() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_finalize_import() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("snapshot-name")
+                ::clap::Arg::new("snapshot-name")
                     .long("snapshot-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false)
                     .help(
                         "If specified a snapshot of the disk will be created with the given name \
@@ -853,49 +853,49 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Confirm disk block import completion")
     }
 
-    pub fn cli_disk_metrics_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_disk_metrics_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("end-time")
+                ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("metric")
+                ::clap::Arg::new("metric")
                     .long("metric")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::DiskMetricName::Activated.to_string(),
                             types::DiskMetricName::Flush.to_string(),
                             types::DiskMetricName::Read.to_string(),
@@ -908,10 +908,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true),
             )
             .arg(
-                clap::Arg::new("order")
+                ::clap::Arg::new("order")
                     .long("order")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::PaginationOrder::Ascending.to_string(),
                             types::PaginationOrder::Descending.to_string(),
                         ]),
@@ -921,43 +921,43 @@ impl<T: CliConfig> Cli<T> {
                     .help("Query result order"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("start-time")
+                ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
             .about("Fetch disk metrics")
     }
 
-    pub fn cli_floating_ip_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -969,18 +969,18 @@ impl<T: CliConfig> Cli<T> {
             .about("List floating IPs")
     }
 
-    pub fn cli_floating_ip_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("ip")
+                ::clap::Arg::new("ip")
                     .long("ip")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
                         "An IP address to reserve for use as a floating IP. This field is \
@@ -989,15 +989,15 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "The parent IP pool that a floating IP is pulled from. If unset, the \
@@ -1005,126 +1005,126 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create floating IP")
     }
 
-    pub fn cli_floating_ip_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("floating-ip")
+                ::clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch floating IP")
     }
 
-    pub fn cli_floating_ip_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("floating-ip")
+                ::clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update floating IP")
     }
 
-    pub fn cli_floating_ip_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("floating-ip")
+                ::clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete floating IP")
     }
 
-    pub fn cli_floating_ip_attach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_attach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("floating-ip")
+                ::clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
-                clap::Arg::new("kind")
+                ::clap::Arg::new("kind")
                     .long("kind")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::FloatingIpParentKind::Instance.to_string(),
                         ]),
                         |s| types::FloatingIpParentKind::try_from(s).unwrap(),
@@ -1133,71 +1133,71 @@ impl<T: CliConfig> Cli<T> {
                     .help("The type of `parent`'s resource"),
             )
             .arg(
-                clap::Arg::new("parent")
+                ::clap::Arg::new("parent")
                     .long("parent")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the resource that this IP address should be attached to"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Attach floating IP")
             .long_about("Attach floating IP to an instance or other resource.")
     }
 
-    pub fn cli_floating_ip_detach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_floating_ip_detach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("floating-ip")
+                ::clap::Arg::new("floating-ip")
                     .long("floating-ip")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the floating IP"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Detach floating IP")
     }
 
-    pub fn cli_group_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -1206,39 +1206,39 @@ impl<T: CliConfig> Cli<T> {
             .about("List groups")
     }
 
-    pub fn cli_group_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_group_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("group-id")
+                ::clap::Arg::new("group-id")
                     .long("group-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the group"),
             )
             .about("Fetch group")
     }
 
-    pub fn cli_image_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -1254,72 +1254,72 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_image_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("os")
+                ::clap::Arg::new("os")
                     .long("os")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("The family of the operating system (e.g. Debian, Ubuntu, etc.)"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("version")
+                ::clap::Arg::new("version")
                     .long("version")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("The version of the operating system (e.g. 18.04, 20.04, etc.)"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create image")
             .long_about("Create a new image in a project.")
     }
 
-    pub fn cli_image_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("image")
+                ::clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1327,19 +1327,19 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Fetch the details for a specific image in a project.")
     }
 
-    pub fn cli_image_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("image")
+                ::clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1351,19 +1351,19 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_image_demote() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_demote() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("image")
+                ::clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
@@ -1371,19 +1371,19 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Demote silo image to be visible only to a specified project")
     }
 
-    pub fn cli_image_promote() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_image_promote() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("image")
+                ::clap::Arg::new("image")
                     .long("image")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
@@ -1391,27 +1391,27 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Promote project image to be visible to all projects in the silo")
     }
 
-    pub fn cli_instance_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -1423,13 +1423,13 @@ impl<T: CliConfig> Cli<T> {
             .about("List instances")
     }
 
-    pub fn cli_instance_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("auto-restart-policy")
+                ::clap::Arg::new("auto-restart-policy")
                     .long("auto-restart-policy")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::InstanceAutoRestartPolicy::Never.to_string(),
                             types::InstanceAutoRestartPolicy::BestEffort.to_string(),
                         ]),
@@ -1451,56 +1451,56 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("hostname")
+                ::clap::Arg::new("hostname")
                     .long("hostname")
-                    .value_parser(clap::value_parser!(types::Hostname))
+                    .value_parser(::clap::value_parser!(types::Hostname))
                     .required_unless_present("json-body")
                     .help("The hostname to be assigned to the instance"),
             )
             .arg(
-                clap::Arg::new("memory")
+                ::clap::Arg::new("memory")
                     .long("memory")
-                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .value_parser(::clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
                     .help("The amount of RAM (in bytes) to be allocated to the instance"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("ncpus")
+                ::clap::Arg::new("ncpus")
                     .long("ncpus")
-                    .value_parser(clap::value_parser!(types::InstanceCpuCount))
+                    .value_parser(::clap::value_parser!(types::InstanceCpuCount))
                     .required_unless_present("json-body")
                     .help("The number of vCPUs to be allocated to the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("start")
+                ::clap::Arg::new("start")
                     .long("start")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help("Should this instance be started upon creation; true by default."),
             )
             .arg(
-                clap::Arg::new("user-data")
+                ::clap::Arg::new("user-data")
                     .long("user-data")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false)
                     .help(
                         "User data for instance initialization systems (such as cloud-init). Must \
@@ -1509,48 +1509,48 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create instance")
     }
 
-    pub fn cli_instance_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch instance")
     }
 
-    pub fn cli_instance_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("auto-restart-policy")
+                ::clap::Arg::new("auto-restart-policy")
                     .long("auto-restart-policy")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::InstanceAutoRestartPolicy::Never.to_string(),
                             types::InstanceAutoRestartPolicy::BestEffort.to_string(),
                         ]),
@@ -1572,9 +1572,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("boot-disk")
+                ::clap::Arg::new("boot-disk")
                     .long("boot-disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the disk the instance should be instructed to boot \
@@ -1582,97 +1582,97 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("memory")
+                ::clap::Arg::new("memory")
                     .long("memory")
-                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .value_parser(::clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
                     .help("The amount of memory to assign to this instance."),
             )
             .arg(
-                clap::Arg::new("ncpus")
+                ::clap::Arg::new("ncpus")
                     .long("ncpus")
-                    .value_parser(clap::value_parser!(types::InstanceCpuCount))
+                    .value_parser(::clap::value_parser!(types::InstanceCpuCount))
                     .required_unless_present("json-body")
                     .help("The number of CPUs to assign to this instance."),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update instance")
     }
 
-    pub fn cli_instance_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete instance")
     }
 
-    pub fn cli_instance_disk_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_disk_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -1684,189 +1684,189 @@ impl<T: CliConfig> Cli<T> {
             .about("List disks for instance")
     }
 
-    pub fn cli_instance_disk_attach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_disk_attach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Attach disk to instance")
     }
 
-    pub fn cli_instance_disk_detach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_disk_detach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Detach disk from instance")
     }
 
-    pub fn cli_instance_external_ip_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_external_ip_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("List external IP addresses")
     }
 
-    pub fn cli_instance_ephemeral_ip_attach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_ephemeral_ip_attach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the IP pool used to allocate an address"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Allocate and attach ephemeral IP to instance")
     }
 
-    pub fn cli_instance_ephemeral_ip_detach() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_ephemeral_ip_detach() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Detach and deallocate ephemeral IP from instance")
     }
 
-    pub fn cli_instance_reboot() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_reboot() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Reboot an instance")
     }
 
-    pub fn cli_instance_serial_console() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_serial_console() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("from-start")
+                ::clap::Arg::new("from-start")
                     .long("from-start")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting the \
@@ -1876,16 +1876,16 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("max-bytes")
+                ::clap::Arg::new("max-bytes")
                     .long("max-bytes")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required(false)
                     .help(
                         "Maximum number of bytes of buffered serial console contents to return. \
@@ -1894,9 +1894,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("most-recent")
+                ::clap::Arg::new("most-recent")
                     .long("most-recent")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting \
@@ -1905,9 +1905,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -1917,19 +1917,19 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch instance serial console")
     }
 
-    pub fn cli_instance_serial_console_stream() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_serial_console_stream() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("most-recent")
+                ::clap::Arg::new("most-recent")
                     .long("most-recent")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting \
@@ -1938,9 +1938,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -1950,34 +1950,34 @@ impl<T: CliConfig> Cli<T> {
             .about("Stream instance serial console")
     }
 
-    pub fn cli_instance_ssh_public_key_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_ssh_public_key_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -1994,74 +1994,74 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_instance_start() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_start() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Boot instance")
     }
 
-    pub fn cli_instance_stop() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_stop() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Stop instance")
     }
 
-    pub fn cli_internet_gateway_ip_address_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_address_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2071,9 +2071,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
@@ -2082,104 +2082,104 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP addresses attached to internet gateway")
     }
 
-    pub fn cli_internet_gateway_ip_address_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_address_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
+                ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Attach IP address to internet gateway")
     }
 
-    pub fn cli_internet_gateway_ip_address_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_address_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
+                ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP address"),
             )
             .arg(
-                clap::Arg::new("cascade")
+                ::clap::Arg::new("cascade")
                     .long("cascade")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help("Also delete routes targeting this gateway element."),
             )
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
@@ -2188,36 +2188,36 @@ impl<T: CliConfig> Cli<T> {
             .about("Detach IP address from internet gateway")
     }
 
-    pub fn cli_internet_gateway_ip_pool_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2227,9 +2227,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
@@ -2238,104 +2238,104 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pools attached to internet gateway")
     }
 
-    pub fn cli_internet_gateway_ip_pool_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_pool_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("ip-pool")
+                ::clap::Arg::new("ip-pool")
                     .long("ip-pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Attach IP pool to internet gateway")
     }
 
-    pub fn cli_internet_gateway_ip_pool_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_ip_pool_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("cascade")
+                ::clap::Arg::new("cascade")
                     .long("cascade")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help("Also delete routes targeting this gateway element."),
             )
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the internet gateway"),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `gateway` is provided as a `Name`",
@@ -2344,29 +2344,29 @@ impl<T: CliConfig> Cli<T> {
             .about("Detach IP pool from internet gateway")
     }
 
-    pub fn cli_internet_gateway_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2376,139 +2376,139 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List internet gateways")
     }
 
-    pub fn cli_internet_gateway_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create VPC internet gateway")
     }
 
-    pub fn cli_internet_gateway_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the gateway"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Fetch internet gateway")
     }
 
-    pub fn cli_internet_gateway_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_internet_gateway_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("cascade")
+                ::clap::Arg::new("cascade")
                     .long("cascade")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help("Also delete routes targeting this gateway."),
             )
             .arg(
-                clap::Arg::new("gateway")
+                ::clap::Arg::new("gateway")
                     .long("gateway")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the gateway"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete internet gateway")
     }
 
-    pub fn cli_project_ip_pool_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_ip_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2520,79 +2520,79 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pools")
     }
 
-    pub fn cli_project_ip_pool_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_ip_pool_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch IP pool")
     }
 
-    pub fn cli_login_local() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_login_local() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("password")
+                ::clap::Arg::new("password")
                     .long("password")
-                    .value_parser(clap::value_parser!(types::Password))
+                    .value_parser(::clap::value_parser!(types::Password))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("silo-name")
+                ::clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("username")
+                ::clap::Arg::new("username")
                     .long("username")
-                    .value_parser(clap::value_parser!(types::UserId))
+                    .value_parser(::clap::value_parser!(types::UserId))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Authenticate a user via username and password")
     }
 
-    pub fn cli_logout() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_logout() -> ::clap::Command {
+        ::clap::Command::new("")
             .about("Log user out of web console by deleting session on client and server")
     }
 
-    pub fn cli_current_user_view() -> clap::Command {
-        clap::Command::new("").about("Fetch user for current session")
+    pub fn cli_current_user_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch user for current session")
     }
 
-    pub fn cli_current_user_groups() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_current_user_groups() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -2601,20 +2601,20 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch current user's groups")
     }
 
-    pub fn cli_current_user_ssh_key_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_current_user_ssh_key_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2627,51 +2627,51 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Lists SSH public keys for the currently authenticated user.")
     }
 
-    pub fn cli_current_user_ssh_key_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_current_user_ssh_key_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("public-key")
+                ::clap::Arg::new("public-key")
                     .long("public-key")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create SSH public key")
             .long_about("Create an SSH public key for the currently authenticated user.")
     }
 
-    pub fn cli_current_user_ssh_key_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_current_user_ssh_key_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("ssh-key")
+                ::clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
@@ -2679,12 +2679,12 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Fetch SSH public key associated with the currently authenticated user.")
     }
 
-    pub fn cli_current_user_ssh_key_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_current_user_ssh_key_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("ssh-key")
+                ::clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
@@ -2694,27 +2694,27 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_silo_metric() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_metric() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("end-time")
+                ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("metric-name")
+                ::clap::Arg::new("metric-name")
                     .long("metric-name")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
                             types::SystemMetricName::CpusProvisioned.to_string(),
                             types::SystemMetricName::RamProvisioned.to_string(),
@@ -2724,10 +2724,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true),
             )
             .arg(
-                clap::Arg::new("order")
+                ::clap::Arg::new("order")
                     .long("order")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::PaginationOrder::Ascending.to_string(),
                             types::PaginationOrder::Descending.to_string(),
                         ]),
@@ -2737,16 +2737,16 @@ impl<T: CliConfig> Cli<T> {
                     .help("Query result order"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("start-time")
+                ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
@@ -2756,26 +2756,26 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_instance_network_interface_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_network_interface_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2783,10 +2783,10 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -2798,25 +2798,25 @@ impl<T: CliConfig> Cli<T> {
             .about("List network interfaces")
     }
 
-    pub fn cli_instance_network_interface_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_network_interface_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("ip")
+                ::clap::Arg::new("ip")
                     .long("ip")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
                         "The IP address for the interface. One will be auto-assigned if not \
@@ -2824,15 +2824,15 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2840,56 +2840,56 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("subnet-name")
+                ::clap::Arg::new("subnet-name")
                     .long("subnet-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The VPC Subnet in which to create the interface."),
             )
             .arg(
-                clap::Arg::new("vpc-name")
+                ::clap::Arg::new("vpc-name")
                     .long("vpc-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The VPC in which to create the interface."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create network interface")
     }
 
-    pub fn cli_instance_network_interface_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_network_interface_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("interface")
+                ::clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2899,38 +2899,38 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch network interface")
     }
 
-    pub fn cli_instance_network_interface_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_network_interface_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("interface")
+                ::clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("primary")
+                ::clap::Arg::new("primary")
                     .long("primary")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required(false)
                     .help(
                         "Make a secondary interface the instance's primary interface.\n\nIf \
@@ -2944,9 +2944,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -2954,42 +2954,42 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update network interface")
     }
 
-    pub fn cli_instance_network_interface_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_instance_network_interface_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("instance")
+                ::clap::Arg::new("instance")
                     .long("instance")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("interface")
+                ::clap::Arg::new("interface")
                     .long("interface")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
@@ -3004,49 +3004,49 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ping() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ping() -> ::clap::Command {
+        ::clap::Command::new("")
             .about("Ping API")
             .long_about("Always responds with Ok if it responds at all.")
     }
 
-    pub fn cli_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch current silo's IAM policy")
+    pub fn cli_policy_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch current silo's IAM policy")
     }
 
-    pub fn cli_policy_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_policy_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update current silo's IAM policy")
     }
 
-    pub fn cli_project_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -3058,158 +3058,158 @@ impl<T: CliConfig> Cli<T> {
             .about("List projects")
     }
 
-    pub fn cli_project_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create project")
     }
 
-    pub fn cli_project_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Fetch project")
     }
 
-    pub fn cli_project_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update a project")
     }
 
-    pub fn cli_project_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Delete project")
     }
 
-    pub fn cli_project_policy_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_policy_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Fetch project's IAM policy")
     }
 
-    pub fn cli_project_policy_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_project_policy_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update project's IAM policy")
     }
 
-    pub fn cli_snapshot_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_snapshot_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -3221,105 +3221,105 @@ impl<T: CliConfig> Cli<T> {
             .about("List snapshots")
     }
 
-    pub fn cli_snapshot_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_snapshot_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("disk")
+                ::clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("The disk to be snapshotted"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create snapshot")
             .long_about("Creates a point-in-time snapshot from a disk.")
     }
 
-    pub fn cli_snapshot_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_snapshot_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("snapshot")
+                ::clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
             .about("Fetch snapshot")
     }
 
-    pub fn cli_snapshot_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_snapshot_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("snapshot")
+                ::clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
             .about("Delete snapshot")
     }
 
-    pub fn cli_physical_disk_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_physical_disk_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3328,33 +3328,33 @@ impl<T: CliConfig> Cli<T> {
             .about("List physical disks")
     }
 
-    pub fn cli_physical_disk_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_physical_disk_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("disk-id")
+                ::clap::Arg::new("disk-id")
                     .long("disk-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the physical disk"),
             )
             .about("Get a physical disk")
     }
 
-    pub fn cli_rack_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_rack_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3363,33 +3363,33 @@ impl<T: CliConfig> Cli<T> {
             .about("List racks")
     }
 
-    pub fn cli_rack_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_rack_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the rack"),
             )
             .about("Fetch rack")
     }
 
-    pub fn cli_sled_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3398,71 +3398,71 @@ impl<T: CliConfig> Cli<T> {
             .about("List sleds")
     }
 
-    pub fn cli_sled_add() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_add() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("part")
+                ::clap::Arg::new("part")
                     .long("part")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("serial")
+                ::clap::Arg::new("serial")
                     .long("serial")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Add sled to initialized rack")
     }
 
-    pub fn cli_sled_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("sled-id")
+                ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
             .about("Fetch sled")
     }
 
-    pub fn cli_sled_physical_disk_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_physical_disk_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sled-id")
+                ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3471,28 +3471,28 @@ impl<T: CliConfig> Cli<T> {
             .about("List physical disks attached to sleds")
     }
 
-    pub fn cli_sled_instance_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_instance_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sled-id")
+                ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3501,20 +3501,20 @@ impl<T: CliConfig> Cli<T> {
             .about("List instances running on given sled")
     }
 
-    pub fn cli_sled_set_provision_policy() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_set_provision_policy() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("sled-id")
+                ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
             .arg(
-                clap::Arg::new("state")
+                ::clap::Arg::new("state")
                     .long("state")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::SledProvisionPolicy::Provisionable.to_string(),
                             types::SledProvisionPolicy::NonProvisionable.to_string(),
                         ]),
@@ -3524,178 +3524,178 @@ impl<T: CliConfig> Cli<T> {
                     .help("The provision state."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Set sled provision policy")
     }
 
-    pub fn cli_sled_list_uninitialized() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_sled_list_uninitialized() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List uninitialized sleds")
     }
 
-    pub fn cli_networking_switch_port_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("switch-port-id")
+                ::clap::Arg::new("switch-port-id")
                     .long("switch-port-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(false)
                     .help("An optional switch port id to use when listing switch ports."),
             )
             .about("List switch ports")
     }
 
-    pub fn cli_networking_switch_port_apply_settings() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_apply_settings() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("port")
+                ::clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("port-settings")
+                ::clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help("A name or id to use when applying switch port settings."),
             )
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("switch-location")
+                ::clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Apply switch port settings")
     }
 
-    pub fn cli_networking_switch_port_clear_settings() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_clear_settings() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("port")
+                ::clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("switch-location")
+                ::clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
             .about("Clear switch port settings")
     }
 
-    pub fn cli_networking_switch_port_status() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_status() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("port")
+                ::clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A name to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
             .arg(
-                clap::Arg::new("switch-location")
+                ::clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
             .about("Get switch port status")
     }
 
-    pub fn cli_switch_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_switch_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -3704,39 +3704,39 @@ impl<T: CliConfig> Cli<T> {
             .about("List switches")
     }
 
-    pub fn cli_switch_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_switch_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("switch-id")
+                ::clap::Arg::new("switch-id")
                     .long("switch-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the switch"),
             )
             .about("Fetch switch")
     }
 
-    pub fn cli_silo_identity_provider_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_identity_provider_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -3748,34 +3748,34 @@ impl<T: CliConfig> Cli<T> {
             .about("List a silo's IdP's name")
     }
 
-    pub fn cli_local_idp_user_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_local_idp_user_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("external-id")
+                ::clap::Arg::new("external-id")
                     .long("external-id")
-                    .value_parser(clap::value_parser!(types::UserId))
+                    .value_parser(::clap::value_parser!(types::UserId))
                     .required_unless_present("json-body")
                     .help("username used to log in"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create user")
@@ -3786,53 +3786,53 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_local_idp_user_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_local_idp_user_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("user-id")
+                ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
             .about("Delete user")
     }
 
-    pub fn cli_local_idp_user_set_password() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_local_idp_user_set_password() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("user-id")
+                ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Set or invalidate user's password")
@@ -3841,25 +3841,25 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_saml_identity_provider_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_saml_identity_provider_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("acs-url")
+                ::clap::Arg::new("acs-url")
                     .long("acs-url")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("service provider endpoint where the response will be sent"),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("group-attribute-name")
+                ::clap::Arg::new("group-attribute-name")
                     .long("group-attribute-name")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false)
                     .help(
                         "If set, SAML attributes with this name will be considered to denote a \
@@ -3868,96 +3868,96 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("idp-entity-id")
+                ::clap::Arg::new("idp-entity-id")
                     .long("idp-entity-id")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("idp's entity id"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("slo-url")
+                ::clap::Arg::new("slo-url")
                     .long("slo-url")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("service provider endpoint where the idp should send log out requests"),
             )
             .arg(
-                clap::Arg::new("sp-client-id")
+                ::clap::Arg::new("sp-client-id")
                     .long("sp-client-id")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("sp's client id"),
             )
             .arg(
-                clap::Arg::new("technical-contact-email")
+                ::clap::Arg::new("technical-contact-email")
                     .long("technical-contact-email")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("customer's technical contact for saml configuration"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create SAML IdP")
     }
 
-    pub fn cli_saml_identity_provider_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_saml_identity_provider_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("provider")
+                ::clap::Arg::new("provider")
                     .long("provider")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the SAML identity provider"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch SAML IdP")
     }
 
-    pub fn cli_ip_pool_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -3969,112 +3969,112 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pools")
     }
 
-    pub fn cli_ip_pool_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create IP pool")
     }
 
-    pub fn cli_ip_pool_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch IP pool")
     }
 
-    pub fn cli_ip_pool_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update IP pool")
     }
 
-    pub fn cli_ip_pool_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Delete IP pool")
     }
 
-    pub fn cli_ip_pool_range_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_range_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
@@ -4082,81 +4082,81 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Ranges are ordered by their first address.")
     }
 
-    pub fn cli_ip_pool_range_add() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_range_add() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Add range to IP pool")
             .long_about("IPv6 ranges are not allowed yet.")
     }
 
-    pub fn cli_ip_pool_range_remove() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_range_remove() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Remove range from IP pool")
     }
 
-    pub fn cli_ip_pool_silo_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_silo_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -4165,12 +4165,12 @@ impl<T: CliConfig> Cli<T> {
             .about("List IP pool's linked silos")
     }
 
-    pub fn cli_ip_pool_silo_link() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_silo_link() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("is-default")
+                ::clap::Arg::new("is-default")
                     .long("is-default")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body")
                     .help(
                         "When a pool is the default for a silo, floating IPs and instance \
@@ -4179,30 +4179,30 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Link IP pool to silo")
@@ -4213,12 +4213,12 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ip_pool_silo_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_silo_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("is-default")
+                ::clap::Arg::new("is-default")
                     .long("is-default")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body")
                     .help(
                         "When a pool is the default for a silo, floating IPs and instance \
@@ -4229,29 +4229,29 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Make IP pool default for silo")
@@ -4263,46 +4263,46 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_ip_pool_silo_unlink() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_silo_unlink() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Unlink IP pool from silo")
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
-    pub fn cli_ip_pool_utilization_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_utilization_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("pool")
+                ::clap::Arg::new("pool")
                     .long("pool")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch IP pool utilization")
     }
 
-    pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch Oxide service IP pool")
+    pub fn cli_ip_pool_service_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch Oxide service IP pool")
     }
 
-    pub fn cli_ip_pool_service_range_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_service_range_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4310,66 +4310,66 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Ranges are ordered by their first address.")
     }
 
-    pub fn cli_ip_pool_service_range_add() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_service_range_add() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Add IP range to Oxide service pool")
             .long_about("IPv6 ranges are not allowed yet.")
     }
 
-    pub fn cli_ip_pool_service_range_remove() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_ip_pool_service_range_remove() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Remove IP range from Oxide service pool")
     }
 
-    pub fn cli_system_metric() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_system_metric() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("end-time")
+                ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("metric-name")
+                ::clap::Arg::new("metric-name")
                     .long("metric-name")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
                             types::SystemMetricName::CpusProvisioned.to_string(),
                             types::SystemMetricName::RamProvisioned.to_string(),
@@ -4379,10 +4379,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true),
             )
             .arg(
-                clap::Arg::new("order")
+                ::clap::Arg::new("order")
                     .long("order")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::PaginationOrder::Ascending.to_string(),
                             types::PaginationOrder::Descending.to_string(),
                         ]),
@@ -4392,16 +4392,16 @@ impl<T: CliConfig> Cli<T> {
                     .help("Query result order"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("start-time")
+                ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
@@ -4411,20 +4411,20 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_networking_address_lot_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_address_lot_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -4436,19 +4436,19 @@ impl<T: CliConfig> Cli<T> {
             .about("List address lots")
     }
 
-    pub fn cli_networking_address_lot_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_address_lot_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("kind")
+                ::clap::Arg::new("kind")
                     .long("kind")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::AddressLotKind::Infra.to_string(),
                             types::AddressLotKind::Pool.to_string(),
                         ]),
@@ -4458,62 +4458,62 @@ impl<T: CliConfig> Cli<T> {
                     .help("The kind of address lot to create."),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create address lot")
     }
 
-    pub fn cli_networking_address_lot_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_address_lot_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address-lot")
+                ::clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
             .about("Delete address lot")
     }
 
-    pub fn cli_networking_address_lot_block_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_address_lot_block_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address-lot")
+                ::clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -4522,68 +4522,68 @@ impl<T: CliConfig> Cli<T> {
             .about("List blocks in address lot")
     }
 
-    pub fn cli_networking_allow_list_view() -> clap::Command {
-        clap::Command::new("").about("Get user-facing services IP allowlist")
+    pub fn cli_networking_allow_list_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Get user-facing services IP allowlist")
     }
 
-    pub fn cli_networking_allow_list_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_allow_list_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update user-facing services IP allowlist")
     }
 
-    pub fn cli_networking_bfd_disable() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bfd_disable() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("remote")
+                ::clap::Arg::new("remote")
                     .long("remote")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("Address of the remote peer to disable a BFD session for."),
             )
             .arg(
-                clap::Arg::new("switch")
+                ::clap::Arg::new("switch")
                     .long("switch")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Disable a BFD session")
     }
 
-    pub fn cli_networking_bfd_enable() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bfd_enable() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("detection-threshold")
+                ::clap::Arg::new("detection-threshold")
                     .long("detection-threshold")
-                    .value_parser(clap::value_parser!(u8))
+                    .value_parser(::clap::value_parser!(u8))
                     .required_unless_present("json-body")
                     .help(
                         "The negotiated Control packet transmission interval, multiplied by this \
@@ -4592,9 +4592,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("local")
+                ::clap::Arg::new("local")
                     .long("local")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
                         "Address the Oxide switch will listen on for BFD traffic. If `None` then \
@@ -4602,10 +4602,10 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("mode")
+                ::clap::Arg::new("mode")
                     .long("mode")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::BfdMode::SingleHop.to_string(),
                             types::BfdMode::MultiHop.to_string(),
                         ]),
@@ -4615,16 +4615,16 @@ impl<T: CliConfig> Cli<T> {
                     .help("Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"),
             )
             .arg(
-                clap::Arg::new("remote")
+                ::clap::Arg::new("remote")
                     .long("remote")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("Address of the remote peer to establish a BFD session with."),
             )
             .arg(
-                clap::Arg::new("required-rx")
+                ::clap::Arg::new("required-rx")
                     .long("required-rx")
-                    .value_parser(clap::value_parser!(u64))
+                    .value_parser(::clap::value_parser!(u64))
                     .required_unless_present("json-body")
                     .help(
                         "The minimum interval, in microseconds, between received BFD Control \
@@ -4632,47 +4632,47 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("switch")
+                ::clap::Arg::new("switch")
                     .long("switch")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Enable a BFD session")
     }
 
-    pub fn cli_networking_bfd_status() -> clap::Command {
-        clap::Command::new("").about("Get BFD status")
+    pub fn cli_networking_bfd_status() -> ::clap::Command {
+        ::clap::Command::new("").about("Get BFD status")
     }
 
-    pub fn cli_networking_bgp_config_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_config_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -4684,37 +4684,37 @@ impl<T: CliConfig> Cli<T> {
             .about("List BGP configurations")
     }
 
-    pub fn cli_networking_bgp_config_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_config_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("asn")
+                ::clap::Arg::new("asn")
                     .long("asn")
-                    .value_parser(clap::value_parser!(u32))
+                    .value_parser(::clap::value_parser!(u32))
                     .required_unless_present("json-body")
                     .help("The autonomous system number of this BGP configuration."),
             )
             .arg(
-                clap::Arg::new("bgp-announce-set-id")
+                ::clap::Arg::new("bgp-announce-set-id")
                     .long("bgp-announce-set-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("vrf")
+                ::clap::Arg::new("vrf")
                     .long("vrf")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false)
                     .help(
                         "Optional virtual routing and forwarding identifier for this BGP \
@@ -4722,55 +4722,55 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create new BGP configuration")
     }
 
-    pub fn cli_networking_bgp_config_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_config_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("name-or-id")
+                ::clap::Arg::new("name-or-id")
                     .long("name-or-id")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
             )
             .about("Delete BGP configuration")
     }
 
-    pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_announce_set_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("page-token")
+                ::clap::Arg::new("page-token")
                     .long("page-token")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false)
                     .help("Token returned by previous call to retrieve the subsequent page"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -4782,32 +4782,32 @@ impl<T: CliConfig> Cli<T> {
             .about("List BGP announce sets")
     }
 
-    pub fn cli_networking_bgp_announce_set_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_announce_set_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update BGP announce set")
@@ -4817,77 +4817,77 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_announce_set_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("announce-set")
+                ::clap::Arg::new("announce-set")
                     .long("announce-set")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the announce set"),
             )
             .about("Delete BGP announce set")
     }
 
-    pub fn cli_networking_bgp_announcement_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_announcement_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("announce-set")
+                ::clap::Arg::new("announce-set")
                     .long("announce-set")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the announce set"),
             )
             .about("Get originated routes for a specified BGP announce set")
     }
 
-    pub fn cli_networking_bgp_exported() -> clap::Command {
-        clap::Command::new("").about("Get BGP exported routes")
+    pub fn cli_networking_bgp_exported() -> ::clap::Command {
+        ::clap::Command::new("").about("Get BGP exported routes")
     }
 
-    pub fn cli_networking_bgp_message_history() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_message_history() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("asn")
+                ::clap::Arg::new("asn")
                     .long("asn")
-                    .value_parser(clap::value_parser!(u32))
+                    .value_parser(::clap::value_parser!(u32))
                     .required(true)
                     .help("The ASN to filter on. Required."),
             )
             .about("Get BGP router message history")
     }
 
-    pub fn cli_networking_bgp_imported_routes_ipv4() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_bgp_imported_routes_ipv4() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("asn")
+                ::clap::Arg::new("asn")
                     .long("asn")
-                    .value_parser(clap::value_parser!(u32))
+                    .value_parser(::clap::value_parser!(u32))
                     .required(true)
                     .help("The ASN to filter on. Required."),
             )
             .about("Get imported IPv4 BGP routes")
     }
 
-    pub fn cli_networking_bgp_status() -> clap::Command {
-        clap::Command::new("").about("Get BGP peer status")
+    pub fn cli_networking_bgp_status() -> ::clap::Command {
+        ::clap::Command::new("").about("Get BGP peer status")
     }
 
-    pub fn cli_networking_loopback_address_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_loopback_address_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -4896,19 +4896,19 @@ impl<T: CliConfig> Cli<T> {
             .about("List loopback addresses")
     }
 
-    pub fn cli_networking_loopback_address_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_loopback_address_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
+                ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("The address to create."),
             )
             .arg(
-                clap::Arg::new("address-lot")
+                ::clap::Arg::new("address-lot")
                     .long("address-lot")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
                     .help(
                         "The name or id of the address lot this loopback address will pull an \
@@ -4916,9 +4916,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("anycast")
+                ::clap::Arg::new("anycast")
                     .long("anycast")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body")
                     .help(
                         "Address is an anycast address. This allows the address to be assigned to \
@@ -4926,23 +4926,23 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("mask")
+                ::clap::Arg::new("mask")
                     .long("mask")
-                    .value_parser(clap::value_parser!(u8))
+                    .value_parser(::clap::value_parser!(u8))
                     .required_unless_present("json-body")
                     .help("The subnet mask to use for the address."),
             )
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required_unless_present("json-body")
                     .help("The containing the switch this loopback address will be configured on."),
             )
             .arg(
-                clap::Arg::new("switch-location")
+                ::clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body")
                     .help(
                         "The location of the switch within the rack this loopback address will be \
@@ -4950,28 +4950,28 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create loopback address")
     }
 
-    pub fn cli_networking_loopback_address_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_loopback_address_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
+                ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(std::net::IpAddr))
                     .required(true)
                     .help(
                         "The IP address and subnet mask to use when selecting the loopback \
@@ -4979,16 +4979,16 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("rack-id")
+                ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("The rack to use when selecting the loopback address."),
             )
             .arg(
-                clap::Arg::new("subnet-mask")
+                ::clap::Arg::new("subnet-mask")
                     .long("subnet-mask")
-                    .value_parser(clap::value_parser!(u8))
+                    .value_parser(::clap::value_parser!(u8))
                     .required(true)
                     .help(
                         "The IP address and subnet mask to use when selecting the loopback \
@@ -4996,36 +4996,36 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("switch-location")
+                ::clap::Arg::new("switch-location")
                     .long("switch-location")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(true)
                     .help("The switch location to use when selecting the loopback address."),
             )
             .about("Delete loopback address")
     }
 
-    pub fn cli_networking_switch_port_settings_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_settings_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("port-settings")
+                ::clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("An optional name or id to use when selecting port settings."),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5037,123 +5037,123 @@ impl<T: CliConfig> Cli<T> {
             .about("List switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_settings_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_settings_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("port-settings")
+                ::clap::Arg::new("port-settings")
                     .long("port-settings")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("An optional name or id to use when selecting port settings."),
             )
             .about("Delete switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_networking_switch_port_settings_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("port")
+                ::clap::Arg::new("port")
                     .long("port")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("A name or id to use when selecting switch port settings info objects."),
             )
             .about("Get information about switch port")
     }
 
-    pub fn cli_system_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch top-level IAM policy")
+    pub fn cli_system_policy_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch top-level IAM policy")
     }
 
-    pub fn cli_system_policy_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_system_policy_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update top-level IAM policy")
     }
 
-    pub fn cli_role_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_role_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List built-in roles")
     }
 
-    pub fn cli_role_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_role_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("role-name")
+                ::clap::Arg::new("role-name")
                     .long("role-name")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(true)
                     .help("The built-in role's unique name."),
             )
             .about("Fetch built-in role")
     }
 
-    pub fn cli_system_quotas_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_system_quotas_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -5162,20 +5162,20 @@ impl<T: CliConfig> Cli<T> {
             .about("Lists resource quotas for all silos")
     }
 
-    pub fn cli_silo_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5188,12 +5188,12 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Lists silos that are discoverable based on the current permissions.")
     }
 
-    pub fn cli_silo_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("admin-group-name")
+                ::clap::Arg::new("admin-group-name")
                     .long("admin-group-name")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false)
                     .help(
                         "If set, this group will be created during Silo creation and granted the \
@@ -5205,22 +5205,22 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("discoverable")
+                ::clap::Arg::new("discoverable")
                     .long("discoverable")
-                    .value_parser(clap::value_parser!(bool))
+                    .value_parser(::clap::value_parser!(bool))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("identity-mode")
+                ::clap::Arg::new("identity-mode")
                     .long("identity-mode")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::SiloIdentityMode::SamlJit.to_string(),
                             types::SiloIdentityMode::LocalOnly.to_string(),
                         ]),
@@ -5229,34 +5229,34 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create a silo")
     }
 
-    pub fn cli_silo_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -5264,12 +5264,12 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Fetch silo by name or ID.")
     }
 
-    pub fn cli_silo_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
@@ -5277,27 +5277,27 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Delete a silo by name or ID.")
     }
 
-    pub fn cli_silo_ip_pool_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_ip_pool_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5314,167 +5314,167 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_silo_policy_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_policy_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch silo IAM policy")
     }
 
-    pub fn cli_silo_policy_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_policy_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update silo IAM policy")
     }
 
-    pub fn cli_silo_quotas_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_quotas_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch resource quotas for silo")
     }
 
-    pub fn cli_silo_quotas_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_quotas_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("cpus")
+                ::clap::Arg::new("cpus")
                     .long("cpus")
-                    .value_parser(clap::value_parser!(i64))
+                    .value_parser(::clap::value_parser!(i64))
                     .required(false)
                     .help("The amount of virtual CPUs available for running instances in the Silo"),
             )
             .arg(
-                clap::Arg::new("memory")
+                ::clap::Arg::new("memory")
                     .long("memory")
-                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .value_parser(::clap::value_parser!(types::ByteCount))
                     .required(false)
                     .help(
                         "The amount of RAM (in bytes) available for running instances in the Silo",
                     ),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("storage")
+                ::clap::Arg::new("storage")
                     .long("storage")
-                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .value_parser(::clap::value_parser!(types::ByteCount))
                     .required(false)
                     .help("The amount of storage (in bytes) available for disks or snapshots"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update resource quotas for silo")
             .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
-    pub fn cli_system_timeseries_query() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_system_timeseries_query() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("query")
+                ::clap::Arg::new("query")
                     .long("query")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("A timeseries query string, written in the Oximeter query language."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Run timeseries query")
             .long_about("Queries are written in OxQL.")
     }
 
-    pub fn cli_system_timeseries_schema_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_system_timeseries_schema_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List timeseries schemas")
     }
 
-    pub fn cli_silo_user_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_user_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -5483,39 +5483,39 @@ impl<T: CliConfig> Cli<T> {
             .about("List built-in (system) users in silo")
     }
 
-    pub fn cli_silo_user_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_user_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
-                clap::Arg::new("user-id")
+                ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
             .about("Fetch built-in (system) user")
     }
 
-    pub fn cli_user_builtin_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_user_builtin_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameSortMode::NameAscending.to_string(),
                         ]),
                         |s| types::NameSortMode::try_from(s).unwrap(),
@@ -5525,31 +5525,31 @@ impl<T: CliConfig> Cli<T> {
             .about("List built-in users")
     }
 
-    pub fn cli_user_builtin_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_user_builtin_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("user")
+                ::clap::Arg::new("user")
                     .long("user")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true),
             )
             .about("Fetch built-in user")
     }
 
-    pub fn cli_silo_utilization_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_utilization_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5561,46 +5561,46 @@ impl<T: CliConfig> Cli<T> {
             .about("List current utilization state for all silos")
     }
 
-    pub fn cli_silo_utilization_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_silo_utilization_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("silo")
+                ::clap::Arg::new("silo")
                     .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch current utilization for given silo")
     }
 
-    pub fn cli_timeseries_query() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_timeseries_query() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("query")
+                ::clap::Arg::new("query")
                     .long("query")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body")
                     .help("A timeseries query string, written in the Oximeter query language."),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Run project-scoped timeseries query")
@@ -5611,27 +5611,27 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_user_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_user_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("group")
+                ::clap::Arg::new("group")
                     .long("group")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
                     ))
@@ -5640,61 +5640,61 @@ impl<T: CliConfig> Cli<T> {
             .about("List users")
     }
 
-    pub fn cli_utilization_view() -> clap::Command {
-        clap::Command::new("").about("Fetch resource utilization for user's current silo")
+    pub fn cli_utilization_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
 
-    pub fn cli_vpc_firewall_rules_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_firewall_rules_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List firewall rules")
     }
 
-    pub fn cli_vpc_firewall_rules_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_firewall_rules_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Replace firewall rules")
@@ -5711,36 +5711,36 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_vpc_router_route_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_route_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5750,9 +5750,9 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5762,91 +5762,91 @@ impl<T: CliConfig> Cli<T> {
             .long_about("List the routes associated with a router in a particular VPC.")
     }
 
-    pub fn cli_vpc_router_route_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_route_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create route")
     }
 
-    pub fn cli_vpc_router_route_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_route_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("route")
+                ::clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5855,98 +5855,98 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch route")
     }
 
-    pub fn cli_vpc_router_route_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_route_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("route")
+                ::clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update route")
     }
 
-    pub fn cli_vpc_router_route_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_route_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("route")
+                ::clap::Arg::new("route")
                     .long("route")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `router` is provided as a `Name`",
@@ -5955,29 +5955,29 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete route")
     }
 
-    pub fn cli_vpc_router_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -5987,195 +5987,195 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List routers")
     }
 
-    pub fn cli_vpc_router_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create VPC router")
     }
 
-    pub fn cli_vpc_router_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Fetch router")
     }
 
-    pub fn cli_vpc_router_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update router")
     }
 
-    pub fn cli_vpc_router_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_router_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("router")
+                ::clap::Arg::new("router")
                     .long("router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete router")
     }
 
-    pub fn cli_vpc_subnet_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -6185,21 +6185,21 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List subnets")
     }
 
-    pub fn cli_vpc_subnet_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("custom-router")
+                ::clap::Arg::new("custom-router")
                     .long("custom-router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "An optional router, used to direct packets sent from hosts in this \
@@ -6209,15 +6209,15 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("ipv4-block")
+                ::clap::Arg::new("ipv4-block")
                     .long("ipv4-block")
-                    .value_parser(clap::value_parser!(types::Ipv4Net))
+                    .value_parser(::clap::value_parser!(types::Ipv4Net))
                     .required_unless_present("json-body")
                     .help(
                         "The IPv4 address range for this subnet.\n\nIt must be allocated from an \
@@ -6226,9 +6226,9 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("ipv6-block")
+                ::clap::Arg::new("ipv6-block")
                     .long("ipv6-block")
-                    .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .value_parser(::clap::value_parser!(types::Ipv6Net))
                     .required(false)
                     .help(
                         "The IPv6 address range for this subnet.\n\nIt must be allocated from the \
@@ -6238,78 +6238,78 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create subnet")
     }
 
-    pub fn cli_vpc_subnet_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("subnet")
+                ::clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Fetch subnet")
     }
 
-    pub fn cli_vpc_subnet_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("custom-router")
+                ::clap::Arg::new("custom-router")
                     .long("custom-router")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "An optional router, used to direct packets sent from hosts in this \
@@ -6317,108 +6317,108 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("subnet")
+                ::clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update subnet")
     }
 
-    pub fn cli_vpc_subnet_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("subnet")
+                ::clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete subnet")
     }
 
-    pub fn cli_vpc_subnet_list_network_interfaces() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_subnet_list_network_interfaces() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -6428,43 +6428,43 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .arg(
-                clap::Arg::new("subnet")
+                ::clap::Arg::new("subnet")
                     .long("subnet")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("List network interfaces")
     }
 
-    pub fn cli_vpc_list() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_list() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("limit")
+                ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("sort-by")
+                ::clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
                             types::NameOrIdSortMode::NameDescending.to_string(),
                             types::NameOrIdSortMode::IdAscending.to_string(),
@@ -6476,24 +6476,24 @@ impl<T: CliConfig> Cli<T> {
             .about("List VPCs")
     }
 
-    pub fn cli_vpc_create() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_create() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("dns-name")
+                ::clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("ipv6-prefix")
+                ::clap::Arg::new("ipv6-prefix")
                     .long("ipv6-prefix")
-                    .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .value_parser(::clap::value_parser!(types::Ipv6Net))
                     .required(false)
                     .help(
                         "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC \
@@ -6503,125 +6503,129 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Create VPC")
     }
 
-    pub fn cli_vpc_view() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_view() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("Fetch VPC")
     }
 
-    pub fn cli_vpc_update() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_update() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("description")
+                ::clap::Arg::new("description")
                     .long("description")
-                    .value_parser(clap::value_parser!(::std::string::String))
+                    .value_parser(::clap::value_parser!(::std::string::String))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("dns-name")
+                ::clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("name")
+                ::clap::Arg::new("name")
                     .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(::clap::value_parser!(types::Name))
                     .required(false),
             )
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
-                clap::Arg::new("json-body")
+                ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
             .arg(
-                clap::Arg::new("json-body-template")
+                ::clap::Arg::new("json-body-template")
                     .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
+                    .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
             .about("Update a VPC")
     }
 
-    pub fn cli_vpc_delete() -> clap::Command {
-        clap::Command::new("")
+    pub fn cli_vpc_delete() -> ::clap::Command {
+        ::clap::Command::new("")
             .arg(
-                clap::Arg::new("project")
+                ::clap::Arg::new("project")
                     .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
-                clap::Arg::new("vpc")
+                ::clap::Arg::new("vpc")
                     .long("vpc")
-                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete VPC")
     }
 
-    pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute(
+        &self,
+        cmd: CliCommand,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         match cmd {
             CliCommand::DeviceAuthRequest => self.execute_device_auth_request(matches).await,
             CliCommand::DeviceAuthConfirm => self.execute_device_auth_confirm(matches).await,
@@ -6987,7 +6991,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_device_auth_request(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.device_auth_request();
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
@@ -7015,7 +7019,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_device_auth_confirm(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.device_auth_confirm();
         if let Some(value) = matches.get_one::<::std::string::String>("user-code") {
@@ -7045,7 +7049,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_device_access_token(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.device_access_token();
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
@@ -7080,7 +7084,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_probe_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_probe_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7120,7 +7124,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_probe_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_probe_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7162,7 +7166,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_probe_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_probe_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
             request = request.probe(value.clone());
@@ -7186,7 +7190,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_probe_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_probe_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
             request = request.probe(value.clone());
@@ -7210,7 +7214,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_login_saml(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_login_saml(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_saml();
         if let Some(value) = matches.get_one::<types::Name>("provider-name") {
             request = request.provider_name(value.clone());
@@ -7233,7 +7237,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_certificate_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_certificate_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7272,7 +7279,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_certificate_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_create();
         if let Some(value) = matches.get_one::<::std::string::String>("cert") {
@@ -7316,7 +7323,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_certificate_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
             request = request.certificate(value.clone());
@@ -7339,7 +7349,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_certificate_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
@@ -7361,7 +7371,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_disk_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_disk_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7400,7 +7410,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_disk_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_disk_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7438,7 +7448,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_disk_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_disk_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -7462,7 +7472,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_disk_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_disk_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -7488,7 +7498,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_bulk_write_import(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import();
         if let Some(value) = matches.get_one::<::std::string::String>("base64-encoded-data") {
@@ -7531,7 +7541,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_bulk_write_import_start(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_start();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -7559,7 +7569,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_bulk_write_import_stop(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_stop();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -7587,7 +7597,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_finalize_import(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_finalize_import();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -7625,7 +7635,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_metrics_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.disk_metrics_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -7684,7 +7694,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_floating_ip_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_floating_ip_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7727,7 +7740,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -7771,7 +7784,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_floating_ip_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_floating_ip_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
@@ -7798,7 +7814,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -7840,7 +7856,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
@@ -7868,7 +7884,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
@@ -7910,7 +7926,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_floating_ip_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
@@ -7936,7 +7952,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_group_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_group_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7971,7 +7987,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_group_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_group_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group-id") {
             request = request.group_id(value.clone());
@@ -7991,7 +8007,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8030,7 +8046,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -8072,7 +8088,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -8096,7 +8112,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -8120,7 +8136,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_demote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_demote(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_demote();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -8144,7 +8160,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_promote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_image_promote(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_promote();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -8168,7 +8184,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8207,7 +8223,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_create();
         if let Some(value) =
             matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
@@ -8267,7 +8286,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -8291,7 +8310,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_update();
         if let Some(value) =
             matches.get_one::<types::InstanceAutoRestartPolicy>("auto-restart-policy")
@@ -8339,7 +8361,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -8365,7 +8390,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8412,7 +8437,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_disk_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -8450,7 +8475,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_disk_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -8488,7 +8513,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_external_ip_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_external_ip_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8516,7 +8541,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_ephemeral_ip_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8554,7 +8579,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_ephemeral_ip_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8580,7 +8605,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_reboot(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_reboot(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_reboot();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -8606,7 +8634,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_serial_console(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_serial_console();
         if let Some(value) = matches.get_one::<u64>("from-start") {
@@ -8646,7 +8674,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_serial_console_stream(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_serial_console_stream();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8676,7 +8704,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_ssh_public_key_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ssh_public_key_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8721,7 +8749,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_start(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_start(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_start();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -8745,7 +8773,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_stop(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_instance_stop(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_stop();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -8771,7 +8799,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_address_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_address_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
@@ -8824,7 +8852,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_address_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_address_create();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
@@ -8875,7 +8903,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_address_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_address_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("address") {
@@ -8915,7 +8943,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_pool_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
@@ -8968,7 +8996,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_pool_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_pool_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -9019,7 +9047,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_ip_pool_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_pool_delete();
         if let Some(value) = matches.get_one::<bool>("cascade") {
@@ -9059,7 +9087,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9108,7 +9136,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -9151,7 +9179,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("gateway") {
@@ -9183,7 +9211,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_internet_gateway_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_delete();
         if let Some(value) = matches.get_one::<bool>("cascade") {
@@ -9219,7 +9247,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9259,7 +9287,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_ip_pool_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -9281,7 +9309,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_login_local(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_login_local(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_local();
         if let Some(value) = matches.get_one::<types::Password>("password") {
             request = request.body_map(|body| body.password(value.clone()))
@@ -9316,7 +9344,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_logout(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_logout(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.logout();
         self.config.execute_logout(matches, &mut request)?;
         let result = request.send().await;
@@ -9334,7 +9362,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_view();
         self.config
@@ -9354,7 +9382,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_groups(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_groups();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9393,7 +9421,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_ssh_key_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9432,7 +9460,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_ssh_key_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -9470,7 +9498,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_ssh_key_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
@@ -9494,7 +9522,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_current_user_ssh_key_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
@@ -9516,7 +9544,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_metric(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_metric(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_metric();
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
@@ -9571,7 +9599,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_network_interface_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -9620,7 +9648,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_network_interface_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -9675,7 +9703,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_network_interface_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -9707,7 +9735,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_network_interface_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -9758,7 +9786,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_network_interface_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -9788,7 +9816,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ping(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ping(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ping();
         self.config.execute_ping(matches, &mut request)?;
         let result = request.send().await;
@@ -9804,7 +9832,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_policy_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_policy_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_view();
         self.config.execute_policy_view(matches, &mut request)?;
         let result = request.send().await;
@@ -9820,7 +9848,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_policy_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_policy_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
@@ -9842,7 +9870,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_project_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9877,7 +9905,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_project_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -9907,7 +9935,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_project_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -9927,7 +9955,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_project_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -9961,7 +9989,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_project_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -9983,7 +10011,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -10007,7 +10035,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -10035,7 +10063,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_snapshot_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_snapshot_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10074,7 +10102,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_snapshot_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_snapshot_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -10112,7 +10143,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_snapshot_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_snapshot_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10136,7 +10167,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_snapshot_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_snapshot_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10162,7 +10196,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_physical_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.physical_disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10202,7 +10236,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_physical_disk_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.physical_disk_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("disk-id") {
@@ -10224,7 +10258,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_rack_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10259,7 +10293,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_rack_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
@@ -10279,7 +10313,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_sled_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10314,7 +10348,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_add(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_sled_add(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_add();
         if let Some(value) = matches.get_one::<::std::string::String>("part") {
             request = request.body_map(|body| body.part(value.clone()))
@@ -10344,7 +10378,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_sled_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
@@ -10366,7 +10400,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_physical_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_physical_disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10410,7 +10444,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_instance_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_instance_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10454,7 +10488,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_set_provision_policy(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_set_provision_policy();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
@@ -10489,7 +10523,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_list_uninitialized(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_list_uninitialized();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10526,7 +10560,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10570,7 +10604,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_apply_settings(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_apply_settings();
         if let Some(value) = matches.get_one::<types::Name>("port") {
@@ -10613,7 +10647,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_clear_settings(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_clear_settings();
         if let Some(value) = matches.get_one::<types::Name>("port") {
@@ -10645,7 +10679,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_status();
         if let Some(value) = matches.get_one::<types::Name>("port") {
@@ -10675,7 +10709,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_switch_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_switch_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10710,7 +10744,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_switch_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_switch_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("switch-id") {
             request = request.switch_id(value.clone());
@@ -10732,7 +10766,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_identity_provider_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_identity_provider_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10777,7 +10811,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_local_idp_user_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_create();
         if let Some(value) = matches.get_one::<types::UserId>("external-id") {
@@ -10811,7 +10845,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_local_idp_user_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
@@ -10839,7 +10873,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_local_idp_user_set_password(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_set_password();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
@@ -10873,7 +10907,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_saml_identity_provider_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.saml_identity_provider_create();
         if let Some(value) = matches.get_one::<::std::string::String>("acs-url") {
@@ -10936,7 +10970,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_saml_identity_provider_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.saml_identity_provider_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("provider") {
@@ -10962,7 +10996,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10997,7 +11031,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ip_pool_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -11027,7 +11061,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ip_pool_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
@@ -11047,7 +11081,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ip_pool_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -11081,7 +11115,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_ip_pool_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
@@ -11103,7 +11137,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_range_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11143,7 +11177,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_range_add(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_add();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -11173,7 +11207,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_range_remove(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_remove();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -11203,7 +11237,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_silo_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11247,7 +11281,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_silo_link(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_link();
         if let Some(value) = matches.get_one::<bool>("is-default") {
@@ -11285,7 +11319,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_silo_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_update();
         if let Some(value) = matches.get_one::<bool>("is-default") {
@@ -11323,7 +11357,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_silo_unlink(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_unlink();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -11351,7 +11385,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_utilization_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_utilization_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -11375,7 +11409,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_service_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_view();
         self.config
@@ -11395,7 +11429,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_service_range_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11431,7 +11465,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_service_range_add(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -11457,7 +11491,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_service_range_remove(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -11481,7 +11515,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_system_metric(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_system_metric(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.system_metric();
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
@@ -11536,7 +11570,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_address_lot_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11576,7 +11610,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_address_lot_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -11614,7 +11648,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_address_lot_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
@@ -11638,7 +11672,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_address_lot_block_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_block_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
@@ -11683,7 +11717,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_allow_list_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_allow_list_view();
         self.config
@@ -11703,7 +11737,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_allow_list_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_allow_list_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -11729,7 +11763,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bfd_disable(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bfd_disable();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
@@ -11763,7 +11797,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bfd_enable(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bfd_enable();
         if let Some(value) = matches.get_one::<u8>("detection-threshold") {
@@ -11813,7 +11847,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bfd_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bfd_status();
         self.config
@@ -11833,7 +11867,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_config_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11873,7 +11907,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_config_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_create();
         if let Some(value) = matches.get_one::<u32>("asn") {
@@ -11919,7 +11953,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_config_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
@@ -11943,7 +11977,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_announce_set_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -11975,7 +12009,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_announce_set_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -12010,7 +12044,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_announce_set_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
@@ -12034,7 +12068,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_announcement_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announcement_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("announce-set") {
@@ -12058,7 +12092,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_exported(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_exported();
         self.config
@@ -12078,7 +12112,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_message_history(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_message_history();
         if let Some(value) = matches.get_one::<u32>("asn") {
@@ -12102,7 +12136,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_imported_routes_ipv4(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_imported_routes_ipv4();
         if let Some(value) = matches.get_one::<u32>("asn") {
@@ -12126,7 +12160,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_bgp_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_status();
         self.config
@@ -12146,7 +12180,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_loopback_address_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12187,7 +12221,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_loopback_address_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_create();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
@@ -12238,7 +12272,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_loopback_address_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_delete();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
@@ -12274,7 +12308,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_settings_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12319,7 +12353,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_settings_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -12354,7 +12388,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_settings_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
@@ -12378,7 +12412,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_networking_switch_port_settings_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("port") {
@@ -12402,7 +12436,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_view();
         self.config
@@ -12422,7 +12456,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -12446,7 +12480,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_role_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_role_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.role_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -12477,7 +12511,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_role_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_role_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.role_view();
         if let Some(value) = matches.get_one::<::std::string::String>("role-name") {
             request = request.role_name(value.clone());
@@ -12499,7 +12533,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_quotas_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_quotas_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12537,7 +12571,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -12572,7 +12606,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_create();
         if let Some(value) = matches.get_one::<::std::string::String>("admin-group-name") {
             request = request.body_map(|body| body.admin_group_name(value.clone()))
@@ -12614,7 +12648,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -12634,7 +12668,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -12656,7 +12690,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12698,7 +12732,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_policy_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -12721,7 +12758,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
@@ -12749,7 +12786,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_quotas_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_quotas_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_quotas_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -12772,7 +12812,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_quotas_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_quotas_update();
         if let Some(value) = matches.get_one::<i64>("cpus") {
@@ -12814,7 +12854,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_timeseries_query(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_query();
         if let Some(value) = matches.get_one::<::std::string::String>("query") {
@@ -12844,7 +12884,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_timeseries_schema_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_schema_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12879,7 +12919,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -12918,7 +12958,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_silo_user_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -12944,7 +12984,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_user_builtin_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -12984,7 +13024,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_user_builtin_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("user") {
@@ -13008,7 +13048,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_utilization_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -13049,7 +13089,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_utilization_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
@@ -13071,7 +13111,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_timeseries_query(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_timeseries_query(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.timeseries_query();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -13102,7 +13145,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.user_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
             request = request.group(value.clone());
@@ -13141,7 +13184,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_utilization_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_utilization_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.utilization_view();
         self.config
             .execute_utilization_view(matches, &mut request)?;
@@ -13160,7 +13206,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_firewall_rules_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13188,7 +13234,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_firewall_rules_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13223,7 +13269,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_route_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -13275,7 +13321,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_route_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -13321,7 +13367,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_route_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13357,7 +13403,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_route_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -13407,7 +13453,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_route_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13441,7 +13487,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_router_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_router_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -13487,7 +13536,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -13527,7 +13576,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_router_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_router_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -13557,7 +13609,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
@@ -13603,7 +13655,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_router_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13633,7 +13685,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_subnet_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_subnet_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -13679,7 +13734,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_subnet_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_create();
         if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
@@ -13731,7 +13786,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_subnet_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_subnet_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -13761,7 +13819,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_subnet_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("custom-router") {
@@ -13811,7 +13869,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_subnet_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -13843,7 +13901,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_subnet_list_network_interfaces(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list_network_interfaces();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -13894,7 +13952,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -13933,7 +13991,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_create(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -13975,7 +14033,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -13999,7 +14057,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_update();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -14041,7 +14099,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+    pub async fn execute_vpc_delete(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -14088,7 +14146,7 @@ pub trait CliConfig {
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn execute_device_auth_request(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DeviceAuthRequest,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14096,7 +14154,7 @@ pub trait CliConfig {
 
     fn execute_device_auth_confirm(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DeviceAuthConfirm,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14104,7 +14162,7 @@ pub trait CliConfig {
 
     fn execute_device_access_token(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DeviceAccessToken,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14112,7 +14170,7 @@ pub trait CliConfig {
 
     fn execute_probe_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProbeList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14120,7 +14178,7 @@ pub trait CliConfig {
 
     fn execute_probe_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProbeCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14128,7 +14186,7 @@ pub trait CliConfig {
 
     fn execute_probe_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProbeView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14136,7 +14194,7 @@ pub trait CliConfig {
 
     fn execute_probe_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProbeDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14144,7 +14202,7 @@ pub trait CliConfig {
 
     fn execute_login_saml(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::LoginSaml,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14152,7 +14210,7 @@ pub trait CliConfig {
 
     fn execute_certificate_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CertificateList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14160,7 +14218,7 @@ pub trait CliConfig {
 
     fn execute_certificate_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CertificateCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14168,7 +14226,7 @@ pub trait CliConfig {
 
     fn execute_certificate_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CertificateView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14176,7 +14234,7 @@ pub trait CliConfig {
 
     fn execute_certificate_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CertificateDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14184,7 +14242,7 @@ pub trait CliConfig {
 
     fn execute_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14192,7 +14250,7 @@ pub trait CliConfig {
 
     fn execute_disk_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14200,7 +14258,7 @@ pub trait CliConfig {
 
     fn execute_disk_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14208,7 +14266,7 @@ pub trait CliConfig {
 
     fn execute_disk_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14216,7 +14274,7 @@ pub trait CliConfig {
 
     fn execute_disk_bulk_write_import(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImport,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14224,7 +14282,7 @@ pub trait CliConfig {
 
     fn execute_disk_bulk_write_import_start(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImportStart,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14232,7 +14290,7 @@ pub trait CliConfig {
 
     fn execute_disk_bulk_write_import_stop(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImportStop,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14240,7 +14298,7 @@ pub trait CliConfig {
 
     fn execute_disk_finalize_import(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskFinalizeImport,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14248,7 +14306,7 @@ pub trait CliConfig {
 
     fn execute_disk_metrics_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::DiskMetricsList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14256,7 +14314,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14264,7 +14322,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14272,7 +14330,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14280,7 +14338,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14288,7 +14346,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14296,7 +14354,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpAttach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14304,7 +14362,7 @@ pub trait CliConfig {
 
     fn execute_floating_ip_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::FloatingIpDetach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14312,7 +14370,7 @@ pub trait CliConfig {
 
     fn execute_group_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::GroupList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14320,7 +14378,7 @@ pub trait CliConfig {
 
     fn execute_group_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::GroupView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14328,7 +14386,7 @@ pub trait CliConfig {
 
     fn execute_image_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImageList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14336,7 +14394,7 @@ pub trait CliConfig {
 
     fn execute_image_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImageCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14344,7 +14402,7 @@ pub trait CliConfig {
 
     fn execute_image_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImageView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14352,7 +14410,7 @@ pub trait CliConfig {
 
     fn execute_image_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImageDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14360,7 +14418,7 @@ pub trait CliConfig {
 
     fn execute_image_demote(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImageDemote,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14368,7 +14426,7 @@ pub trait CliConfig {
 
     fn execute_image_promote(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ImagePromote,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14376,7 +14434,7 @@ pub trait CliConfig {
 
     fn execute_instance_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14384,7 +14442,7 @@ pub trait CliConfig {
 
     fn execute_instance_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14392,7 +14450,7 @@ pub trait CliConfig {
 
     fn execute_instance_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14400,7 +14458,7 @@ pub trait CliConfig {
 
     fn execute_instance_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14408,7 +14466,7 @@ pub trait CliConfig {
 
     fn execute_instance_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14416,7 +14474,7 @@ pub trait CliConfig {
 
     fn execute_instance_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceDiskList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14424,7 +14482,7 @@ pub trait CliConfig {
 
     fn execute_instance_disk_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceDiskAttach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14432,7 +14490,7 @@ pub trait CliConfig {
 
     fn execute_instance_disk_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceDiskDetach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14440,7 +14498,7 @@ pub trait CliConfig {
 
     fn execute_instance_external_ip_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceExternalIpList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14448,7 +14506,7 @@ pub trait CliConfig {
 
     fn execute_instance_ephemeral_ip_attach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceEphemeralIpAttach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14456,7 +14514,7 @@ pub trait CliConfig {
 
     fn execute_instance_ephemeral_ip_detach(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceEphemeralIpDetach,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14464,7 +14522,7 @@ pub trait CliConfig {
 
     fn execute_instance_reboot(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceReboot,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14472,7 +14530,7 @@ pub trait CliConfig {
 
     fn execute_instance_serial_console(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceSerialConsole,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14480,7 +14538,7 @@ pub trait CliConfig {
 
     fn execute_instance_serial_console_stream(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceSerialConsoleStream,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14488,7 +14546,7 @@ pub trait CliConfig {
 
     fn execute_instance_ssh_public_key_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceSshPublicKeyList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14496,7 +14554,7 @@ pub trait CliConfig {
 
     fn execute_instance_start(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceStart,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14504,7 +14562,7 @@ pub trait CliConfig {
 
     fn execute_instance_stop(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceStop,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14512,7 +14570,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_address_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpAddressList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14520,7 +14578,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_address_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpAddressCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14528,7 +14586,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_address_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpAddressDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14536,7 +14594,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14544,7 +14602,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_pool_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpPoolCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14552,7 +14610,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_ip_pool_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayIpPoolDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14560,7 +14618,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14568,7 +14626,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14576,7 +14634,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14584,7 +14642,7 @@ pub trait CliConfig {
 
     fn execute_internet_gateway_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InternetGatewayDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14592,7 +14650,7 @@ pub trait CliConfig {
 
     fn execute_project_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectIpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14600,7 +14658,7 @@ pub trait CliConfig {
 
     fn execute_project_ip_pool_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectIpPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14608,7 +14666,7 @@ pub trait CliConfig {
 
     fn execute_login_local(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::LoginLocal,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14616,7 +14674,7 @@ pub trait CliConfig {
 
     fn execute_logout(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::Logout,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14624,7 +14682,7 @@ pub trait CliConfig {
 
     fn execute_current_user_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14632,7 +14690,7 @@ pub trait CliConfig {
 
     fn execute_current_user_groups(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserGroups,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14640,7 +14698,7 @@ pub trait CliConfig {
 
     fn execute_current_user_ssh_key_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14648,7 +14706,7 @@ pub trait CliConfig {
 
     fn execute_current_user_ssh_key_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14656,7 +14714,7 @@ pub trait CliConfig {
 
     fn execute_current_user_ssh_key_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14664,7 +14722,7 @@ pub trait CliConfig {
 
     fn execute_current_user_ssh_key_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14672,7 +14730,7 @@ pub trait CliConfig {
 
     fn execute_silo_metric(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloMetric,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14680,7 +14738,7 @@ pub trait CliConfig {
 
     fn execute_instance_network_interface_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14688,7 +14746,7 @@ pub trait CliConfig {
 
     fn execute_instance_network_interface_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14696,7 +14754,7 @@ pub trait CliConfig {
 
     fn execute_instance_network_interface_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14704,7 +14762,7 @@ pub trait CliConfig {
 
     fn execute_instance_network_interface_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14712,7 +14770,7 @@ pub trait CliConfig {
 
     fn execute_instance_network_interface_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14720,7 +14778,7 @@ pub trait CliConfig {
 
     fn execute_ping(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::Ping,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14728,7 +14786,7 @@ pub trait CliConfig {
 
     fn execute_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::PolicyView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14736,7 +14794,7 @@ pub trait CliConfig {
 
     fn execute_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::PolicyUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14744,7 +14802,7 @@ pub trait CliConfig {
 
     fn execute_project_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14752,7 +14810,7 @@ pub trait CliConfig {
 
     fn execute_project_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14760,7 +14818,7 @@ pub trait CliConfig {
 
     fn execute_project_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14768,7 +14826,7 @@ pub trait CliConfig {
 
     fn execute_project_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14776,7 +14834,7 @@ pub trait CliConfig {
 
     fn execute_project_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14784,7 +14842,7 @@ pub trait CliConfig {
 
     fn execute_project_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectPolicyView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14792,7 +14850,7 @@ pub trait CliConfig {
 
     fn execute_project_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::ProjectPolicyUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14800,7 +14858,7 @@ pub trait CliConfig {
 
     fn execute_snapshot_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SnapshotList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14808,7 +14866,7 @@ pub trait CliConfig {
 
     fn execute_snapshot_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SnapshotCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14816,7 +14874,7 @@ pub trait CliConfig {
 
     fn execute_snapshot_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SnapshotView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14824,7 +14882,7 @@ pub trait CliConfig {
 
     fn execute_snapshot_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SnapshotDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14832,7 +14890,7 @@ pub trait CliConfig {
 
     fn execute_physical_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::PhysicalDiskList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14840,7 +14898,7 @@ pub trait CliConfig {
 
     fn execute_physical_disk_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::PhysicalDiskView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14848,7 +14906,7 @@ pub trait CliConfig {
 
     fn execute_rack_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::RackList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14856,7 +14914,7 @@ pub trait CliConfig {
 
     fn execute_rack_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::RackView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14864,7 +14922,7 @@ pub trait CliConfig {
 
     fn execute_sled_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14872,7 +14930,7 @@ pub trait CliConfig {
 
     fn execute_sled_add(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledAdd,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14880,7 +14938,7 @@ pub trait CliConfig {
 
     fn execute_sled_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14888,7 +14946,7 @@ pub trait CliConfig {
 
     fn execute_sled_physical_disk_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledPhysicalDiskList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14896,7 +14954,7 @@ pub trait CliConfig {
 
     fn execute_sled_instance_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledInstanceList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14904,7 +14962,7 @@ pub trait CliConfig {
 
     fn execute_sled_set_provision_policy(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledSetProvisionPolicy,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14912,7 +14970,7 @@ pub trait CliConfig {
 
     fn execute_sled_list_uninitialized(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SledListUninitialized,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14920,7 +14978,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14928,7 +14986,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_apply_settings(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortApplySettings,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14936,7 +14994,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_clear_settings(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortClearSettings,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14944,7 +15002,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortStatus,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14952,7 +15010,7 @@ pub trait CliConfig {
 
     fn execute_switch_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SwitchList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14960,7 +15018,7 @@ pub trait CliConfig {
 
     fn execute_switch_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SwitchView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14968,7 +15026,7 @@ pub trait CliConfig {
 
     fn execute_silo_identity_provider_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloIdentityProviderList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14976,7 +15034,7 @@ pub trait CliConfig {
 
     fn execute_local_idp_user_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::LocalIdpUserCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14984,7 +15042,7 @@ pub trait CliConfig {
 
     fn execute_local_idp_user_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::LocalIdpUserDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -14992,7 +15050,7 @@ pub trait CliConfig {
 
     fn execute_local_idp_user_set_password(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::LocalIdpUserSetPassword,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15000,7 +15058,7 @@ pub trait CliConfig {
 
     fn execute_saml_identity_provider_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SamlIdentityProviderCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15008,7 +15066,7 @@ pub trait CliConfig {
 
     fn execute_saml_identity_provider_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SamlIdentityProviderView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15016,7 +15074,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15024,7 +15082,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15032,7 +15090,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15040,7 +15098,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15048,7 +15106,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15056,7 +15114,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_range_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolRangeList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15064,7 +15122,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_range_add(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolRangeAdd,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15072,7 +15130,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_range_remove(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15080,7 +15138,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_silo_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolSiloList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15088,7 +15146,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_silo_link(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolSiloLink,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15096,7 +15154,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_silo_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolSiloUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15104,7 +15162,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_silo_unlink(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolSiloUnlink,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15112,7 +15170,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_utilization_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolUtilizationView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15120,7 +15178,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_service_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolServiceView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15128,7 +15186,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_service_range_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15136,7 +15194,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_service_range_add(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeAdd,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15144,7 +15202,7 @@ pub trait CliConfig {
 
     fn execute_ip_pool_service_range_remove(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeRemove,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15152,7 +15210,7 @@ pub trait CliConfig {
 
     fn execute_system_metric(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemMetric,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15160,7 +15218,7 @@ pub trait CliConfig {
 
     fn execute_networking_address_lot_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15168,7 +15226,7 @@ pub trait CliConfig {
 
     fn execute_networking_address_lot_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15176,7 +15234,7 @@ pub trait CliConfig {
 
     fn execute_networking_address_lot_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15184,7 +15242,7 @@ pub trait CliConfig {
 
     fn execute_networking_address_lot_block_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotBlockList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15192,7 +15250,7 @@ pub trait CliConfig {
 
     fn execute_networking_allow_list_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAllowListView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15200,7 +15258,7 @@ pub trait CliConfig {
 
     fn execute_networking_allow_list_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingAllowListUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15208,7 +15266,7 @@ pub trait CliConfig {
 
     fn execute_networking_bfd_disable(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBfdDisable,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15216,7 +15274,7 @@ pub trait CliConfig {
 
     fn execute_networking_bfd_enable(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBfdEnable,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15224,7 +15282,7 @@ pub trait CliConfig {
 
     fn execute_networking_bfd_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBfdStatus,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15232,7 +15290,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_config_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15240,7 +15298,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_config_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15248,7 +15306,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_config_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15256,7 +15314,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_announce_set_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15264,7 +15322,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_announce_set_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15272,7 +15330,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_announce_set_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15280,7 +15338,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_announcement_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnouncementList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15288,7 +15346,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_exported(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpExported,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15296,7 +15354,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_message_history(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpMessageHistory,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15304,7 +15362,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_imported_routes_ipv4(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpImportedRoutesIpv4,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15312,7 +15370,7 @@ pub trait CliConfig {
 
     fn execute_networking_bgp_status(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingBgpStatus,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15320,7 +15378,7 @@ pub trait CliConfig {
 
     fn execute_networking_loopback_address_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15328,7 +15386,7 @@ pub trait CliConfig {
 
     fn execute_networking_loopback_address_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15336,7 +15394,7 @@ pub trait CliConfig {
 
     fn execute_networking_loopback_address_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15344,7 +15402,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_settings_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15352,7 +15410,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_settings_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15360,7 +15418,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_settings_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15368,7 +15426,7 @@ pub trait CliConfig {
 
     fn execute_networking_switch_port_settings_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15376,7 +15434,7 @@ pub trait CliConfig {
 
     fn execute_system_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemPolicyView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15384,7 +15442,7 @@ pub trait CliConfig {
 
     fn execute_system_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemPolicyUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15392,7 +15450,7 @@ pub trait CliConfig {
 
     fn execute_role_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::RoleList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15400,7 +15458,7 @@ pub trait CliConfig {
 
     fn execute_role_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::RoleView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15408,7 +15466,7 @@ pub trait CliConfig {
 
     fn execute_system_quotas_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemQuotasList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15416,7 +15474,7 @@ pub trait CliConfig {
 
     fn execute_silo_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15424,7 +15482,7 @@ pub trait CliConfig {
 
     fn execute_silo_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15432,7 +15490,7 @@ pub trait CliConfig {
 
     fn execute_silo_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15440,7 +15498,7 @@ pub trait CliConfig {
 
     fn execute_silo_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15448,7 +15506,7 @@ pub trait CliConfig {
 
     fn execute_silo_ip_pool_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloIpPoolList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15456,7 +15514,7 @@ pub trait CliConfig {
 
     fn execute_silo_policy_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloPolicyView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15464,7 +15522,7 @@ pub trait CliConfig {
 
     fn execute_silo_policy_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloPolicyUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15472,7 +15530,7 @@ pub trait CliConfig {
 
     fn execute_silo_quotas_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloQuotasView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15480,7 +15538,7 @@ pub trait CliConfig {
 
     fn execute_silo_quotas_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloQuotasUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15488,7 +15546,7 @@ pub trait CliConfig {
 
     fn execute_system_timeseries_query(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemTimeseriesQuery,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15496,7 +15554,7 @@ pub trait CliConfig {
 
     fn execute_system_timeseries_schema_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SystemTimeseriesSchemaList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15504,7 +15562,7 @@ pub trait CliConfig {
 
     fn execute_silo_user_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloUserList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15512,7 +15570,7 @@ pub trait CliConfig {
 
     fn execute_silo_user_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloUserView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15520,7 +15578,7 @@ pub trait CliConfig {
 
     fn execute_user_builtin_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::UserBuiltinList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15528,7 +15586,7 @@ pub trait CliConfig {
 
     fn execute_user_builtin_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::UserBuiltinView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15536,7 +15594,7 @@ pub trait CliConfig {
 
     fn execute_silo_utilization_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloUtilizationList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15544,7 +15602,7 @@ pub trait CliConfig {
 
     fn execute_silo_utilization_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::SiloUtilizationView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15552,7 +15610,7 @@ pub trait CliConfig {
 
     fn execute_timeseries_query(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::TimeseriesQuery,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15560,7 +15618,7 @@ pub trait CliConfig {
 
     fn execute_user_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::UserList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15568,7 +15626,7 @@ pub trait CliConfig {
 
     fn execute_utilization_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::UtilizationView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15576,7 +15634,7 @@ pub trait CliConfig {
 
     fn execute_vpc_firewall_rules_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcFirewallRulesView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15584,7 +15642,7 @@ pub trait CliConfig {
 
     fn execute_vpc_firewall_rules_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcFirewallRulesUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15592,7 +15650,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_route_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterRouteList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15600,7 +15658,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_route_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterRouteCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15608,7 +15666,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_route_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterRouteView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15616,7 +15674,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_route_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterRouteUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15624,7 +15682,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_route_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterRouteDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15632,7 +15690,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15640,7 +15698,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15648,7 +15706,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15656,7 +15714,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15664,7 +15722,7 @@ pub trait CliConfig {
 
     fn execute_vpc_router_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcRouterDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15672,7 +15730,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15680,7 +15738,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15688,7 +15746,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15696,7 +15754,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15704,7 +15762,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetDelete,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15712,7 +15770,7 @@ pub trait CliConfig {
 
     fn execute_vpc_subnet_list_network_interfaces(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcSubnetListNetworkInterfaces,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15720,7 +15778,7 @@ pub trait CliConfig {
 
     fn execute_vpc_list(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcList,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15728,7 +15786,7 @@ pub trait CliConfig {
 
     fn execute_vpc_create(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcCreate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15736,7 +15794,7 @@ pub trait CliConfig {
 
     fn execute_vpc_view(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcView,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15744,7 +15802,7 @@ pub trait CliConfig {
 
     fn execute_vpc_update(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
@@ -15752,7 +15810,7 @@ pub trait CliConfig {
 
     fn execute_vpc_delete(
         &self,
-        matches: &clap::ArgMatches,
+        matches: &::clap::ArgMatches,
         request: &mut builder::VpcDelete,
     ) -> anyhow::Result<()> {
         Ok(())
