@@ -20,10 +20,6 @@ use serde_json::json;
 fn scrub_server(raw: String, server: String) -> String {
     raw.replace(&server, "<TEST-SERVER>")
 }
-fn scrub_creds(raw: String, path: &Path) -> String {
-    let path = path.to_string_lossy().to_string();
-    raw.replace(&path, "<CREDENTIALS-PATH>")
-}
 struct MockOAuth<'a> {
     device_auth: Mock<'a>,
     device_token: Mock<'a>,
@@ -336,6 +332,11 @@ fn test_auth_credentials_permissions() {
         .assert()
         .success();
     let stderr = String::from_utf8_lossy(&cmd.get_output().stderr);
+
+    fn scrub_creds(raw: String, path: &Path) -> String {
+        let path = path.to_string_lossy().to_string();
+        raw.replace(&path, "<CREDENTIALS-PATH>")
+    }
 
     assert_contents(
         "tests/data/test_auth_credentials_permissions.stderr",
