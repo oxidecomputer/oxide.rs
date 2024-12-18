@@ -1791,6 +1791,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "integration-tests"
+version = "0.0.0"
+dependencies = [
+ "httpmock",
+ "oxide",
+ "oxide-httpmock",
+ "rand",
+ "tempfile",
+ "test-common",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
 name = "io-lifetimes"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2340,8 +2354,6 @@ dependencies = [
  "clap",
  "dirs",
  "futures",
- "httpmock",
- "oxide-httpmock",
  "progenitor-client 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand",
  "regress",

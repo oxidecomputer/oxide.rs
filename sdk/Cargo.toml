@@ -27,8 +27,6 @@ toml_edit = { workspace = true }
 uuid = { workspace = true }
 
 [dev-dependencies]
-httpmock = { workspace = true }
-oxide-httpmock = { workspace = true }
 tempfile = { workspace = true }
 test-common = { workspace = true }
 tokio = { workspace = true }
