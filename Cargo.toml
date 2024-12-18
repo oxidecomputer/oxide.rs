@@ -40,7 +40,7 @@ oxide-httpmock = { path = "sdk-httpmock", version = "0.9.0" }
 oxnet = { git = "https://github.com/oxidecomputer/oxnet" }
 predicates = "3.1.2"
 pretty_assertions = "1.4.1"
-progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
+progenitor = "0.8.0"
 progenitor-client = "0.8.0"
 rand = "0.8.5"
 ratatui = "0.26.3"
