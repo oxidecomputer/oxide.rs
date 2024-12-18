@@ -1,0 +1,15 @@
+[package]
+name = "integration-tests"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dev-dependencies]
+httpmock = { workspace = true }
+oxide = { workspace = true }
+oxide-httpmock = { workspace = true }
+tempfile = { workspace = true }
+test-common = { workspace = true }
+tokio = { workspace = true }
+rand = { workspace = true, features = ["small_rng"] }
+uuid = { workspace = true }

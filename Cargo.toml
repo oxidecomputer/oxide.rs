@@ -1,6 +1,7 @@
 [workspace]
 members = [
 	"cli",
+	"integration-tests",
 	"sdk",
 	"sdk-httpmock",
 	"test-common",
