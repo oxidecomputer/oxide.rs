@@ -18,7 +18,7 @@ built = { version = "0.7.5", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.23", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.39"
-colored = "2.1.0"
+colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
