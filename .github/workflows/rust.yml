@@ -13,7 +13,7 @@ jobs:
   check-style:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v4
       - name: Report cargo version
         run: cargo --version
       - name: Report rustfmt version
@@ -24,7 +24,7 @@ jobs:
   clippy-lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v4
       - name: Report cargo version
         run: cargo --version
       - name: Report Clippy version
@@ -38,13 +38,11 @@ jobs:
   check-generation:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v4
       - name: Install nightly rustfmt
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          toolchain: nightly
           components: rustfmt
-          default: false
       - name: Report cargo version
         run: cargo --version
       - name: Report rustc version
@@ -62,7 +60,7 @@ jobs:
           - features: all
             feature_flags: --all-features
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v4
       - name: Report cargo version
         run: cargo --version
       - name: Report rustc version
