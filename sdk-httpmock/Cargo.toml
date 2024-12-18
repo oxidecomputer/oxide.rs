@@ -1,7 +1,7 @@
 [package]
 name = "oxide-httpmock"
 description = "httpmock for the Oxide rack API"
-version = "0.8.0+20241009.0"
+version = "0.9.0+20241204.0.0"
 edition = "2021"
 license = "MPL-2.0"
 repository = "https://github.com/oxidecomputer/oxide.rs"
