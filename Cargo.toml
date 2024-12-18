@@ -15,7 +15,7 @@ assert_cmd = "2.0.16"
 async-trait = "0.1.83"
 base64 = "0.22.1"
 built = { version = "0.7.5", features = ["git2"] }
-chrono = { version = "0.4.38", features = ["serde"] }
+chrono = { version = "0.4.39", features = ["serde"] }
 clap = { version = "4.5.23", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.39"
 colored = "2.2.0"
@@ -58,7 +58,7 @@ thiserror = "2.0.7"
 tempfile = "3.14.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
-tokio = { version = "1.41.1", features = ["full"] }
+tokio = { version = "1.42.0", features = ["full"] }
 toml = "0.8.19"
 toml_edit = "0.22.22"
 url = "2.5.4"
