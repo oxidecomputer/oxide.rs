@@ -20538,7 +20538,10 @@ pub mod types {
         ///
         /// The default is that no Fleet roles are conferred by any Silo roles
         /// unless there's a corresponding entry in this map.
-        #[serde(default, skip_serializing_if = "::std::collections::HashMap::is_empty")]
+        #[serde(
+            default,
+            skip_serializing_if = ":: std :: collections :: HashMap::is_empty"
+        )]
         pub mapped_fleet_roles: ::std::collections::HashMap<::std::string::String, Vec<FleetRole>>,
         pub name: Name,
         /// Limits the amount of provisionable CPU, memory, and storage in the
