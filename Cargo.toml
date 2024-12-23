@@ -10,14 +10,14 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = "1.0.94"
+anyhow = "1.0.95"
 assert_cmd = "2.0.16"
 async-trait = "0.1.83"
 base64 = "0.22.1"
 built = { version = "0.7.5", features = ["git2"] }
 chrono = { version = "0.4.39", features = ["serde"] }
 clap = { version = "4.5.23", features = ["derive", "string", "env", "wrap_help"] }
-clap_complete = "4.5.39"
+clap_complete = "4.5.40"
 colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
@@ -29,7 +29,7 @@ futures = "0.3.31"
 httpmock = "0.6.8"
 humantime = "2"
 indicatif = "0.17"
-libc = "0.2.168"
+libc = "0.2.169"
 log = "0.4.22"
 md5 = "0.7.0"
 newline-converter = "0.3.0"
@@ -38,7 +38,7 @@ open = "4.2.0"
 oxide = { path = "sdk", version = "0.9.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.9.0" }
 oxnet = { git = "https://github.com/oxidecomputer/oxnet" }
-predicates = "3.1.2"
+predicates = "3.1.3"
 pretty_assertions = "1.4.1"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor", default-features = false }
 progenitor-client = "0.8.0"
@@ -54,7 +54,7 @@ serde = { version = "1.0.216", features = ["derive"] }
 serde_json = "1.0.133"
 similar = "2.6.0"
 tabwriter = "1.4.0"
-thiserror = "2.0.7"
+thiserror = "2.0.9"
 tempfile = "3.14.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
