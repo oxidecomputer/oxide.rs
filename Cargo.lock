@@ -615,7 +615,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c"
 dependencies = [
  "lazy_static",
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
@@ -2094,7 +2094,7 @@ version = "5.0.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23d385da3c602d29036d2f70beed71c36604df7570be17fed4c5b839616785bf"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.21.7",
  "chrono",
  "getrandom",
  "http 1.2.0",
@@ -2501,17 +2501,17 @@ dependencies = [
 
 [[package]]
 name = "progenitor"
-version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#cf8d20fbecf1f329348fd09f759bb0442cb3eeaa"
+version = "0.9.0"
+source = "git+https://github.com/oxidecomputer/progenitor#a01e0fb71d56986bad28a066f65369ea5a022d4b"
 dependencies = [
  "progenitor-impl",
 ]
 
 [[package]]
 name = "progenitor-client"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4a5db54eac3cae7007a0785854bc3e89fd418cca7dfc2207b99b43979154c1b"
+checksum = "8ec6f204bec21b7165004e0973327631e4976e690c6b91686ee3f0a700d9f5bd"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2524,8 +2524,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor-impl"
-version = "0.8.0"
-source = "git+https://github.com/oxidecomputer/progenitor#cf8d20fbecf1f329348fd09f759bb0442cb3eeaa"
+version = "0.9.0"
+source = "git+https://github.com/oxidecomputer/progenitor#a01e0fb71d56986bad28a066f65369ea5a022d4b"
 dependencies = [
  "heck",
  "http 1.2.0",
@@ -3798,8 +3798,9 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 
 [[package]]
 name = "typify"
-version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#fa65d747632c2c95d06df9d702cca1d04684e3c2"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e03ba3643450cfd95a1aca2e1938fef63c1c1994489337998aff4ad771f21ef8"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3807,8 +3808,9 @@ dependencies = [
 
 [[package]]
 name = "typify-impl"
-version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#fa65d747632c2c95d06df9d702cca1d04684e3c2"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bce48219a2f3154aaa2c56cbf027728b24a3c8fe0a47ed6399781de2b3f3eeaf"
 dependencies = [
  "heck",
  "log",
@@ -3826,8 +3828,9 @@ dependencies = [
 
 [[package]]
 name = "typify-macro"
-version = "0.2.0"
-source = "git+https://github.com/oxidecomputer/typify#fa65d747632c2c95d06df9d702cca1d04684e3c2"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68b5780d745920ed73c5b7447496a9b5c42ed2681a9b70859377aec423ecf02b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4131,7 +4134,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]

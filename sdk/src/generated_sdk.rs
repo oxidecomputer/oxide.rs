@@ -575,7 +575,7 @@ pub mod types {
         Pool,
     }
 
-    impl ::std::convert::From<&AddressLotKind> for AddressLotKind {
+    impl ::std::convert::From<&Self> for AddressLotKind {
         fn from(value: &AddressLotKind) -> Self {
             value.clone()
         }
@@ -895,7 +895,7 @@ pub mod types {
         List(::std::vec::Vec<IpNet>),
     }
 
-    impl ::std::convert::From<&AllowedSourceIps> for AllowedSourceIps {
+    impl ::std::convert::From<&Self> for AllowedSourceIps {
         fn from(value: &AllowedSourceIps) -> Self {
             value.clone()
         }
@@ -989,7 +989,7 @@ pub mod types {
         ViewableToAll,
     }
 
-    impl ::std::convert::From<&AuthzScope> for AuthzScope {
+    impl ::std::convert::From<&Self> for AuthzScope {
         fn from(value: &AuthzScope) -> Self {
             value.clone()
         }
@@ -1130,7 +1130,7 @@ pub mod types {
         MultiHop,
     }
 
-    impl ::std::convert::From<&BfdMode> for BfdMode {
+    impl ::std::convert::From<&Self> for BfdMode {
         fn from(value: &BfdMode) -> Self {
             value.clone()
         }
@@ -1413,7 +1413,7 @@ pub mod types {
         Up,
     }
 
-    impl ::std::convert::From<&BfdState> for BfdState {
+    impl ::std::convert::From<&Self> for BfdState {
         fn from(value: &BfdState) -> Self {
             value.clone()
         }
@@ -2574,7 +2574,7 @@ pub mod types {
         Established,
     }
 
-    impl ::std::convert::From<&BgpPeerState> for BgpPeerState {
+    impl ::std::convert::From<&Self> for BgpPeerState {
         fn from(value: &BgpPeerState) -> Self {
             value.clone()
         }
@@ -2829,7 +2829,7 @@ pub mod types {
         RangeFrom { start: f64 },
     }
 
-    impl ::std::convert::From<&BinRangedouble> for BinRangedouble {
+    impl ::std::convert::From<&Self> for BinRangedouble {
         fn from(value: &BinRangedouble) -> Self {
             value.clone()
         }
@@ -2939,7 +2939,7 @@ pub mod types {
         RangeFrom { start: f32 },
     }
 
-    impl ::std::convert::From<&BinRangefloat> for BinRangefloat {
+    impl ::std::convert::From<&Self> for BinRangefloat {
         fn from(value: &BinRangefloat) -> Self {
             value.clone()
         }
@@ -3049,7 +3049,7 @@ pub mod types {
         RangeFrom { start: i16 },
     }
 
-    impl ::std::convert::From<&BinRangeint16> for BinRangeint16 {
+    impl ::std::convert::From<&Self> for BinRangeint16 {
         fn from(value: &BinRangeint16) -> Self {
             value.clone()
         }
@@ -3159,7 +3159,7 @@ pub mod types {
         RangeFrom { start: i32 },
     }
 
-    impl ::std::convert::From<&BinRangeint32> for BinRangeint32 {
+    impl ::std::convert::From<&Self> for BinRangeint32 {
         fn from(value: &BinRangeint32) -> Self {
             value.clone()
         }
@@ -3269,7 +3269,7 @@ pub mod types {
         RangeFrom { start: i64 },
     }
 
-    impl ::std::convert::From<&BinRangeint64> for BinRangeint64 {
+    impl ::std::convert::From<&Self> for BinRangeint64 {
         fn from(value: &BinRangeint64) -> Self {
             value.clone()
         }
@@ -3379,7 +3379,7 @@ pub mod types {
         RangeFrom { start: i8 },
     }
 
-    impl ::std::convert::From<&BinRangeint8> for BinRangeint8 {
+    impl ::std::convert::From<&Self> for BinRangeint8 {
         fn from(value: &BinRangeint8) -> Self {
             value.clone()
         }
@@ -3493,7 +3493,7 @@ pub mod types {
         RangeFrom { start: u16 },
     }
 
-    impl ::std::convert::From<&BinRangeuint16> for BinRangeuint16 {
+    impl ::std::convert::From<&Self> for BinRangeuint16 {
         fn from(value: &BinRangeuint16) -> Self {
             value.clone()
         }
@@ -3607,7 +3607,7 @@ pub mod types {
         RangeFrom { start: u32 },
     }
 
-    impl ::std::convert::From<&BinRangeuint32> for BinRangeuint32 {
+    impl ::std::convert::From<&Self> for BinRangeuint32 {
         fn from(value: &BinRangeuint32) -> Self {
             value.clone()
         }
@@ -3721,7 +3721,7 @@ pub mod types {
         RangeFrom { start: u64 },
     }
 
-    impl ::std::convert::From<&BinRangeuint64> for BinRangeuint64 {
+    impl ::std::convert::From<&Self> for BinRangeuint64 {
         fn from(value: &BinRangeuint64) -> Self {
             value.clone()
         }
@@ -3835,7 +3835,7 @@ pub mod types {
         RangeFrom { start: u8 },
     }
 
-    impl ::std::convert::From<&BinRangeuint8> for BinRangeuint8 {
+    impl ::std::convert::From<&Self> for BinRangeuint8 {
         fn from(value: &BinRangeuint8) -> Self {
             value.clone()
         }
@@ -5581,7 +5581,7 @@ pub mod types {
         Missing(MissingDatum),
     }
 
-    impl ::std::convert::From<&Datum> for Datum {
+    impl ::std::convert::From<&Self> for Datum {
         fn from(value: &Datum) -> Self {
             value.clone()
         }
@@ -5859,7 +5859,7 @@ pub mod types {
         HistogramF64,
     }
 
-    impl ::std::convert::From<&DatumType> for DatumType {
+    impl ::std::convert::From<&Self> for DatumType {
         fn from(value: &DatumType) -> Self {
             value.clone()
         }
@@ -6170,7 +6170,7 @@ pub mod types {
         Sha256(::std::string::String),
     }
 
-    impl ::std::convert::From<&Digest> for Digest {
+    impl ::std::convert::From<&Self> for Digest {
         fn from(value: &Digest) -> Self {
             value.clone()
         }
@@ -6413,7 +6413,7 @@ pub mod types {
         WriteBytes,
     }
 
-    impl ::std::convert::From<&DiskMetricName> for DiskMetricName {
+    impl ::std::convert::From<&Self> for DiskMetricName {
         fn from(value: &DiskMetricName) -> Self {
             value.clone()
         }
@@ -6690,7 +6690,7 @@ pub mod types {
         ImportingBlocks { block_size: BlockSize },
     }
 
-    impl ::std::convert::From<&DiskSource> for DiskSource {
+    impl ::std::convert::From<&Self> for DiskSource {
         fn from(value: &DiskSource) -> Self {
             value.clone()
         }
@@ -6938,7 +6938,7 @@ pub mod types {
         Faulted,
     }
 
-    impl ::std::convert::From<&DiskState> for DiskState {
+    impl ::std::convert::From<&Self> for DiskState {
         fn from(value: &DiskState) -> Self {
             value.clone()
         }
@@ -7474,7 +7474,7 @@ pub mod types {
         },
     }
 
-    impl ::std::convert::From<&ExternalIp> for ExternalIp {
+    impl ::std::convert::From<&Self> for ExternalIp {
         fn from(value: &ExternalIp) -> Self {
             value.clone()
         }
@@ -7568,7 +7568,7 @@ pub mod types {
         Floating { floating_ip: NameOrId },
     }
 
-    impl ::std::convert::From<&ExternalIpCreate> for ExternalIpCreate {
+    impl ::std::convert::From<&Self> for ExternalIpCreate {
         fn from(value: &ExternalIpCreate) -> Self {
             value.clone()
         }
@@ -7718,7 +7718,7 @@ pub mod types {
         Metric,
     }
 
-    impl ::std::convert::From<&FieldSource> for FieldSource {
+    impl ::std::convert::From<&Self> for FieldSource {
         fn from(value: &FieldSource) -> Self {
             value.clone()
         }
@@ -7835,7 +7835,7 @@ pub mod types {
         Bool,
     }
 
-    impl ::std::convert::From<&FieldType> for FieldType {
+    impl ::std::convert::From<&Self> for FieldType {
         fn from(value: &FieldType) -> Self {
             value.clone()
         }
@@ -8180,7 +8180,7 @@ pub mod types {
         Bool(bool),
     }
 
-    impl ::std::convert::From<&FieldValue> for FieldValue {
+    impl ::std::convert::From<&Self> for FieldValue {
         fn from(value: &FieldValue) -> Self {
             value.clone()
         }
@@ -8352,7 +8352,7 @@ pub mod types {
         Viewer,
     }
 
-    impl ::std::convert::From<&FleetRole> for FleetRole {
+    impl ::std::convert::From<&Self> for FleetRole {
         fn from(value: &FleetRole) -> Self {
             value.clone()
         }
@@ -8801,7 +8801,7 @@ pub mod types {
         Instance,
     }
 
-    impl ::std::convert::From<&FloatingIpParentKind> for FloatingIpParentKind {
+    impl ::std::convert::From<&Self> for FloatingIpParentKind {
         fn from(value: &FloatingIpParentKind) -> Self {
             value.clone()
         }
@@ -10646,7 +10646,7 @@ pub mod types {
         IdAscending,
     }
 
-    impl ::std::convert::From<&IdSortMode> for IdSortMode {
+    impl ::std::convert::From<&Self> for IdSortMode {
         fn from(value: &IdSortMode) -> Self {
             value.clone()
         }
@@ -10874,7 +10874,7 @@ pub mod types {
         Saml,
     }
 
-    impl ::std::convert::From<&IdentityProviderType> for IdentityProviderType {
+    impl ::std::convert::From<&Self> for IdentityProviderType {
         fn from(value: &IdentityProviderType) -> Self {
             value.clone()
         }
@@ -10958,7 +10958,7 @@ pub mod types {
         SiloGroup,
     }
 
-    impl ::std::convert::From<&IdentityType> for IdentityType {
+    impl ::std::convert::From<&Self> for IdentityType {
         fn from(value: &IdentityType) -> Self {
             value.clone()
         }
@@ -11067,7 +11067,7 @@ pub mod types {
         Base64EncodedXml { data: ::std::string::String },
     }
 
-    impl ::std::convert::From<&IdpMetadataSource> for IdpMetadataSource {
+    impl ::std::convert::From<&Self> for IdpMetadataSource {
         fn from(value: &IdpMetadataSource) -> Self {
             value.clone()
         }
@@ -11405,7 +11405,7 @@ pub mod types {
         YouCanBootAnythingAsLongAsItsAlpine,
     }
 
-    impl ::std::convert::From<&ImageSource> for ImageSource {
+    impl ::std::convert::From<&Self> for ImageSource {
         fn from(value: &ImageSource) -> Self {
             value.clone()
         }
@@ -11523,7 +11523,7 @@ pub mod types {
         Allow(::std::vec::Vec<IpNet>),
     }
 
-    impl ::std::convert::From<&ImportExportPolicy> for ImportExportPolicy {
+    impl ::std::convert::From<&Self> for ImportExportPolicy {
         fn from(value: &ImportExportPolicy) -> Self {
             value.clone()
         }
@@ -11821,7 +11821,7 @@ pub mod types {
         BestEffort,
     }
 
-    impl ::std::convert::From<&InstanceAutoRestartPolicy> for InstanceAutoRestartPolicy {
+    impl ::std::convert::From<&Self> for InstanceAutoRestartPolicy {
         fn from(value: &InstanceAutoRestartPolicy) -> Self {
             value.clone()
         }
@@ -12304,7 +12304,7 @@ pub mod types {
         },
     }
 
-    impl ::std::convert::From<&InstanceDiskAttachment> for InstanceDiskAttachment {
+    impl ::std::convert::From<&Self> for InstanceDiskAttachment {
         fn from(value: &InstanceDiskAttachment) -> Self {
             value.clone()
         }
@@ -12544,9 +12544,7 @@ pub mod types {
         None,
     }
 
-    impl ::std::convert::From<&InstanceNetworkInterfaceAttachment>
-        for InstanceNetworkInterfaceAttachment
-    {
+    impl ::std::convert::From<&Self> for InstanceNetworkInterfaceAttachment {
         fn from(value: &InstanceNetworkInterfaceAttachment) -> Self {
             value.clone()
         }
@@ -13062,7 +13060,7 @@ pub mod types {
         Destroyed,
     }
 
-    impl ::std::convert::From<&InstanceState> for InstanceState {
+    impl ::std::convert::From<&Self> for InstanceState {
         fn from(value: &InstanceState) -> Self {
             value.clone()
         }
@@ -13867,7 +13865,7 @@ pub mod types {
         V6(Ipv6Net),
     }
 
-    impl ::std::convert::From<&IpNet> for IpNet {
+    impl ::std::convert::From<&Self> for IpNet {
         fn from(value: &IpNet) -> Self {
             value.clone()
         }
@@ -14580,7 +14578,7 @@ pub mod types {
         V6(Ipv6Range),
     }
 
-    impl ::std::convert::From<&IpRange> for IpRange {
+    impl ::std::convert::From<&Self> for IpRange {
         fn from(value: &IpRange) -> Self {
             value.clone()
         }
@@ -15341,7 +15339,7 @@ pub mod types {
         Rs,
     }
 
-    impl ::std::convert::From<&LinkFec> for LinkFec {
+    impl ::std::convert::From<&Self> for LinkFec {
         fn from(value: &LinkFec) -> Self {
             value.clone()
         }
@@ -15512,7 +15510,7 @@ pub mod types {
         Speed400G,
     }
 
-    impl ::std::convert::From<&LinkSpeed> for LinkSpeed {
+    impl ::std::convert::From<&Self> for LinkSpeed {
         fn from(value: &LinkSpeed) -> Self {
             value.clone()
         }
@@ -16295,7 +16293,7 @@ pub mod types {
         Cumulative,
     }
 
-    impl ::std::convert::From<&MetricType> for MetricType {
+    impl ::std::convert::From<&Self> for MetricType {
         fn from(value: &MetricType) -> Self {
             value.clone()
         }
@@ -16538,7 +16536,7 @@ pub mod types {
         Name(Name),
     }
 
-    impl ::std::convert::From<&NameOrId> for NameOrId {
+    impl ::std::convert::From<&Self> for NameOrId {
         fn from(value: &NameOrId) -> Self {
             value.clone()
         }
@@ -16662,7 +16660,7 @@ pub mod types {
         IdAscending,
     }
 
-    impl ::std::convert::From<&NameOrIdSortMode> for NameOrIdSortMode {
+    impl ::std::convert::From<&Self> for NameOrIdSortMode {
         fn from(value: &NameOrIdSortMode) -> Self {
             value.clone()
         }
@@ -16756,7 +16754,7 @@ pub mod types {
         NameAscending,
     }
 
-    impl ::std::convert::From<&NameSortMode> for NameSortMode {
+    impl ::std::convert::From<&Self> for NameSortMode {
         fn from(value: &NameSortMode) -> Self {
             value.clone()
         }
@@ -16985,7 +16983,7 @@ pub mod types {
         Probe(uuid::Uuid),
     }
 
-    impl ::std::convert::From<&NetworkInterfaceKind> for NetworkInterfaceKind {
+    impl ::std::convert::From<&Self> for NetworkInterfaceKind {
         fn from(value: &NetworkInterfaceKind) -> Self {
             value.clone()
         }
@@ -17072,7 +17070,7 @@ pub mod types {
         Descending,
     }
 
-    impl ::std::convert::From<&PaginationOrder> for PaginationOrder {
+    impl ::std::convert::From<&Self> for PaginationOrder {
         fn from(value: &PaginationOrder) -> Self {
             value.clone()
         }
@@ -17368,7 +17366,7 @@ pub mod types {
         U2,
     }
 
-    impl ::std::convert::From<&PhysicalDiskKind> for PhysicalDiskKind {
+    impl ::std::convert::From<&Self> for PhysicalDiskKind {
         fn from(value: &PhysicalDiskKind) -> Self {
             value.clone()
         }
@@ -17487,7 +17485,7 @@ pub mod types {
         Expunged,
     }
 
-    impl ::std::convert::From<&PhysicalDiskPolicy> for PhysicalDiskPolicy {
+    impl ::std::convert::From<&Self> for PhysicalDiskPolicy {
         fn from(value: &PhysicalDiskPolicy) -> Self {
             value.clone()
         }
@@ -17649,7 +17647,7 @@ pub mod types {
         Decommissioned,
     }
 
-    impl ::std::convert::From<&PhysicalDiskState> for PhysicalDiskState {
+    impl ::std::convert::From<&Self> for PhysicalDiskState {
         fn from(value: &PhysicalDiskState) -> Self {
             value.clone()
         }
@@ -17776,7 +17774,7 @@ pub mod types {
         Ok,
     }
 
-    impl ::std::convert::From<&PingStatus> for PingStatus {
+    impl ::std::convert::From<&Self> for PingStatus {
         fn from(value: &PingStatus) -> Self {
             value.clone()
         }
@@ -18132,7 +18130,7 @@ pub mod types {
         Ephemeral,
     }
 
-    impl ::std::convert::From<&ProbeExternalIpKind> for ProbeExternalIpKind {
+    impl ::std::convert::From<&Self> for ProbeExternalIpKind {
         fn from(value: &ProbeExternalIpKind) -> Self {
             value.clone()
         }
@@ -18512,7 +18510,7 @@ pub mod types {
         Viewer,
     }
 
-    impl ::std::convert::From<&ProjectRole> for ProjectRole {
+    impl ::std::convert::From<&Self> for ProjectRole {
         fn from(value: &ProjectRole) -> Self {
             value.clone()
         }
@@ -19391,7 +19389,7 @@ pub mod types {
         Subnet(Name),
     }
 
-    impl ::std::convert::From<&RouteDestination> for RouteDestination {
+    impl ::std::convert::From<&Self> for RouteDestination {
         fn from(value: &RouteDestination) -> Self {
             value.clone()
         }
@@ -19558,7 +19556,7 @@ pub mod types {
         Drop,
     }
 
-    impl ::std::convert::From<&RouteTarget> for RouteTarget {
+    impl ::std::convert::From<&Self> for RouteTarget {
         fn from(value: &RouteTarget) -> Self {
             value.clone()
         }
@@ -19848,7 +19846,7 @@ pub mod types {
         Custom,
     }
 
-    impl ::std::convert::From<&RouterRouteKind> for RouterRouteKind {
+    impl ::std::convert::From<&Self> for RouterRouteKind {
         fn from(value: &RouterRouteKind) -> Self {
             value.clone()
         }
@@ -20344,7 +20342,7 @@ pub mod types {
         ExternalApi,
     }
 
-    impl ::std::convert::From<&ServiceUsingCertificate> for ServiceUsingCertificate {
+    impl ::std::convert::From<&Self> for ServiceUsingCertificate {
         fn from(value: &ServiceUsingCertificate) -> Self {
             value.clone()
         }
@@ -20699,7 +20697,7 @@ pub mod types {
         LocalOnly,
     }
 
-    impl ::std::convert::From<&SiloIdentityMode> for SiloIdentityMode {
+    impl ::std::convert::From<&Self> for SiloIdentityMode {
         fn from(value: &SiloIdentityMode) -> Self {
             value.clone()
         }
@@ -21271,7 +21269,7 @@ pub mod types {
         Viewer,
     }
 
-    impl ::std::convert::From<&SiloRole> for SiloRole {
+    impl ::std::convert::From<&Self> for SiloRole {
         fn from(value: &SiloRole) -> Self {
             value.clone()
         }
@@ -21943,7 +21941,7 @@ pub mod types {
         Expunged,
     }
 
-    impl ::std::convert::From<&SledPolicy> for SledPolicy {
+    impl ::std::convert::From<&Self> for SledPolicy {
         fn from(value: &SledPolicy) -> Self {
             value.clone()
         }
@@ -22012,7 +22010,7 @@ pub mod types {
         NonProvisionable,
     }
 
-    impl ::std::convert::From<&SledProvisionPolicy> for SledProvisionPolicy {
+    impl ::std::convert::From<&Self> for SledProvisionPolicy {
         fn from(value: &SledProvisionPolicy) -> Self {
             value.clone()
         }
@@ -22273,7 +22271,7 @@ pub mod types {
         Decommissioned,
     }
 
-    impl ::std::convert::From<&SledState> for SledState {
+    impl ::std::convert::From<&Self> for SledState {
         fn from(value: &SledState) -> Self {
             value.clone()
         }
@@ -22571,7 +22569,7 @@ pub mod types {
         Destroyed,
     }
 
-    impl ::std::convert::From<&SnapshotState> for SnapshotState {
+    impl ::std::convert::From<&Self> for SnapshotState {
         fn from(value: &SnapshotState) -> Self {
             value.clone()
         }
@@ -23168,7 +23166,7 @@ pub mod types {
         Loopback,
     }
 
-    impl ::std::convert::From<&SwitchInterfaceKind> for SwitchInterfaceKind {
+    impl ::std::convert::From<&Self> for SwitchInterfaceKind {
         fn from(value: &SwitchInterfaceKind) -> Self {
             value.clone()
         }
@@ -23246,7 +23244,7 @@ pub mod types {
         Loopback,
     }
 
-    impl ::std::convert::From<&SwitchInterfaceKind2> for SwitchInterfaceKind2 {
+    impl ::std::convert::From<&Self> for SwitchInterfaceKind2 {
         fn from(value: &SwitchInterfaceKind2) -> Self {
             value.clone()
         }
@@ -23385,7 +23383,7 @@ pub mod types {
         Switch1,
     }
 
-    impl ::std::convert::From<&SwitchLocation> for SwitchLocation {
+    impl ::std::convert::From<&Self> for SwitchLocation {
         fn from(value: &SwitchLocation) -> Self {
             value.clone()
         }
@@ -23799,7 +23797,7 @@ pub mod types {
         Sfp28x4,
     }
 
-    impl ::std::convert::From<&SwitchPortGeometry> for SwitchPortGeometry {
+    impl ::std::convert::From<&Self> for SwitchPortGeometry {
         fn from(value: &SwitchPortGeometry) -> Self {
             value.clone()
         }
@@ -23913,7 +23911,7 @@ pub mod types {
         Sfp28x4,
     }
 
-    impl ::std::convert::From<&SwitchPortGeometry2> for SwitchPortGeometry2 {
+    impl ::std::convert::From<&Self> for SwitchPortGeometry2 {
         fn from(value: &SwitchPortGeometry2) -> Self {
             value.clone()
         }
@@ -24862,7 +24860,7 @@ pub mod types {
         RamProvisioned,
     }
 
-    impl ::std::convert::From<&SystemMetricName> for SystemMetricName {
+    impl ::std::convert::From<&Self> for SystemMetricName {
         fn from(value: &SystemMetricName) -> Self {
             value.clone()
         }
@@ -25677,7 +25675,7 @@ pub mod types {
         Rpm,
     }
 
-    impl ::std::convert::From<&Units> for Units {
+    impl ::std::convert::From<&Self> for Units {
         fn from(value: &Units) -> Self {
             value.clone()
         }
@@ -26155,7 +26153,7 @@ pub mod types {
         LoginDisallowed,
     }
 
-    impl ::std::convert::From<&UserPassword> for UserPassword {
+    impl ::std::convert::From<&Self> for UserPassword {
         fn from(value: &UserPassword) -> Self {
             value.clone()
         }
@@ -26525,7 +26523,7 @@ pub mod types {
         DoubleDistribution(::std::vec::Vec<::std::option::Option<Distributiondouble>>),
     }
 
-    impl ::std::convert::From<&ValueArray> for ValueArray {
+    impl ::std::convert::From<&Self> for ValueArray {
         fn from(value: &ValueArray) -> Self {
             value.clone()
         }
@@ -27147,7 +27145,7 @@ pub mod types {
         Deny,
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleAction> for VpcFirewallRuleAction {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleAction {
         fn from(value: &VpcFirewallRuleAction) -> Self {
             value.clone()
         }
@@ -27232,7 +27230,7 @@ pub mod types {
         Outbound,
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleDirection> for VpcFirewallRuleDirection {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleDirection {
         fn from(value: &VpcFirewallRuleDirection) -> Self {
             value.clone()
         }
@@ -27518,7 +27516,7 @@ pub mod types {
         IpNet(IpNet),
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleHostFilter> for VpcFirewallRuleHostFilter {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleHostFilter {
         fn from(value: &VpcFirewallRuleHostFilter) -> Self {
             value.clone()
         }
@@ -27575,7 +27573,7 @@ pub mod types {
         Icmp,
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleProtocol> for VpcFirewallRuleProtocol {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleProtocol {
         fn from(value: &VpcFirewallRuleProtocol) -> Self {
             value.clone()
         }
@@ -27662,7 +27660,7 @@ pub mod types {
         Enabled,
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleStatus> for VpcFirewallRuleStatus {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleStatus {
         fn from(value: &VpcFirewallRuleStatus) -> Self {
             value.clone()
         }
@@ -27852,7 +27850,7 @@ pub mod types {
         IpNet(IpNet),
     }
 
-    impl ::std::convert::From<&VpcFirewallRuleTarget> for VpcFirewallRuleTarget {
+    impl ::std::convert::From<&Self> for VpcFirewallRuleTarget {
         fn from(value: &VpcFirewallRuleTarget) -> Self {
             value.clone()
         }
@@ -28295,7 +28293,7 @@ pub mod types {
         Custom,
     }
 
-    impl ::std::convert::From<&VpcRouterKind> for VpcRouterKind {
+    impl ::std::convert::From<&Self> for VpcRouterKind {
         fn from(value: &VpcRouterKind) -> Self {
             value.clone()
         }
@@ -55430,19 +55428,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/experimental/v1/probes", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -55451,7 +55436,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -55576,8 +55567,6 @@ pub mod builder {
                 .and_then(|v| types::ProbeCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/experimental/v1/probes", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -55587,7 +55576,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -55657,8 +55646,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&probe.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -55667,7 +55654,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -55737,8 +55724,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&probe.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -55747,7 +55732,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -55923,16 +55908,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/certificates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -55941,7 +55916,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56282,19 +56262,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56303,7 +56270,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56428,8 +56401,6 @@ pub mod builder {
                 .and_then(|v| types::DiskCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56439,7 +56410,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56510,10 +56481,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56522,7 +56489,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56593,10 +56560,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56605,7 +56568,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56706,10 +56669,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56719,7 +56678,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56790,10 +56749,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56802,7 +56757,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56873,10 +56828,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56885,7 +56836,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -56982,10 +56933,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -56995,7 +56942,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57157,25 +57104,6 @@ pub mod builder {
                 encode_path(&disk.to_string()),
                 encode_path(&metric.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &order {
-                query.push(("order", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57184,7 +57112,18 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("order", &order))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new(
+                    "start_time",
+                    &start_time,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57331,19 +57270,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/floating-ips", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57352,7 +57278,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57479,8 +57411,6 @@ pub mod builder {
                 .and_then(|v| types::FloatingIpCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/floating-ips", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57490,7 +57420,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57561,10 +57491,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&floating_ip.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57573,7 +57499,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57672,10 +57598,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&floating_ip.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57685,7 +57607,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57756,10 +57678,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&floating_ip.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57768,7 +57686,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57867,10 +57785,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&floating_ip.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57880,7 +57794,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -57951,10 +57865,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&floating_ip.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57963,7 +57873,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58046,16 +57956,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58064,7 +57964,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58268,19 +58173,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58289,7 +58181,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58415,10 +58313,6 @@ pub mod builder {
                 .and_then(|v| types::ImageCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58428,7 +58322,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58499,10 +58393,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58511,7 +58401,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58582,10 +58472,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58594,7 +58480,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58664,8 +58550,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58674,7 +58558,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58745,10 +58629,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58757,7 +58637,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -58855,19 +58735,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -58876,7 +58743,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59001,8 +58874,6 @@ pub mod builder {
                 .and_then(|v| types::InstanceCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59012,7 +58883,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59083,10 +58954,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59095,7 +58962,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59192,10 +59059,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59205,7 +59068,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59276,10 +59139,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59288,7 +59147,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59404,19 +59263,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59425,7 +59271,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59569,10 +59421,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59582,7 +59430,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59679,10 +59527,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59692,7 +59536,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59765,10 +59609,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59777,7 +59617,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59877,10 +59717,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59890,7 +59726,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -59962,10 +59798,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -59974,7 +59806,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60045,10 +59877,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60057,7 +59885,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60175,19 +60003,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &from_start {
-                query.push(("from_start", v.to_string()));
-            }
-            if let Some(v) = &max_bytes {
-                query.push(("max_bytes", v.to_string()));
-            }
-            if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60196,7 +60011,16 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new(
+                    "from_start",
+                    &from_start,
+                ))
+                .query(&progenitor_client::QueryParam::new("max_bytes", &max_bytes))
+                .query(&progenitor_client::QueryParam::new(
+                    "most_recent",
+                    &most_recent,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60285,18 +60109,15 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
                 .get(url)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new(
+                    "most_recent",
+                    &most_recent,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .header(reqwest::header::CONNECTION, "Upgrade")
                 .header(reqwest::header::UPGRADE, "websocket")
                 .header(reqwest::header::SEC_WEBSOCKET_VERSION, "13")
@@ -60417,19 +60238,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60438,7 +60246,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60556,10 +60370,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60568,7 +60378,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60639,10 +60449,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60651,7 +60457,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60780,25 +60586,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateway-ip-addresses", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &gateway {
-                query.push(("gateway", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60807,7 +60594,15 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -60974,14 +60769,6 @@ pub mod builder {
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateway-ip-addresses", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            query.push(("gateway", gateway.to_string()));
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -60991,7 +60778,9 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61108,19 +60897,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&address.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &cascade {
-                query.push(("cascade", v.to_string()));
-            }
-            if let Some(v) = &gateway {
-                query.push(("gateway", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61129,7 +60905,10 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("cascade", &cascade))
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61258,25 +61037,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateway-ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &gateway {
-                query.push(("gateway", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61285,7 +61045,15 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61452,14 +61220,6 @@ pub mod builder {
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateway-ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            query.push(("gateway", gateway.to_string()));
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61469,7 +61229,9 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61585,19 +61347,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &cascade {
-                query.push(("cascade", v.to_string()));
-            }
-            if let Some(v) = &gateway {
-                query.push(("gateway", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61606,7 +61355,10 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("cascade", &cascade))
+                .query(&progenitor_client::QueryParam::new("gateway", &gateway))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61719,22 +61471,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateways", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61743,7 +61479,14 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61890,11 +61633,6 @@ pub mod builder {
                 .and_then(|v| types::InternetGatewayCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/internet-gateways", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("vpc", vpc.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -61904,7 +61642,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -61992,13 +61731,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&gateway.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -62007,7 +61739,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -62108,16 +61841,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&gateway.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &cascade {
-                query.push(("cascade", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -62126,7 +61849,9 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("cascade", &cascade))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -62209,16 +61934,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -62227,7 +61942,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -62595,16 +62315,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/me/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -62613,7 +62323,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -62742,16 +62457,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -62760,7 +62465,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63142,25 +62852,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &order {
-                query.push(("order", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63169,7 +62860,18 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("order", &order))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new(
+                    "start_time",
+                    &start_time,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63332,22 +63034,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63356,7 +63042,14 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("instance", &instance))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63507,11 +63200,6 @@ pub mod builder {
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("instance", instance.to_string()));
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63521,7 +63209,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("instance", &instance))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63609,13 +63298,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63624,7 +63306,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("instance", &instance))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63745,13 +63428,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63761,7 +63437,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("instance", &instance))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -63847,13 +63524,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -63862,7 +63532,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("instance", &instance))
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -64100,16 +63771,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64118,7 +63779,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -64697,19 +64363,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64718,7 +64371,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -64843,8 +64502,6 @@ pub mod builder {
                 .and_then(|v| types::SnapshotCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64854,7 +64511,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -64925,10 +64582,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -64937,7 +64590,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65008,10 +64661,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65020,7 +64669,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65103,16 +64752,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65121,7 +64760,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65310,16 +64954,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/racks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65328,7 +64962,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65517,16 +65156,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65535,7 +65164,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65813,16 +65447,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65831,7 +65455,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -65980,16 +65609,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -65998,7 +65617,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66215,13 +65839,6 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/sleds-uninitialized", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66230,7 +65847,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66374,19 +65995,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let switch_port_id = switch_port_id.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/switch-port", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &switch_port_id {
-                query.push(("switch_port_id", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66395,7 +66003,16 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_port_id",
+                    &switch_port_id,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66560,9 +66177,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66572,7 +66186,11 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_location",
+                    &switch_location,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66658,9 +66276,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66669,7 +66284,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_location",
+                    &switch_location,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66756,9 +66375,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66767,7 +66383,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("rack_id", &rack_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "switch_location",
+                    &switch_location,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -66850,16 +66470,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/switches", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -66868,7 +66478,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67073,19 +66688,6 @@ pub mod builder {
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/identity-providers", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67094,7 +66696,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67219,8 +66827,6 @@ pub mod builder {
                 "{}/v1/system/identity-providers/local/users",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67230,7 +66836,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67301,8 +66907,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67311,7 +66915,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67396,8 +67000,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67407,7 +67009,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67490,8 +67092,6 @@ pub mod builder {
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67501,7 +67101,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67574,8 +67174,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&provider.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67584,7 +67182,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -67667,16 +67265,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -67685,7 +67273,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -68092,13 +67685,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -68107,7 +67693,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -68401,16 +67991,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -68419,7 +67999,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -68908,13 +68493,6 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -68923,7 +68501,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -69233,25 +68815,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &order {
-                query.push(("order", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
-            }
-            if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -69260,7 +68823,18 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("order", &order))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .query(&progenitor_client::QueryParam::new(
+                    "start_time",
+                    &start_time,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -69392,16 +68966,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -69410,7 +68974,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -69696,16 +69265,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&address_lot.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -69714,7 +69273,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70139,16 +69703,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70157,7 +69711,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70321,8 +69880,6 @@ pub mod builder {
             let Self { client, name_or_id } = self;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("name_or_id", name_or_id.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70331,7 +69888,10 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new(
+                    "name_or_id",
+                    &name_or_id,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70416,16 +69976,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-announce-set", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70434,7 +69984,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70739,8 +70294,6 @@ pub mod builder {
                 "{}/v1/system/networking/bgp-message-history",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("asn", asn.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70749,7 +70302,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70802,8 +70355,6 @@ pub mod builder {
             let Self { client, asn } = self;
             let asn = asn.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-routes-ipv4", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("asn", asn.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70812,7 +70363,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -70940,16 +70491,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -70958,7 +70499,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -71295,19 +70841,6 @@ pub mod builder {
                 "{}/v1/system/networking/switch-port-settings",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -71316,7 +70849,16 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "port_settings",
+                    &port_settings,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -71505,10 +71047,6 @@ pub mod builder {
                 "{}/v1/system/networking/switch-port-settings",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -71517,7 +71055,10 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new(
+                    "port_settings",
+                    &port_settings,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -71763,13 +71304,6 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/roles", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -71778,7 +71312,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -71966,16 +71504,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/silo-quotas", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -71984,7 +71512,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -72113,16 +71646,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/silos", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -72131,7 +71654,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -72467,16 +71995,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -72485,7 +72003,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -72969,13 +72492,6 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/timeseries/schemas", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -72984,7 +72500,11 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73127,19 +72647,6 @@ pub mod builder {
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73148,7 +72655,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73265,8 +72778,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73275,7 +72786,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73358,16 +72869,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/users-builtin", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73376,7 +72877,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73565,16 +73071,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/utilization/silos", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73583,7 +73079,12 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73771,8 +73272,6 @@ pub mod builder {
                 .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/timeseries/query", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73782,7 +73281,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -73880,19 +73379,6 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &group {
-                query.push(("group", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -73901,7 +73387,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("group", &group))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74058,11 +73550,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("vpc", vpc.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74071,7 +73558,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74173,11 +73661,6 @@ pub mod builder {
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("vpc", vpc.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74187,7 +73670,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74315,25 +73799,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &router {
-                query.push(("router", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74342,7 +73807,15 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("router", &router))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74501,14 +73974,6 @@ pub mod builder {
                 .and_then(|v| types::RouterRouteCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("router", router.to_string()));
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74518,7 +73983,9 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("router", &router))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74618,14 +74085,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("router", router.to_string()));
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74634,7 +74093,9 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("router", &router))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74763,16 +74224,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &router {
-                query.push(("router", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74782,7 +74233,9 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("router", &router))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -74883,16 +74336,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &router {
-                query.push(("router", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -74901,7 +74344,9 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("router", &router))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75014,22 +74459,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75038,7 +74467,14 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75179,11 +74615,6 @@ pub mod builder {
                 .and_then(|v| types::VpcRouterCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("vpc", vpc.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75193,7 +74624,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75279,13 +74711,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75294,7 +74719,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75406,13 +74832,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75422,7 +74841,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75508,13 +74928,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75523,7 +74936,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75636,22 +75050,6 @@ pub mod builder {
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75660,7 +75058,14 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75801,11 +75206,6 @@ pub mod builder {
                 .and_then(|v| types::VpcSubnetCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            query.push(("vpc", vpc.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75815,7 +75215,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -75901,13 +75302,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -75916,7 +75310,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76028,13 +75423,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76044,7 +75432,8 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76130,13 +75519,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76145,7 +75527,8 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76278,22 +75661,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76302,7 +75669,14 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76450,19 +75824,6 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76471,7 +75832,13 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76596,8 +75963,6 @@ pub mod builder {
                 .and_then(|v| types::VpcCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76607,7 +75972,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76678,10 +76043,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76690,7 +76051,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76787,10 +76148,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76800,7 +76157,7 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -76871,10 +76228,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -76883,7 +76236,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
