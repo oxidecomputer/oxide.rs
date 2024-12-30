@@ -2502,7 +2502,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.9.0"
-source = "git+https://github.com/oxidecomputer/progenitor#865b8d575b26eaa02f3ec45cb87e447bfa2de10d"
+source = "git+https://github.com/oxidecomputer/progenitor#74c5e1108665519506ed0b78d9330635e50f22ef"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2525,7 +2525,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.9.0"
-source = "git+https://github.com/oxidecomputer/progenitor#865b8d575b26eaa02f3ec45cb87e447bfa2de10d"
+source = "git+https://github.com/oxidecomputer/progenitor#74c5e1108665519506ed0b78d9330635e50f22ef"
 dependencies = [
  "heck",
  "http 1.2.0",
@@ -2996,18 +2996,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.216"
+version = "1.0.217"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b9781016e935a97e8beecf0c933758c97a5520d32930e460142b4cd80c6338e"
+checksum = "02fc4265df13d6fa1d00ecff087228cc0a2b5f3c0e87e258d8b94a156e984c70"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.216"
+version = "1.0.217"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46f859dbbf73865c6627ed570e78961cd3ac92407a2d117204c49232485da55e"
+checksum = "5a9bf7cf98d04a2b28aead066b7496853d4779c9cc183c440dbac457641e19a0"
 dependencies = [
  "proc-macro2",
  "quote",
