@@ -22822,6 +22822,265 @@ pub mod types {
         }
     }
 
+    /// SupportBundleInfo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "reason_for_creation",
+    ///    "state",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "$ref": "#/components/schemas/TypedUuidForSupportBundleKind"
+    ///    },
+    ///    "reason_for_creation": {
+    ///      "type": "string"
+    ///    },
+    ///    "reason_for_failure": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "state": {
+    ///      "$ref": "#/components/schemas/SupportBundleState"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleInfo {
+        pub id: TypedUuidForSupportBundleKind,
+        pub reason_for_creation: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub reason_for_failure: ::std::option::Option<::std::string::String>,
+        pub state: SupportBundleState,
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&SupportBundleInfo> for SupportBundleInfo {
+        fn from(value: &SupportBundleInfo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SupportBundleInfo {
+        pub fn builder() -> builder::SupportBundleInfo {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SupportBundleInfo"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleInfoResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<SupportBundleInfo>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleInfoResultsPage> for SupportBundleInfoResultsPage {
+        fn from(value: &SupportBundleInfoResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SupportBundleInfoResultsPage {
+        pub fn builder() -> builder::SupportBundleInfoResultsPage {
+            Default::default()
+        }
+    }
+
+    /// SupportBundleState
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Support Bundle still actively being
+    /// collected.\n\nThis is the initial state for a Support Bundle, and it
+    /// will automatically transition to either \"Failing\" or \"Active\".\n\nIf
+    /// a user no longer wants to access a Support Bundle, they can request
+    /// cancellation, which will transition to the \"Destroying\" state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "collecting"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Support Bundle is being destroyed.\n\nOnce backing
+    /// storage has been freed, this bundle is destroyed.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "destroying"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Support Bundle was not created successfully, or was
+    /// created and has lost backing storage.\n\nThe record of the bundle still
+    /// exists for readability, but the only valid operation on these bundles is
+    /// to destroy them.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "failed"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Support Bundle has been processed, and is ready for
+    /// usage.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "active"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum SupportBundleState {
+        /// Support Bundle still actively being collected.
+        ///
+        /// This is the initial state for a Support Bundle, and it will
+        /// automatically transition to either "Failing" or "Active".
+        ///
+        /// If a user no longer wants to access a Support Bundle, they can
+        /// request cancellation, which will transition to the "Destroying"
+        /// state.
+        #[serde(rename = "collecting")]
+        Collecting,
+        /// Support Bundle is being destroyed.
+        ///
+        /// Once backing storage has been freed, this bundle is destroyed.
+        #[serde(rename = "destroying")]
+        Destroying,
+        /// Support Bundle was not created successfully, or was created and has
+        /// lost backing storage.
+        ///
+        /// The record of the bundle still exists for readability, but the only
+        /// valid operation on these bundles is to destroy them.
+        #[serde(rename = "failed")]
+        Failed,
+        /// Support Bundle has been processed, and is ready for usage.
+        #[serde(rename = "active")]
+        Active,
+    }
+
+    impl ::std::convert::From<&Self> for SupportBundleState {
+        fn from(value: &SupportBundleState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for SupportBundleState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Collecting => write!(f, "collecting"),
+                Self::Destroying => write!(f, "destroying"),
+                Self::Failed => write!(f, "failed"),
+                Self::Active => write!(f, "active"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SupportBundleState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "collecting" => Ok(Self::Collecting),
+                "destroying" => Ok(Self::Destroying),
+                "failed" => Ok(Self::Failed),
+                "active" => Ok(Self::Active),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SupportBundleState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SupportBundleState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SupportBundleState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// An operator's view of a Switch.
     ///
     /// <details><summary>JSON schema</summary>
@@ -25445,6 +25704,81 @@ pub mod types {
     impl TxEqConfig {
         pub fn builder() -> builder::TxEqConfig {
             Default::default()
+        }
+    }
+
+    /// TypedUuidForSupportBundleKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TypedUuidForSupportBundleKind(pub uuid::Uuid);
+    impl ::std::ops::Deref for TypedUuidForSupportBundleKind {
+        type Target = uuid::Uuid;
+        fn deref(&self) -> &uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForSupportBundleKind> for uuid::Uuid {
+        fn from(value: TypedUuidForSupportBundleKind) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TypedUuidForSupportBundleKind> for TypedUuidForSupportBundleKind {
+        fn from(value: &TypedUuidForSupportBundleKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<uuid::Uuid> for TypedUuidForSupportBundleKind {
+        fn from(value: uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for TypedUuidForSupportBundleKind {
+        type Err = <uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TypedUuidForSupportBundleKind {
+        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for TypedUuidForSupportBundleKind {
+        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for TypedUuidForSupportBundleKind {
+        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for TypedUuidForSupportBundleKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
         }
     }
 
@@ -45800,6 +46134,185 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SupportBundleInfo {
+            id: ::std::result::Result<super::TypedUuidForSupportBundleKind, ::std::string::String>,
+            reason_for_creation:
+                ::std::result::Result<::std::string::String, ::std::string::String>,
+            reason_for_failure: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            state: ::std::result::Result<super::SupportBundleState, ::std::string::String>,
+            time_created:
+                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SupportBundleInfo {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    reason_for_creation: Err(
+                        "no value supplied for reason_for_creation".to_string()
+                    ),
+                    reason_for_failure: Ok(Default::default()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                }
+            }
+        }
+
+        impl SupportBundleInfo {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TypedUuidForSupportBundleKind>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn reason_for_creation<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.reason_for_creation = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for reason_for_creation: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn reason_for_failure<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.reason_for_failure = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for reason_for_failure: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SupportBundleState>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleInfo> for super::SupportBundleInfo {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleInfo,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    reason_for_creation: value.reason_for_creation?,
+                    reason_for_failure: value.reason_for_failure?,
+                    state: value.state?,
+                    time_created: value.time_created?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleInfo> for SupportBundleInfo {
+            fn from(value: super::SupportBundleInfo) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    reason_for_creation: Ok(value.reason_for_creation),
+                    reason_for_failure: Ok(value.reason_for_failure),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SupportBundleInfoResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::SupportBundleInfo>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SupportBundleInfoResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SupportBundleInfoResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SupportBundleInfo>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleInfoResultsPage> for super::SupportBundleInfoResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleInfoResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleInfoResultsPage> for SupportBundleInfoResultsPage {
+            fn from(value: super::SupportBundleInfoResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Switch {
             baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
             id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
@@ -51126,6 +51639,141 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn probe_delete(&self) -> builder::ProbeDelete;
+    /// List all support bundles
+    ///
+    /// Sends a `GET` request to `/experimental/v1/system/support-bundles`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.support_bundle_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_list(&self) -> builder::SupportBundleList;
+    /// Create a new support bundle
+    ///
+    /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
+    ///
+    /// ```ignore
+    /// let response = client.support_bundle_create()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_create(&self) -> builder::SupportBundleCreate;
+    /// View a support bundle
+    ///
+    /// Sends a `GET` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_view()
+    ///    .support_bundle(support_bundle)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_view(&self) -> builder::SupportBundleView;
+    /// Delete an existing support bundle
+    ///
+    /// May also be used to cancel a support bundle which is currently being
+    /// collected, or to remove metadata for a support bundle that has failed.
+    ///
+    /// Sends a `DELETE` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_delete()
+    ///    .support_bundle(support_bundle)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_delete(&self) -> builder::SupportBundleDelete;
+    /// Download the contents of a support bundle
+    ///
+    /// Sends a `GET` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}/download`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_download()
+    ///    .support_bundle(support_bundle)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_download(&self) -> builder::SupportBundleDownload;
+    /// Download the metadata of a support bundle
+    ///
+    /// Sends a `HEAD` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}/download`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_head()
+    ///    .support_bundle(support_bundle)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_head(&self) -> builder::SupportBundleHead;
+    /// Download a file within a support bundle
+    ///
+    /// Sends a `GET` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}/download/
+    /// {file}`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// - `file`: The file within the bundle to download
+    /// ```ignore
+    /// let response = client.support_bundle_download_file()
+    ///    .support_bundle(support_bundle)
+    ///    .file(file)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile;
+    /// Download the metadata of a file within the support bundle
+    ///
+    /// Sends a `HEAD` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}/download/
+    /// {file}`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// - `file`: The file within the bundle to download
+    /// ```ignore
+    /// let response = client.support_bundle_head_file()
+    ///    .support_bundle(support_bundle)
+    ///    .file(file)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile;
+    /// Download the index of a support bundle
+    ///
+    /// Sends a `GET` request to
+    /// `/experimental/v1/system/support-bundles/{support_bundle}/index`
+    ///
+    /// Arguments:
+    /// - `support_bundle`: ID of the support bundle
+    /// ```ignore
+    /// let response = client.support_bundle_index()
+    ///    .support_bundle(support_bundle)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_index(&self) -> builder::SupportBundleIndex;
     /// Log user out of web console by deleting session on client and server
     ///
     /// Sends a `POST` request to `/v1/logout`
@@ -51184,6 +51832,42 @@ impl ClientHiddenExt for Client {
 
     fn probe_delete(&self) -> builder::ProbeDelete {
         builder::ProbeDelete::new(self)
+    }
+
+    fn support_bundle_list(&self) -> builder::SupportBundleList {
+        builder::SupportBundleList::new(self)
+    }
+
+    fn support_bundle_create(&self) -> builder::SupportBundleCreate {
+        builder::SupportBundleCreate::new(self)
+    }
+
+    fn support_bundle_view(&self) -> builder::SupportBundleView {
+        builder::SupportBundleView::new(self)
+    }
+
+    fn support_bundle_delete(&self) -> builder::SupportBundleDelete {
+        builder::SupportBundleDelete::new(self)
+    }
+
+    fn support_bundle_download(&self) -> builder::SupportBundleDownload {
+        builder::SupportBundleDownload::new(self)
+    }
+
+    fn support_bundle_head(&self) -> builder::SupportBundleHead {
+        builder::SupportBundleHead::new(self)
+    }
+
+    fn support_bundle_download_file(&self) -> builder::SupportBundleDownloadFile {
+        builder::SupportBundleDownloadFile::new(self)
+    }
+
+    fn support_bundle_head_file(&self) -> builder::SupportBundleHeadFile {
+        builder::SupportBundleHeadFile::new(self)
+    }
+
+    fn support_bundle_index(&self) -> builder::SupportBundleIndex {
+        builder::SupportBundleIndex::new(self)
     }
 
     fn logout(&self) -> builder::Logout {
@@ -55745,6 +56429,610 @@ pub mod builder {
                     ResponseValue::from_response(response).await?,
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_list`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_list`]: super::ClientHiddenExt::support_bundle_list
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SupportBundleList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/experimental/v1/system/support-bundles`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfoResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/experimental/v1/system/support-bundles`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SupportBundleInfo, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_create`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_create`]: super::ClientHiddenExt::support_bundle_create
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleCreate<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> SupportBundleCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_view`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_view`]: super::ClientHiddenExt::support_bundle_view
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleView<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                support_bundle,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_delete`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_delete`]: super::ClientHiddenExt::support_bundle_delete
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDelete<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                support_bundle,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_download`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_download`]: super::ClientHiddenExt::support_bundle_download
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDownload<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleDownload<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}/download`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                support_bundle,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}/download",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_head`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_head`]: super::ClientHiddenExt::support_bundle_head
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleHead<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleHead<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        /// Sends a `HEAD` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}/download`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                support_bundle,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}/download",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client.client.head(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_download_file`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_download_file`]: super::ClientHiddenExt::support_bundle_download_file
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleDownloadFile<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+        file: Result<::std::string::String, String>,
+    }
+
+    impl<'a> SupportBundleDownloadFile<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+                file: Err("file was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        pub fn file<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}/download/
+        /// {file}`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                support_bundle,
+                file,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let file = file.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}/download/{}",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+                encode_path(&file.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_head_file`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_head_file`]: super::ClientHiddenExt::support_bundle_head_file
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleHeadFile<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+        file: Result<::std::string::String, String>,
+    }
+
+    impl<'a> SupportBundleHeadFile<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+                file: Err("file was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        pub fn file<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `HEAD` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}/download/
+        /// {file}`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                support_bundle,
+                file,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let file = file.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}/download/{}",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+                encode_path(&file.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client.client.head(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::support_bundle_index`]
+    ///
+    /// [`ClientHiddenExt::support_bundle_index`]: super::ClientHiddenExt::support_bundle_index
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleIndex<'a> {
+        client: &'a super::Client,
+        support_bundle: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SupportBundleIndex<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                support_bundle: Err("support_bundle was not initialized".to_string()),
+            }
+        }
+
+        pub fn support_bundle<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.support_bundle = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/experimental/v1/system/support-bundles/{support_bundle}/index`
+        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
+            let Self {
+                client,
+                support_bundle,
+            } = self;
+            let support_bundle = support_bundle.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}/index",
+                client.baseurl,
+                encode_path(&support_bundle.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
             }
         }
     }
