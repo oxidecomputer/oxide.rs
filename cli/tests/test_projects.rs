@@ -33,6 +33,8 @@ fn test_project_simple_list() {
         .env("OXIDE_TOKEN", "fake-token")
         .arg("project")
         .arg("list")
+        .arg("--sort-by")
+        .arg("name_ascending")
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(
