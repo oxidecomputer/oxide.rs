@@ -2509,9 +2509,9 @@ dependencies = [
 
 [[package]]
 name = "progenitor-client"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ec6f204bec21b7165004e0973327631e4976e690c6b91686ee3f0a700d9f5bd"
+checksum = "fdae8df95f0b2a7d6159a9c43b7380016b8d3b0fc1ece46871ecd2e0087cfaf6"
 dependencies = [
  "bytes",
  "futures-core",
