@@ -20,6 +20,15 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::ProbeCreate => Self::cli_probe_create(),
             CliCommand::ProbeView => Self::cli_probe_view(),
             CliCommand::ProbeDelete => Self::cli_probe_delete(),
+            CliCommand::SupportBundleList => Self::cli_support_bundle_list(),
+            CliCommand::SupportBundleCreate => Self::cli_support_bundle_create(),
+            CliCommand::SupportBundleView => Self::cli_support_bundle_view(),
+            CliCommand::SupportBundleDelete => Self::cli_support_bundle_delete(),
+            CliCommand::SupportBundleDownload => Self::cli_support_bundle_download(),
+            CliCommand::SupportBundleHead => Self::cli_support_bundle_head(),
+            CliCommand::SupportBundleDownloadFile => Self::cli_support_bundle_download_file(),
+            CliCommand::SupportBundleHeadFile => Self::cli_support_bundle_head_file(),
+            CliCommand::SupportBundleIndex => Self::cli_support_bundle_index(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
@@ -488,6 +497,135 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Delete instrumentation probe")
+    }
+
+    pub fn cli_support_bundle_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List all support bundles")
+    }
+
+    pub fn cli_support_bundle_create() -> ::clap::Command {
+        ::clap::Command::new("").about("Create a new support bundle")
+    }
+
+    pub fn cli_support_bundle_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("View a support bundle")
+    }
+
+    pub fn cli_support_bundle_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Delete an existing support bundle")
+            .long_about(
+                "May also be used to cancel a support bundle which is currently being collected, \
+                 or to remove metadata for a support bundle that has failed.",
+            )
+    }
+
+    pub fn cli_support_bundle_download() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Download the contents of a support bundle")
+    }
+
+    pub fn cli_support_bundle_head() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Download the metadata of a support bundle")
+    }
+
+    pub fn cli_support_bundle_download_file() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("file")
+                    .long("file")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(true)
+                    .help("The file within the bundle to download"),
+            )
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Download a file within a support bundle")
+    }
+
+    pub fn cli_support_bundle_head_file() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("file")
+                    .long("file")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(true)
+                    .help("The file within the bundle to download"),
+            )
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Download the metadata of a file within the support bundle")
+    }
+
+    pub fn cli_support_bundle_index() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("support-bundle")
+                    .long("support-bundle")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .about("Download the index of a support bundle")
     }
 
     pub fn cli_login_saml() -> ::clap::Command {
@@ -6634,6 +6772,21 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::ProbeCreate => self.execute_probe_create(matches).await,
             CliCommand::ProbeView => self.execute_probe_view(matches).await,
             CliCommand::ProbeDelete => self.execute_probe_delete(matches).await,
+            CliCommand::SupportBundleList => self.execute_support_bundle_list(matches).await,
+            CliCommand::SupportBundleCreate => self.execute_support_bundle_create(matches).await,
+            CliCommand::SupportBundleView => self.execute_support_bundle_view(matches).await,
+            CliCommand::SupportBundleDelete => self.execute_support_bundle_delete(matches).await,
+            CliCommand::SupportBundleDownload => {
+                self.execute_support_bundle_download(matches).await
+            }
+            CliCommand::SupportBundleHead => self.execute_support_bundle_head(matches).await,
+            CliCommand::SupportBundleDownloadFile => {
+                self.execute_support_bundle_download_file(matches).await
+            }
+            CliCommand::SupportBundleHeadFile => {
+                self.execute_support_bundle_head_file(matches).await
+            }
+            CliCommand::SupportBundleIndex => self.execute_support_bundle_index(matches).await,
             CliCommand::LoginSaml => self.execute_login_saml(matches).await,
             CliCommand::CertificateList => self.execute_certificate_list(matches).await,
             CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
@@ -7210,6 +7363,233 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::SupportBundleInfoResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SupportBundleInfoResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_create();
+        self.config
+            .execute_support_bundle_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_view();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_delete();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_download(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_download();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_download(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_head(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_head();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_head(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_download_file(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_download_file();
+        if let Some(value) = matches.get_one::<::std::string::String>("file") {
+            request = request.file(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_download_file(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_head_file(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_head_file();
+        if let Some(value) = matches.get_one::<::std::string::String>("file") {
+            request = request.file(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_head_file(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_index(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_index();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+            request = request.support_bundle(value.clone());
+        }
+
+        self.config
+            .execute_support_bundle_index(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
             }
         }
     }
@@ -14200,6 +14580,78 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_support_bundle_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_download(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleDownload,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_head(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleHead,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_download_file(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleDownloadFile,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_head_file(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleHeadFile,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_support_bundle_index(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleIndex,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_login_saml(
         &self,
         matches: &::clap::ArgMatches,
@@ -15826,6 +16278,15 @@ pub enum CliCommand {
     ProbeCreate,
     ProbeView,
     ProbeDelete,
+    SupportBundleList,
+    SupportBundleCreate,
+    SupportBundleView,
+    SupportBundleDelete,
+    SupportBundleDownload,
+    SupportBundleHead,
+    SupportBundleDownloadFile,
+    SupportBundleHeadFile,
+    SupportBundleIndex,
     LoginSaml,
     CertificateList,
     CertificateCreate,
@@ -16040,6 +16501,15 @@ impl CliCommand {
             CliCommand::ProbeCreate,
             CliCommand::ProbeView,
             CliCommand::ProbeDelete,
+            CliCommand::SupportBundleList,
+            CliCommand::SupportBundleCreate,
+            CliCommand::SupportBundleView,
+            CliCommand::SupportBundleDelete,
+            CliCommand::SupportBundleDownload,
+            CliCommand::SupportBundleHead,
+            CliCommand::SupportBundleDownloadFile,
+            CliCommand::SupportBundleHeadFile,
+            CliCommand::SupportBundleIndex,
             CliCommand::LoginSaml,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,

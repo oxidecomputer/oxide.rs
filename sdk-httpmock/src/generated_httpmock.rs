@@ -445,6 +445,523 @@ pub mod operations {
         }
     }
 
+    pub struct SupportBundleListWhen(::httpmock::When);
+    impl SupportBundleListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SupportBundleListThen(::httpmock::Then);
+    impl SupportBundleListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SupportBundleInfoResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleCreateWhen(::httpmock::When);
+    impl SupportBundleCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SupportBundleCreateThen(::httpmock::Then);
+    impl SupportBundleCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SupportBundleInfo) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleViewWhen(::httpmock::When);
+    impl SupportBundleViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleViewThen(::httpmock::Then);
+    impl SupportBundleViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SupportBundleInfo) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleDeleteWhen(::httpmock::When);
+    impl SupportBundleDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleDeleteThen(::httpmock::Then);
+    impl SupportBundleDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleDownloadWhen(::httpmock::When);
+    impl SupportBundleDownloadWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*/download$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}/download$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleDownloadThen(::httpmock::Then);
+    impl SupportBundleDownloadThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleHeadWhen(::httpmock::When);
+    impl SupportBundleHeadWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::HEAD).path_matches(
+                    regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*/download$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}/download$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleHeadThen(::httpmock::Then);
+    impl SupportBundleHeadThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleDownloadFileWhen(::httpmock::When);
+    impl SupportBundleDownloadFileWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/experimental/v1/system/support-bundles/[^/]*/download/[^/]*$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}/download/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn file(self, value: &str) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/.*/download/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleDownloadFileThen(::httpmock::Then);
+    impl SupportBundleDownloadFileThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleHeadFileWhen(::httpmock::When);
+    impl SupportBundleHeadFileWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::HEAD).path_matches(
+                    regex::Regex::new(
+                        "^/experimental/v1/system/support-bundles/[^/]*/download/[^/]*$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}/download/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn file(self, value: &str) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/.*/download/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleHeadFileThen(::httpmock::Then);
+    impl SupportBundleHeadFileThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleIndexWhen(::httpmock::When);
+    impl SupportBundleIndexWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*/index$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn support_bundle(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}/index$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SupportBundleIndexThen(::httpmock::Then);
+    impl SupportBundleIndexThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
+        }
+    }
+
     pub struct LoginSamlWhen(::httpmock::When);
     impl LoginSamlWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -17053,6 +17570,36 @@ pub trait MockServerExt {
     fn probe_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::ProbeDeleteWhen, operations::ProbeDeleteThen);
+    fn support_bundle_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleListWhen, operations::SupportBundleListThen);
+    fn support_bundle_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleCreateWhen, operations::SupportBundleCreateThen);
+    fn support_bundle_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleViewWhen, operations::SupportBundleViewThen);
+    fn support_bundle_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleDeleteWhen, operations::SupportBundleDeleteThen);
+    fn support_bundle_download<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleDownloadWhen, operations::SupportBundleDownloadThen);
+    fn support_bundle_head<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleHeadWhen, operations::SupportBundleHeadThen);
+    fn support_bundle_download_file<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SupportBundleDownloadFileWhen,
+            operations::SupportBundleDownloadFileThen,
+        );
+    fn support_bundle_head_file<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleHeadFileWhen, operations::SupportBundleHeadFileThen);
+    fn support_bundle_index<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleIndexWhen, operations::SupportBundleIndexThen);
     fn login_saml<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
@@ -17880,6 +18427,117 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::ProbeDeleteWhen::new(when),
                 operations::ProbeDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleListWhen, operations::SupportBundleListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleListWhen::new(when),
+                operations::SupportBundleListThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleCreateWhen, operations::SupportBundleCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleCreateWhen::new(when),
+                operations::SupportBundleCreateThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleViewWhen, operations::SupportBundleViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleViewWhen::new(when),
+                operations::SupportBundleViewThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleDeleteWhen, operations::SupportBundleDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleDeleteWhen::new(when),
+                operations::SupportBundleDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_download<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleDownloadWhen, operations::SupportBundleDownloadThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleDownloadWhen::new(when),
+                operations::SupportBundleDownloadThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_head<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleHeadWhen, operations::SupportBundleHeadThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleHeadWhen::new(when),
+                operations::SupportBundleHeadThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_download_file<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SupportBundleDownloadFileWhen,
+            operations::SupportBundleDownloadFileThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleDownloadFileWhen::new(when),
+                operations::SupportBundleDownloadFileThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_head_file<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleHeadFileWhen, operations::SupportBundleHeadFileThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleHeadFileWhen::new(when),
+                operations::SupportBundleHeadFileThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_index<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleIndexWhen, operations::SupportBundleIndexThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleIndexWhen::new(when),
+                operations::SupportBundleIndexThen::new(then),
             )
         })
     }
