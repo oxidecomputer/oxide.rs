@@ -16,7 +16,7 @@ async-trait = "0.1.85"
 base64 = "0.22.1"
 built = { version = "0.7.5", features = ["git2"] }
 chrono = { version = "0.4.39", features = ["serde"] }
-clap = { version = "4.5.23", features = ["derive", "string", "env", "wrap_help"] }
+clap = { version = "4.5.26", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.40"
 colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
@@ -46,7 +46,7 @@ rand = "0.8.5"
 ratatui = "0.26.3"
 rcgen = "0.10.0"
 regex = "1.11.1"
-regress = "0.10.1"
+regress = "0.10.2"
 reqwest = "0.12.12"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
@@ -58,11 +58,11 @@ thiserror = "2.0.9"
 tempfile = "3.15.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
-tokio = { version = "1.42.0", features = ["full"] }
+tokio = { version = "1.43.0", features = ["full"] }
 toml = "0.8.19"
 toml_edit = "0.22.22"
 url = "2.5.4"
-uuid = { version = "1.11.0", features = ["serde", "v4"] }
+uuid = { version = "1.11.1", features = ["serde", "v4"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
