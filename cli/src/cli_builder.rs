@@ -583,6 +583,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("experimental system timeseries schema list")
         }
 
+        // Support bundles are not yet implemented.
+        CliCommand::SupportBundleList
+        | CliCommand::SupportBundleCreate
+        | CliCommand::SupportBundleView
+        | CliCommand::SupportBundleDelete
+        | CliCommand::SupportBundleDownload
+        | CliCommand::SupportBundleHead
+        | CliCommand::SupportBundleDownloadFile
+        | CliCommand::SupportBundleHeadFile
+        | CliCommand::SupportBundleIndex => None,
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
