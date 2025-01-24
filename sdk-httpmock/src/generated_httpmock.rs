@@ -8459,6 +8459,139 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingSwitchPortLldpNeighborsWhen(::httpmock::When);
+    impl NetworkingSwitchPortLldpNeighborsWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/hardware/rack-switch-port/[^/]*/[^/]*/[^/]*/lldp/neighbors$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/rack-switch-port/{}/.*/.*/lldp/neighbors$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn switch_location(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/rack-switch-port/.*/{}/.*/lldp/neighbors$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn port(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/rack-switch-port/.*/.*/{}/lldp/neighbors$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct NetworkingSwitchPortLldpNeighborsThen(::httpmock::Then);
+    impl NetworkingSwitchPortLldpNeighborsThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::LldpNeighborResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct RackListWhen(::httpmock::When);
     impl RackListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -9319,6 +9452,145 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortLldpConfigViewWhen(::httpmock::When);
+    impl NetworkingSwitchPortLldpConfigViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/switch-port/[^/]*/lldp/config$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn port(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/switch-port/{}/lldp/config$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn rack_id(self, value: &uuid::Uuid) -> Self {
+            Self(self.0.query_param("rack_id", value.to_string()))
+        }
+
+        pub fn switch_location(self, value: &types::Name) -> Self {
+            Self(self.0.query_param("switch_location", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingSwitchPortLldpConfigViewThen(::httpmock::Then);
+    impl NetworkingSwitchPortLldpConfigViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::LldpLinkConfig) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingSwitchPortLldpConfigUpdateWhen(::httpmock::When);
+    impl NetworkingSwitchPortLldpConfigUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/hardware/switch-port/[^/]*/lldp/config$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn port(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/switch-port/{}/lldp/config$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn rack_id(self, value: &uuid::Uuid) -> Self {
+            Self(self.0.query_param("rack_id", value.to_string()))
+        }
+
+        pub fn switch_location(self, value: &types::Name) -> Self {
+            Self(self.0.query_param("switch_location", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::LldpLinkConfig) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingSwitchPortLldpConfigUpdateThen(::httpmock::Then);
+    impl NetworkingSwitchPortLldpConfigUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -17912,6 +18184,12 @@ pub trait MockServerExt {
     fn physical_disk_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::PhysicalDiskViewWhen, operations::PhysicalDiskViewThen);
+    fn networking_switch_port_lldp_neighbors<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpNeighborsWhen,
+            operations::NetworkingSwitchPortLldpNeighborsThen,
+        );
     fn rack_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::RackListWhen, operations::RackListThen);
@@ -17944,6 +18222,18 @@ pub trait MockServerExt {
         F: FnOnce(
             operations::NetworkingSwitchPortListWhen,
             operations::NetworkingSwitchPortListThen,
+        );
+    fn networking_switch_port_lldp_config_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpConfigViewWhen,
+            operations::NetworkingSwitchPortLldpConfigViewThen,
+        );
+    fn networking_switch_port_lldp_config_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpConfigUpdateWhen,
+            operations::NetworkingSwitchPortLldpConfigUpdateThen,
         );
     fn networking_switch_port_apply_settings<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
@@ -19646,6 +19936,21 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn networking_switch_port_lldp_neighbors<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpNeighborsWhen,
+            operations::NetworkingSwitchPortLldpNeighborsThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortLldpNeighborsWhen::new(when),
+                operations::NetworkingSwitchPortLldpNeighborsThen::new(then),
+            )
+        })
+    }
+
     fn rack_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::RackListWhen, operations::RackListThen),
@@ -19765,6 +20070,36 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::NetworkingSwitchPortListWhen::new(when),
                 operations::NetworkingSwitchPortListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_lldp_config_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpConfigViewWhen,
+            operations::NetworkingSwitchPortLldpConfigViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortLldpConfigViewWhen::new(when),
+                operations::NetworkingSwitchPortLldpConfigViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_switch_port_lldp_config_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingSwitchPortLldpConfigUpdateWhen,
+            operations::NetworkingSwitchPortLldpConfigUpdateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingSwitchPortLldpConfigUpdateWhen::new(when),
+                operations::NetworkingSwitchPortLldpConfigUpdateThen::new(then),
             )
         })
     }

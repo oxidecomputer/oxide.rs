@@ -129,6 +129,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
+            CliCommand::NetworkingSwitchPortLldpNeighbors => {
+                Self::cli_networking_switch_port_lldp_neighbors()
+            }
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
@@ -139,6 +142,12 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SledSetProvisionPolicy => Self::cli_sled_set_provision_policy(),
             CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
+            CliCommand::NetworkingSwitchPortLldpConfigView => {
+                Self::cli_networking_switch_port_lldp_config_view()
+            }
+            CliCommand::NetworkingSwitchPortLldpConfigUpdate => {
+                Self::cli_networking_switch_port_lldp_config_update()
+            }
             CliCommand::NetworkingSwitchPortApplySettings => {
                 Self::cli_networking_switch_port_apply_settings()
             }
@@ -3478,6 +3487,50 @@ impl<T: CliConfig> Cli<T> {
             .about("Get a physical disk")
     }
 
+    pub fn cli_networking_switch_port_lldp_neighbors() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("Fetch the LLDP neighbors seen on a switch port")
+    }
+
     pub fn cli_rack_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -3718,6 +3771,128 @@ impl<T: CliConfig> Cli<T> {
                     .help("An optional switch port id to use when listing switch ports."),
             )
             .about("List switch ports")
+    }
+
+    pub fn cli_networking_switch_port_lldp_config_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("Fetch the LLDP configuration for a switch port")
+    }
+
+    pub fn cli_networking_switch_port_lldp_config_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("chassis-id")
+                    .long("chassis-id")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The LLDP chassis identifier TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("enabled")
+                    .long("enabled")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help("Whether or not the LLDP service is enabled."),
+            )
+            .arg(
+                ::clap::Arg::new("id")
+                    .long("id")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body")
+                    .help("The id of this LLDP service instance."),
+            )
+            .arg(
+                ::clap::Arg::new("link-description")
+                    .long("link-description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The LLDP link description TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("link-name")
+                    .long("link-name")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The LLDP link name TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("management-ip")
+                    .long("management-ip")
+                    .value_parser(::clap::value_parser!(types::IpNet))
+                    .required(false)
+                    .help("The LLDP management IP TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .arg(
+                ::clap::Arg::new("system-description")
+                    .long("system-description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The LLDP system description TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("system-name")
+                    .long("system-name")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The LLDP system name TLV."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update the LLDP configuration for a switch port")
     }
 
     pub fn cli_networking_switch_port_apply_settings() -> ::clap::Command {
@@ -6930,6 +7105,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
+            CliCommand::NetworkingSwitchPortLldpNeighbors => {
+                self.execute_networking_switch_port_lldp_neighbors(matches)
+                    .await
+            }
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
             CliCommand::SledList => self.execute_sled_list(matches).await,
@@ -6945,6 +7124,14 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::NetworkingSwitchPortList => {
                 self.execute_networking_switch_port_list(matches).await
+            }
+            CliCommand::NetworkingSwitchPortLldpConfigView => {
+                self.execute_networking_switch_port_lldp_config_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingSwitchPortLldpConfigUpdate => {
+                self.execute_networking_switch_port_lldp_config_update(matches)
+                    .await
             }
             CliCommand::NetworkingSwitchPortApplySettings => {
                 self.execute_networking_switch_port_apply_settings(matches)
@@ -10638,6 +10825,58 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_switch_port_lldp_neighbors(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_lldp_neighbors();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_lldp_neighbors(matches, &mut request)?;
+        self.config.list_start::<types::LldpNeighborResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::LldpNeighborResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_rack_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10978,6 +11217,108 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_lldp_config_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_lldp_config_view();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_lldp_config_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_lldp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_lldp_config_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("chassis-id") {
+            request = request.body_map(|body| body.chassis_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("enabled") {
+            request = request.body_map(|body| body.enabled(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
+            request = request.body_map(|body| body.id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("link-description") {
+            request = request.body_map(|body| body.link_description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("link-name") {
+            request = request.body_map(|body| body.link_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpNet>("management-ip") {
+            request = request.body_map(|body| body.management_ip(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("system-description") {
+            request = request.body_map(|body| body.system_description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("system-name") {
+            request = request.body_map(|body| body.system_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::LldpLinkConfig>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_switch_port_lldp_config_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -15356,6 +15697,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_switch_port_lldp_neighbors(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortLldpNeighbors,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_rack_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -15432,6 +15781,22 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_lldp_config_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortLldpConfigView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_lldp_config_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortLldpConfigUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -16375,6 +16740,7 @@ pub enum CliCommand {
     SnapshotDelete,
     PhysicalDiskList,
     PhysicalDiskView,
+    NetworkingSwitchPortLldpNeighbors,
     RackList,
     RackView,
     SledList,
@@ -16385,6 +16751,8 @@ pub enum CliCommand {
     SledSetProvisionPolicy,
     SledListUninitialized,
     NetworkingSwitchPortList,
+    NetworkingSwitchPortLldpConfigView,
+    NetworkingSwitchPortLldpConfigUpdate,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
     NetworkingSwitchPortStatus,
@@ -16598,6 +16966,7 @@ impl CliCommand {
             CliCommand::SnapshotDelete,
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
+            CliCommand::NetworkingSwitchPortLldpNeighbors,
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::SledList,
@@ -16608,6 +16977,8 @@ impl CliCommand {
             CliCommand::SledSetProvisionPolicy,
             CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
+            CliCommand::NetworkingSwitchPortLldpConfigView,
+            CliCommand::NetworkingSwitchPortLldpConfigUpdate,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,
             CliCommand::NetworkingSwitchPortStatus,
