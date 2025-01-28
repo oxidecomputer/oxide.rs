@@ -476,6 +476,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingSwitchPortSettingsView => {
             Some("system networking switch-port-settings view")
         }
+        CliCommand::NetworkingSwitchPortLldpConfigView => Some("system networking lldp view"),
+        CliCommand::NetworkingSwitchPortLldpConfigUpdate => Some("system networking lldp update"),
+        CliCommand::NetworkingSwitchPortLldpNeighbors => Some("system networking lldp neighbors"),
 
         CliCommand::NetworkingBfdStatus => Some("system networking bfd status"),
         CliCommand::NetworkingBfdEnable => Some("system networking bfd enable"),

@@ -5889,6 +5889,141 @@
               ]
             },
             {
+              "name": "lldp",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "neighbors",
+                  "about": "Fetch the LLDP neighbors seen on a switch port",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "A switch location to use when selecting switch ports."
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update the LLDP configuration for a switch port",
+                  "args": [
+                    {
+                      "long": "chassis-id",
+                      "help": "The LLDP chassis identifier TLV."
+                    },
+                    {
+                      "long": "enabled",
+                      "values": [
+                        "true",
+                        "false"
+                      ],
+                      "help": "Whether or not the LLDP service is enabled."
+                    },
+                    {
+                      "long": "id",
+                      "help": "The id of this LLDP service instance."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "link-description",
+                      "help": "The LLDP link description TLV."
+                    },
+                    {
+                      "long": "link-name",
+                      "help": "The LLDP link name TLV."
+                    },
+                    {
+                      "long": "management-ip",
+                      "help": "The LLDP management IP TLV."
+                    },
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "A switch location to use when selecting switch ports."
+                    },
+                    {
+                      "long": "system-description",
+                      "help": "The LLDP system description TLV."
+                    },
+                    {
+                      "long": "system-name",
+                      "help": "The LLDP system name TLV."
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch the LLDP configuration for a switch port",
+                  "args": [
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "A switch location to use when selecting switch ports."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "loopback-address",
               "args": [
                 {
