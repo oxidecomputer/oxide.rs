@@ -620,8 +620,8 @@ mod tests {
             .arg(bad_url)
             .assert()
             .failure()
-            .stderr(str::starts_with(&format!(
-                "Request failed: request failed: error sending request for url (https://{bad_url}/device/auth):"
+            .stderr(str::starts_with(format!(
+                "Request failed: client error: error sending request for url (https://{bad_url}/device/auth):"
             )));
     }
 
