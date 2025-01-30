@@ -392,13 +392,14 @@ pub mod types {
                 if !chunk.iter().all(|x| *x == 0) {
                     let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
 
-                    if let Err(e) = senders[i % self.upload_thread_ct]
+                    if senders[i % self.upload_thread_ct]
                         .send((offset, encoded, n as u64))
                         .await
+                        .is_err()
                     {
-                        break Err(DiskImportError::other(format!(
-                            "sending chunk to thread failed: {e}"
-                        )));
+                        // Failure to send indicates that the upload task exited early
+                        // due to an error on its end. We will return that error below.
+                        break Ok(());
                     }
                 } else {
                     // Bump the progress bar here to make it consistent
