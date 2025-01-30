@@ -529,6 +529,80 @@ fn test_disk_import_bad_file_size() {
         .failure();
 }
 
+// A disk import where an upload task on write_import fails
+#[test]
+fn test_disk_write_import_fail() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(425);
+    let server = MockServer::start();
+
+    let disk_view_mock = server.disk_view(|when, then| {
+        when.into_inner().any_request();
+        then.client_error(
+            404,
+            &oxide::types::Error {
+                error_code: None,
+                message: "disk not found".into(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
+            },
+        );
+    });
+
+    let disk_create_mock = server.disk_create(|when, then| {
+        when.into_inner().any_request();
+        then.created(&Disk {
+            name: "test-import".parse().unwrap(),
+            ..Disk::mock_value(&mut src).unwrap()
+        });
+    });
+
+    let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
+        when.into_inner().any_request();
+        then.server_error(
+            503,
+            &oxide::types::Error {
+                error_code: None,
+                message: "I can't do that Dave".into(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
+            },
+        );
+    });
+
+    let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
+    let output = "upload task(s) failed:
+  task 0: Error Response: status: 503 Service Unavailable;";
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--path")
+        .arg(test_file.path())
+        .arg("--disk")
+        .arg("test-disk-import-bulk-import-start-fail")
+        .arg("--parallelism") // Ensure only one write request is sent.
+        .arg("1")
+        .assert()
+        .failure()
+        .stderr(predicate::str::starts_with(output));
+
+    disk_view_mock.assert_hits(2);
+    disk_create_mock.assert();
+    start_bulk_write_mock.assert();
+    disk_bulk_write_mock.assert();
+}
+
 // Test for required parameters being supplied
 #[test]
 fn test_disk_import_required_parameters() {

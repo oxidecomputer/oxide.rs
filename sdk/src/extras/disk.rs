@@ -415,17 +415,24 @@ pub mod types {
                 drop(tx);
             }
 
-            read_result?;
-
             let mut results = Vec::with_capacity(handles.len());
             for handle in handles {
                 let result = handle.await.map_err(DiskImportError::other)?;
                 results.push(result);
             }
 
-            if results.iter().any(|x| x.is_err()) {
-                return Err(DiskImportError::other("one of the upload threads failed"));
+            if results.iter().any(|r| r.is_err()) {
+                let mut msg = String::from("upload task(s) failed:");
+                for (i, err) in results.into_iter().filter_map(Result::err).enumerate() {
+                    msg += &format!("\n  task {i}: {err}");
+                }
+                return Err(DiskImportError::Other(msg.into()));
             }
+
+            // Check for errors while reading the file. We do second as an error in an
+            // uploading task will cause a failure here, and we should surface the
+            // triggering error to the user.
+            read_result?;
 
             // Stop the bulk write process
             self.client
