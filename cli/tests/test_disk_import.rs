@@ -573,8 +573,7 @@ fn test_disk_write_import_fail() {
     });
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
-    let output = "upload task(s) failed:
-  task 0: Error Response: status: 503 Service Unavailable;";
+    let output = "upload task failed: Error Response: status: 503 Service Unavailable;";
 
     Command::cargo_bin("oxide")
         .unwrap()
