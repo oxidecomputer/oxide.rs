@@ -436,7 +436,7 @@ pub mod types {
                 2.. => {
                     let mut msg = String::from("upload tasks failed:");
                     for err in errors {
-                        msg += &format!("\n{err}");
+                        msg += &format!("\n * {err}");
                     }
                     return Err(DiskImportError::Other(msg.into()));
                 }
