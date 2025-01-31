@@ -416,9 +416,11 @@ pub mod types {
                 drop(tx);
             }
 
-            read_result?;
-
             let mut errors = Vec::new();
+            if let Err(e) = read_result {
+                errors.push(e);
+            }
+
             for handle in handles {
                 let result = handle.await.map_err(DiskImportError::other)?;
                 if let Err(err) = result {
