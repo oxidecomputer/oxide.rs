@@ -431,18 +431,18 @@ pub mod types {
             match errors.len() {
                 1 => {
                     return Err(DiskImportError::context(
-                        "upload task failed",
+                        "Error while uploading the disk image",
                         errors.remove(0),
                     ))
                 }
                 2.. => {
-                    let mut msg = String::from("upload tasks failed:");
+                    let mut msg = String::from("Errors while uploading the disk image:");
                     for err in errors {
                         msg += &format!("\n * {err}");
                     }
                     return Err(DiskImportError::Other(msg.into()));
                 }
-                _ => {}
+                0 => {}
             }
 
             // Stop the bulk write process

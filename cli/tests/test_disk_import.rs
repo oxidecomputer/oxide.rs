@@ -573,7 +573,7 @@ fn test_disk_write_import_fail() {
     });
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
-    let output = "upload task failed: Error Response: status: 503 Service Unavailable;";
+    let output = r#"(?m)\AErrors while uploading the disk image:\n \* Error Response: status: 503 Service Unavailable;.*$\n \* Error Response: status: 503 Service Unavailable;.*"#;
 
     Command::cargo_bin("oxide")
         .unwrap()
@@ -590,16 +590,16 @@ fn test_disk_write_import_fail() {
         .arg(test_file.path())
         .arg("--disk")
         .arg("test-disk-import-bulk-import-start-fail")
-        .arg("--parallelism") // Ensure only one write request is sent.
-        .arg("1")
+        .arg("--parallelism")
+        .arg("2")
         .assert()
         .failure()
-        .stderr(predicate::str::starts_with(output));
+        .stderr(predicate::str::is_match(output).unwrap());
 
     disk_view_mock.assert_hits(2);
     disk_create_mock.assert();
     start_bulk_write_mock.assert();
-    disk_bulk_write_mock.assert();
+    disk_bulk_write_mock.assert_hits(2);
 }
 
 // Test for required parameters being supplied
