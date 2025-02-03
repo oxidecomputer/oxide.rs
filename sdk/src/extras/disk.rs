@@ -392,13 +392,14 @@ pub mod types {
                 if !chunk.iter().all(|x| *x == 0) {
                     let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
 
-                    if let Err(e) = senders[i % self.upload_thread_ct]
+                    if senders[i % self.upload_thread_ct]
                         .send((offset, encoded, n as u64))
                         .await
+                        .is_err()
                     {
-                        break Err(DiskImportError::other(format!(
-                            "sending chunk to thread failed: {e}"
-                        )));
+                        // Failure to send indicates that the upload task exited early
+                        // due to an error on its end. We will return that error below.
+                        break Ok(());
                     }
                 } else {
                     // Bump the progress bar here to make it consistent
@@ -415,16 +416,33 @@ pub mod types {
                 drop(tx);
             }
 
-            read_result?;
-
-            let mut results = Vec::with_capacity(handles.len());
-            for handle in handles {
-                let result = handle.await.map_err(DiskImportError::other)?;
-                results.push(result);
+            let mut errors = Vec::new();
+            if let Err(e) = read_result {
+                errors.push(e);
             }
 
-            if results.iter().any(|x| x.is_err()) {
-                return Err(DiskImportError::other("one of the upload threads failed"));
+            for handle in handles {
+                let result = handle.await.map_err(DiskImportError::other)?;
+                if let Err(err) = result {
+                    errors.push(err);
+                }
+            }
+
+            match errors.len() {
+                1 => {
+                    return Err(DiskImportError::context(
+                        "Error while uploading the disk image",
+                        errors.remove(0),
+                    ))
+                }
+                2.. => {
+                    let mut msg = String::from("Errors while uploading the disk image:");
+                    for err in errors {
+                        msg += &format!("\n * {err}");
+                    }
+                    return Err(DiskImportError::Other(msg.into()));
+                }
+                0 => {}
             }
 
             // Stop the bulk write process
