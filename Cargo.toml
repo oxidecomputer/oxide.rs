@@ -12,12 +12,12 @@ resolver = "2"
 [workspace.dependencies]
 anyhow = "1.0.95"
 assert_cmd = "2.0.16"
-async-trait = "0.1.85"
+async-trait = "0.1.86"
 base64 = "0.22.1"
 built = { version = "0.7.5", features = ["git2"] }
 chrono = { version = "0.4.39", features = ["serde"] }
 clap = { version = "4.5.27", features = ["derive", "string", "env", "wrap_help"] }
-clap_complete = "4.5.43"
+clap_complete = "4.5.44"
 colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
@@ -55,12 +55,12 @@ serde_json = "1.0.137"
 similar = "2.7.0"
 tabwriter = "1.4.1"
 thiserror = "2.0.11"
-tempfile = "3.15.0"
+tempfile = "3.16.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.43.0", features = ["full"] }
 toml = "0.8.19"
-toml_edit = "0.22.22"
+toml_edit = "0.22.23"
 url = "2.5.4"
 uuid = { version = "1.12.1", features = ["serde", "v4"] }
 
