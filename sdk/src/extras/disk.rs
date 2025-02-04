@@ -178,12 +178,12 @@ pub mod types {
 
     use base64::Engine;
     use std::fs::{self, File};
-    use std::io::{self, Read};
+    use std::io::{self, Read, Seek, SeekFrom};
     use std::path::{Path, PathBuf};
     use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
     use std::sync::Arc;
     use std::time::Duration;
-    use tokio::sync::{mpsc, oneshot, watch};
+    use tokio::sync::{oneshot, watch};
 
     // Upload to Nexus in 512k byte chunks
     const CHUNK_SIZE: u64 = 512 * 1024;
@@ -331,96 +331,67 @@ pub mod types {
             // Create one tokio task for each thread that will upload file chunks
             let mut handles: Vec<tokio::task::JoinHandle<Result<(), DiskImportError>>> =
                 Vec::with_capacity(self.upload_thread_ct);
-            let mut senders = Vec::with_capacity(self.upload_thread_ct);
+            let (tx, rx) = flume::bounded(64);
+            let (failed_tx, failed_rx) = flume::bounded(self.upload_thread_ct);
+            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_thread_ct);
 
             for _ in 0..self.upload_thread_ct {
-                let (tx, mut rx) = mpsc::channel(100);
+                let mut worker = UploadWorker {
+                    client: self.client.clone(),
+                    disk: self.disk.clone(),
+                    project: self.project.clone(),
+                    file_path: self.disk_info.file_path.clone(),
+                    file: File::open(&self.disk_info.file_path)?,
+                    progress_tx: self.progress_tx.clone(),
+                    upload_progress: self.upload_progress.clone(),
+                    buf: Vec::with_capacity(CHUNK_SIZE as usize),
+                };
 
-                let client = self.client.clone();
-                let project = self.project.clone();
-                let disk = self.disk.clone();
-                let upload_progress = self.upload_progress.clone();
-                let progress_tx = self.progress_tx.clone();
+                let rx = rx.clone();
+                let failed_tx = failed_tx.clone();
+                let resubmit_rx = resubmit_rx.clone();
 
                 handles.push(tokio::spawn(async move {
-                    while let Some((offset, base64_encoded_data, data_len)) = rx.recv().await {
-                        client
-                            .disk_bulk_write_import()
-                            .disk(disk.clone())
-                            .project(project.clone())
-                            .body(ImportBlocksBulkWrite {
-                                offset,
-                                base64_encoded_data,
-                            })
-                            .send()
-                            .await?;
+                    while let Ok(offset) = rx.recv_async().await {
+                        if let Err(err) = worker.upload_chunk(offset).await {
+                            let _ = failed_tx.send_async(offset).await;
+                            return Err(err);
+                        }
+                    }
 
-                        upload_progress.fetch_add(data_len, Ordering::Relaxed);
-                        progress_tx.send_replace(upload_progress.load(Ordering::Relaxed));
+                    // Signal the main task that the worker has sent all chunks successfully.
+                    drop(failed_tx);
+
+                    while let Ok(offset) = resubmit_rx.recv_async().await {
+                        worker.upload_chunk(offset).await?;
                     }
 
                     Ok(())
                 }));
-
-                senders.push(tx);
             }
+            // Only worker tasks use this sender.
+            drop(failed_tx);
 
-            // Read chunks from the file in the file system and send them to the
-            // upload threads.
-            let mut file = File::open(&self.disk_info.file_path)?;
-            let mut i = 0;
-            let mut offset = 0;
-
-            let read_result: Result<(), DiskImportError> = loop {
-                let mut chunk = Vec::with_capacity(CHUNK_SIZE as usize);
-
-                let n = match file.by_ref().take(CHUNK_SIZE).read_to_end(&mut chunk) {
-                    Ok(n) => n,
-                    Err(e) => {
-                        break Err(DiskImportError::context(
-                            format!("reading from {} failed", self.disk_info.file_path.display()),
-                            e,
-                        ));
-                    }
-                };
-
-                if n == 0 {
-                    break Ok(());
+            let file_len = self.disk_info.file_path.metadata()?.len();
+            for offset in (0..file_len).step_by(CHUNK_SIZE as usize) {
+                // Failure to send indicates that all upload tasks exited early
+                // due to errors on their end. We will return those errors below.
+                if tx.send_async(offset).await.is_err() {
+                    break;
                 }
-
-                // If the chunk we just read is all zeroes, don't POST it.
-                if !chunk.iter().all(|x| *x == 0) {
-                    let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
-
-                    if senders[i % self.upload_thread_ct]
-                        .send((offset, encoded, n as u64))
-                        .await
-                        .is_err()
-                    {
-                        // Failure to send indicates that the upload task exited early
-                        // due to an error on its end. We will return that error below.
-                        break Ok(());
-                    }
-                } else {
-                    // Bump the progress bar here to make it consistent
-                    self.upload_progress.fetch_add(n as u64, Ordering::Relaxed);
-                    self.progress_tx
-                        .send_replace(self.upload_progress.load(Ordering::Relaxed));
-                }
-
-                offset += CHUNK_SIZE;
-                i += 1;
-            };
-
-            for tx in senders {
-                drop(tx);
             }
+            drop(tx);
+
+            // Resubmit any failed offsets back to the remaining workers to retry.
+            while let Ok(failed_offset) = failed_rx.recv_async().await {
+                if resubmit_tx.send_async(failed_offset).await.is_err() {
+                    // All worker tasks have failed.
+                    break;
+                }
+            }
+            drop(resubmit_tx);
 
             let mut errors = Vec::new();
-            if let Err(e) = read_result {
-                errors.push(e);
-            }
-
             for handle in handles {
                 let result = handle.await.map_err(DiskImportError::other)?;
                 if let Err(err) = result {
@@ -428,21 +399,24 @@ pub mod types {
                 }
             }
 
-            match errors.len() {
-                1 => {
-                    return Err(DiskImportError::context(
-                        "Error while uploading the disk image",
-                        errors.remove(0),
-                    ))
-                }
-                2.. => {
-                    let mut msg = String::from("Errors while uploading the disk image:");
-                    for err in errors {
-                        msg += &format!("\n * {err}");
+            // Only return an error if all worker tasks failed.
+            if errors.len() == self.upload_thread_ct {
+                match errors.len() {
+                    1 => {
+                        return Err(DiskImportError::context(
+                            "Error while uploading the disk image",
+                            errors.remove(0),
+                        ))
                     }
-                    return Err(DiskImportError::Other(msg.into()));
+                    2.. => {
+                        let mut msg = String::from("Errors while uploading the disk image:");
+                        for err in errors {
+                            msg += &format!("\n * {err}");
+                        }
+                        return Err(DiskImportError::Other(msg.into()));
+                    }
+                    0 => {} // Unreachable.
                 }
-                0 => {}
             }
 
             // Stop the bulk write process
@@ -794,6 +768,64 @@ pub mod types {
 
         /// The version of the image's operating system
         pub image_version: String,
+    }
+
+    struct UploadWorker {
+        client: Client,
+        disk: Name,
+        project: NameOrId,
+        file: File,
+        file_path: PathBuf,
+        progress_tx: watch::Sender<u64>,
+        upload_progress: Arc<AtomicU64>,
+        buf: Vec<u8>,
+    }
+
+    impl UploadWorker {
+        async fn upload_chunk(&mut self, offset: u64) -> Result<(), DiskImportError> {
+            self.file.seek(SeekFrom::Start(offset))?;
+            let n = match self
+                .file
+                .by_ref()
+                .take(CHUNK_SIZE)
+                .read_to_end(&mut self.buf)
+            {
+                Ok(n) => n,
+                Err(e) => {
+                    return Err(DiskImportError::context(
+                        format!("reading from {} failed", self.file_path.display()),
+                        e,
+                    ));
+                }
+            };
+
+            if n == 0 {
+                return Ok(());
+            }
+
+            // If the chunk we just read is all zeroes, don't POST it.
+            let data = &self.buf[..n];
+            if !data.iter().all(|x| *x == 0) {
+                let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(data);
+                self.client
+                    .disk_bulk_write_import()
+                    .disk(self.disk.clone())
+                    .project(self.project.clone())
+                    .body(ImportBlocksBulkWrite {
+                        offset,
+                        base64_encoded_data,
+                    })
+                    .send()
+                    .await?;
+            }
+
+            self.upload_progress.fetch_add(n as u64, Ordering::Relaxed);
+            self.progress_tx
+                .send_replace(self.upload_progress.load(Ordering::Relaxed));
+            self.buf.clear();
+
+            Ok(())
+        }
     }
 
     #[cfg(test)]
