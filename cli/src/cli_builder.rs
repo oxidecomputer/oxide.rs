@@ -4,14 +4,21 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
+use std::{
+    any::{Any, TypeId},
+    collections::BTreeMap,
+    marker::PhantomData,
+    net::IpAddr,
+    path::PathBuf,
+};
 
-use anyhow::{bail, Result};
+use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
+    cmd_disk::CmdDiskImport,
     context::Context,
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
@@ -87,7 +94,7 @@ impl std::str::FromStr for ResolveValue {
 }
 
 #[async_trait]
-trait RunIt: Send + Sync {
+trait RunIt: Any + Send + Sync {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()>;
     fn is_subtree(&self) -> bool;
 }
@@ -192,7 +199,7 @@ impl<'a> Default for NewCli<'a> {
 #[async_trait]
 impl<C> RunIt for CustomCmd<C>
 where
-    C: Send + Sync + FromArgMatches + RunnableCmd,
+    C: Send + Sync + FromArgMatches + RunnableCmd + 'static,
 {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let cmd = C::from_arg_matches(matches).unwrap();
@@ -215,7 +222,7 @@ impl<'a> NewCli<'a> {
         self
     }
 
-    pub async fn run(self) -> Result<()> {
+    pub fn run(self) -> Result<()> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
@@ -227,7 +234,7 @@ impl<'a> NewCli<'a> {
             cacert,
             insecure,
             timeout,
-        } = OxideCli::from_arg_matches(&matches).unwrap();
+        } = OxideCli::from_arg_matches(&matches)?;
 
         let mut log_builder = env_logger::builder();
         if debug {
@@ -269,13 +276,29 @@ impl<'a> NewCli<'a> {
         let mut node = &runner;
         let mut sm = &matches;
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
-            node = node.children.get(sub_name).unwrap();
+            node = node
+                .children
+                .get(sub_name)
+                .ok_or_else(|| anyhow!("subcommand {sub_name} not found"))?;
             sm = sub_matches;
             if node.terminal {
                 break;
             }
         }
-        node.cmd.as_ref().unwrap().run_cmd(sm, &ctx).await
+
+        let Some(cmd) = node.cmd.as_ref() else {
+            bail!("action not found for subcommand");
+        };
+        let rt = if cmd.as_ref().type_id() == TypeId::of::<CustomCmd<CmdDiskImport>>() {
+            tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()?
+        } else {
+            tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?
+        };
+        rt.block_on(async move { cmd.run_cmd(sm, &ctx).await })
     }
 
     pub fn command(&self) -> &Command {
