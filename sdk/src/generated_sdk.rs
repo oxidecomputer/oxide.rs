@@ -11,7 +11,7 @@ use reqwest::header::{HeaderMap, HeaderValue};
 pub mod types {
     /// Error types.
     pub mod error {
-        /// Error from a TryFrom or FromStr implementation.
+        /// Error from a `TryFrom` or `FromStr` implementation.
         pub struct ConversionError(::std::borrow::Cow<'static, str>);
         impl ::std::error::Error for ConversionError {}
         impl ::std::fmt::Display for ConversionError {
@@ -1342,7 +1342,7 @@ pub mod types {
         }
     }
 
-    /// BfdState
+    /// `BfdState`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -1468,7 +1468,7 @@ pub mod types {
         }
     }
 
-    /// BfdStatus
+    /// `BfdStatus`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -2147,7 +2147,7 @@ pub mod types {
         }
     }
 
-    /// BgpMessageHistory
+    /// `BgpMessageHistory`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -2430,7 +2430,7 @@ pub mod types {
         }
     }
 
-    /// BgpPeerConfig
+    /// `BgpPeerConfig`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -4381,7 +4381,7 @@ pub mod types {
         }
     }
 
-    /// BlockSize
+    /// `BlockSize`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -5960,7 +5960,7 @@ pub mod types {
         }
     }
 
-    /// DerEncodedKeyPair
+    /// `DerEncodedKeyPair`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6009,7 +6009,7 @@ pub mod types {
         }
     }
 
-    /// DeviceAccessTokenRequest
+    /// `DeviceAccessTokenRequest`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6057,7 +6057,7 @@ pub mod types {
         }
     }
 
-    /// DeviceAuthRequest
+    /// `DeviceAuthRequest`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6095,7 +6095,7 @@ pub mod types {
         }
     }
 
-    /// DeviceAuthVerify
+    /// `DeviceAuthVerify`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6132,7 +6132,7 @@ pub mod types {
         }
     }
 
-    /// Digest
+    /// `Digest`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6367,7 +6367,7 @@ pub mod types {
         }
     }
 
-    /// DiskMetricName
+    /// `DiskMetricName`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -6472,7 +6472,7 @@ pub mod types {
         }
     }
 
-    /// DiskPath
+    /// `DiskPath`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -7329,7 +7329,7 @@ pub mod types {
         }
     }
 
-    /// ExternalIp
+    /// `ExternalIp`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -8315,7 +8315,7 @@ pub mod types {
         }
     }
 
-    /// FleetRole
+    /// `FleetRole`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -10837,7 +10837,7 @@ pub mod types {
         }
     }
 
-    /// IdentityProviderType
+    /// `IdentityProviderType`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -11009,7 +11009,7 @@ pub mod types {
         }
     }
 
-    /// IdpMetadataSource
+    /// `IdpMetadataSource`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -13824,7 +13824,7 @@ pub mod types {
         }
     }
 
-    /// IpNet
+    /// `IpNet`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14052,7 +14052,7 @@ pub mod types {
         }
     }
 
-    /// IpPoolLinkSilo
+    /// `IpPoolLinkSilo`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14100,7 +14100,7 @@ pub mod types {
         }
     }
 
-    /// IpPoolRange
+    /// `IpPoolRange`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14375,7 +14375,7 @@ pub mod types {
         }
     }
 
-    /// IpPoolSiloUpdate
+    /// `IpPoolSiloUpdate`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14486,7 +14486,7 @@ pub mod types {
         }
     }
 
-    /// IpPoolUtilization
+    /// `IpPoolUtilization`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14542,7 +14542,7 @@ pub mod types {
         }
     }
 
-    /// IpRange
+    /// `IpRange`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14761,7 +14761,7 @@ pub mod types {
         }
     }
 
-    /// Ipv4Utilization
+    /// `Ipv4Utilization`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -15003,7 +15003,7 @@ pub mod types {
         }
     }
 
-    /// Ipv6Utilization
+    /// `Ipv6Utilization`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -16520,7 +16520,7 @@ pub mod types {
         }
     }
 
-    /// MissingDatum
+    /// `MissingDatum`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -16673,7 +16673,7 @@ pub mod types {
         }
     }
 
-    /// NameOrId
+    /// `NameOrId`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -17872,7 +17872,7 @@ pub mod types {
         }
     }
 
-    /// Ping
+    /// `Ping`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -17917,7 +17917,7 @@ pub mod types {
         }
     }
 
-    /// PingStatus
+    /// `PingStatus`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -18210,7 +18210,7 @@ pub mod types {
         }
     }
 
-    /// ProbeExternalIp
+    /// `ProbeExternalIp`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -18267,7 +18267,7 @@ pub mod types {
         }
     }
 
-    /// ProbeExternalIpKind
+    /// `ProbeExternalIpKind`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -18357,7 +18357,7 @@ pub mod types {
         }
     }
 
-    /// ProbeInfo
+    /// `ProbeInfo`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -18647,7 +18647,7 @@ pub mod types {
         }
     }
 
-    /// ProjectRole
+    /// `ProjectRole`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -21406,7 +21406,7 @@ pub mod types {
         }
     }
 
-    /// SiloRole
+    /// `SiloRole`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -22703,7 +22703,7 @@ pub mod types {
         }
     }
 
-    /// SnapshotState
+    /// `SnapshotState`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -22996,7 +22996,7 @@ pub mod types {
         }
     }
 
-    /// SupportBundleInfo
+    /// `SupportBundleInfo`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -23111,7 +23111,7 @@ pub mod types {
         }
     }
 
-    /// SupportBundleState
+    /// `SupportBundleState`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -23730,7 +23730,7 @@ pub mod types {
         }
     }
 
-    /// SwitchLinkState
+    /// `SwitchLinkState`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -25256,7 +25256,7 @@ pub mod types {
         }
     }
 
-    /// SystemMetricName
+    /// `SystemMetricName`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -25881,7 +25881,7 @@ pub mod types {
         }
     }
 
-    /// TypedUuidForSupportBundleKind
+    /// `TypedUuidForSupportBundleKind`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -27619,7 +27619,7 @@ pub mod types {
         }
     }
 
-    /// VpcFirewallRuleAction
+    /// `VpcFirewallRuleAction`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -27704,7 +27704,7 @@ pub mod types {
         }
     }
 
-    /// VpcFirewallRuleDirection
+    /// `VpcFirewallRuleDirection`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -28134,7 +28134,7 @@ pub mod types {
         }
     }
 
-    /// VpcFirewallRuleStatus
+    /// `VpcFirewallRuleStatus`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -28767,7 +28767,7 @@ pub mod types {
         }
     }
 
-    /// VpcRouterKind
+    /// `VpcRouterKind`
     ///
     /// <details><summary>JSON schema</summary>
     ///
