@@ -6,7 +6,7 @@
 
 use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{bail, Result};
 use async_trait::async_trait;
 use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
@@ -227,7 +227,7 @@ impl<'a> NewCli<'a> {
             cacert,
             insecure,
             timeout,
-        } = OxideCli::from_arg_matches(&matches)?;
+        } = OxideCli::from_arg_matches(&matches).expect("failed to parse OxideCli from args");
 
         let mut log_builder = env_logger::builder();
         if debug {
@@ -272,16 +272,17 @@ impl<'a> NewCli<'a> {
             node = node
                 .children
                 .get(sub_name)
-                .ok_or_else(|| anyhow!("subcommand {sub_name} not found"))?;
+                .expect("child subcommand not found");
             sm = sub_matches;
             if node.terminal {
                 break;
             }
         }
-        let Some(cmd) = node.cmd.as_ref() else {
-            bail!("action not found for subcommand");
-        };
-        cmd.run_cmd(sm, &ctx).await
+        node.cmd
+            .as_ref()
+            .expect("no cmd for node")
+            .run_cmd(sm, &ctx)
+            .await
     }
 
     pub fn command(&self) -> &Command {
