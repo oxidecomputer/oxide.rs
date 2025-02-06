@@ -19,8 +19,7 @@ pub mod builder {
     use crate::{Client, Error};
 
     use std::future::Future;
-    use std::sync::atomic::{AtomicBool, AtomicU64};
-    use std::sync::Arc;
+    use std::sync::atomic::AtomicBool;
     use tokio::sync::{oneshot, watch};
 
     /// Builder for [`ClientExtraDiskExt::disk_import`]
@@ -149,8 +148,6 @@ pub mod builder {
             let disk_info = builder.disk_info.map_err(Error::InvalidRequest)?;
             let image_info = builder.image_info.map_err(Error::InvalidRequest)?;
 
-            let upload_progress = Arc::new(AtomicU64::new(0));
-
             Ok(Self {
                 client: builder.client,
                 project,
@@ -159,7 +156,6 @@ pub mod builder {
                 disk,
                 disk_info,
                 image_info,
-                upload_progress,
                 progress_tx,
                 cleanup_started: AtomicBool::new(false),
             })
@@ -178,8 +174,7 @@ pub mod types {
 
     use base64::Engine;
     use std::path::{Path, PathBuf};
-    use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
     use std::time::Duration;
     use tokio::fs::File;
     use tokio::io::{self, AsyncReadExt, AsyncSeekExt, SeekFrom};
@@ -253,7 +248,6 @@ pub mod types {
         pub disk: Name,
         pub disk_info: DiskInfo,
         pub image_info: Option<ImageInfo>,
-        pub upload_progress: Arc<AtomicU64>,
         pub progress_tx: watch::Sender<u64>,
         pub cleanup_started: AtomicBool,
     }
@@ -343,7 +337,6 @@ pub mod types {
                     file_path: self.disk_info.file_path.clone(),
                     file: File::open(&self.disk_info.file_path).await?,
                     progress_tx: self.progress_tx.clone(),
-                    upload_progress: self.upload_progress.clone(),
                     buf: Vec::with_capacity(CHUNK_SIZE as usize),
                 };
 
@@ -777,7 +770,6 @@ pub mod types {
         file: File,
         file_path: PathBuf,
         progress_tx: watch::Sender<u64>,
-        upload_progress: Arc<AtomicU64>,
         buf: Vec<u8>,
     }
 
@@ -808,8 +800,8 @@ pub mod types {
                 let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(data);
                 self.client
                     .disk_bulk_write_import()
-                    .disk(self.disk.clone())
-                    .project(self.project.clone())
+                    .disk(&*self.disk)
+                    .project(&self.project)
                     .body(ImportBlocksBulkWrite {
                         offset,
                         base64_encoded_data,
@@ -818,9 +810,7 @@ pub mod types {
                     .await?;
             }
 
-            self.upload_progress.fetch_add(n as u64, Ordering::Relaxed);
-            self.progress_tx
-                .send_replace(self.upload_progress.load(Ordering::Relaxed));
+            self.progress_tx.send_modify(|offset| *offset += n as u64);
             self.buf.clear();
 
             Ok(())
