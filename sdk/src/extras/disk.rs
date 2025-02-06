@@ -177,12 +177,12 @@ pub mod types {
     };
 
     use base64::Engine;
-    use std::fs::{self, File};
-    use std::io::{self, Read, Seek, SeekFrom};
     use std::path::{Path, PathBuf};
     use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
     use std::sync::Arc;
     use std::time::Duration;
+    use tokio::fs::File;
+    use tokio::io::{self, AsyncReadExt, AsyncSeekExt, SeekFrom};
     use tokio::sync::{oneshot, watch};
 
     // Upload to Nexus in 512k byte chunks
@@ -341,7 +341,7 @@ pub mod types {
                     disk: self.disk.clone(),
                     project: self.project.clone(),
                     file_path: self.disk_info.file_path.clone(),
-                    file: File::open(&self.disk_info.file_path)?,
+                    file: File::open(&self.disk_info.file_path).await?,
                     progress_tx: self.progress_tx.clone(),
                     upload_progress: self.upload_progress.clone(),
                     buf: Vec::with_capacity(CHUNK_SIZE as usize),
@@ -678,7 +678,7 @@ pub mod types {
                 )));
             }
 
-            let file_size = fs::metadata(&file_path)?.len();
+            let file_size = std::fs::metadata(&file_path)?.len();
             let disk_size = Self::get_disk_size(file_size, requested_disk_size.map(|x| **x)).into();
 
             let disk_block_size = match requested_disk_block_size {
@@ -783,12 +783,11 @@ pub mod types {
 
     impl UploadWorker {
         async fn upload_chunk(&mut self, offset: u64) -> Result<(), DiskImportError> {
-            self.file.seek(SeekFrom::Start(offset))?;
-            let n = match self
-                .file
-                .by_ref()
+            self.file.seek(SeekFrom::Start(offset)).await?;
+            let n = match (&mut self.file)
                 .take(CHUNK_SIZE)
                 .read_to_end(&mut self.buf)
+                .await
             {
                 Ok(n) => n,
                 Err(e) => {
