@@ -96,10 +96,11 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_net::CmdStaticRoute>("system networking route")
 }
 
-fn main() {
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
     let new_cli = make_cli();
 
-    if let Err(e) = new_cli.run() {
+    if let Err(e) = new_cli.run().await {
         if let Some(io_err) = e.downcast_ref::<io::Error>() {
             if io_err.kind() == io::ErrorKind::BrokenPipe {
                 return;

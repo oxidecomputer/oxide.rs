@@ -4,13 +4,7 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{
-    any::{Any, TypeId},
-    collections::BTreeMap,
-    marker::PhantomData,
-    net::IpAddr,
-    path::PathBuf,
-};
+use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -18,7 +12,6 @@ use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
-    cmd_disk::CmdDiskImport,
     context::Context,
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
@@ -94,7 +87,7 @@ impl std::str::FromStr for ResolveValue {
 }
 
 #[async_trait]
-trait RunIt: Any + Send + Sync {
+trait RunIt: Send + Sync {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()>;
     fn is_subtree(&self) -> bool;
 }
@@ -199,7 +192,7 @@ impl<'a> Default for NewCli<'a> {
 #[async_trait]
 impl<C> RunIt for CustomCmd<C>
 where
-    C: Send + Sync + FromArgMatches + RunnableCmd + 'static,
+    C: Send + Sync + FromArgMatches + RunnableCmd,
 {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let cmd = C::from_arg_matches(matches).unwrap();
@@ -222,7 +215,7 @@ impl<'a> NewCli<'a> {
         self
     }
 
-    pub fn run(self) -> Result<()> {
+    pub async fn run(self) -> Result<()> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
@@ -285,20 +278,10 @@ impl<'a> NewCli<'a> {
                 break;
             }
         }
-
         let Some(cmd) = node.cmd.as_ref() else {
             bail!("action not found for subcommand");
         };
-        let rt = if cmd.as_ref().type_id() == TypeId::of::<CustomCmd<CmdDiskImport>>() {
-            tokio::runtime::Builder::new_multi_thread()
-                .enable_all()
-                .build()?
-        } else {
-            tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()?
-        };
-        rt.block_on(async move { cmd.run_cmd(sm, &ctx).await })
+        cmd.run_cmd(sm, &ctx).await
     }
 
     pub fn command(&self) -> &Command {
