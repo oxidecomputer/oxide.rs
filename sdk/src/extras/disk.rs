@@ -349,7 +349,8 @@ pub mod types {
                         }
                     }
 
-                    // Signal the main task that the worker has sent all chunks successfully.
+                    // Signal the main task that the worker has sent all chunks successfully and
+                    // none remain to be sent.
                     drop(failed_tx);
 
                     while let Ok(chunk) = resubmit_rx.recv_async().await {
