@@ -173,6 +173,7 @@ pub mod types {
     };
 
     use base64::Engine;
+    use std::collections::HashSet;
     use std::path::{Path, PathBuf};
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::time::Duration;
@@ -429,22 +430,22 @@ pub mod types {
 
             // Only return an error if all worker tasks failed.
             if errors.len() == self.upload_thread_ct {
-                match errors.len() {
-                    1 => {
-                        return Err(DiskImportError::context(
-                            "Error while uploading the disk image",
-                            errors.remove(0),
-                        ))
-                    }
-                    2.. => {
-                        let mut msg = String::from("Errors while uploading the disk image:");
-                        for err in errors {
-                            msg += &format!("\n * {err}");
-                        }
-                        return Err(DiskImportError::Other(msg.into()));
-                    }
-                    0 => {} // Unreachable.
+                // Dedupe error messages.
+                let mut err_set = HashSet::new();
+                for err in errors {
+                    err_set.insert(format!("\n * {err}"));
                 }
+
+                let mut msg = match err_set.len() {
+                    1 => String::from("Error while uploading the disk image:"),
+                    2.. => String::from("Errors while uploading the disk image:"),
+                    0 => unreachable!(),
+                };
+
+                for err in err_set {
+                    msg += &err;
+                }
+                return Err(DiskImportError::Other(msg.into()));
             }
 
             // Stop the bulk write process
