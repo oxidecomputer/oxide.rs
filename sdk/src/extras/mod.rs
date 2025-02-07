@@ -25,7 +25,7 @@ pub trait ClientExtraDiskExt {
     /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `description`: Human-readable free-form text about the disk
-    /// - `upload_thread_ct`: The number of threads used to upload the disk
+    /// - `upload_task_ct`: The number of tokio tasks used to upload the disk
     /// - `disk`: Name of the disk
     /// - `disk_info`: Information needed to construct the disk
     /// - `image_info`: Information needed to construct a snapshot and image, optional
@@ -36,7 +36,7 @@ pub trait ClientExtraDiskExt {
     /// client.disk_import()
     ///    .project(project)
     ///    .description(description)
-    ///    .upload_thread_ct(upload_thread_ct)
+    ///    .upload_task_ct(upload_task_ct)
     ///    .disk(disk)
     ///    .disk_info(disk_info)
     ///    .image_info(image_info)
@@ -53,7 +53,7 @@ pub trait ClientExtraDiskExt {
     /// let (import_future, handle) = client.disk_import()
     ///    .project(project)
     ///    .description(description)
-    ///    .upload_thread_ct(upload_thread_ct)
+    ///    .upload_task_ct(upload_task_ct)
     ///    .disk(disk)
     ///    .disk_info(disk_info)
     ///    .image_info(image_info)

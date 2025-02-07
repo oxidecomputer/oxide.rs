@@ -30,7 +30,7 @@ pub mod builder {
         client: &'a Client,
         project: Result<NameOrId, String>,
         description: Result<String, String>,
-        upload_thread_ct: Result<NonZeroUsize, String>,
+        upload_task_ct: Result<NonZeroUsize, String>,
         disk: Result<Name, String>,
         disk_info: Result<DiskInfo, String>,
         image_info: Result<Option<ImageInfo>, String>,
@@ -42,7 +42,7 @@ pub mod builder {
                 client,
                 project: Err("project was not initialized".to_string()),
                 description: Err("description was not initialized".to_string()),
-                upload_thread_ct: Err("upload_thread_ct was not initialized".to_string()),
+                upload_task_ct: Err("upload_task_ct was not initialized".to_string()),
                 disk: Err("disk was not initialized".to_string()),
                 disk_info: Err("disk_info was not initialized".to_string()),
                 image_info: Ok(None),
@@ -69,12 +69,12 @@ pub mod builder {
             self
         }
 
-        pub fn upload_thread_ct<V>(mut self, value: V) -> Self
+        pub fn upload_task_ct<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<NonZeroUsize>,
         {
-            self.upload_thread_ct = value.try_into().map_err(|_| {
-                "conversion to `non-zero usize` for upload_thread_ct failed".to_string()
+            self.upload_task_ct = value.try_into().map_err(|_| {
+                "conversion to `non-zero usize` for upload_task_ct failed".to_string()
             });
             self
         }
@@ -144,7 +144,7 @@ pub mod builder {
 
             let project = builder.project.map_err(Error::InvalidRequest)?;
             let description = builder.description.map_err(Error::InvalidRequest)?;
-            let upload_thread_ct = builder.upload_thread_ct.map_err(Error::InvalidRequest)?;
+            let upload_task_ct = builder.upload_task_ct.map_err(Error::InvalidRequest)?;
             let disk = builder.disk.map_err(Error::InvalidRequest)?;
             let disk_info = builder.disk_info.map_err(Error::InvalidRequest)?;
             let image_info = builder.image_info.map_err(Error::InvalidRequest)?;
@@ -153,7 +153,7 @@ pub mod builder {
                 client: builder.client,
                 project,
                 description,
-                upload_thread_ct,
+                upload_task_ct,
                 disk,
                 disk_info,
                 image_info,
@@ -247,7 +247,7 @@ pub mod types {
         pub client: &'a Client,
         pub project: NameOrId,
         pub description: String,
-        pub upload_thread_ct: NonZeroUsize,
+        pub upload_task_ct: NonZeroUsize,
         pub disk: Name,
         pub disk_info: DiskInfo,
         pub image_info: Option<ImageInfo>,
@@ -325,14 +325,13 @@ pub mod types {
                     DiskImportError::context("starting the build write process failed", e)
                 })?;
 
-            // Create one tokio task for each thread that will upload file chunks
             let mut handles: Vec<tokio::task::JoinHandle<Result<(), DiskImportError>>> =
-                Vec::with_capacity(self.upload_thread_ct.get());
+                Vec::with_capacity(self.upload_task_ct.get());
             let (tx, rx) = flume::bounded(64);
-            let (failed_tx, failed_rx) = flume::bounded(self.upload_thread_ct.get());
-            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_thread_ct.get());
+            let (failed_tx, failed_rx) = flume::bounded(self.upload_task_ct.get());
+            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_task_ct.get());
 
-            for _ in 0..self.upload_thread_ct.get() {
+            for _ in 0..self.upload_task_ct.get() {
                 let mut worker = UploadWorker {
                     client: self.client.clone(),
                     disk: self.disk.clone(),
@@ -431,7 +430,7 @@ pub mod types {
             }
 
             // Only return an error if all worker tasks failed.
-            if errors.len() == self.upload_thread_ct.get() {
+            if errors.len() == self.upload_task_ct.get() {
                 // Dedupe error messages.
                 let mut err_set = HashSet::new();
                 for err in errors {
