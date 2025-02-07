@@ -19,6 +19,7 @@ pub mod builder {
     use crate::{Client, Error};
 
     use std::future::Future;
+    use std::num::NonZeroUsize;
     use std::sync::atomic::AtomicBool;
     use tokio::sync::{oneshot, watch};
 
@@ -29,7 +30,7 @@ pub mod builder {
         client: &'a Client,
         project: Result<NameOrId, String>,
         description: Result<String, String>,
-        upload_thread_ct: Result<usize, String>,
+        upload_thread_ct: Result<NonZeroUsize, String>,
         disk: Result<Name, String>,
         disk_info: Result<DiskInfo, String>,
         image_info: Result<Option<ImageInfo>, String>,
@@ -70,11 +71,11 @@ pub mod builder {
 
         pub fn upload_thread_ct<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<usize>,
+            V: std::convert::TryInto<NonZeroUsize>,
         {
-            self.upload_thread_ct = value
-                .try_into()
-                .map_err(|_| "conversion to `usize` for upload_thread_ct failed".to_string());
+            self.upload_thread_ct = value.try_into().map_err(|_| {
+                "conversion to `non-zero usize` for upload_thread_ct failed".to_string()
+            });
             self
         }
 
@@ -174,6 +175,7 @@ pub mod types {
 
     use base64::Engine;
     use std::collections::HashSet;
+    use std::num::NonZeroUsize;
     use std::path::{Path, PathBuf};
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::time::Duration;
@@ -245,7 +247,7 @@ pub mod types {
         pub client: &'a Client,
         pub project: NameOrId,
         pub description: String,
-        pub upload_thread_ct: usize,
+        pub upload_thread_ct: NonZeroUsize,
         pub disk: Name,
         pub disk_info: DiskInfo,
         pub image_info: Option<ImageInfo>,
@@ -325,12 +327,12 @@ pub mod types {
 
             // Create one tokio task for each thread that will upload file chunks
             let mut handles: Vec<tokio::task::JoinHandle<Result<(), DiskImportError>>> =
-                Vec::with_capacity(self.upload_thread_ct);
+                Vec::with_capacity(self.upload_thread_ct.get());
             let (tx, rx) = flume::bounded(64);
-            let (failed_tx, failed_rx) = flume::bounded(self.upload_thread_ct);
-            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_thread_ct);
+            let (failed_tx, failed_rx) = flume::bounded(self.upload_thread_ct.get());
+            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_thread_ct.get());
 
-            for _ in 0..self.upload_thread_ct {
+            for _ in 0..self.upload_thread_ct.get() {
                 let mut worker = UploadWorker {
                     client: self.client.clone(),
                     disk: self.disk.clone(),
@@ -429,7 +431,7 @@ pub mod types {
             }
 
             // Only return an error if all worker tasks failed.
-            if errors.len() == self.upload_thread_ct {
+            if errors.len() == self.upload_thread_ct.get() {
                 // Dedupe error messages.
                 let mut err_set = HashSet::new();
                 for err in errors {
@@ -439,7 +441,7 @@ pub mod types {
                 let mut msg = match err_set.len() {
                     1 => String::from("Error while uploading the disk image:"),
                     2.. => String::from("Errors while uploading the disk image:"),
-                    0 => unreachable!(),
+                    0 => unreachable!("error count was zero"),
                 };
 
                 for err in err_set {
