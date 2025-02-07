@@ -177,7 +177,7 @@ pub mod types {
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::time::Duration;
     use tokio::fs::File;
-    use tokio::io::{self, AsyncReadExt, AsyncSeekExt, SeekFrom};
+    use tokio::io::{self, AsyncReadExt};
     use tokio::sync::{oneshot, watch};
 
     // Upload to Nexus in 512k byte chunks
@@ -334,10 +334,7 @@ pub mod types {
                     client: self.client.clone(),
                     disk: self.disk.clone(),
                     project: self.project.clone(),
-                    file_path: self.disk_info.file_path.clone(),
-                    file: File::open(&self.disk_info.file_path).await?,
                     progress_tx: self.progress_tx.clone(),
-                    buf: Vec::with_capacity(CHUNK_SIZE as usize),
                 };
 
                 let rx = rx.clone();
@@ -345,18 +342,18 @@ pub mod types {
                 let resubmit_rx = resubmit_rx.clone();
 
                 handles.push(tokio::spawn(async move {
-                    while let Ok(offset) = rx.recv_async().await {
-                        if let Err(err) = worker.upload_chunk(offset).await {
-                            let _ = failed_tx.send_async(offset).await;
-                            return Err(err);
+                    while let Ok(chunk) = rx.recv_async().await {
+                        if let Err(e) = worker.upload_chunk(&chunk).await {
+                            let _ = failed_tx.send_async(chunk).await;
+                            return Err(e);
                         }
                     }
 
                     // Signal the main task that the worker has sent all chunks successfully.
                     drop(failed_tx);
 
-                    while let Ok(offset) = resubmit_rx.recv_async().await {
-                        worker.upload_chunk(offset).await?;
+                    while let Ok(chunk) = resubmit_rx.recv_async().await {
+                        worker.upload_chunk(&chunk).await?;
                     }
 
                     Ok(())
@@ -365,19 +362,53 @@ pub mod types {
             // Only worker tasks use this sender.
             drop(failed_tx);
 
-            let file_len = self.disk_info.file_path.metadata()?.len();
-            for offset in (0..file_len).step_by(CHUNK_SIZE as usize) {
-                // Failure to send indicates that all upload tasks exited early
-                // due to errors on their end. We will return those errors below.
-                if tx.send_async(offset).await.is_err() {
-                    break;
+            let mut buf = Vec::with_capacity(CHUNK_SIZE as usize);
+            let mut file = File::open(&self.disk_info.file_path).await?;
+            let mut offset = 0;
+
+            let read_result: Result<(), DiskImportError> = loop {
+                let n = match (&mut file).take(CHUNK_SIZE).read_to_end(&mut buf).await {
+                    Ok(n) => n,
+                    Err(e) => {
+                        return Err(DiskImportError::context(
+                            format!("reading from {} failed", self.disk_info.file_path.display()),
+                            e,
+                        ));
+                    }
+                };
+
+                if n == 0 {
+                    break Ok(());
                 }
-            }
+
+                // If the chunk we just read is all zeroes, don't POST it.
+                let data = &buf[..n];
+                if !data.iter().all(|x| *x == 0) {
+                    // Failure to send indicates that all upload tasks exited early
+                    // due to errors on their end. We will return those errors below.
+                    if tx
+                        .send_async(Chunk {
+                            offset,
+                            data: data.to_vec(),
+                        })
+                        .await
+                        .is_err()
+                    {
+                        break Ok(());
+                    }
+                } else {
+                    // Bump the progress bar here to make it consistent.
+                    self.progress_tx.send_modify(|offset| *offset += n as u64);
+                }
+
+                offset += n as u64;
+                buf.clear();
+            };
             drop(tx);
 
-            // Resubmit any failed offsets back to the remaining workers to retry.
-            while let Ok(failed_offset) = failed_rx.recv_async().await {
-                if resubmit_tx.send_async(failed_offset).await.is_err() {
+            // Resubmit any failed chunks back to the remaining workers to retry.
+            while let Ok(failed_chunk) = failed_rx.recv_async().await {
+                if resubmit_tx.send_async(failed_chunk).await.is_err() {
                     // All worker tasks have failed.
                     break;
                 }
@@ -385,6 +416,9 @@ pub mod types {
             drop(resubmit_tx);
 
             let mut errors = Vec::new();
+            if let Err(e) = read_result {
+                errors.push(e);
+            }
             for handle in handles {
                 let result = handle.await.map_err(DiskImportError::other)?;
                 if let Err(err) = result {
@@ -763,55 +797,34 @@ pub mod types {
         pub image_version: String,
     }
 
+    struct Chunk {
+        offset: u64,
+        data: Vec<u8>,
+    }
+
     struct UploadWorker {
         client: Client,
         disk: Name,
         project: NameOrId,
-        file: File,
-        file_path: PathBuf,
         progress_tx: watch::Sender<u64>,
-        buf: Vec<u8>,
     }
 
     impl UploadWorker {
-        async fn upload_chunk(&mut self, offset: u64) -> Result<(), DiskImportError> {
-            self.file.seek(SeekFrom::Start(offset)).await?;
-            let n = match (&mut self.file)
-                .take(CHUNK_SIZE)
-                .read_to_end(&mut self.buf)
-                .await
-            {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(DiskImportError::context(
-                        format!("reading from {} failed", self.file_path.display()),
-                        e,
-                    ));
-                }
-            };
+        async fn upload_chunk(&mut self, chunk: &Chunk) -> Result<(), DiskImportError> {
+            let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(&chunk.data);
+            self.client
+                .disk_bulk_write_import()
+                .disk(&*self.disk)
+                .project(&self.project)
+                .body(ImportBlocksBulkWrite {
+                    offset: chunk.offset,
+                    base64_encoded_data,
+                })
+                .send()
+                .await?;
 
-            if n == 0 {
-                return Ok(());
-            }
-
-            // If the chunk we just read is all zeroes, don't POST it.
-            let data = &self.buf[..n];
-            if !data.iter().all(|x| *x == 0) {
-                let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(data);
-                self.client
-                    .disk_bulk_write_import()
-                    .disk(&*self.disk)
-                    .project(&self.project)
-                    .body(ImportBlocksBulkWrite {
-                        offset,
-                        base64_encoded_data,
-                    })
-                    .send()
-                    .await?;
-            }
-
-            self.progress_tx.send_modify(|offset| *offset += n as u64);
-            self.buf.clear();
+            self.progress_tx
+                .send_modify(|offset| *offset += chunk.data.len() as u64);
 
             Ok(())
         }
