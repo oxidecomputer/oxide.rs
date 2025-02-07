@@ -384,7 +384,7 @@ pub mod types {
                     break Ok(());
                 }
 
-                // If the chunk we just read is all zeroes, don't POST it.
+                // If the chunk we just read is all zeroes, we don't need to upload it.
                 let data = &buf[..n];
                 if !data.iter().all(|x| *x == 0) {
                     // Failure to send indicates that all upload tasks exited early
@@ -400,7 +400,7 @@ pub mod types {
                         break Ok(());
                     }
                 } else {
-                    // Bump the progress bar here to make it consistent.
+                    // Bump the progress bar here. We don't need to send this chunk so we've completed the relevant work.
                     self.progress_tx.send_modify(|offset| *offset += n as u64);
                 }
 
