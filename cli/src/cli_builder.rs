@@ -227,7 +227,7 @@ impl<'a> NewCli<'a> {
             cacert,
             insecure,
             timeout,
-        } = OxideCli::from_arg_matches(&matches).unwrap();
+        } = OxideCli::from_arg_matches(&matches).expect("failed to parse OxideCli from args");
 
         let mut log_builder = env_logger::builder();
         if debug {
@@ -269,13 +269,20 @@ impl<'a> NewCli<'a> {
         let mut node = &runner;
         let mut sm = &matches;
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
-            node = node.children.get(sub_name).unwrap();
+            node = node
+                .children
+                .get(sub_name)
+                .expect("child subcommand not found");
             sm = sub_matches;
             if node.terminal {
                 break;
             }
         }
-        node.cmd.as_ref().unwrap().run_cmd(sm, &ctx).await
+        node.cmd
+            .as_ref()
+            .expect("no cmd for node")
+            .run_cmd(sm, &ctx)
+            .await
     }
 
     pub fn command(&self) -> &Command {
