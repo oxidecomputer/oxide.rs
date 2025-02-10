@@ -2302,7 +2302,7 @@ dependencies = [
 [[package]]
 name = "oxnet"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/oxnet#49ee85dcd294901031c3395ee773363db1cdc289"
+source = "git+https://github.com/oxidecomputer/oxnet#7c0f72aa9f57f9fa52a7d693721b08330f4ea413"
 dependencies = [
  "ipnetwork",
  "schemars",
