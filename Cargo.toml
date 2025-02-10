@@ -25,6 +25,7 @@ dirs = "4.0.0"
 dropshot = "0.13.0"
 env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
+flume = "0.11.1"
 futures = "0.3.31"
 httpmock = "0.7.0"
 humantime = "2"

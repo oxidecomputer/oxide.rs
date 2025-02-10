@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use super::ClientExtraDiskExt;
 use crate::Client;
@@ -19,8 +19,8 @@ pub mod builder {
     use crate::{Client, Error};
 
     use std::future::Future;
-    use std::sync::atomic::{AtomicBool, AtomicU64};
-    use std::sync::Arc;
+    use std::num::NonZeroUsize;
+    use std::sync::atomic::AtomicBool;
     use tokio::sync::{oneshot, watch};
 
     /// Builder for [`ClientExtraDiskExt::disk_import`]
@@ -30,7 +30,7 @@ pub mod builder {
         client: &'a Client,
         project: Result<NameOrId, String>,
         description: Result<String, String>,
-        upload_thread_ct: Result<usize, String>,
+        upload_task_ct: Result<NonZeroUsize, String>,
         disk: Result<Name, String>,
         disk_info: Result<DiskInfo, String>,
         image_info: Result<Option<ImageInfo>, String>,
@@ -42,7 +42,7 @@ pub mod builder {
                 client,
                 project: Err("project was not initialized".to_string()),
                 description: Err("description was not initialized".to_string()),
-                upload_thread_ct: Err("upload_thread_ct was not initialized".to_string()),
+                upload_task_ct: Err("upload_task_ct was not initialized".to_string()),
                 disk: Err("disk was not initialized".to_string()),
                 disk_info: Err("disk_info was not initialized".to_string()),
                 image_info: Ok(None),
@@ -69,13 +69,13 @@ pub mod builder {
             self
         }
 
-        pub fn upload_thread_ct<V>(mut self, value: V) -> Self
+        pub fn upload_task_ct<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<usize>,
+            V: std::convert::TryInto<NonZeroUsize>,
         {
-            self.upload_thread_ct = value
-                .try_into()
-                .map_err(|_| "conversion to `usize` for upload_thread_ct failed".to_string());
+            self.upload_task_ct = value.try_into().map_err(|_| {
+                "conversion to `non-zero usize` for upload_task_ct failed".to_string()
+            });
             self
         }
 
@@ -144,22 +144,19 @@ pub mod builder {
 
             let project = builder.project.map_err(Error::InvalidRequest)?;
             let description = builder.description.map_err(Error::InvalidRequest)?;
-            let upload_thread_ct = builder.upload_thread_ct.map_err(Error::InvalidRequest)?;
+            let upload_task_ct = builder.upload_task_ct.map_err(Error::InvalidRequest)?;
             let disk = builder.disk.map_err(Error::InvalidRequest)?;
             let disk_info = builder.disk_info.map_err(Error::InvalidRequest)?;
             let image_info = builder.image_info.map_err(Error::InvalidRequest)?;
-
-            let upload_progress = Arc::new(AtomicU64::new(0));
 
             Ok(Self {
                 client: builder.client,
                 project,
                 description,
-                upload_thread_ct,
+                upload_task_ct,
                 disk,
                 disk_info,
                 image_info,
-                upload_progress,
                 progress_tx,
                 cleanup_started: AtomicBool::new(false),
             })
@@ -177,13 +174,14 @@ pub mod types {
     };
 
     use base64::Engine;
-    use std::fs::{self, File};
-    use std::io::{self, Read};
+    use std::collections::HashSet;
+    use std::num::NonZeroUsize;
     use std::path::{Path, PathBuf};
-    use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
     use std::time::Duration;
-    use tokio::sync::{mpsc, oneshot, watch};
+    use tokio::fs::File;
+    use tokio::io::{self, AsyncReadExt};
+    use tokio::sync::{oneshot, watch};
 
     // Upload to Nexus in 512k byte chunks
     const CHUNK_SIZE: u64 = 512 * 1024;
@@ -249,11 +247,10 @@ pub mod types {
         pub client: &'a Client,
         pub project: NameOrId,
         pub description: String,
-        pub upload_thread_ct: usize,
+        pub upload_task_ct: NonZeroUsize,
         pub disk: Name,
         pub disk_info: DiskInfo,
         pub image_info: Option<ImageInfo>,
-        pub upload_progress: Arc<AtomicU64>,
         pub progress_tx: watch::Sender<u64>,
         pub cleanup_started: AtomicBool,
     }
@@ -328,56 +325,55 @@ pub mod types {
                     DiskImportError::context("starting the build write process failed", e)
                 })?;
 
-            // Create one tokio task for each thread that will upload file chunks
             let mut handles: Vec<tokio::task::JoinHandle<Result<(), DiskImportError>>> =
-                Vec::with_capacity(self.upload_thread_ct);
-            let mut senders = Vec::with_capacity(self.upload_thread_ct);
+                Vec::with_capacity(self.upload_task_ct.get());
+            let (tx, rx) = flume::bounded(64);
+            let (failed_tx, failed_rx) = flume::bounded(self.upload_task_ct.get());
+            let (resubmit_tx, resubmit_rx) = flume::bounded(self.upload_task_ct.get());
 
-            for _ in 0..self.upload_thread_ct {
-                let (tx, mut rx) = mpsc::channel(100);
+            for _ in 0..self.upload_task_ct.get() {
+                let mut worker = UploadWorker {
+                    client: self.client.clone(),
+                    disk: self.disk.clone(),
+                    project: self.project.clone(),
+                    progress_tx: self.progress_tx.clone(),
+                };
 
-                let client = self.client.clone();
-                let project = self.project.clone();
-                let disk = self.disk.clone();
-                let upload_progress = self.upload_progress.clone();
-                let progress_tx = self.progress_tx.clone();
+                let rx = rx.clone();
+                let failed_tx = failed_tx.clone();
+                let resubmit_rx = resubmit_rx.clone();
 
                 handles.push(tokio::spawn(async move {
-                    while let Some((offset, base64_encoded_data, data_len)) = rx.recv().await {
-                        client
-                            .disk_bulk_write_import()
-                            .disk(disk.clone())
-                            .project(project.clone())
-                            .body(ImportBlocksBulkWrite {
-                                offset,
-                                base64_encoded_data,
-                            })
-                            .send()
-                            .await?;
+                    while let Ok(chunk) = rx.recv_async().await {
+                        if let Err(e) = worker.upload_chunk(&chunk).await {
+                            let _ = failed_tx.send_async(chunk).await;
+                            return Err(e);
+                        }
+                    }
 
-                        upload_progress.fetch_add(data_len, Ordering::Relaxed);
-                        progress_tx.send_replace(upload_progress.load(Ordering::Relaxed));
+                    // Signal the main task that the worker has sent all chunks successfully and
+                    // none remain to be sent.
+                    drop(failed_tx);
+
+                    while let Ok(chunk) = resubmit_rx.recv_async().await {
+                        worker.upload_chunk(&chunk).await?;
                     }
 
                     Ok(())
                 }));
-
-                senders.push(tx);
             }
+            // Only worker tasks use this sender.
+            drop(failed_tx);
 
-            // Read chunks from the file in the file system and send them to the
-            // upload threads.
-            let mut file = File::open(&self.disk_info.file_path)?;
-            let mut i = 0;
+            let mut buf = Vec::with_capacity(CHUNK_SIZE as usize);
+            let mut file = File::open(&self.disk_info.file_path).await?;
             let mut offset = 0;
 
             let read_result: Result<(), DiskImportError> = loop {
-                let mut chunk = Vec::with_capacity(CHUNK_SIZE as usize);
-
-                let n = match file.by_ref().take(CHUNK_SIZE).read_to_end(&mut chunk) {
+                let n = match (&mut file).take(CHUNK_SIZE).read_to_end(&mut buf).await {
                     Ok(n) => n,
                     Err(e) => {
-                        break Err(DiskImportError::context(
+                        return Err(DiskImportError::context(
                             format!("reading from {} failed", self.disk_info.file_path.display()),
                             e,
                         ));
@@ -388,39 +384,44 @@ pub mod types {
                     break Ok(());
                 }
 
-                // If the chunk we just read is all zeroes, don't POST it.
-                if !chunk.iter().all(|x| *x == 0) {
-                    let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
-
-                    if senders[i % self.upload_thread_ct]
-                        .send((offset, encoded, n as u64))
+                // If the chunk we just read is all zeroes, we don't need to upload it.
+                let data = &buf[..n];
+                if !data.iter().all(|x| *x == 0) {
+                    // Failure to send indicates that all upload tasks exited early
+                    // due to errors on their end. We will return those errors below.
+                    if tx
+                        .send_async(Chunk {
+                            offset,
+                            data: data.to_vec(),
+                        })
                         .await
                         .is_err()
                     {
-                        // Failure to send indicates that the upload task exited early
-                        // due to an error on its end. We will return that error below.
                         break Ok(());
                     }
                 } else {
-                    // Bump the progress bar here to make it consistent
-                    self.upload_progress.fetch_add(n as u64, Ordering::Relaxed);
-                    self.progress_tx
-                        .send_replace(self.upload_progress.load(Ordering::Relaxed));
+                    // Bump the progress bar here. We don't need to send this chunk so we've completed the relevant work.
+                    self.progress_tx.send_modify(|offset| *offset += n as u64);
                 }
 
-                offset += CHUNK_SIZE;
-                i += 1;
+                offset += n as u64;
+                buf.clear();
             };
+            drop(tx);
 
-            for tx in senders {
-                drop(tx);
+            // Resubmit any failed chunks back to the remaining workers to retry.
+            while let Ok(failed_chunk) = failed_rx.recv_async().await {
+                if resubmit_tx.send_async(failed_chunk).await.is_err() {
+                    // All worker tasks have failed.
+                    break;
+                }
             }
+            drop(resubmit_tx);
 
             let mut errors = Vec::new();
             if let Err(e) = read_result {
                 errors.push(e);
             }
-
             for handle in handles {
                 let result = handle.await.map_err(DiskImportError::other)?;
                 if let Err(err) = result {
@@ -428,21 +429,24 @@ pub mod types {
                 }
             }
 
-            match errors.len() {
-                1 => {
-                    return Err(DiskImportError::context(
-                        "Error while uploading the disk image",
-                        errors.remove(0),
-                    ))
+            // Only return an error if all worker tasks failed.
+            if errors.len() == self.upload_task_ct.get() {
+                // Dedupe error messages.
+                let mut err_set = HashSet::new();
+                for err in errors {
+                    err_set.insert(format!("\n * {err}"));
                 }
-                2.. => {
-                    let mut msg = String::from("Errors while uploading the disk image:");
-                    for err in errors {
-                        msg += &format!("\n * {err}");
-                    }
-                    return Err(DiskImportError::Other(msg.into()));
+
+                let mut msg = match err_set.len() {
+                    1 => String::from("Error while uploading the disk image:"),
+                    2.. => String::from("Errors while uploading the disk image:"),
+                    0 => unreachable!("error count was zero"),
+                };
+
+                for err in err_set {
+                    msg += &err;
                 }
-                0 => {}
+                return Err(DiskImportError::Other(msg.into()));
             }
 
             // Stop the bulk write process
@@ -704,7 +708,7 @@ pub mod types {
                 )));
             }
 
-            let file_size = fs::metadata(&file_path)?.len();
+            let file_size = std::fs::metadata(&file_path)?.len();
             let disk_size = Self::get_disk_size(file_size, requested_disk_size.map(|x| **x)).into();
 
             let disk_block_size = match requested_disk_block_size {
@@ -794,6 +798,39 @@ pub mod types {
 
         /// The version of the image's operating system
         pub image_version: String,
+    }
+
+    struct Chunk {
+        offset: u64,
+        data: Vec<u8>,
+    }
+
+    struct UploadWorker {
+        client: Client,
+        disk: Name,
+        project: NameOrId,
+        progress_tx: watch::Sender<u64>,
+    }
+
+    impl UploadWorker {
+        async fn upload_chunk(&mut self, chunk: &Chunk) -> Result<(), DiskImportError> {
+            let base64_encoded_data = base64::engine::general_purpose::STANDARD.encode(&chunk.data);
+            self.client
+                .disk_bulk_write_import()
+                .disk(&*self.disk)
+                .project(&self.project)
+                .body(ImportBlocksBulkWrite {
+                    offset: chunk.offset,
+                    base64_encoded_data,
+                })
+                .send()
+                .await?;
+
+            self.progress_tx
+                .send_modify(|offset| *offset += chunk.data.len() as u64);
+
+            Ok(())
+        }
     }
 
     #[cfg(test)]

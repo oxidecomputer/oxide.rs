@@ -101,7 +101,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
             .disk_import()
             .project(self.project.clone())
             .description(self.description.clone())
-            .upload_thread_ct(self.parallelism)
+            .upload_task_ct(self.parallelism)
             .disk(self.disk.clone())
             .disk_info(disk_info.clone());
 

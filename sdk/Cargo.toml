@@ -12,6 +12,7 @@ base64 = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true, optional = true }
 dirs = { workspace = true }
+flume = { workspace = true }
 futures = { workspace = true }
 progenitor-client = { workspace = true }
 rand = { workspace = true }

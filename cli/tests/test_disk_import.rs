@@ -573,7 +573,7 @@ fn test_disk_write_import_fail() {
     });
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
-    let output = r#"(?m)\AErrors while uploading the disk image:\n \* Error Response: status: 503 Service Unavailable;.*$\n \* Error Response: status: 503 Service Unavailable;.*"#;
+    let output = r#"(?m)\AError while uploading the disk image:\n \* Error Response: status: 503 Service Unavailable;.*$"#;
 
     Command::cargo_bin("oxide")
         .unwrap()
