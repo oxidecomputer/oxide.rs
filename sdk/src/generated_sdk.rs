@@ -218,15 +218,15 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// Desired use of `AddressLot`
         pub kind: AddressLotKind,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&AddressLot> for AddressLot {
@@ -281,11 +281,11 @@ pub mod types {
     )]
     pub struct AddressLotBlock {
         /// The first address of the block (inclusive).
-        pub first_address: std::net::IpAddr,
+        pub first_address: ::std::net::IpAddr,
         /// The id of the address lot block.
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The last address of the block (inclusive).
-        pub last_address: std::net::IpAddr,
+        pub last_address: ::std::net::IpAddr,
     }
 
     impl ::std::convert::From<&AddressLotBlock> for AddressLotBlock {
@@ -334,9 +334,9 @@ pub mod types {
     )]
     pub struct AddressLotBlockCreate {
         /// The first address in the lot (inclusive).
-        pub first_address: std::net::IpAddr,
+        pub first_address: ::std::net::IpAddr,
         /// The last address in the lot (inclusive).
-        pub last_address: std::net::IpAddr,
+        pub last_address: ::std::net::IpAddr,
     }
 
     impl ::std::convert::From<&AddressLotBlockCreate> for AddressLotBlockCreate {
@@ -768,9 +768,9 @@ pub mod types {
         /// The allowlist of IPs or subnets.
         pub allowed_ips: AllowedSourceIps,
         /// Time the list was created.
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Time the list was last modified.
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&AllowList> for AllowList {
@@ -1218,7 +1218,7 @@ pub mod types {
     )]
     pub struct BfdSessionDisable {
         /// Address of the remote peer to disable a BFD session for.
-        pub remote: std::net::IpAddr,
+        pub remote: ::std::net::IpAddr,
         /// The switch to enable this session on. Must be `switch0` or
         /// `switch1`.
         pub switch: Name,
@@ -1317,11 +1317,11 @@ pub mod types {
         /// Address the Oxide switch will listen on for BFD traffic. If `None`
         /// then the unspecified address (0.0.0.0 or ::) is used.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub local: ::std::option::Option<std::net::IpAddr>,
+        pub local: ::std::option::Option<::std::net::IpAddr>,
         /// Select either single-hop (RFC 5881) or multi-hop (RFC 5883)
         pub mode: BfdMode,
         /// Address of the remote peer to establish a BFD session with.
-        pub remote: std::net::IpAddr,
+        pub remote: ::std::net::IpAddr,
         /// The minimum interval, in microseconds, between received BFD Control
         /// packets that this system requires
         pub required_rx: u64,
@@ -1524,9 +1524,9 @@ pub mod types {
     pub struct BfdStatus {
         pub detection_threshold: u8,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub local: ::std::option::Option<std::net::IpAddr>,
+        pub local: ::std::option::Option<::std::net::IpAddr>,
         pub mode: BfdMode,
-        pub peer: std::net::IpAddr,
+        pub peer: ::std::net::IpAddr,
         pub required_rx: u64,
         pub state: BfdState,
         pub switch: Name,
@@ -1602,13 +1602,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&BgpAnnounceSet> for BgpAnnounceSet {
@@ -1719,9 +1719,9 @@ pub mod types {
     )]
     pub struct BgpAnnouncement {
         /// The address block the IP network being announced is drawn from.
-        pub address_lot_block_id: uuid::Uuid,
+        pub address_lot_block_id: ::uuid::Uuid,
         /// The id of the set this announcement is a part of.
-        pub announce_set_id: uuid::Uuid,
+        pub announce_set_id: ::uuid::Uuid,
         /// The IP network being announced.
         pub network: IpNet,
     }
@@ -1868,13 +1868,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Optional virtual routing and forwarding identifier for this BGP
         /// configuration.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -2128,7 +2128,7 @@ pub mod types {
         /// BGP identifier of the originating router.
         pub id: u32,
         /// The nexthop the prefix is reachable through.
-        pub nexthop: std::net::Ipv4Addr,
+        pub nexthop: ::std::net::Ipv4Addr,
         /// The destination network prefix.
         pub prefix: Ipv4Net,
         /// Switch the route is imported into.
@@ -2367,7 +2367,7 @@ pub mod types {
     )]
     pub struct BgpPeer {
         /// The address of the host to peer with.
-        pub addr: std::net::IpAddr,
+        pub addr: ::std::net::IpAddr,
         /// Define export policy for a peer.
         pub allowed_export: ImportExportPolicy,
         /// Define import policy for a peer.
@@ -2700,7 +2700,7 @@ pub mod types {
     )]
     pub struct BgpPeerStatus {
         /// IP address of the peer.
-        pub addr: std::net::IpAddr,
+        pub addr: ::std::net::IpAddr,
         /// Local autonomous system number.
         pub local_asn: u32,
         /// Remote autonomous system number.
@@ -4590,15 +4590,15 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The service using this certificate
         pub service: ServiceUsingCertificate,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Certificate> for Certificate {
@@ -4765,7 +4765,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Cumulativedouble {
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: f64,
     }
 
@@ -4810,7 +4810,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Cumulativefloat {
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: f32,
     }
 
@@ -4855,7 +4855,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Cumulativeint64 {
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: i64,
     }
 
@@ -4901,7 +4901,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Cumulativeuint64 {
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: u64,
     }
 
@@ -4963,9 +4963,9 @@ pub mod types {
     pub struct CurrentUser {
         /// Human-readable name that can identify the user
         pub display_name: ::std::string::String,
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this user belongs
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
         pub silo_name: Name,
     }
@@ -6040,7 +6040,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DeviceAccessTokenRequest {
-        pub client_id: uuid::Uuid,
+        pub client_id: ::uuid::Uuid,
         pub device_code: ::std::string::String,
         pub grant_type: ::std::string::String,
     }
@@ -6080,7 +6080,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct DeviceAuthRequest {
-        pub client_id: uuid::Uuid,
+        pub client_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&DeviceAuthRequest> for DeviceAuthRequest {
@@ -6272,22 +6272,22 @@ pub mod types {
         pub description: ::std::string::String,
         pub device_path: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// ID of image from which disk was created, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub image_id: ::std::option::Option<uuid::Uuid>,
+        pub image_id: ::std::option::Option<::uuid::Uuid>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        pub project_id: uuid::Uuid,
+        pub project_id: ::uuid::Uuid,
         pub size: ByteCount,
         /// ID of snapshot from which disk was created, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub snapshot_id: ::std::option::Option<uuid::Uuid>,
+        pub snapshot_id: ::std::option::Option<::uuid::Uuid>,
         pub state: DiskState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Disk> for Disk {
@@ -6680,10 +6680,10 @@ pub mod types {
         },
         /// Create a disk from a disk snapshot
         #[serde(rename = "snapshot")]
-        Snapshot { snapshot_id: uuid::Uuid },
+        Snapshot { snapshot_id: ::uuid::Uuid },
         /// Create a disk from an image
         #[serde(rename = "image")]
-        Image { image_id: uuid::Uuid },
+        Image { image_id: ::uuid::Uuid },
         /// Create a blank disk that will accept bulk writes or pull blocks from
         /// an external source.
         #[serde(rename = "importing_blocks")]
@@ -6925,13 +6925,13 @@ pub mod types {
         Maintenance,
         /// Disk is being attached to the given Instance
         #[serde(rename = "attaching")]
-        Attaching(uuid::Uuid),
+        Attaching(::uuid::Uuid),
         /// Disk is attached to the given Instance
         #[serde(rename = "attached")]
-        Attached(uuid::Uuid),
+        Attached(::uuid::Uuid),
         /// Disk is being detached from the given Instance
         #[serde(rename = "detaching")]
-        Detaching(uuid::Uuid),
+        Detaching(::uuid::Uuid),
         #[serde(rename = "destroyed")]
         Destroyed,
         #[serde(rename = "faulted")]
@@ -7445,7 +7445,7 @@ pub mod types {
     #[serde(tag = "kind")]
     pub enum ExternalIp {
         #[serde(rename = "ephemeral")]
-        Ephemeral { ip: std::net::IpAddr },
+        Ephemeral { ip: ::std::net::IpAddr },
         /// A Floating IP is a well-known IP address which can be attached and
         /// detached from instances.
         #[serde(rename = "floating")]
@@ -7454,23 +7454,23 @@ pub mod types {
             description: ::std::string::String,
             /// unique, immutable, system-controlled identifier for each
             /// resource
-            id: uuid::Uuid,
+            id: ::uuid::Uuid,
             /// The ID of the instance that this Floating IP is attached to, if
             /// it is presently in use.
             #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            instance_id: ::std::option::Option<uuid::Uuid>,
+            instance_id: ::std::option::Option<::uuid::Uuid>,
             /// The IP address held by this resource.
-            ip: std::net::IpAddr,
+            ip: ::std::net::IpAddr,
             /// The ID of the IP pool this resource belongs to.
-            ip_pool_id: uuid::Uuid,
+            ip_pool_id: ::uuid::Uuid,
             /// unique, mutable, user-controlled identifier for each resource
             name: Name,
             /// The project this resource exists within.
-            project_id: uuid::Uuid,
+            project_id: ::uuid::Uuid,
             /// timestamp when this resource was created
-            time_created: chrono::DateTime<chrono::offset::Utc>,
+            time_created: ::chrono::DateTime<::chrono::offset::Utc>,
             /// timestamp when this resource was last modified
-            time_modified: chrono::DateTime<chrono::offset::Utc>,
+            time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         },
     }
 
@@ -8173,9 +8173,9 @@ pub mod types {
         #[serde(rename = "u64")]
         U64(u64),
         #[serde(rename = "ip_addr")]
-        IpAddr(std::net::IpAddr),
+        IpAddr(::std::net::IpAddr),
         #[serde(rename = "uuid")]
-        Uuid(uuid::Uuid),
+        Uuid(::uuid::Uuid),
         #[serde(rename = "bool")]
         Bool(bool),
     }
@@ -8234,14 +8234,14 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<std::net::IpAddr> for FieldValue {
-        fn from(value: std::net::IpAddr) -> Self {
+    impl ::std::convert::From<::std::net::IpAddr> for FieldValue {
+        fn from(value: ::std::net::IpAddr) -> Self {
             Self::IpAddr(value)
         }
     }
 
-    impl ::std::convert::From<uuid::Uuid> for FieldValue {
-        fn from(value: uuid::Uuid) -> Self {
+    impl ::std::convert::From<::uuid::Uuid> for FieldValue {
+        fn from(value: ::uuid::Uuid) -> Self {
             Self::Uuid(value)
         }
     }
@@ -8496,7 +8496,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FleetRoleRoleAssignment {
-        pub identity_id: uuid::Uuid,
+        pub identity_id: ::uuid::Uuid,
         pub identity_type: IdentityType,
         pub role_name: FleetRole,
     }
@@ -8598,23 +8598,23 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The ID of the instance that this Floating IP is attached to, if it
         /// is presently in use.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub instance_id: ::std::option::Option<uuid::Uuid>,
+        pub instance_id: ::std::option::Option<::uuid::Uuid>,
         /// The IP address held by this resource.
-        pub ip: std::net::IpAddr,
+        pub ip: ::std::net::IpAddr,
         /// The ID of the IP pool this resource belongs to.
-        pub ip_pool_id: uuid::Uuid,
+        pub ip_pool_id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The project this resource exists within.
-        pub project_id: uuid::Uuid,
+        pub project_id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&FloatingIp> for FloatingIp {
@@ -8748,7 +8748,7 @@ pub mod types {
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip: ::std::option::Option<std::net::IpAddr>,
+        pub ip: ::std::option::Option<::std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -9005,9 +9005,9 @@ pub mod types {
     pub struct Group {
         /// Human-readable name that can identify the group
         pub display_name: ::std::string::String,
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this group belongs
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&Group> for Group {
@@ -9198,7 +9198,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub sum_of_samples: f64,
     }
 
@@ -9336,7 +9336,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         pub sum_of_samples: f64,
     }
 
@@ -9476,7 +9476,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -9617,7 +9617,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -9758,7 +9758,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -9899,7 +9899,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -10042,7 +10042,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -10185,7 +10185,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -10328,7 +10328,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -10471,7 +10471,7 @@ pub mod types {
         pub p99: Quantile,
         pub squared_mean: f64,
         /// The start time of the histogram.
-        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub start_time: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The sum of all samples in the histogram.
         pub sum_of_samples: i64,
     }
@@ -10760,15 +10760,15 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// Identity provider type
         pub provider_type: IdentityProviderType,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&IdentityProvider> for IdentityProvider {
@@ -11193,20 +11193,20 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub digest: ::std::option::Option<Digest>,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The family of the operating system like Debian, Ubuntu, etc.
         pub os: ::std::string::String,
         /// ID of the parent project if the image is a project image
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub project_id: ::std::option::Option<uuid::Uuid>,
+        pub project_id: ::std::option::Option<::uuid::Uuid>,
         /// total size in bytes
         pub size: ByteCount,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Version of the operating system
         pub version: ::std::string::String,
     }
@@ -11400,7 +11400,7 @@ pub mod types {
     #[serde(tag = "type", content = "id")]
     pub enum ImageSource {
         #[serde(rename = "snapshot")]
-        Snapshot(uuid::Uuid),
+        Snapshot(::uuid::Uuid),
         #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
         YouCanBootAnythingAsLongAsItsAlpine,
     }
@@ -11411,8 +11411,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<uuid::Uuid> for ImageSource {
-        fn from(value: uuid::Uuid) -> Self {
+    impl ::std::convert::From<::uuid::Uuid> for ImageSource {
+        fn from(value: ::uuid::Uuid) -> Self {
             Self::Snapshot(value)
         }
     }
@@ -11699,7 +11699,7 @@ pub mod types {
         /// allowing the instance to be restarted immediately if it fails.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_cooldown_expiration:
-            ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+            ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         /// `true` if this instance's auto-restart policy will permit the
         /// control plane to automatically restart it if it enters the `Failed`
         /// state.
@@ -11719,13 +11719,13 @@ pub mod types {
         /// the ID of the disk used to boot this Instance, if a specific one is
         /// assigned.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub boot_disk_id: ::std::option::Option<uuid::Uuid>,
+        pub boot_disk_id: ::std::option::Option<::uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// RFC1035-compliant hostname for the Instance.
         pub hostname: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// memory allocated for this Instance
         pub memory: ByteCount,
         /// unique, mutable, user-controlled identifier for each resource
@@ -11733,20 +11733,21 @@ pub mod types {
         /// number of CPUs allocated for this Instance
         pub ncpus: InstanceCpuCount,
         /// id for the project containing this Instance
-        pub project_id: uuid::Uuid,
+        pub project_id: ::uuid::Uuid,
         pub run_state: InstanceState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The timestamp of the most recent time this instance was
         /// automatically restarted by the control plane.
         ///
         /// If this is not present, then this instance has not been
         /// automatically restarted.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub time_last_auto_restarted: ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+        pub time_last_auto_restarted:
+            ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub time_run_state_updated: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Instance> for Instance {
@@ -12416,11 +12417,11 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The Instance to which the interface belongs.
-        pub instance_id: uuid::Uuid,
+        pub instance_id: ::uuid::Uuid,
         /// The IP address assigned to this interface.
-        pub ip: std::net::IpAddr,
+        pub ip: ::std::net::IpAddr,
         /// The MAC address assigned to this interface.
         pub mac: MacAddr,
         /// unique, mutable, user-controlled identifier for each resource
@@ -12429,17 +12430,17 @@ pub mod types {
         /// attached.
         pub primary: bool,
         /// The subnet to which the interface belongs.
-        pub subnet_id: uuid::Uuid,
+        pub subnet_id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// A set of additional networks that this interface may send and
         /// receive traffic on.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC to which the interface belongs.
-        pub vpc_id: uuid::Uuid,
+        pub vpc_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&InstanceNetworkInterface> for InstanceNetworkInterface {
@@ -12617,7 +12618,7 @@ pub mod types {
         /// The IP address for the interface. One will be auto-assigned if not
         /// provided.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip: ::std::option::Option<std::net::IpAddr>,
+        pub ip: ::std::option::Option<::std::net::IpAddr>,
         pub name: Name,
         /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
@@ -13311,15 +13312,15 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the gateway belongs.
-        pub vpc_id: uuid::Uuid,
+        pub vpc_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&InternetGateway> for InternetGateway {
@@ -13443,19 +13444,19 @@ pub mod types {
     )]
     pub struct InternetGatewayIpAddress {
         /// The associated IP address,
-        pub address: std::net::IpAddr,
+        pub address: ::std::net::IpAddr,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The associated internet gateway.
-        pub internet_gateway_id: uuid::Uuid,
+        pub internet_gateway_id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&InternetGatewayIpAddress> for InternetGatewayIpAddress {
@@ -13502,7 +13503,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InternetGatewayIpAddressCreate {
-        pub address: std::net::IpAddr,
+        pub address: ::std::net::IpAddr,
         pub description: ::std::string::String,
         pub name: Name,
     }
@@ -13643,17 +13644,17 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The associated internet gateway.
-        pub internet_gateway_id: uuid::Uuid,
+        pub internet_gateway_id: ::uuid::Uuid,
         /// The associated IP pool.
-        pub ip_pool_id: uuid::Uuid,
+        pub ip_pool_id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&InternetGatewayIpPool> for InternetGatewayIpPool {
@@ -13988,13 +13989,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&IpPool> for IpPool {
@@ -14137,10 +14138,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolRange {
-        pub id: uuid::Uuid,
-        pub ip_pool_id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
+        pub ip_pool_id: ::uuid::Uuid,
         pub range: IpRange,
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&IpPoolRange> for IpPoolRange {
@@ -14301,12 +14302,12 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolSiloLink {
-        pub ip_pool_id: uuid::Uuid,
+        pub ip_pool_id: ::uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
         /// specified. There can be at most one default for a given silo.
         pub is_default: bool,
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&IpPoolSiloLink> for IpPoolSiloLink {
@@ -14745,8 +14746,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Ipv4Range {
-        pub first: std::net::Ipv4Addr,
-        pub last: std::net::Ipv4Addr,
+        pub first: ::std::net::Ipv4Addr,
+        pub last: ::std::net::Ipv4Addr,
     }
 
     impl ::std::convert::From<&Ipv4Range> for Ipv4Range {
@@ -14987,8 +14988,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Ipv6Range {
-        pub first: std::net::Ipv6Addr,
-        pub last: std::net::Ipv6Addr,
+        pub first: ::std::net::Ipv6Addr,
+        pub last: ::std::net::Ipv6Addr,
     }
 
     impl ::std::convert::From<&Ipv6Range> for Ipv6Range {
@@ -15662,7 +15663,7 @@ pub mod types {
         /// Whether or not the LLDP service is enabled.
         pub enabled: bool,
         /// The id of this LLDP service instance.
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The LLDP link description TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub link_description: ::std::option::Option<::std::string::String>,
@@ -15772,7 +15773,7 @@ pub mod types {
         pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub management_ip: ::std::option::Option<std::net::IpAddr>,
+        pub management_ip: ::std::option::Option<::std::net::IpAddr>,
         /// The LLDP system description TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
@@ -15881,9 +15882,9 @@ pub mod types {
         /// The LLDP chassis identifier advertised by the neighbor
         pub chassis_id: ::std::string::String,
         /// Initial sighting of this LldpNeighbor
-        pub first_seen: chrono::DateTime<chrono::offset::Utc>,
+        pub first_seen: ::chrono::DateTime<::chrono::offset::Utc>,
         /// Most recent sighting of this LldpNeighbor
-        pub last_seen: chrono::DateTime<chrono::offset::Utc>,
+        pub last_seen: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The LLDP link description advertised by the neighbor
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub link_description: ::std::option::Option<::std::string::String>,
@@ -16025,11 +16026,11 @@ pub mod types {
         /// The loopback IP address and prefix length.
         pub address: IpNet,
         /// The address lot block this address came from.
-        pub address_lot_block_id: uuid::Uuid,
+        pub address_lot_block_id: ::uuid::Uuid,
         /// The id of the loopback address.
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The id of the rack where this loopback address is assigned.
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
         /// Switch location where this loopback address is assigned.
         pub switch_location: ::std::string::String,
     }
@@ -16113,7 +16114,7 @@ pub mod types {
     )]
     pub struct LoopbackAddressCreate {
         /// The address to create.
-        pub address: std::net::IpAddr,
+        pub address: ::std::net::IpAddr,
         /// The name or id of the address lot this loopback address will pull an
         /// address from.
         pub address_lot: NameOrId,
@@ -16124,7 +16125,7 @@ pub mod types {
         pub mask: u8,
         /// The containing the switch this loopback address will be configured
         /// on.
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
         /// The location of the switch within the rack this loopback address
         /// will be configured on.
         pub switch_location: Name,
@@ -16336,7 +16337,7 @@ pub mod types {
     )]
     pub struct Measurement {
         pub datum: Datum,
-        pub timestamp: chrono::DateTime<chrono::offset::Utc>,
+        pub timestamp: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Measurement> for Measurement {
@@ -16551,7 +16552,7 @@ pub mod types {
     pub struct MissingDatum {
         pub datum_type: DatumType,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub start_time: ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+        pub start_time: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
 
     impl ::std::convert::From<&MissingDatum> for MissingDatum {
@@ -16706,7 +16707,7 @@ pub mod types {
     )]
     #[serde(untagged)]
     pub enum NameOrId {
-        Id(uuid::Uuid),
+        Id(::uuid::Uuid),
         Name(Name),
     }
 
@@ -16763,8 +16764,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<uuid::Uuid> for NameOrId {
-        fn from(value: uuid::Uuid) -> Self {
+    impl ::std::convert::From<::uuid::Uuid> for NameOrId {
+        fn from(value: ::uuid::Uuid) -> Self {
             Self::Id(value)
         }
     }
@@ -17044,8 +17045,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct NetworkInterface {
-        pub id: uuid::Uuid,
-        pub ip: std::net::IpAddr,
+        pub id: ::uuid::Uuid,
+        pub ip: ::std::net::IpAddr,
         pub kind: NetworkInterfaceKind,
         pub mac: MacAddr,
         pub name: Name,
@@ -17148,13 +17149,13 @@ pub mod types {
     pub enum NetworkInterfaceKind {
         /// A vNIC attached to a guest instance
         #[serde(rename = "instance")]
-        Instance(uuid::Uuid),
+        Instance(::uuid::Uuid),
         /// A vNIC associated with an internal service
         #[serde(rename = "service")]
-        Service(uuid::Uuid),
+        Service(::uuid::Uuid),
         /// A vNIC associated with a probe
         #[serde(rename = "probe")]
-        Probe(uuid::Uuid),
+        Probe(::uuid::Uuid),
     }
 
     impl ::std::convert::From<&Self> for NetworkInterfaceKind {
@@ -17476,20 +17477,20 @@ pub mod types {
     pub struct PhysicalDisk {
         pub form_factor: PhysicalDiskKind,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         pub model: ::std::string::String,
         /// The operator-defined policy for a physical disk.
         pub policy: PhysicalDiskPolicy,
         pub serial: ::std::string::String,
         /// The sled to which this disk is attached, if any.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub sled_id: ::std::option::Option<uuid::Uuid>,
+        pub sled_id: ::std::option::Option<::uuid::Uuid>,
         /// The current state Nexus believes the disk to be in.
         pub state: PhysicalDiskState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         pub vendor: ::std::string::String,
     }
 
@@ -18043,8 +18044,8 @@ pub mod types {
     pub struct Points {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub start_times:
-            ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
-        pub timestamps: ::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>,
+            ::std::option::Option<::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>>,
+        pub timestamps: ::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>,
         pub values: ::std::vec::Vec<Values>,
     }
 
@@ -18123,14 +18124,14 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        pub sled: uuid::Uuid,
+        pub sled: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Probe> for Probe {
@@ -18195,7 +18196,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ip_pool: ::std::option::Option<NameOrId>,
         pub name: Name,
-        pub sled: uuid::Uuid,
+        pub sled: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&ProbeCreate> for ProbeCreate {
@@ -18250,7 +18251,7 @@ pub mod types {
     )]
     pub struct ProbeExternalIp {
         pub first_port: u16,
-        pub ip: std::net::IpAddr,
+        pub ip: ::std::net::IpAddr,
         pub kind: ProbeExternalIpKind,
         pub last_port: u16,
     }
@@ -18401,10 +18402,10 @@ pub mod types {
     )]
     pub struct ProbeInfo {
         pub external_ips: ::std::vec::Vec<ProbeExternalIp>,
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         pub interface: NetworkInterface,
         pub name: Name,
-        pub sled: uuid::Uuid,
+        pub sled: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&ProbeInfo> for ProbeInfo {
@@ -18529,13 +18530,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Project> for Project {
@@ -18828,7 +18829,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct ProjectRoleRoleAssignment {
-        pub identity_id: uuid::Uuid,
+        pub identity_id: ::uuid::Uuid,
         pub identity_type: IdentityType,
         pub role_name: ProjectRole,
     }
@@ -19047,11 +19048,11 @@ pub mod types {
     )]
     pub struct Rack {
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Rack> for Rack {
@@ -19376,7 +19377,7 @@ pub mod types {
         /// The route destination.
         pub dst: IpNet,
         /// The route gateway.
-        pub gw: std::net::IpAddr,
+        pub gw: ::std::net::IpAddr,
         /// Local preference for route. Higher preference indictes precedence
         /// within and across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -19551,7 +19552,7 @@ pub mod types {
     pub enum RouteDestination {
         /// Route applies to traffic destined for the specified IP address
         #[serde(rename = "ip")]
-        Ip(std::net::IpAddr),
+        Ip(::std::net::IpAddr),
         /// Route applies to traffic destined for the specified IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
@@ -19569,8 +19570,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<std::net::IpAddr> for RouteDestination {
-        fn from(value: std::net::IpAddr) -> Self {
+    impl ::std::convert::From<::std::net::IpAddr> for RouteDestination {
+        fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
         }
     }
@@ -19713,7 +19714,7 @@ pub mod types {
     pub enum RouteTarget {
         /// Forward traffic to a particular IP address.
         #[serde(rename = "ip")]
-        Ip(std::net::IpAddr),
+        Ip(::std::net::IpAddr),
         /// Forward traffic to a VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
@@ -19736,8 +19737,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<std::net::IpAddr> for RouteTarget {
-        fn from(value: std::net::IpAddr) -> Self {
+    impl ::std::convert::From<::std::net::IpAddr> for RouteTarget {
+        fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
         }
     }
@@ -19839,7 +19840,7 @@ pub mod types {
         /// Selects which traffic this routing rule will apply to
         pub destination: RouteDestination,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// Describes the kind of router. Set at creation. `read-only`
         pub kind: RouterRouteKind,
         /// unique, mutable, user-controlled identifier for each resource
@@ -19847,11 +19848,11 @@ pub mod types {
         /// The location that matched packets should be forwarded to
         pub target: RouteTarget,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The ID of the VPC Router to which the route belongs
-        pub vpc_router_id: uuid::Uuid,
+        pub vpc_router_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&RouterRoute> for RouterRoute {
@@ -20319,7 +20320,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub group_attribute_name: ::std::option::Option<::std::string::String>,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// IdP's entity id
         pub idp_entity_id: ::std::string::String,
         /// unique, mutable, user-controlled identifier for each resource
@@ -20335,9 +20336,9 @@ pub mod types {
         /// Customer's technical contact for saml configuration
         pub technical_contact_email: ::std::string::String,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SamlIdentityProvider> for SamlIdentityProvider {
@@ -20655,7 +20656,7 @@ pub mod types {
         /// it will not be part of the "list all silos" output.
         pub discoverable: bool,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// How users and groups are managed in this Silo
         pub identity_mode: SiloIdentityMode,
         /// Mapping of which Fleet roles are conferred by each Silo role
@@ -20666,9 +20667,9 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Silo> for Silo {
@@ -20985,7 +20986,7 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
         /// specified. There can be at most one default for a given silo.
@@ -20993,9 +20994,9 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SiloIpPool> for SiloIpPool {
@@ -21118,7 +21119,7 @@ pub mod types {
         pub cpus: i64,
         /// Amount of memory in bytes
         pub memory: ByteCount,
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
         /// Amount of disk storage in bytes
         pub storage: ByteCount,
     }
@@ -21587,7 +21588,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SiloRoleRoleAssignment {
-        pub identity_id: uuid::Uuid,
+        pub identity_id: ::uuid::Uuid,
         pub identity_type: IdentityType,
         pub role_name: SiloRole,
     }
@@ -21662,7 +21663,7 @@ pub mod types {
         /// and memory resources associated with a stopped instances are not
         /// counted here
         pub provisioned: VirtualResourceCounts,
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
         pub silo_name: Name,
     }
 
@@ -21818,17 +21819,17 @@ pub mod types {
     pub struct Sled {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The operator-defined policy of a sled.
         pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
         /// The current state Nexus believes the sled to be in.
         pub state: SledState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The number of hardware threads which can execute on this sled
         pub usable_hardware_threads: u32,
         /// Amount of RAM which may be used by the Sled's OS
@@ -21871,7 +21872,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SledId {
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&SledId> for SledId {
@@ -21963,21 +21964,21 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SledInstance {
-        pub active_sled_id: uuid::Uuid,
+        pub active_sled_id: ::uuid::Uuid,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         pub memory: i64,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub migration_id: ::std::option::Option<uuid::Uuid>,
+        pub migration_id: ::std::option::Option<::uuid::Uuid>,
         pub name: Name,
         pub ncpus: i64,
         pub project_name: Name,
         pub silo_name: Name,
         pub state: InstanceState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SledInstance> for SledInstance {
@@ -22569,18 +22570,18 @@ pub mod types {
     pub struct Snapshot {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
-        pub disk_id: uuid::Uuid,
+        pub disk_id: ::uuid::Uuid,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        pub project_id: uuid::Uuid,
+        pub project_id: ::uuid::Uuid,
         pub size: ByteCount,
         pub state: SnapshotState,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Snapshot> for Snapshot {
@@ -22866,17 +22867,17 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
         pub public_key: ::std::string::String,
         /// The user to whom this key belongs
-        pub silo_user_id: uuid::Uuid,
+        pub silo_user_id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SshKey> for SshKey {
@@ -23042,7 +23043,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub reason_for_failure: ::std::option::Option<::std::string::String>,
         pub state: SupportBundleState,
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SupportBundleInfo> for SupportBundleInfo {
@@ -23306,13 +23307,13 @@ pub mod types {
     pub struct Switch {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The rack to which this Switch is currently attached
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Switch> for Switch {
@@ -23434,14 +23435,14 @@ pub mod types {
     )]
     pub struct SwitchInterfaceConfig {
         /// A unique identifier for this switch interface.
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The name of this switch interface.
         pub interface_name: ::std::string::String,
         /// The switch interface kind.
         pub kind: SwitchInterfaceKind2,
         /// The port settings object this switch interface configuration belongs
         /// to.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
         /// Whether or not IPv6 is enabled on this interface.
         pub v6_enabled: bool,
     }
@@ -23919,15 +23920,15 @@ pub mod types {
     )]
     pub struct SwitchPort {
         /// The id of the switch port.
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The name of this switch port.
         pub port_name: ::std::string::String,
         /// The primary settings group of this switch port. Will be `None` until
         /// this switch port is configured.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub port_settings_id: ::std::option::Option<uuid::Uuid>,
+        pub port_settings_id: ::std::option::Option<::uuid::Uuid>,
         /// The rack this switch port belongs to.
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
         /// The switch location of this switch port.
         pub switch_location: ::std::string::String,
     }
@@ -24004,11 +24005,11 @@ pub mod types {
         /// The IP address and prefix.
         pub address: IpNet,
         /// The id of the address lot block this address is drawn from.
-        pub address_lot_block_id: uuid::Uuid,
+        pub address_lot_block_id: ::uuid::Uuid,
         /// The interface name this address belongs to.
         pub interface_name: ::std::string::String,
         /// The port settings object this address configuration belongs to.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
         /// An optional VLAN ID
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub vlan_id: ::std::option::Option<u16>,
@@ -24110,7 +24111,7 @@ pub mod types {
         /// The physical link geometry of the port.
         pub geometry: SwitchPortGeometry2,
         /// The id of the port settings object this configuration belongs to.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&SwitchPortConfig> for SwitchPortConfig {
@@ -24496,16 +24497,16 @@ pub mod types {
         /// The link-layer discovery protocol service configuration id for this
         /// link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub lldp_link_config_id: ::std::option::Option<uuid::Uuid>,
+        pub lldp_link_config_id: ::std::option::Option<::uuid::Uuid>,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
         /// The configured speed of the link.
         pub speed: LinkSpeed,
         /// The tx_eq configuration id for this link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub tx_eq_config_id: ::std::option::Option<uuid::Uuid>,
+        pub tx_eq_config_id: ::std::option::Option<::uuid::Uuid>,
     }
 
     impl ::std::convert::From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
@@ -24651,7 +24652,7 @@ pub mod types {
         /// The interface name this route configuration is assigned to.
         pub interface_name: ::std::string::String,
         /// The port settings object this route configuration belongs to.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
         /// RIB Priority indicating priority within and across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
@@ -24731,13 +24732,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&SwitchPortSettings> for SwitchPortSettings {
@@ -24910,9 +24911,9 @@ pub mod types {
     pub struct SwitchPortSettingsGroups {
         /// The id of a port settings group being referenced by a port settings
         /// object.
-        pub port_settings_group_id: uuid::Uuid,
+        pub port_settings_group_id: ::uuid::Uuid,
         /// The id of a port settings object referencing a port settings group.
-        pub port_settings_id: uuid::Uuid,
+        pub port_settings_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&SwitchPortSettingsGroups> for SwitchPortSettingsGroups {
@@ -25237,7 +25238,7 @@ pub mod types {
     pub struct SwitchVlanInterfaceConfig {
         /// The switch interface configuration this VLAN interface configuration
         /// belongs to.
-        pub interface_config_id: uuid::Uuid,
+        pub interface_config_id: ::uuid::Uuid,
         /// The virtual network id for this interface that is used for producing
         /// and consuming 802.1Q Ethernet tags. This field has a maximum value
         /// of 4095 as 802.1Q tags are twelve bits.
@@ -25705,13 +25706,13 @@ pub mod types {
     )]
     pub struct TimeseriesSchema {
         pub authz_scope: AuthzScope,
-        pub created: chrono::DateTime<chrono::offset::Utc>,
+        pub created: ::chrono::DateTime<::chrono::offset::Utc>,
         pub datum_type: DatumType,
         pub description: TimeseriesDescription,
         pub field_schema: Vec<FieldSchema>,
         pub timeseries_name: TimeseriesName,
         pub units: Units,
-        pub version: std::num::NonZeroU8,
+        pub version: ::std::num::NonZeroU8,
     }
 
     impl ::std::convert::From<&TimeseriesSchema> for TimeseriesSchema {
@@ -25896,15 +25897,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct TypedUuidForSupportBundleKind(pub uuid::Uuid);
+    pub struct TypedUuidForSupportBundleKind(pub ::uuid::Uuid);
     impl ::std::ops::Deref for TypedUuidForSupportBundleKind {
-        type Target = uuid::Uuid;
-        fn deref(&self) -> &uuid::Uuid {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
             &self.0
         }
     }
 
-    impl ::std::convert::From<TypedUuidForSupportBundleKind> for uuid::Uuid {
+    impl ::std::convert::From<TypedUuidForSupportBundleKind> for ::uuid::Uuid {
         fn from(value: TypedUuidForSupportBundleKind) -> Self {
             value.0
         }
@@ -25916,35 +25917,35 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<uuid::Uuid> for TypedUuidForSupportBundleKind {
-        fn from(value: uuid::Uuid) -> Self {
+    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForSupportBundleKind {
+        fn from(value: ::uuid::Uuid) -> Self {
             Self(value)
         }
     }
 
     impl ::std::str::FromStr for TypedUuidForSupportBundleKind {
-        type Err = <uuid::Uuid as ::std::str::FromStr>::Err;
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
             Ok(Self(value.parse()?))
         }
     }
 
     impl ::std::convert::TryFrom<&str> for TypedUuidForSupportBundleKind {
-        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl ::std::convert::TryFrom<&String> for TypedUuidForSupportBundleKind {
-        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
     }
 
     impl ::std::convert::TryFrom<String> for TypedUuidForSupportBundleKind {
-        type Error = <uuid::Uuid as ::std::str::FromStr>::Err;
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
         fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
             value.parse()
         }
@@ -25993,7 +25994,7 @@ pub mod types {
     pub struct UninitializedSled {
         pub baseboard: Baseboard,
         pub cubby: u16,
-        pub rack_id: uuid::Uuid,
+        pub rack_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&UninitializedSled> for UninitializedSled {
@@ -26287,9 +26288,9 @@ pub mod types {
     pub struct User {
         /// Human-readable name that can identify the user
         pub display_name: ::std::string::String,
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// Uuid of the silo to which this user belongs
-        pub silo_id: uuid::Uuid,
+        pub silo_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&User> for User {
@@ -26365,13 +26366,13 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&UserBuiltin> for UserBuiltin {
@@ -27367,19 +27368,19 @@ pub mod types {
         /// The name used for the VPC in DNS.
         pub dns_name: Name,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The unique local IPv6 address range for subnets in this VPC
         pub ipv6_prefix: Ipv6Net,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// id for the project containing this VPC
-        pub project_id: uuid::Uuid,
+        pub project_id: ::uuid::Uuid,
         /// id for the system router where subnet default routes are registered
-        pub system_router_id: uuid::Uuid,
+        pub system_router_id: ::uuid::Uuid,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&Vpc> for Vpc {
@@ -27590,7 +27591,7 @@ pub mod types {
         /// Reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The relative priority of this rule
@@ -27600,11 +27601,11 @@ pub mod types {
         /// Determine the set of instances that the rule applies to
         pub targets: ::std::vec::Vec<VpcFirewallRuleTarget>,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which this rule belongs
-        pub vpc_id: uuid::Uuid,
+        pub vpc_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&VpcFirewallRule> for VpcFirewallRule {
@@ -28018,7 +28019,7 @@ pub mod types {
         Instance(Name),
         /// The rule applies to traffic from/to a specific IP address
         #[serde(rename = "ip")]
-        Ip(std::net::IpAddr),
+        Ip(::std::net::IpAddr),
         /// The rule applies to traffic from/to a specific IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
@@ -28030,8 +28031,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<std::net::IpAddr> for VpcFirewallRuleHostFilter {
-        fn from(value: std::net::IpAddr) -> Self {
+    impl ::std::convert::From<::std::net::IpAddr> for VpcFirewallRuleHostFilter {
+        fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
         }
     }
@@ -28352,7 +28353,7 @@ pub mod types {
         Instance(Name),
         /// The rule applies to a specific IP address
         #[serde(rename = "ip")]
-        Ip(std::net::IpAddr),
+        Ip(::std::net::IpAddr),
         /// The rule applies to a specific IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
@@ -28364,8 +28365,8 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<std::net::IpAddr> for VpcFirewallRuleTarget {
-        fn from(value: std::net::IpAddr) -> Self {
+    impl ::std::convert::From<::std::net::IpAddr> for VpcFirewallRuleTarget {
+        fn from(value: ::std::net::IpAddr) -> Self {
             Self::Ip(value)
         }
     }
@@ -28700,16 +28701,16 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         pub kind: VpcRouterKind,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the router belongs.
-        pub vpc_id: uuid::Uuid,
+        pub vpc_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&VpcRouter> for VpcRouter {
@@ -29061,11 +29062,11 @@ pub mod types {
     pub struct VpcSubnet {
         /// ID for an attached custom router.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub custom_router_id: ::std::option::Option<uuid::Uuid>,
+        pub custom_router_id: ::std::option::Option<::uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
+        pub id: ::uuid::Uuid,
         /// The IPv4 subnet CIDR block.
         pub ipv4_block: Ipv4Net,
         /// The IPv6 subnet CIDR block.
@@ -29073,11 +29074,11 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
         /// The VPC to which the subnet belongs.
-        pub vpc_id: uuid::Uuid,
+        pub vpc_id: ::uuid::Uuid,
     }
 
     impl ::std::convert::From<&VpcSubnet> for VpcSubnet {
@@ -29549,13 +29550,17 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct AddressLot {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             kind: ::std::result::Result<super::AddressLotKind, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for AddressLot {
@@ -29584,7 +29589,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -29614,7 +29619,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -29624,7 +29629,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -29665,9 +29670,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotBlock {
-            first_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            last_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            first_address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            last_address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
         }
 
         impl ::std::default::Default for AddressLotBlock {
@@ -29683,7 +29688,7 @@ pub mod types {
         impl AddressLotBlock {
             pub fn first_address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.first_address = value.try_into().map_err(|e| {
@@ -29693,7 +29698,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -29703,7 +29708,7 @@ pub mod types {
             }
             pub fn last_address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.last_address = value.try_into().map_err(|e| {
@@ -29738,8 +29743,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct AddressLotBlockCreate {
-            first_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
-            last_address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            first_address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            last_address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
         }
 
         impl ::std::default::Default for AddressLotBlockCreate {
@@ -29754,7 +29759,7 @@ pub mod types {
         impl AddressLotBlockCreate {
             pub fn first_address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.first_address = value.try_into().map_err(|e| {
@@ -29764,7 +29769,7 @@ pub mod types {
             }
             pub fn last_address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.last_address = value.try_into().map_err(|e| {
@@ -30128,10 +30133,14 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct AllowList {
             allowed_ips: ::std::result::Result<super::AllowedSourceIps, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for AllowList {
@@ -30157,7 +30166,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -30167,7 +30176,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -30320,7 +30329,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BfdSessionDisable {
-            remote: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             switch: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -30336,7 +30345,7 @@ pub mod types {
         impl BfdSessionDisable {
             pub fn remote<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.remote = value
@@ -30381,11 +30390,11 @@ pub mod types {
         pub struct BfdSessionEnable {
             detection_threshold: ::std::result::Result<u8, ::std::string::String>,
             local: ::std::result::Result<
-                ::std::option::Option<std::net::IpAddr>,
+                ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
             mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
-            remote: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            remote: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
             switch: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -30421,7 +30430,7 @@ pub mod types {
             }
             pub fn local<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.local = value
@@ -30441,7 +30450,7 @@ pub mod types {
             }
             pub fn remote<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.remote = value
@@ -30504,11 +30513,11 @@ pub mod types {
         pub struct BfdStatus {
             detection_threshold: ::std::result::Result<u8, ::std::string::String>,
             local: ::std::result::Result<
-                ::std::option::Option<std::net::IpAddr>,
+                ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
             mode: ::std::result::Result<super::BfdMode, ::std::string::String>,
-            peer: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            peer: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             required_rx: ::std::result::Result<u64, ::std::string::String>,
             state: ::std::result::Result<super::BfdState, ::std::string::String>,
             switch: ::std::result::Result<super::Name, ::std::string::String>,
@@ -30546,7 +30555,7 @@ pub mod types {
             }
             pub fn local<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.local = value
@@ -30566,7 +30575,7 @@ pub mod types {
             }
             pub fn peer<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.peer = value
@@ -30640,12 +30649,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct BgpAnnounceSet {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for BgpAnnounceSet {
@@ -30673,7 +30686,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -30693,7 +30706,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -30703,7 +30716,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -30818,8 +30831,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpAnnouncement {
-            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            announce_set_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            announce_set_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             network: ::std::result::Result<super::IpNet, ::std::string::String>,
         }
 
@@ -30838,7 +30851,7 @@ pub mod types {
         impl BgpAnnouncement {
             pub fn address_lot_block_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
@@ -30851,7 +30864,7 @@ pub mod types {
             }
             pub fn announce_set_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.announce_set_id = value.try_into().map_err(|e| {
@@ -30960,12 +30973,16 @@ pub mod types {
         pub struct BgpConfig {
             asn: ::std::result::Result<u32, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             vrf: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -31009,7 +31026,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -31029,7 +31046,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -31039,7 +31056,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -31314,7 +31331,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct BgpImportedRouteIpv4 {
             id: ::std::result::Result<u32, ::std::string::String>,
-            nexthop: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
+            nexthop: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
             prefix: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
             switch: ::std::result::Result<super::SwitchLocation, ::std::string::String>,
         }
@@ -31343,7 +31360,7 @@ pub mod types {
             }
             pub fn nexthop<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::Ipv4Addr>,
+                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.nexthop = value
@@ -31400,7 +31417,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeer {
-            addr: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            addr: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             allowed_export: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             allowed_import: ::std::result::Result<super::ImportExportPolicy, ::std::string::String>,
             bgp_config: ::std::result::Result<super::NameOrId, ::std::string::String>,
@@ -31452,7 +31469,7 @@ pub mod types {
         impl BgpPeer {
             pub fn addr<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.addr = value
@@ -31738,7 +31755,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeerStatus {
-            addr: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            addr: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             local_asn: ::std::result::Result<u32, ::std::string::String>,
             remote_asn: ::std::result::Result<u32, ::std::string::String>,
             state: ::std::result::Result<super::BgpPeerState, ::std::string::String>,
@@ -31764,7 +31781,7 @@ pub mod types {
         impl BgpPeerStatus {
             pub fn addr<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.addr = value
@@ -32450,13 +32467,17 @@ pub mod types {
         pub struct Certificate {
             cert: ::std::result::Result<::std::string::String, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             service: ::std::result::Result<super::ServiceUsingCertificate, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Certificate {
@@ -32496,7 +32517,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -32526,7 +32547,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -32536,7 +32557,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -32743,8 +32764,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativedouble {
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             value: ::std::result::Result<f64, ::std::string::String>,
         }
 
@@ -32760,7 +32783,7 @@ pub mod types {
         impl Cumulativedouble {
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -32803,8 +32826,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativefloat {
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             value: ::std::result::Result<f32, ::std::string::String>,
         }
 
@@ -32820,7 +32845,7 @@ pub mod types {
         impl Cumulativefloat {
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -32863,8 +32888,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativeint64 {
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             value: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -32880,7 +32907,7 @@ pub mod types {
         impl Cumulativeint64 {
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -32923,8 +32950,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Cumulativeuint64 {
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             value: ::std::result::Result<u64, ::std::string::String>,
         }
 
@@ -32940,7 +32969,7 @@ pub mod types {
         impl Cumulativeuint64 {
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -32984,8 +33013,8 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct CurrentUser {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -33013,7 +33042,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -33023,7 +33052,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -33129,7 +33158,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DeviceAccessTokenRequest {
-            client_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            client_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             device_code: ::std::result::Result<::std::string::String, ::std::string::String>,
             grant_type: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
@@ -33147,7 +33176,7 @@ pub mod types {
         impl DeviceAccessTokenRequest {
             pub fn client_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.client_id = value
@@ -33202,7 +33231,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct DeviceAuthRequest {
-            client_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            client_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for DeviceAuthRequest {
@@ -33216,7 +33245,7 @@ pub mod types {
         impl DeviceAuthRequest {
             pub fn client_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.client_id = value
@@ -33295,19 +33324,23 @@ pub mod types {
             block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             device_path: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             image_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             snapshot_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             state: ::std::result::Result<super::DiskState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Disk {
@@ -33362,7 +33395,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -33372,7 +33405,7 @@ pub mod types {
             }
             pub fn image_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.image_id = value
@@ -33392,7 +33425,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -33412,7 +33445,7 @@ pub mod types {
             }
             pub fn snapshot_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.snapshot_id = value
@@ -33432,7 +33465,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -33442,7 +33475,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -34385,7 +34418,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FleetRoleRoleAssignment {
-            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
             role_name: ::std::result::Result<super::FleetRole, ::std::string::String>,
         }
@@ -34403,7 +34436,7 @@ pub mod types {
         impl FleetRoleRoleAssignment {
             pub fn identity_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.identity_id = value
@@ -34459,17 +34492,21 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct FloatingIp {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             instance_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
-            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
-            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for FloatingIp {
@@ -34501,7 +34538,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -34511,7 +34548,7 @@ pub mod types {
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.instance_id = value
@@ -34521,7 +34558,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -34531,7 +34568,7 @@ pub mod types {
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip_pool_id = value
@@ -34551,7 +34588,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -34561,7 +34598,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -34571,7 +34608,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -34679,7 +34716,7 @@ pub mod types {
         pub struct FloatingIpCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             ip: ::std::result::Result<
-                ::std::option::Option<std::net::IpAddr>,
+                ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -34713,7 +34750,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -34895,8 +34932,8 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Group {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for Group {
@@ -34922,7 +34959,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -34932,7 +34969,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -35037,8 +35074,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
 
@@ -35142,7 +35181,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -35209,8 +35248,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
 
@@ -35314,7 +35355,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -35381,8 +35422,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -35486,7 +35529,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -35553,8 +35596,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -35658,7 +35703,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -35725,8 +35770,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -35830,7 +35877,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -35897,8 +35944,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -36002,7 +36051,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -36069,8 +36118,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -36174,7 +36225,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -36241,8 +36292,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -36346,7 +36399,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -36413,8 +36466,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -36518,7 +36573,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -36585,8 +36640,10 @@ pub mod types {
             p90: ::std::result::Result<super::Quantile, ::std::string::String>,
             p99: ::std::result::Result<super::Quantile, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
-            start_time:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            start_time: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
 
@@ -36690,7 +36747,7 @@ pub mod types {
             }
             pub fn start_time<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.start_time = value
@@ -36750,14 +36807,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IdentityProvider {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             provider_type:
                 ::std::result::Result<super::IdentityProviderType, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for IdentityProvider {
@@ -36786,7 +36847,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -36816,7 +36877,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -36826,7 +36887,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -36936,16 +36997,20 @@ pub mod types {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             digest:
                 ::std::result::Result<::std::option::Option<super::Digest>, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             os: ::std::result::Result<::std::string::String, ::std::string::String>,
             project_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             version: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
@@ -37000,7 +37065,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -37030,7 +37095,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -37050,7 +37115,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -37060,7 +37125,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -37350,7 +37415,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Instance {
             auto_restart_cooldown_expiration: ::std::result::Result<
-                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
                 ::std::string::String,
             >,
             auto_restart_enabled: ::std::result::Result<bool, ::std::string::String>,
@@ -37359,25 +37424,31 @@ pub mod types {
                 ::std::string::String,
             >,
             boot_disk_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             hostname: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
-            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             run_state: ::std::result::Result<super::InstanceState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_last_auto_restarted: ::std::result::Result<
-                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_run_state_updated:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_last_auto_restarted: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_run_state_updated: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Instance {
@@ -37411,7 +37482,7 @@ pub mod types {
             pub fn auto_restart_cooldown_expiration<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -37451,7 +37522,7 @@ pub mod types {
             }
             pub fn boot_disk_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.boot_disk_id = value.try_into().map_err(|e| {
@@ -37481,7 +37552,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -37521,7 +37592,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -37541,7 +37612,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -37552,7 +37623,7 @@ pub mod types {
             pub fn time_last_auto_restarted<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -37566,7 +37637,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -37576,7 +37647,7 @@ pub mod types {
             }
             pub fn time_run_state_updated<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_run_state_updated = value.try_into().map_err(|e| {
@@ -37878,20 +37949,24 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterface {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            instance_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            instance_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             primary: ::std::result::Result<bool, ::std::string::String>,
-            subnet_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            subnet_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             transit_ips:
                 ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
-            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for InstanceNetworkInterface {
@@ -37926,7 +38001,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -37936,7 +38011,7 @@ pub mod types {
             }
             pub fn instance_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.instance_id = value
@@ -37946,7 +38021,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -37986,7 +38061,7 @@ pub mod types {
             }
             pub fn subnet_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.subnet_id = value
@@ -37996,7 +38071,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -38006,7 +38081,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -38026,7 +38101,7 @@ pub mod types {
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_id = value
@@ -38081,7 +38156,7 @@ pub mod types {
         pub struct InstanceNetworkInterfaceCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             ip: ::std::result::Result<
-                ::std::option::Option<std::net::IpAddr>,
+                ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -38114,7 +38189,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -38572,13 +38647,17 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InternetGateway {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for InternetGateway {
@@ -38607,7 +38686,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -38627,7 +38706,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -38637,7 +38716,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -38647,7 +38726,7 @@ pub mod types {
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_id = value
@@ -38747,15 +38826,19 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpAddress {
-            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            internet_gateway_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            internet_gateway_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for InternetGatewayIpAddress {
@@ -38777,7 +38860,7 @@ pub mod types {
         impl InternetGatewayIpAddress {
             pub fn address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address = value
@@ -38797,7 +38880,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -38807,7 +38890,7 @@ pub mod types {
             }
             pub fn internet_gateway_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.internet_gateway_id = value.try_into().map_err(|e| {
@@ -38830,7 +38913,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -38840,7 +38923,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -38883,7 +38966,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpAddressCreate {
-            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -38901,7 +38984,7 @@ pub mod types {
         impl InternetGatewayIpAddressCreate {
             pub fn address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address = value
@@ -39030,14 +39113,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InternetGatewayIpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            internet_gateway_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            internet_gateway_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for InternetGatewayIpPool {
@@ -39069,7 +39156,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -39079,7 +39166,7 @@ pub mod types {
             }
             pub fn internet_gateway_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.internet_gateway_id = value.try_into().map_err(|e| {
@@ -39092,7 +39179,7 @@ pub mod types {
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip_pool_id = value
@@ -39112,7 +39199,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -39122,7 +39209,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -39373,12 +39460,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for IpPool {
@@ -39406,7 +39497,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -39426,7 +39517,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -39436,7 +39527,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -39593,11 +39684,13 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolRange {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             range: ::std::result::Result<super::IpRange, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for IpPoolRange {
@@ -39614,7 +39707,7 @@ pub mod types {
         impl IpPoolRange {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -39624,7 +39717,7 @@ pub mod types {
             }
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip_pool_id = value
@@ -39644,7 +39737,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -39806,9 +39899,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolSiloLink {
-            ip_pool_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             is_default: ::std::result::Result<bool, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for IpPoolSiloLink {
@@ -39824,7 +39917,7 @@ pub mod types {
         impl IpPoolSiloLink {
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip_pool_id = value
@@ -39844,7 +39937,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -40110,8 +40203,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv4Range {
-            first: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
-            last: ::std::result::Result<std::net::Ipv4Addr, ::std::string::String>,
+            first: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
+            last: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
         }
 
         impl ::std::default::Default for Ipv4Range {
@@ -40126,7 +40219,7 @@ pub mod types {
         impl Ipv4Range {
             pub fn first<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::Ipv4Addr>,
+                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.first = value
@@ -40136,7 +40229,7 @@ pub mod types {
             }
             pub fn last<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::Ipv4Addr>,
+                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.last = value
@@ -40228,8 +40321,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Ipv6Range {
-            first: ::std::result::Result<std::net::Ipv6Addr, ::std::string::String>,
-            last: ::std::result::Result<std::net::Ipv6Addr, ::std::string::String>,
+            first: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
+            last: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
         }
 
         impl ::std::default::Default for Ipv6Range {
@@ -40244,7 +40337,7 @@ pub mod types {
         impl Ipv6Range {
             pub fn first<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::Ipv6Addr>,
+                T: ::std::convert::TryInto<::std::net::Ipv6Addr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.first = value
@@ -40254,7 +40347,7 @@ pub mod types {
             }
             pub fn last<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::Ipv6Addr>,
+                T: ::std::convert::TryInto<::std::net::Ipv6Addr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.last = value
@@ -40470,7 +40563,7 @@ pub mod types {
                 ::std::string::String,
             >,
             enabled: ::std::result::Result<bool, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             link_description: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -40529,7 +40622,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -40644,7 +40737,7 @@ pub mod types {
                 ::std::string::String,
             >,
             management_ip: ::std::result::Result<
-                ::std::option::Option<std::net::IpAddr>,
+                ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
             system_description: ::std::result::Result<
@@ -40717,7 +40810,7 @@ pub mod types {
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<std::net::IpAddr>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.management_ip = value.try_into().map_err(|e| {
@@ -40784,10 +40877,14 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct LldpNeighbor {
             chassis_id: ::std::result::Result<::std::string::String, ::std::string::String>,
-            first_seen:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            last_seen:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            first_seen: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            last_seen: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             link_description: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -40835,7 +40932,7 @@ pub mod types {
             }
             pub fn first_seen<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.first_seen = value
@@ -40845,7 +40942,7 @@ pub mod types {
             }
             pub fn last_seen<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.last_seen = value
@@ -41022,9 +41119,9 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct LoopbackAddress {
             address: ::std::result::Result<super::IpNet, ::std::string::String>,
-            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
@@ -41055,7 +41152,7 @@ pub mod types {
             }
             pub fn address_lot_block_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
@@ -41068,7 +41165,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -41078,7 +41175,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -41127,11 +41224,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LoopbackAddressCreate {
-            address: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            address: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             address_lot: ::std::result::Result<super::NameOrId, ::std::string::String>,
             anycast: ::std::result::Result<bool, ::std::string::String>,
             mask: ::std::result::Result<u8, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             switch_location: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -41151,7 +41248,7 @@ pub mod types {
         impl LoopbackAddressCreate {
             pub fn address<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address = value
@@ -41191,7 +41288,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -41308,8 +41405,10 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Measurement {
             datum: ::std::result::Result<super::Datum, ::std::string::String>,
-            timestamp:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            timestamp: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Measurement {
@@ -41334,7 +41433,7 @@ pub mod types {
             }
             pub fn timestamp<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.timestamp = value
@@ -41432,7 +41531,7 @@ pub mod types {
         pub struct MissingDatum {
             datum_type: ::std::result::Result<super::DatumType, ::std::string::String>,
             start_time: ::std::result::Result<
-                ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
                 ::std::string::String,
             >,
         }
@@ -41460,7 +41559,7 @@ pub mod types {
             pub fn start_time<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::option::Option<chrono::DateTime<chrono::offset::Utc>>,
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -41494,8 +41593,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct NetworkInterface {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             kind: ::std::result::Result<super::NetworkInterfaceKind, ::std::string::String>,
             mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
@@ -41527,7 +41626,7 @@ pub mod types {
         impl NetworkInterface {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -41537,7 +41636,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -41712,17 +41811,21 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
             form_factor: ::std::result::Result<super::PhysicalDiskKind, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             model: ::std::result::Result<::std::string::String, ::std::string::String>,
             policy: ::std::result::Result<super::PhysicalDiskPolicy, ::std::string::String>,
             serial: ::std::result::Result<::std::string::String, ::std::string::String>,
             sled_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             state: ::std::result::Result<super::PhysicalDiskState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             vendor: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
@@ -41756,7 +41859,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -41796,7 +41899,7 @@ pub mod types {
             }
             pub fn sled_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.sled_id = value
@@ -41816,7 +41919,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -41826,7 +41929,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -41992,11 +42095,11 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Points {
             start_times: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                ::std::option::Option<::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>>,
                 ::std::string::String,
             >,
             timestamps: ::std::result::Result<
-                ::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>,
+                ::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>,
                 ::std::string::String,
             >,
             values: ::std::result::Result<::std::vec::Vec<super::Values>, ::std::string::String>,
@@ -42016,7 +42119,9 @@ pub mod types {
             pub fn start_times<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<
-                    ::std::option::Option<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                    ::std::option::Option<
+                        ::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>,
+                    >,
                 >,
                 T::Error: ::std::fmt::Display,
             {
@@ -42027,7 +42132,9 @@ pub mod types {
             }
             pub fn timestamps<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                T: ::std::convert::TryInto<
+                    ::std::vec::Vec<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
                 T::Error: ::std::fmt::Display,
             {
                 self.timestamps = value
@@ -42073,13 +42180,17 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Probe {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            sled: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Probe {
@@ -42108,7 +42219,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -42128,7 +42239,7 @@ pub mod types {
             }
             pub fn sled<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.sled = value
@@ -42138,7 +42249,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -42148,7 +42259,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -42195,7 +42306,7 @@ pub mod types {
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            sled: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for ProbeCreate {
@@ -42242,7 +42353,7 @@ pub mod types {
             }
             pub fn sled<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.sled = value
@@ -42280,7 +42391,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct ProbeExternalIp {
             first_port: ::std::result::Result<u16, ::std::string::String>,
-            ip: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             kind: ::std::result::Result<super::ProbeExternalIpKind, ::std::string::String>,
             last_port: ::std::result::Result<u16, ::std::string::String>,
         }
@@ -42309,7 +42420,7 @@ pub mod types {
             }
             pub fn ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.ip = value
@@ -42370,10 +42481,10 @@ pub mod types {
                 ::std::vec::Vec<super::ProbeExternalIp>,
                 ::std::string::String,
             >,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             interface: ::std::result::Result<super::NetworkInterface, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            sled: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            sled: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for ProbeInfo {
@@ -42401,7 +42512,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -42431,7 +42542,7 @@ pub mod types {
             }
             pub fn sled<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.sled = value
@@ -42533,12 +42644,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Project {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Project {
@@ -42566,7 +42681,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -42586,7 +42701,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -42596,7 +42711,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -42807,7 +42922,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ProjectRoleRoleAssignment {
-            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
             role_name: ::std::result::Result<super::ProjectRole, ::std::string::String>,
         }
@@ -42825,7 +42940,7 @@ pub mod types {
         impl ProjectRoleRoleAssignment {
             pub fn identity_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.identity_id = value
@@ -43037,11 +43152,15 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Rack {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Rack {
@@ -43057,7 +43176,7 @@ pub mod types {
         impl Rack {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -43067,7 +43186,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -43077,7 +43196,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -43292,7 +43411,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Route {
             dst: ::std::result::Result<super::IpNet, ::std::string::String>,
-            gw: ::std::result::Result<std::net::IpAddr, ::std::string::String>,
+            gw: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
             vid: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
@@ -43321,7 +43440,7 @@ pub mod types {
             }
             pub fn gw<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::net::IpAddr>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.gw = value
@@ -43425,15 +43544,19 @@ pub mod types {
         pub struct RouterRoute {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             destination: ::std::result::Result<super::RouteDestination, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             kind: ::std::result::Result<super::RouterRouteKind, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             target: ::std::result::Result<super::RouteTarget, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            vpc_router_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            vpc_router_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for RouterRoute {
@@ -43475,7 +43598,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -43515,7 +43638,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -43525,7 +43648,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -43535,7 +43658,7 @@ pub mod types {
             }
             pub fn vpc_router_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_router_id = value.try_into().map_err(|e| {
@@ -43828,7 +43951,7 @@ pub mod types {
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
             >,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             idp_entity_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             public_cert: ::std::result::Result<
@@ -43839,10 +43962,14 @@ pub mod types {
             sp_client_id: ::std::result::Result<::std::string::String, ::std::string::String>,
             technical_contact_email:
                 ::std::result::Result<::std::string::String, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SamlIdentityProvider {
@@ -43902,7 +44029,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -43975,7 +44102,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -43985,7 +44112,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -44232,17 +44359,21 @@ pub mod types {
         pub struct Silo {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             discoverable: ::std::result::Result<bool, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             identity_mode: ::std::result::Result<super::SiloIdentityMode, ::std::string::String>,
             mapped_fleet_roles: ::std::result::Result<
                 ::std::collections::HashMap<::std::string::String, Vec<super::FleetRole>>,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Silo {
@@ -44283,7 +44414,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -44328,7 +44459,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -44338,7 +44469,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -44545,13 +44676,17 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SiloIpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             is_default: ::std::result::Result<bool, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SiloIpPool {
@@ -44580,7 +44715,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -44610,7 +44745,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -44620,7 +44755,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -44725,7 +44860,7 @@ pub mod types {
         pub struct SiloQuotas {
             cpus: ::std::result::Result<i64, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             storage: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
 
@@ -44763,7 +44898,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -45137,7 +45272,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SiloRoleRoleAssignment {
-            identity_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            identity_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             identity_type: ::std::result::Result<super::IdentityType, ::std::string::String>,
             role_name: ::std::result::Result<super::SiloRole, ::std::string::String>,
         }
@@ -45155,7 +45290,7 @@ pub mod types {
         impl SiloRoleRoleAssignment {
             pub fn identity_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.identity_id = value
@@ -45212,7 +45347,7 @@ pub mod types {
         pub struct SiloUtilization {
             allocated: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
             provisioned: ::std::result::Result<super::VirtualResourceCounts, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -45250,7 +45385,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -45363,14 +45498,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Sled {
             baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             policy: ::std::result::Result<super::SledPolicy, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             state: ::std::result::Result<super::SledState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             usable_hardware_threads: ::std::result::Result<u32, ::std::string::String>,
             usable_physical_ram: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
@@ -45408,7 +45547,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -45428,7 +45567,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -45448,7 +45587,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -45458,7 +45597,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -45529,7 +45668,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledId {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for SledId {
@@ -45543,7 +45682,7 @@ pub mod types {
         impl SledId {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -45570,20 +45709,24 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledInstance {
-            active_sled_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            active_sled_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             memory: ::std::result::Result<i64, ::std::string::String>,
             migration_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             ncpus: ::std::result::Result<i64, ::std::string::String>,
             project_name: ::std::result::Result<super::Name, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
             state: ::std::result::Result<super::InstanceState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SledInstance {
@@ -45607,7 +45750,7 @@ pub mod types {
         impl SledInstance {
             pub fn active_sled_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.active_sled_id = value.try_into().map_err(|e| {
@@ -45617,7 +45760,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -45637,7 +45780,7 @@ pub mod types {
             }
             pub fn migration_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.migration_id = value.try_into().map_err(|e| {
@@ -45697,7 +45840,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -45707,7 +45850,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -45988,16 +46131,20 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Snapshot {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            disk_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            disk_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             state: ::std::result::Result<super::SnapshotState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Snapshot {
@@ -46029,7 +46176,7 @@ pub mod types {
             }
             pub fn disk_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.disk_id = value
@@ -46039,7 +46186,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -46059,7 +46206,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -46089,7 +46236,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -46099,7 +46246,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -46282,14 +46429,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SshKey {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             public_key: ::std::result::Result<::std::string::String, ::std::string::String>,
-            silo_user_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            silo_user_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SshKey {
@@ -46319,7 +46470,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -46349,7 +46500,7 @@ pub mod types {
             }
             pub fn silo_user_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_user_id = value.try_into().map_err(|e| {
@@ -46359,7 +46510,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -46369,7 +46520,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -46555,8 +46706,10 @@ pub mod types {
                 ::std::string::String,
             >,
             state: ::std::result::Result<super::SupportBundleState, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SupportBundleInfo {
@@ -46622,7 +46775,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -46727,12 +46880,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Switch {
             baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Switch {
@@ -46760,7 +46917,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -46770,7 +46927,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -46780,7 +46937,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -46790,7 +46947,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -46893,10 +47050,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfig {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             kind: ::std::result::Result<super::SwitchInterfaceKind2, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             v6_enabled: ::std::result::Result<bool, ::std::string::String>,
         }
 
@@ -46915,7 +47072,7 @@ pub mod types {
         impl SwitchInterfaceConfig {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -46945,7 +47102,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47056,11 +47213,11 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPort {
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             port_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             port_settings_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             switch_location: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
@@ -47079,7 +47236,7 @@ pub mod types {
         impl SwitchPort {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -47099,7 +47256,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47112,7 +47269,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -47162,9 +47319,9 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortAddressConfig {
             address: ::std::result::Result<super::IpNet, ::std::string::String>,
-            address_lot_block_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
@@ -47195,7 +47352,7 @@ pub mod types {
             }
             pub fn address_lot_block_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
@@ -47218,7 +47375,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47316,7 +47473,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortConfig {
             geometry: ::std::result::Result<super::SwitchPortGeometry2, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPortConfig {
@@ -47341,7 +47498,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47427,12 +47584,12 @@ pub mod types {
                 ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
             link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             lldp_link_config_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             mtu: ::std::result::Result<u16, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
             tx_eq_config_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPortLinkConfig {
@@ -47483,7 +47640,7 @@ pub mod types {
             }
             pub fn lldp_link_config_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.lldp_link_config_id = value.try_into().map_err(|e| {
@@ -47506,7 +47663,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47529,7 +47686,7 @@ pub mod types {
             }
             pub fn tx_eq_config_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.tx_eq_config_id = value.try_into().map_err(|e| {
@@ -47639,7 +47796,7 @@ pub mod types {
             dst: ::std::result::Result<super::IpNet, ::std::string::String>,
             gw: ::std::result::Result<super::IpNet, ::std::string::String>,
             interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
@@ -47690,7 +47847,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -47755,12 +47912,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettings {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SwitchPortSettings {
@@ -47788,7 +47949,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -47808,7 +47969,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -47818,7 +47979,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -48046,8 +48207,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsGroups {
-            port_settings_group_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            port_settings_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            port_settings_group_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPortSettingsGroups {
@@ -48064,7 +48225,7 @@ pub mod types {
         impl SwitchPortSettingsGroups {
             pub fn port_settings_group_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_group_id = value.try_into().map_err(|e| {
@@ -48077,7 +48238,7 @@ pub mod types {
             }
             pub fn port_settings_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_settings_id = value.try_into().map_err(|e| {
@@ -48454,7 +48615,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchVlanInterfaceConfig {
-            interface_config_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            interface_config_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             vlan_id: ::std::result::Result<u16, ::std::string::String>,
         }
 
@@ -48472,7 +48633,7 @@ pub mod types {
         impl SwitchVlanInterfaceConfig {
             pub fn interface_config_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_config_id = value.try_into().map_err(|e| {
@@ -48751,14 +48912,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct TimeseriesSchema {
             authz_scope: ::std::result::Result<super::AuthzScope, ::std::string::String>,
-            created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
             datum_type: ::std::result::Result<super::DatumType, ::std::string::String>,
             description: ::std::result::Result<super::TimeseriesDescription, ::std::string::String>,
             field_schema: ::std::result::Result<Vec<super::FieldSchema>, ::std::string::String>,
             timeseries_name: ::std::result::Result<super::TimeseriesName, ::std::string::String>,
             units: ::std::result::Result<super::Units, ::std::string::String>,
-            version: ::std::result::Result<std::num::NonZeroU8, ::std::string::String>,
+            version: ::std::result::Result<::std::num::NonZeroU8, ::std::string::String>,
         }
 
         impl ::std::default::Default for TimeseriesSchema {
@@ -48789,7 +48952,7 @@ pub mod types {
             }
             pub fn created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.created = value
@@ -48849,7 +49012,7 @@ pub mod types {
             }
             pub fn version<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<std::num::NonZeroU8>,
+                T: ::std::convert::TryInto<::std::num::NonZeroU8>,
                 T::Error: ::std::fmt::Display,
             {
                 self.version = value
@@ -49062,7 +49225,7 @@ pub mod types {
         pub struct UninitializedSled {
             baseboard: ::std::result::Result<super::Baseboard, ::std::string::String>,
             cubby: ::std::result::Result<u16, ::std::string::String>,
-            rack_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for UninitializedSled {
@@ -49098,7 +49261,7 @@ pub mod types {
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.rack_id = value
@@ -49258,8 +49421,8 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct User {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            silo_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for User {
@@ -49285,7 +49448,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -49295,7 +49458,7 @@ pub mod types {
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.silo_id = value
@@ -49329,12 +49492,16 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct UserBuiltin {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for UserBuiltin {
@@ -49362,7 +49529,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -49382,7 +49549,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -49392,7 +49559,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -49867,15 +50034,19 @@ pub mod types {
         pub struct Vpc {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             dns_name: ::std::result::Result<super::Name, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ipv6_prefix: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            project_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            system_router_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            system_router_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for Vpc {
@@ -49917,7 +50088,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -49947,7 +50118,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.project_id = value
@@ -49957,7 +50128,7 @@ pub mod types {
             }
             pub fn system_router_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.system_router_id = value.try_into().map_err(|e| {
@@ -49970,7 +50141,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -49980,7 +50151,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -50118,7 +50289,7 @@ pub mod types {
             direction:
                 ::std::result::Result<super::VpcFirewallRuleDirection, ::std::string::String>,
             filters: ::std::result::Result<super::VpcFirewallRuleFilter, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             priority: ::std::result::Result<u16, ::std::string::String>,
             status: ::std::result::Result<super::VpcFirewallRuleStatus, ::std::string::String>,
@@ -50126,11 +50297,15 @@ pub mod types {
                 ::std::vec::Vec<super::VpcFirewallRuleTarget>,
                 ::std::string::String,
             >,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for VpcFirewallRule {
@@ -50195,7 +50370,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -50245,7 +50420,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -50255,7 +50430,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -50265,7 +50440,7 @@ pub mod types {
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_id = value
@@ -50712,14 +50887,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct VpcRouter {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             kind: ::std::result::Result<super::VpcRouterKind, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for VpcRouter {
@@ -50749,7 +50928,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -50779,7 +50958,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -50789,7 +50968,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -50799,7 +50978,7 @@ pub mod types {
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_id = value
@@ -51026,17 +51205,21 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct VpcSubnet {
             custom_router_id:
-                ::std::result::Result<::std::option::Option<uuid::Uuid>, ::std::string::String>,
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ipv4_block: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
             ipv6_block: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            time_created:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            time_modified:
-                ::std::result::Result<chrono::DateTime<chrono::offset::Utc>, ::std::string::String>,
-            vpc_id: ::std::result::Result<uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
         impl ::std::default::Default for VpcSubnet {
@@ -51058,7 +51241,7 @@ pub mod types {
         impl VpcSubnet {
             pub fn custom_router_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.custom_router_id = value.try_into().map_err(|e| {
@@ -51081,7 +51264,7 @@ pub mod types {
             }
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
@@ -51121,7 +51304,7 @@ pub mod types {
             }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_created = value.try_into().map_err(|e| {
@@ -51131,7 +51314,7 @@ pub mod types {
             }
             pub fn time_modified<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.time_modified = value.try_into().map_err(|e| {
@@ -51141,7 +51324,7 @@ pub mod types {
             }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<uuid::Uuid>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.vpc_id = value
@@ -56536,7 +56719,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ProbeList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -56555,10 +56738,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -56938,7 +57121,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -56955,10 +57138,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -57125,7 +57308,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleView<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SupportBundleView<'a> {
@@ -57138,11 +57321,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57191,7 +57374,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleDelete<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SupportBundleDelete<'a> {
@@ -57204,11 +57387,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57255,7 +57438,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleDownload<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SupportBundleDownload<'a> {
@@ -57268,11 +57451,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57306,7 +57489,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleHead<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SupportBundleHead<'a> {
@@ -57319,11 +57502,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57357,7 +57540,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleDownloadFile<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
         file: Result<::std::string::String, String>,
     }
 
@@ -57372,11 +57555,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57424,7 +57607,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleHeadFile<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
         file: Result<::std::string::String, String>,
     }
 
@@ -57439,11 +57622,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57491,7 +57674,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleIndex<'a> {
         client: &'a super::Client,
-        support_bundle: Result<uuid::Uuid, String>,
+        support_bundle: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SupportBundleIndex<'a> {
@@ -57504,11 +57687,11 @@ pub mod builder {
 
         pub fn support_bundle<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.support_bundle = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for support_bundle failed".to_string());
+            self.support_bundle = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for support_bundle failed".to_string()
+            });
             self
         }
 
@@ -57635,7 +57818,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct CertificateList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -57652,10 +57835,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -57974,7 +58157,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct DiskList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -57993,10 +58176,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -58754,12 +58937,12 @@ pub mod builder {
         client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         metric: Result<types::DiskMetricName, String>,
-        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
     }
 
     impl<'a> DiskMetricsList<'a> {
@@ -58799,10 +58982,11 @@ pub mod builder {
 
         pub fn end_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.end_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+                 failed"
                     .to_string()
             });
             self
@@ -58810,10 +58994,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -58852,11 +59036,11 @@ pub mod builder {
 
         pub fn start_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.start_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time \
-                 failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for \
+                 start_time failed"
                     .to_string()
             });
             self
@@ -58982,7 +59166,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct FloatingIpList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -59001,10 +59185,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -59683,7 +59867,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct GroupList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -59700,10 +59884,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -59825,7 +60009,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct GroupView<'a> {
         client: &'a super::Client,
-        group_id: Result<uuid::Uuid, String>,
+        group_id: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> GroupView<'a> {
@@ -59838,11 +60022,11 @@ pub mod builder {
 
         pub fn group_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.group_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for group_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for group_id failed".to_string());
             self
         }
 
@@ -59885,7 +60069,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ImageList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -59904,10 +60088,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -60447,7 +60631,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct InstanceList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -60466,10 +60650,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -60958,7 +61142,7 @@ pub mod builder {
     pub struct InstanceDiskList<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -60988,10 +61172,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -61933,7 +62117,7 @@ pub mod builder {
     pub struct InstanceSshPublicKeyList<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -61963,10 +62147,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -62268,7 +62452,7 @@ pub mod builder {
     pub struct InternetGatewayIpAddressList<'a> {
         client: &'a super::Client,
         gateway: Result<Option<types::NameOrId>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -62301,10 +62485,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -62719,7 +62903,7 @@ pub mod builder {
     pub struct InternetGatewayIpPoolList<'a> {
         client: &'a super::Client,
         gateway: Result<Option<types::NameOrId>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -62752,10 +62936,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -63168,7 +63352,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct InternetGatewayList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -63189,10 +63373,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -63661,7 +63845,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ProjectIpPoolList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -63678,10 +63862,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -64042,7 +64226,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct CurrentUserGroups<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -64059,10 +64243,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -64184,7 +64368,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -64201,10 +64385,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -64516,12 +64700,12 @@ pub mod builder {
     pub struct SiloMetric<'a> {
         client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
-        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
     }
 
     impl<'a> SiloMetric<'a> {
@@ -64550,10 +64734,11 @@ pub mod builder {
 
         pub fn end_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.end_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+                 failed"
                     .to_string()
             });
             self
@@ -64561,10 +64746,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -64603,11 +64788,11 @@ pub mod builder {
 
         pub fn start_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.start_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time \
-                 failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for \
+                 start_time failed"
                     .to_string()
             });
             self
@@ -64731,7 +64916,7 @@ pub mod builder {
     pub struct InstanceNetworkInterfaceList<'a> {
         client: &'a super::Client,
         instance: Result<Option<types::NameOrId>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -64762,10 +64947,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -65498,7 +65683,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ProjectList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -65515,10 +65700,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -66075,7 +66260,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SnapshotList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -66094,10 +66279,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -66479,7 +66664,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct PhysicalDiskList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -66496,10 +66681,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -66621,7 +66806,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct PhysicalDiskView<'a> {
         client: &'a super::Client,
-        disk_id: Result<uuid::Uuid, String>,
+        disk_id: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> PhysicalDiskView<'a> {
@@ -66634,11 +66819,11 @@ pub mod builder {
 
         pub fn disk_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.disk_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for disk_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for disk_id failed".to_string());
             self
         }
 
@@ -66682,10 +66867,10 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortLldpNeighbors<'a> {
         client: &'a super::Client,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
         port: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -66705,11 +66890,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -66735,10 +66920,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -66876,7 +67061,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct RackList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -66893,10 +67078,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67018,7 +67203,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct RackView<'a> {
         client: &'a super::Client,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> RackView<'a> {
@@ -67031,11 +67216,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -67078,7 +67263,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -67095,10 +67280,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67291,7 +67476,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledView<'a> {
         client: &'a super::Client,
-        sled_id: Result<uuid::Uuid, String>,
+        sled_id: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SledView<'a> {
@@ -67304,11 +67489,11 @@ pub mod builder {
 
         pub fn sled_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.sled_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for sled_id failed".to_string());
             self
         }
 
@@ -67351,8 +67536,8 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledPhysicalDiskList<'a> {
         client: &'a super::Client,
-        sled_id: Result<uuid::Uuid, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        sled_id: Result<::uuid::Uuid, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -67370,20 +67555,20 @@ pub mod builder {
 
         pub fn sled_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.sled_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for sled_id failed".to_string());
             self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67512,8 +67697,8 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledInstanceList<'a> {
         client: &'a super::Client,
-        sled_id: Result<uuid::Uuid, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        sled_id: Result<::uuid::Uuid, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -67531,20 +67716,20 @@ pub mod builder {
 
         pub fn sled_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.sled_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for sled_id failed".to_string());
             self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67674,7 +67859,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledSetProvisionPolicy<'a> {
         client: &'a super::Client,
-        sled_id: Result<uuid::Uuid, String>,
+        sled_id: Result<::uuid::Uuid, String>,
         body: Result<types::builder::SledProvisionPolicyParams, String>,
     }
 
@@ -67689,11 +67874,11 @@ pub mod builder {
 
         pub fn sled_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.sled_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for sled_id failed".to_string());
             self
         }
 
@@ -67775,7 +67960,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledListUninitialized<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
@@ -67790,10 +67975,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67902,10 +68087,10 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
-        switch_port_id: Result<Option<uuid::Uuid>, String>,
+        switch_port_id: Result<Option<::uuid::Uuid>, String>,
     }
 
     impl<'a> NetworkingSwitchPortList<'a> {
@@ -67921,10 +68106,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -67952,12 +68137,11 @@ pub mod builder {
 
         pub fn switch_port_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
-            self.switch_port_id = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `uuid :: Uuid` for switch_port_id failed".to_string());
+            self.switch_port_id = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for switch_port_id failed".to_string()
+            });
             self
         }
 
@@ -68066,7 +68250,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortLldpConfigView<'a> {
         client: &'a super::Client,
         port: Result<types::Name, String>,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
     }
 
@@ -68092,11 +68276,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -68166,7 +68350,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortLldpConfigUpdate<'a> {
         client: &'a super::Client,
         port: Result<types::Name, String>,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
         body: Result<types::builder::LldpLinkConfig, String>,
     }
@@ -68194,11 +68378,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -68291,7 +68475,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortApplySettings<'a> {
         client: &'a super::Client,
         port: Result<types::Name, String>,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
         body: Result<types::builder::SwitchPortApplySettings, String>,
     }
@@ -68319,11 +68503,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -68422,7 +68606,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortClearSettings<'a> {
         client: &'a super::Client,
         port: Result<types::Name, String>,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
     }
 
@@ -68448,11 +68632,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -68519,7 +68703,7 @@ pub mod builder {
     pub struct NetworkingSwitchPortStatus<'a> {
         client: &'a super::Client,
         port: Result<types::Name, String>,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
     }
 
@@ -68545,11 +68729,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -68617,7 +68801,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SwitchList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -68634,10 +68818,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -68759,7 +68943,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SwitchView<'a> {
         client: &'a super::Client,
-        switch_id: Result<uuid::Uuid, String>,
+        switch_id: Result<::uuid::Uuid, String>,
     }
 
     impl<'a> SwitchView<'a> {
@@ -68772,11 +68956,11 @@ pub mod builder {
 
         pub fn switch_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.switch_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for switch_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for switch_id failed".to_string());
             self
         }
 
@@ -68819,7 +69003,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloIdentityProviderList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -68838,10 +69022,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -69066,7 +69250,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserDelete<'a> {
         client: &'a super::Client,
-        user_id: Result<uuid::Uuid, String>,
+        user_id: Result<::uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
 
@@ -69081,11 +69265,11 @@ pub mod builder {
 
         pub fn user_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.user_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
             self
         }
 
@@ -69145,7 +69329,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserSetPassword<'a> {
         client: &'a super::Client,
-        user_id: Result<uuid::Uuid, String>,
+        user_id: Result<::uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
         body: Result<types::UserPassword, String>,
     }
@@ -69162,11 +69346,11 @@ pub mod builder {
 
         pub fn user_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.user_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
             self
         }
 
@@ -69412,7 +69596,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -69429,10 +69613,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -69830,7 +70014,7 @@ pub mod builder {
     pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
@@ -69856,10 +70040,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -70121,7 +70305,7 @@ pub mod builder {
     pub struct IpPoolSiloList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -70149,10 +70333,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -70655,7 +70839,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
@@ -70670,10 +70854,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -70899,12 +71083,12 @@ pub mod builder {
     pub struct SystemMetric<'a> {
         client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
-        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
-        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
     }
 
     impl<'a> SystemMetric<'a> {
@@ -70933,10 +71117,11 @@ pub mod builder {
 
         pub fn end_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.end_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+                 failed"
                     .to_string()
             });
             self
@@ -70944,10 +71129,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -70986,11 +71171,11 @@ pub mod builder {
 
         pub fn start_time<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
         {
             self.start_time = value.try_into().map(Some).map_err(|_| {
-                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time \
-                 failed"
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for \
+                 start_time failed"
                     .to_string()
             });
             self
@@ -71113,7 +71298,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -71130,10 +71315,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -71394,7 +71579,7 @@ pub mod builder {
     pub struct NetworkingAddressLotBlockList<'a> {
         client: &'a super::Client,
         address_lot: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -71422,10 +71607,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -71850,7 +72035,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpConfigList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -71867,10 +72052,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -72122,7 +72307,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -72139,10 +72324,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -72638,7 +72823,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -72655,10 +72840,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -72857,9 +73042,9 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressDelete<'a> {
         client: &'a super::Client,
-        rack_id: Result<uuid::Uuid, String>,
+        rack_id: Result<::uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
-        address: Result<std::net::IpAddr, String>,
+        address: Result<::std::net::IpAddr, String>,
         subnet_mask: Result<u8, String>,
     }
 
@@ -72876,11 +73061,11 @@ pub mod builder {
 
         pub fn rack_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.rack_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for rack_id failed".to_string());
             self
         }
 
@@ -72896,11 +73081,11 @@ pub mod builder {
 
         pub fn address<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::net::IpAddr>,
+            V: std::convert::TryInto<::std::net::IpAddr>,
         {
-            self.address = value
-                .try_into()
-                .map_err(|_| "conversion to `std :: net :: IpAddr` for address failed".to_string());
+            self.address = value.try_into().map_err(|_| {
+                "conversion to `:: std :: net :: IpAddr` for address failed".to_string()
+            });
             self
         }
 
@@ -72968,7 +73153,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         port_settings: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -72987,10 +73172,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -73466,7 +73651,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct RoleList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
@@ -73481,10 +73666,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -73651,7 +73836,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemQuotasList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -73668,10 +73853,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -73793,7 +73978,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -73810,10 +73995,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -74125,7 +74310,7 @@ pub mod builder {
     pub struct SiloIpPoolList<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -74153,10 +74338,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -74653,7 +74838,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemTimeseriesSchemaList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
     }
 
@@ -74668,10 +74853,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -74779,7 +74964,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloUserList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -74798,10 +74983,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -74938,7 +75123,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloUserView<'a> {
         client: &'a super::Client,
-        user_id: Result<uuid::Uuid, String>,
+        user_id: Result<::uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
 
@@ -74953,11 +75138,11 @@ pub mod builder {
 
         pub fn user_id<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.user_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
             self
         }
 
@@ -75016,7 +75201,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct UserBuiltinList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameSortMode>, String>,
     }
@@ -75033,10 +75218,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -75218,7 +75403,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloUtilizationList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
@@ -75235,10 +75420,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -75511,8 +75696,8 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct UserList<'a> {
         client: &'a super::Client,
-        group: Result<Option<uuid::Uuid>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        group: Result<Option<::uuid::Uuid>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
@@ -75530,21 +75715,21 @@ pub mod builder {
 
         pub fn group<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<uuid::Uuid>,
+            V: std::convert::TryInto<::uuid::Uuid>,
         {
             self.group = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `uuid :: Uuid` for group failed".to_string());
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for group failed".to_string());
             self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -75901,7 +76086,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
@@ -75924,10 +76109,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -76576,7 +76761,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct VpcRouterList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -76597,10 +76782,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -77167,7 +77352,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct VpcSubnetList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -77188,10 +77373,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -77759,7 +77944,7 @@ pub mod builder {
     pub struct VpcSubnetListNetworkInterfaces<'a> {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -77791,10 +77976,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
@@ -77956,7 +78141,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct VpcList<'a> {
         client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -77975,10 +78160,10 @@ pub mod builder {
 
         pub fn limit<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
         {
             self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
             });
             self
         }
