@@ -292,7 +292,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("client-id")
                     .long("client-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -352,7 +352,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("client-id")
                     .long("client-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -393,7 +393,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -450,7 +450,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("sled")
                     .long("sled")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -513,7 +513,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -540,7 +540,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -552,7 +552,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -568,7 +568,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -580,7 +580,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -599,7 +599,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -618,7 +618,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -630,7 +630,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("support-bundle")
                     .long("support-bundle")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
             )
@@ -659,7 +659,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -776,7 +776,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1027,14 +1027,16 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1077,7 +1079,9 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
@@ -1089,7 +1093,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1127,7 +1131,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("ip")
                     .long("ip")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(false)
                     .help(
                         "An IP address to reserve for use as a floating IP. This field is \
@@ -1335,7 +1339,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1358,7 +1362,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("group-id")
                     .long("group-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the group"),
             )
@@ -1370,7 +1374,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1543,7 +1547,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -1804,7 +1808,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2109,7 +2113,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2191,7 +2195,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2234,7 +2238,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -2347,7 +2351,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2496,7 +2500,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2647,7 +2651,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2730,7 +2734,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2753,7 +2757,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2846,14 +2850,16 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2893,7 +2899,9 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
@@ -2915,7 +2923,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -2963,7 +2971,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("ip")
                     .long("ip")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(false)
                     .help(
                         "The IP address for the interface. One will be auto-assigned if not \
@@ -3185,7 +3193,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3341,7 +3349,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3457,7 +3465,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3480,7 +3488,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("disk-id")
                     .long("disk-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the physical disk"),
             )
@@ -3492,7 +3500,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3506,7 +3514,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3536,7 +3544,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3559,7 +3567,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the rack"),
             )
@@ -3571,7 +3579,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3625,7 +3633,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
@@ -3637,14 +3645,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
@@ -3667,14 +3675,14 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
@@ -3697,7 +3705,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the sled"),
             )
@@ -3736,7 +3744,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3748,7 +3756,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -3766,7 +3774,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("switch-port-id")
                     .long("switch-port-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(false)
                     .help("An optional switch port id to use when listing switch ports."),
             )
@@ -3785,7 +3793,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3818,7 +3826,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("id")
                     .long("id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body")
                     .help("The id of this LLDP service instance."),
             )
@@ -3853,7 +3861,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3914,7 +3922,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3954,7 +3962,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3980,7 +3988,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("A rack id to use when selecting switch ports."),
             )
@@ -3999,7 +4007,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4022,7 +4030,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("switch-id")
                     .long("switch-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the switch"),
             )
@@ -4034,7 +4042,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4111,7 +4119,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
@@ -4130,7 +4138,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
@@ -4262,7 +4270,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4380,7 +4388,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4453,7 +4461,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4615,7 +4623,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4667,14 +4675,16 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("end-time")
                     .long("end-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4714,7 +4724,9 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("start-time")
                     .long("start-time")
-                    .value_parser(::clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
@@ -4729,7 +4741,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4817,7 +4829,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -4863,7 +4875,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("remote")
                     .long("remote")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("Address of the remote peer to disable a BFD session for."),
             )
@@ -4907,7 +4919,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("local")
                     .long("local")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(false)
                     .help(
                         "Address the Oxide switch will listen on for BFD traffic. If `None` then \
@@ -4930,7 +4942,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("remote")
                     .long("remote")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("Address of the remote peer to establish a BFD session with."),
             )
@@ -4977,7 +4989,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5068,7 +5080,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5191,7 +5203,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5214,7 +5226,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required_unless_present("json-body")
                     .help("The address to create."),
             )
@@ -5248,7 +5260,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body")
                     .help("The containing the switch this loopback address will be configured on."),
             )
@@ -5284,7 +5296,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("address")
                     .long("address")
-                    .value_parser(::clap::value_parser!(std::net::IpAddr))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(true)
                     .help(
                         "The IP address and subnet mask to use when selecting the loopback \
@@ -5294,7 +5306,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("The rack to use when selecting the loopback address."),
             )
@@ -5323,7 +5335,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5433,7 +5445,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5457,7 +5469,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5480,7 +5492,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5595,7 +5607,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5759,7 +5771,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5771,7 +5783,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5808,7 +5820,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("user-id")
                     .long("user-id")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("The user's internal ID"),
             )
@@ -5820,7 +5832,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5854,7 +5866,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -5929,13 +5941,13 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("group")
                     .long("group")
-                    .value_parser(::clap::value_parser!(uuid::Uuid))
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(false),
             )
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -6029,7 +6041,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -6273,7 +6285,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -6471,7 +6483,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -6714,7 +6726,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -6762,7 +6774,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("limit")
                     .long("limit")
-                    .value_parser(::clap::value_parser!(std::num::NonZeroU32))
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
@@ -7334,7 +7346,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.device_auth_request();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
         }
 
@@ -7392,7 +7404,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.device_access_token();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
         }
 
@@ -7426,7 +7438,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_probe_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.probe_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -7482,7 +7494,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("sled") {
             request = request.body_map(|body| body.sled(value.clone()))
         }
 
@@ -7559,7 +7571,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -7620,7 +7632,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7644,7 +7656,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_delete();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7668,7 +7680,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_download();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7690,7 +7702,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_head();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7716,7 +7728,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.file(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7742,7 +7754,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.file(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7764,7 +7776,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_index();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("support-bundle") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
             request = request.support_bundle(value.clone());
         }
 
@@ -7809,7 +7821,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -7940,7 +7952,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_disk_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8209,11 +8221,13 @@ impl<T: CliConfig> Cli<T> {
             request = request.disk(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
             request = request.end_time(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8229,7 +8243,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
         {
             request = request.start_time(value.clone());
         }
@@ -8266,7 +8281,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8314,7 +8329,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
             request = request.body_map(|body| body.ip(value.clone()))
         }
 
@@ -8521,7 +8536,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_group_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8556,7 +8571,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_group_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("group-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("group-id") {
             request = request.group_id(value.clone());
         }
 
@@ -8576,7 +8591,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_image_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8753,7 +8768,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_instance_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -8964,7 +8979,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9278,7 +9293,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9373,7 +9388,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.gateway(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9422,7 +9437,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_ip_address_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("address") {
             request = request.body_map(|body| body.address(value.clone()))
         }
 
@@ -9517,7 +9532,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.gateway(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9657,7 +9672,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.internet_gateway_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9817,7 +9832,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9952,7 +9967,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_groups();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -9991,7 +10006,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10113,11 +10128,13 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_metric(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_metric();
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
             request = request.end_time(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10133,7 +10150,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
         {
             request = request.start_time(value.clone());
         }
@@ -10173,7 +10191,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10226,7 +10244,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
             request = request.body_map(|body| body.ip(value.clone()))
         }
 
@@ -10439,7 +10457,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_project_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10632,7 +10650,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_snapshot_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10766,7 +10784,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.physical_disk_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10806,7 +10824,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.physical_disk_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("disk-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("disk-id") {
             request = request.disk_id(value.clone());
         }
 
@@ -10830,7 +10848,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_lldp_neighbors();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10838,7 +10856,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -10879,7 +10897,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_rack_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10914,7 +10932,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_rack_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -10934,7 +10952,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -10999,7 +11017,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_sled_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -11022,11 +11040,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_physical_disk_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -11066,11 +11084,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_instance_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -11110,7 +11128,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_set_provision_policy();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -11145,7 +11163,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.sled_list_uninitialized();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11182,7 +11200,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11190,7 +11208,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("switch-port-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("switch-port-id") {
             request = request.switch_port_id(value.clone());
         }
 
@@ -11230,7 +11248,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -11266,7 +11284,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.enabled(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("id") {
             request = request.body_map(|body| body.id(value.clone()))
         }
 
@@ -11286,7 +11304,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -11336,7 +11354,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.port_settings(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -11375,7 +11393,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -11407,7 +11425,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.port(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -11432,7 +11450,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_switch_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11467,7 +11485,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_switch_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("switch-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("switch-id") {
             request = request.switch_id(value.clone());
         }
 
@@ -11490,7 +11508,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_identity_provider_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11573,7 +11591,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -11601,7 +11619,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -11719,7 +11737,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_ip_pool_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11861,7 +11879,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -11961,7 +11979,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12153,7 +12171,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12238,11 +12256,13 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_system_metric(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.system_metric();
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
             request = request.end_time(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12258,7 +12278,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
         {
             request = request.start_time(value.clone());
         }
@@ -12294,7 +12315,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12400,7 +12421,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.address_lot(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12487,7 +12508,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bfd_disable();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("remote") {
             request = request.body_map(|body| body.remote(value.clone()))
         }
 
@@ -12525,7 +12546,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.detection_threshold(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("local") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("local") {
             request = request.body_map(|body| body.local(value.clone()))
         }
 
@@ -12533,7 +12554,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.mode(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("remote") {
             request = request.body_map(|body| body.remote(value.clone()))
         }
 
@@ -12591,7 +12612,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12701,7 +12722,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12904,7 +12925,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -12945,7 +12966,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("address") {
             request = request.body_map(|body| body.address(value.clone()))
         }
 
@@ -12961,7 +12982,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.mask(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.body_map(|body| body.rack_id(value.clone()))
         }
 
@@ -12996,11 +13017,11 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_delete();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("address") {
             request = request.address(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -13032,7 +13053,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13203,7 +13224,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_role_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.role_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13257,7 +13278,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_quotas_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13294,7 +13315,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13414,7 +13435,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_ip_pool_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13608,7 +13629,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_schema_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13642,7 +13663,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_silo_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13685,7 +13706,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -13708,7 +13729,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13772,7 +13793,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13868,11 +13889,11 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.user_list();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("group") {
             request = request.group(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -13993,7 +14014,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_route_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -14213,7 +14234,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_router_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -14411,7 +14432,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -14625,7 +14646,7 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list_network_interfaces();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
@@ -14675,7 +14696,7 @@ impl<T: CliConfig> Cli<T> {
 
     pub async fn execute_vpc_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
