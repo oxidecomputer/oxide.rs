@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use anyhow::Result;
 use assert_cmd::Command;
@@ -573,13 +573,20 @@ fn test_disk_write_import_fail() {
     });
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
-    let output = r#"(?m)\AError while uploading the disk image:\n \* Error Response: status: 503 Service Unavailable;.*$"#;
+    let output = concat!(
+        r#"(?m)\AError while uploading the disk image:\n "#,
+        r#"\* Error Response: status: 503 Service Unavailable;.*$"#
+    );
+
+    let temp_dir = tempfile::tempdir().unwrap().into_path();
 
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
+        .arg("--config-dir")
+        .arg(temp_dir.as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
