@@ -2512,7 +2512,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#4a8467a4660df4308890b690808ecb898f128cd1"
+source = "git+https://github.com/oxidecomputer/progenitor#f40c49ae81d0e5135b5c3884ee339b4ca44732e6"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2535,7 +2535,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#4a8467a4660df4308890b690808ecb898f128cd1"
+source = "git+https://github.com/oxidecomputer/progenitor#f40c49ae81d0e5135b5c3884ee339b4ca44732e6"
 dependencies = [
  "heck",
  "http 1.2.0",
@@ -3038,9 +3038,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.138"
+version = "1.0.139"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d434192e7da787e94a6ea7e9670b26a036d0ca41e0b7efb2676dd32bae872949"
+checksum = "44f86c3acccc9c65b153fe1b85a3be07fe5515274ec9f0653b4a0875731c72a6"
 dependencies = [
  "itoa",
  "memchr",
@@ -3878,9 +3878,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.16"
+version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a210d160f08b701c8721ba1c726c11662f877ea6b7094007e1ca9a1041945034"
+checksum = "00e2473a93778eb0bad35909dff6a10d28e63f792f16ed15e404fca9d5eeedbe"
 
 [[package]]
 name = "unicode-segmentation"
