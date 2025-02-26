@@ -774,7 +774,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an affinity group")
+            .about("Create affinity group")
     }
 
     pub fn cli_affinity_group_view() -> ::clap::Command {
@@ -793,7 +793,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an affinity group")
+            .about("Fetch affinity group")
     }
 
     pub fn cli_affinity_group_update() -> ::clap::Command {
@@ -838,7 +838,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an affinity group")
+            .about("Update affinity group")
     }
 
     pub fn cli_affinity_group_delete() -> ::clap::Command {
@@ -857,7 +857,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an affinity group")
+            .about("Delete affinity group")
     }
 
     pub fn cli_affinity_group_member_list() -> ::clap::Command {
@@ -894,7 +894,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List members of an affinity group")
+            .about("List affinity group members")
     }
 
     pub fn cli_affinity_group_member_instance_view() -> ::clap::Command {
@@ -918,7 +918,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an affinity group member")
+            .about("Fetch affinity group member")
     }
 
     pub fn cli_affinity_group_member_instance_add() -> ::clap::Command {
@@ -942,7 +942,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Add a member to an affinity group")
+            .about("Add member to affinity group")
     }
 
     pub fn cli_affinity_group_member_instance_delete() -> ::clap::Command {
@@ -966,7 +966,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Remove a member from an affinity group")
+            .about("Remove member from affinity group")
     }
 
     pub fn cli_anti_affinity_group_list() -> ::clap::Command {
@@ -1059,7 +1059,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an anti-affinity group")
+            .about("Create anti-affinity group")
     }
 
     pub fn cli_anti_affinity_group_view() -> ::clap::Command {
@@ -1078,7 +1078,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an anti-affinity group")
+            .about("Fetch anti-affinity group")
     }
 
     pub fn cli_anti_affinity_group_update() -> ::clap::Command {
@@ -1123,7 +1123,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an anti-affinity group")
+            .about("Update anti-affinity group")
     }
 
     pub fn cli_anti_affinity_group_delete() -> ::clap::Command {
@@ -1142,7 +1142,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an anti-affinity group")
+            .about("Delete anti-affinity group")
     }
 
     pub fn cli_anti_affinity_group_member_list() -> ::clap::Command {
@@ -1179,7 +1179,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List members of an anti-affinity group")
+            .about("List anti-affinity group members")
     }
 
     pub fn cli_anti_affinity_group_member_instance_view() -> ::clap::Command {
@@ -1203,7 +1203,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an anti-affinity group member")
+            .about("Fetch anti-affinity group member")
     }
 
     pub fn cli_anti_affinity_group_member_instance_add() -> ::clap::Command {
@@ -1227,7 +1227,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Add a member to an anti-affinity group")
+            .about("Add member to anti-affinity group")
     }
 
     pub fn cli_anti_affinity_group_member_instance_delete() -> ::clap::Command {
@@ -1251,7 +1251,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Remove a member from an anti-affinity group")
+            .about("Remove member from anti-affinity group")
     }
 
     pub fn cli_certificate_list() -> ::clap::Command {

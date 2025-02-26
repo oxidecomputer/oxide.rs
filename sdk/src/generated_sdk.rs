@@ -53643,7 +53643,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_list(&self) -> builder::AffinityGroupList;
-    /// Create an affinity group
+    /// Create affinity group
     ///
     /// Sends a `POST` request to `/v1/affinity-groups`
     ///
@@ -53658,7 +53658,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_create(&self) -> builder::AffinityGroupCreate;
-    /// Fetch an affinity group
+    /// Fetch affinity group
     ///
     /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}`
     ///
@@ -53673,7 +53673,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_view(&self) -> builder::AffinityGroupView;
-    /// Update an affinity group
+    /// Update affinity group
     ///
     /// Sends a `PUT` request to `/v1/affinity-groups/{affinity_group}`
     ///
@@ -53690,7 +53690,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_update(&self) -> builder::AffinityGroupUpdate;
-    /// Delete an affinity group
+    /// Delete affinity group
     ///
     /// Sends a `DELETE` request to `/v1/affinity-groups/{affinity_group}`
     ///
@@ -53705,7 +53705,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_delete(&self) -> builder::AffinityGroupDelete;
-    /// List members of an affinity group
+    /// List affinity group members
     ///
     /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}/members`
     ///
@@ -53727,7 +53727,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList;
-    /// Fetch an affinity group member
+    /// Fetch affinity group member
     ///
     /// Sends a `GET` request to
     /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
@@ -53745,7 +53745,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView;
-    /// Add a member to an affinity group
+    /// Add member to affinity group
     ///
     /// Sends a `POST` request to
     /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
@@ -53763,7 +53763,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd;
-    /// Remove a member from an affinity group
+    /// Remove member from affinity group
     ///
     /// Sends a `DELETE` request to
     /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
@@ -53801,7 +53801,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_list(&self) -> builder::AntiAffinityGroupList;
-    /// Create an anti-affinity group
+    /// Create anti-affinity group
     ///
     /// Sends a `POST` request to `/v1/anti-affinity-groups`
     ///
@@ -53816,7 +53816,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_create(&self) -> builder::AntiAffinityGroupCreate;
-    /// Fetch an anti-affinity group
+    /// Fetch anti-affinity group
     ///
     /// Sends a `GET` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}`
@@ -53832,7 +53832,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_view(&self) -> builder::AntiAffinityGroupView;
-    /// Update an anti-affinity group
+    /// Update anti-affinity group
     ///
     /// Sends a `PUT` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}`
@@ -53850,7 +53850,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_update(&self) -> builder::AntiAffinityGroupUpdate;
-    /// Delete an anti-affinity group
+    /// Delete anti-affinity group
     ///
     /// Sends a `DELETE` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}`
@@ -53866,7 +53866,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_delete(&self) -> builder::AntiAffinityGroupDelete;
-    /// List members of an anti-affinity group
+    /// List anti-affinity group members
     ///
     /// Sends a `GET` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}/members`
@@ -53889,7 +53889,7 @@ pub trait ClientAffinityExt {
     ///    .await;
     /// ```
     fn anti_affinity_group_member_list(&self) -> builder::AntiAffinityGroupMemberList;
-    /// Fetch an anti-affinity group member
+    /// Fetch anti-affinity group member
     ///
     /// Sends a `GET` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
@@ -53910,7 +53910,7 @@ pub trait ClientAffinityExt {
     fn anti_affinity_group_member_instance_view(
         &self,
     ) -> builder::AntiAffinityGroupMemberInstanceView;
-    /// Add a member to an anti-affinity group
+    /// Add member to anti-affinity group
     ///
     /// Sends a `POST` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
@@ -53931,7 +53931,7 @@ pub trait ClientAffinityExt {
     fn anti_affinity_group_member_instance_add(
         &self,
     ) -> builder::AntiAffinityGroupMemberInstanceAdd;
-    /// Remove a member from an anti-affinity group
+    /// Remove member from anti-affinity group
     ///
     /// Sends a `DELETE` request to
     /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
