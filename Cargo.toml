@@ -23,15 +23,15 @@ crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
 dropshot = "0.13.0"
-env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 flume = "0.11.1"
 futures = "0.3.31"
+http = "1.2.0"
 httpmock = "0.7.0"
 humantime = "2"
+hyper = "1.5.2"
 indicatif = "0.17"
 libc = "0.2.169"
-log = "0.4.25"
 md5 = "0.7.0"
 newline-converter = "0.3.0"
 oauth2 = "5.0.0"
@@ -49,6 +49,8 @@ rcgen = "0.10.0"
 regex = "1.11.1"
 regress = "0.10.3"
 reqwest = "0.12.12"
+reqwest-middleware = { version = "0.4.1", features = ["json"] }
+reqwest-tracing = { version = "0.5.6" }
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.217", features = ["derive"] }
@@ -62,6 +64,8 @@ thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.43.0", features = ["full"] }
 toml = "0.8.20"
 toml_edit = "0.22.24"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3", features = ["env-filter","json"] }
 url = "2.5.4"
 uuid = { version = "1.13.1", features = ["serde", "v4"] }
 

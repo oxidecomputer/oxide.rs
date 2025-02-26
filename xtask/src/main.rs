@@ -10,7 +10,7 @@ use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
 use newline_converter::dos2unix;
-use progenitor::{GenerationSettings, Generator, TagStyle};
+use progenitor::{ClientType, GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
 
 #[derive(Parser)]
@@ -72,6 +72,7 @@ fn generate(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
             .with_tag(TagStyle::Separate)
+            .with_client_type(ClientType::ReqwestMiddleware)
             .with_derive("schemars::JsonSchema"),
     );
 

@@ -14,10 +14,14 @@ clap = { workspace = true, optional = true }
 dirs = { workspace = true }
 flume = { workspace = true }
 futures = { workspace = true }
+http = { workspace = true }
+hyper = { workspace = true }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
 regress = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }
+reqwest-middleware = { workspace = true }
+reqwest-tracing = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 schemars = { workspace = true }
@@ -25,6 +29,7 @@ thiserror =  { workspace = true }
 tokio = { workspace = true }
 toml = { workspace = true }
 toml_edit = { workspace = true }
+tracing = { workspace = true }
 uuid = { workspace = true }
 
 [dev-dependencies]

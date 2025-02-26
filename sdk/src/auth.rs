@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{
     collections::BTreeMap,
@@ -10,6 +10,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::tracing::RequestSpan;
 use crate::{Client, OxideAuthError};
 use reqwest::ClientBuilder;
 use serde::Deserialize;
@@ -173,12 +174,17 @@ impl Client {
                 .collect(),
         );
 
-        Ok(Self::new_with_client(
-            &host,
-            client_builder
+        let client = client_builder
+            .build()
+            .expect("failed to construct underlying client object");
+
+        let client = {
+            reqwest_middleware::ClientBuilder::new(client)
+                .with(reqwest_tracing::TracingMiddleware::<RequestSpan>::new())
                 .build()
-                .expect("failure to construct underlying client object"),
-        ))
+        };
+
+        Ok(Self::new_with_client(&host, client))
     }
 }
 

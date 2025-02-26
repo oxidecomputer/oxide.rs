@@ -51712,14 +51712,14 @@ pub mod types {
 /// Version: 20250212.0.0
 pub struct Client {
     pub(crate) baseurl: String,
-    pub(crate) client: reqwest::Client,
+    pub(crate) client: reqwest_middleware::ClientWithMiddleware,
 }
 
 impl Client {
     /// Create a new client.
     ///
     /// `baseurl` is the base URL provided to the internal
-    /// `reqwest::Client`, and should include a scheme and hostname,
+    /// HTTP client, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
     pub fn new(baseurl: &str) -> Self {
         #[cfg(not(target_arch = "wasm32"))]
@@ -51731,16 +51731,21 @@ impl Client {
         };
         #[cfg(target_arch = "wasm32")]
         let client = reqwest::ClientBuilder::new();
-        Self::new_with_client(baseurl, client.build().unwrap())
+        let built_client = client.build().unwrap();
+        let built_client = reqwest_middleware::ClientBuilder::new(built_client).build();
+        Self::new_with_client(baseurl, built_client)
     }
 
-    /// Construct a new client with an existing `reqwest::Client`,
+    /// Construct a new client with an existing HTTP client,
     /// allowing more control over its configuration.
     ///
     /// `baseurl` is the base URL provided to the internal
-    /// `reqwest::Client`, and should include a scheme and hostname,
+    /// HTTP client, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
-    pub fn new_with_client(baseurl: &str, client: reqwest::Client) -> Self {
+    pub fn new_with_client(
+        baseurl: &str,
+        client: reqwest_middleware::ClientWithMiddleware,
+    ) -> Self {
         Self {
             baseurl: baseurl.to_string(),
             client,
@@ -51752,8 +51757,8 @@ impl Client {
         &self.baseurl
     }
 
-    /// Get the internal `reqwest::Client` used to make requests.
-    pub fn client(&self) -> &reqwest::Client {
+    /// Get the internal HTTP client used to make requests.
+    pub fn client(&self) -> &reqwest_middleware::ClientWithMiddleware {
         &self.client
     }
 
