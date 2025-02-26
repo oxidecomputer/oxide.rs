@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::error::Error;
 use std::fs::{File, OpenOptions};
@@ -465,11 +465,11 @@ impl CmdAuthStatus {
 
             match result {
                 Ok(user) => {
-                    log::debug!("success response for {} (env): {:?}", host_env, user);
+                    tracing::debug!("success response for {} (env): {:?}", host_env, user);
                     println_nopipe!("Logged in to {} as {}", host_env, user.id)
                 }
                 Err(e) => {
-                    log::debug!("error response for {} (env): {:#}", host_env, e);
+                    tracing::debug!("error response for {} (env): {:#}", host_env, e);
                     println_nopipe!("{}: {}", host_env, Self::error_msg(&e))
                 }
             };
@@ -490,11 +490,11 @@ impl CmdAuthStatus {
 
                 let status = match result {
                     Ok(v) => {
-                        log::debug!("success response for {}: {:?}", profile_info.host, v);
+                        tracing::debug!("success response for {}: {:?}", profile_info.host, v);
                         "Authenticated".to_string()
                     }
                     Err(e) => {
-                        log::debug!("error response for {}: {:#}", profile_info.host, e);
+                        tracing::debug!("error response for {}: {:#}", profile_info.host, e);
                         Self::error_msg(&e)
                     }
                 };
@@ -565,6 +565,9 @@ impl CmdAuthStatus {
                 // This would be indicative of a programming error where we
                 // didn't supply all required values.
                 format!("Internal error: {}", msg)
+            }
+            oxide::Error::MiddlewareError(e) => {
+                format!("Middleware error: {}", e)
             }
             oxide::Error::InvalidUpgrade(_) => {
                 unreachable!("auth should not be establishing a websocket")
