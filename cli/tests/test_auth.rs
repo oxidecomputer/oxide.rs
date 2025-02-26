@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{
     fs::{read_to_string, write, File},
@@ -585,4 +585,36 @@ fn test_cmd_auth_debug_logging() {
         .assert()
         .failure()
         .stderr(str::contains("DEBUG"));
+}
+
+#[test]
+fn test_cmd_auth_debug_trace_span() {
+    let server = MockServer::start();
+
+    let oxide_mock = server.current_user_view(|when, then| {
+        when.into_inner()
+            .header("authorization", "Bearer oxide-token-good");
+
+        then.ok(&oxide::types::CurrentUser {
+            display_name: "privileged".to_string(),
+            id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+            silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+            silo_name: "funky-town".parse().unwrap(),
+        });
+    });
+
+    let debug_output = r#".*"target":"oxide::tracing","span":\{"host":"127.0.0.1","http.request.method":"GET","http.response.content_length":\d+,"http.response.status_code":200,"url":"http://127.0.0.1:\d+/v1/me","name":"Oxide API Request"\}.*"#;
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("auth")
+        .arg("status")
+        .env("RUST_LOG", "oxide=debug")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-good")
+        .assert()
+        .success()
+        .stderr(str::is_match(debug_output).unwrap());
+
+    oxide_mock.assert();
 }

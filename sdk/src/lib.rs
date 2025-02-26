@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 #![doc = include_str!("../README.md")]
@@ -16,6 +16,7 @@ mod auth;
 mod clap_feature;
 pub mod extras;
 mod generated_sdk;
+mod tracing;
 
 pub use auth::*;
 pub use generated_sdk::*;
