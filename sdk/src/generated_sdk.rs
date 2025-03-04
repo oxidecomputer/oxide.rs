@@ -678,6 +678,488 @@ pub mod types {
         }
     }
 
+    /// Identity-related metadata that's included in nearly all public API
+    /// objects
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identity-related metadata that's included in nearly all
+    /// public API objects",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "failure_domain",
+    ///    "id",
+    ///    "name",
+    ///    "policy",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "failure_domain": {
+    ///      "$ref": "#/components/schemas/FailureDomain"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "policy": {
+    ///      "$ref": "#/components/schemas/AffinityPolicy"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AffinityGroup {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        pub failure_domain: FailureDomain,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        pub policy: AffinityPolicy,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&AffinityGroup> for AffinityGroup {
+        fn from(value: &AffinityGroup) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AffinityGroup {
+        pub fn builder() -> builder::AffinityGroup {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for an `AffinityGroup`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for an `AffinityGroup`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "failure_domain",
+    ///    "name",
+    ///    "policy"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "failure_domain": {
+    ///      "$ref": "#/components/schemas/FailureDomain"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "policy": {
+    ///      "$ref": "#/components/schemas/AffinityPolicy"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AffinityGroupCreate {
+        pub description: ::std::string::String,
+        pub failure_domain: FailureDomain,
+        pub name: Name,
+        pub policy: AffinityPolicy,
+    }
+
+    impl ::std::convert::From<&AffinityGroupCreate> for AffinityGroupCreate {
+        fn from(value: &AffinityGroupCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AffinityGroupCreate {
+        pub fn builder() -> builder::AffinityGroupCreate {
+            Default::default()
+        }
+    }
+
+    /// A member of an Affinity Group
+    ///
+    /// Membership in a group is not exclusive - members may belong to multiple
+    /// affinity / anti-affinity groups.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A member of an Affinity Group\n\nMembership in a group
+    /// is not exclusive - members may belong to multiple affinity /
+    /// anti-affinity groups.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "An instance belonging to this group, identified by
+    /// UUID.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "instance"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum AffinityGroupMember {
+        /// An instance belonging to this group, identified by UUID.
+        #[serde(rename = "instance")]
+        Instance(TypedUuidForInstanceKind),
+    }
+
+    impl ::std::convert::From<&Self> for AffinityGroupMember {
+        fn from(value: &AffinityGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForInstanceKind> for AffinityGroupMember {
+        fn from(value: TypedUuidForInstanceKind) -> Self {
+            Self::Instance(value)
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AffinityGroupMember"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AffinityGroupMemberResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AffinityGroupMember>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AffinityGroupMemberResultsPage> for AffinityGroupMemberResultsPage {
+        fn from(value: &AffinityGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AffinityGroupMemberResultsPage {
+        pub fn builder() -> builder::AffinityGroupMemberResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AffinityGroup"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AffinityGroupResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AffinityGroup>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AffinityGroupResultsPage> for AffinityGroupResultsPage {
+        fn from(value: &AffinityGroupResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AffinityGroupResultsPage {
+        pub fn builder() -> builder::AffinityGroupResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Updateable properties of an `AffinityGroup`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of an `AffinityGroup`",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AffinityGroupUpdate {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&AffinityGroupUpdate> for AffinityGroupUpdate {
+        fn from(value: &AffinityGroupUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for AffinityGroupUpdate {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl AffinityGroupUpdate {
+        pub fn builder() -> builder::AffinityGroupUpdate {
+            Default::default()
+        }
+    }
+
+    /// Affinity policy used to describe "what to do when a request cannot be
+    /// satisfied"
+    ///
+    /// Used for both Affinity and Anti-Affinity Groups
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Affinity policy used to describe \"what to do when a
+    /// request cannot be satisfied\"\n\nUsed for both Affinity and
+    /// Anti-Affinity Groups",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "If the affinity request cannot be satisfied, allow
+    /// it anyway.\n\nThis enables a \"best-effort\" attempt to satisfy the
+    /// affinity policy.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "allow"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "If the affinity request cannot be satisfied, fail
+    /// explicitly.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "fail"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum AffinityPolicy {
+        /// If the affinity request cannot be satisfied, allow it anyway.
+        ///
+        /// This enables a "best-effort" attempt to satisfy the affinity policy.
+        #[serde(rename = "allow")]
+        Allow,
+        /// If the affinity request cannot be satisfied, fail explicitly.
+        #[serde(rename = "fail")]
+        Fail,
+    }
+
+    impl ::std::convert::From<&Self> for AffinityPolicy {
+        fn from(value: &AffinityPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for AffinityPolicy {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Allow => write!(f, "allow"),
+                Self::Fail => write!(f, "fail"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for AffinityPolicy {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "allow" => Ok(Self::Allow),
+                "fail" => Ok(Self::Fail),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AffinityPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AffinityPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AffinityPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// BGP message history for rack switches.
     ///
     /// <details><summary>JSON schema</summary>
@@ -902,6 +1384,381 @@ pub mod types {
     impl ::std::convert::From<::std::vec::Vec<IpNet>> for AllowedSourceIps {
         fn from(value: ::std::vec::Vec<IpNet>) -> Self {
             Self::List(value)
+        }
+    }
+
+    /// Identity-related metadata that's included in nearly all public API
+    /// objects
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identity-related metadata that's included in nearly all
+    /// public API objects",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "failure_domain",
+    ///    "id",
+    ///    "name",
+    ///    "policy",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "failure_domain": {
+    ///      "$ref": "#/components/schemas/FailureDomain"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "policy": {
+    ///      "$ref": "#/components/schemas/AffinityPolicy"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AntiAffinityGroup {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        pub failure_domain: FailureDomain,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        pub policy: AffinityPolicy,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroup> for AntiAffinityGroup {
+        fn from(value: &AntiAffinityGroup) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AntiAffinityGroup {
+        pub fn builder() -> builder::AntiAffinityGroup {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for an `AntiAffinityGroup`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for an `AntiAffinityGroup`",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "failure_domain",
+    ///    "name",
+    ///    "policy"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "failure_domain": {
+    ///      "$ref": "#/components/schemas/FailureDomain"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "policy": {
+    ///      "$ref": "#/components/schemas/AffinityPolicy"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AntiAffinityGroupCreate {
+        pub description: ::std::string::String,
+        pub failure_domain: FailureDomain,
+        pub name: Name,
+        pub policy: AffinityPolicy,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupCreate> for AntiAffinityGroupCreate {
+        fn from(value: &AntiAffinityGroupCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AntiAffinityGroupCreate {
+        pub fn builder() -> builder::AntiAffinityGroupCreate {
+            Default::default()
+        }
+    }
+
+    /// A member of an Anti-Affinity Group
+    ///
+    /// Membership in a group is not exclusive - members may belong to multiple
+    /// affinity / anti-affinity groups.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A member of an Anti-Affinity Group\n\nMembership in a
+    /// group is not exclusive - members may belong to multiple affinity /
+    /// anti-affinity groups.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "An instance belonging to this group, identified by
+    /// UUID.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "instance"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum AntiAffinityGroupMember {
+        /// An instance belonging to this group, identified by UUID.
+        #[serde(rename = "instance")]
+        Instance(TypedUuidForInstanceKind),
+    }
+
+    impl ::std::convert::From<&Self> for AntiAffinityGroupMember {
+        fn from(value: &AntiAffinityGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForInstanceKind> for AntiAffinityGroupMember {
+        fn from(value: TypedUuidForInstanceKind) -> Self {
+            Self::Instance(value)
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AntiAffinityGroupMember"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AntiAffinityGroupMemberResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AntiAffinityGroupMember>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupMemberResultsPage>
+        for AntiAffinityGroupMemberResultsPage
+    {
+        fn from(value: &AntiAffinityGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AntiAffinityGroupMemberResultsPage {
+        pub fn builder() -> builder::AntiAffinityGroupMemberResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AntiAffinityGroup"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AntiAffinityGroupResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AntiAffinityGroup>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupResultsPage> for AntiAffinityGroupResultsPage {
+        fn from(value: &AntiAffinityGroupResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AntiAffinityGroupResultsPage {
+        pub fn builder() -> builder::AntiAffinityGroupResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Updateable properties of an `AntiAffinityGroup`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of an `AntiAffinityGroup`",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AntiAffinityGroupUpdate {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+    }
+
+    impl ::std::convert::From<&AntiAffinityGroupUpdate> for AntiAffinityGroupUpdate {
+        fn from(value: &AntiAffinityGroupUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for AntiAffinityGroupUpdate {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    impl AntiAffinityGroupUpdate {
+        pub fn builder() -> builder::AntiAffinityGroupUpdate {
+            Default::default()
         }
     }
 
@@ -7626,6 +8483,95 @@ pub mod types {
         }
     }
 
+    /// Describes the scope of affinity for the purposes of co-location.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Describes the scope of affinity for the purposes of
+    /// co-location.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Instances are considered co-located if they are on
+    /// the same sled",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "sled"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum FailureDomain {
+        /// Instances are considered co-located if they are on the same sled
+        #[serde(rename = "sled")]
+        Sled,
+    }
+
+    impl ::std::convert::From<&Self> for FailureDomain {
+        fn from(value: &FailureDomain) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for FailureDomain {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Sled => write!(f, "sled"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for FailureDomain {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "sled" => Ok(Self::Sled),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for FailureDomain {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for FailureDomain {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for FailureDomain {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// The name and type information for a field of a timeseries schema.
     ///
     /// <details><summary>JSON schema</summary>
@@ -10543,10 +11489,10 @@ pub mod types {
     impl ::std::str::FromStr for Hostname {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 253usize {
+            if value.chars().count() > 253usize {
                 return Err("longer than 253 characters".into());
             }
-            if value.len() < 1usize {
+            if value.chars().count() < 1usize {
                 return Err("shorter than 1 characters".into());
             }
             if regress::Regex::new(
@@ -15113,10 +16059,10 @@ pub mod types {
     impl ::std::str::FromStr for L4PortRange {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 11usize {
+            if value.chars().count() > 11usize {
                 return Err("longer than 11 characters".into());
             }
-            if value.len() < 1usize {
+            if value.chars().count() < 1usize {
                 return Err("shorter than 1 characters".into());
             }
             if regress::Regex::new("^[0-9]{1,5}(-[0-9]{1,5})?$")
@@ -16248,10 +17194,10 @@ pub mod types {
     impl ::std::str::FromStr for MacAddr {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 17usize {
+            if value.chars().count() > 17usize {
                 return Err("longer than 17 characters".into());
             }
-            if value.len() < 5usize {
+            if value.chars().count() < 5usize {
                 return Err("shorter than 5 characters".into());
             }
             if regress::Regex::new("^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$")
@@ -16623,10 +17569,10 @@ pub mod types {
     impl ::std::str::FromStr for Name {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 63usize {
+            if value.chars().count() > 63usize {
                 return Err("longer than 63 characters".into());
             }
-            if value.len() < 1usize {
+            if value.chars().count() < 1usize {
                 return Err("shorter than 1 characters".into());
             }
             if regress :: Regex :: new ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$") . unwrap () . find (value) . is_none () { return Err ("doesn't match pattern \"^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$\"" . into ()) ; }
@@ -17342,7 +18288,7 @@ pub mod types {
     impl ::std::str::FromStr for Password {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 512usize {
+            if value.chars().count() > 512usize {
                 return Err("longer than 512 characters".into());
             }
             Ok(Self(value.to_string()))
@@ -19212,7 +20158,7 @@ pub mod types {
     impl ::std::str::FromStr for RoleName {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 63usize {
+            if value.chars().count() > 63usize {
                 return Err("longer than 63 characters".into());
             }
             if regress::Regex::new("[a-z-]+\\.[a-z-]+")
@@ -25880,6 +26826,81 @@ pub mod types {
         }
     }
 
+    /// `TypedUuidForInstanceKind`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TypedUuidForInstanceKind(pub ::uuid::Uuid);
+    impl ::std::ops::Deref for TypedUuidForInstanceKind {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForInstanceKind> for ::uuid::Uuid {
+        fn from(value: TypedUuidForInstanceKind) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TypedUuidForInstanceKind> for TypedUuidForInstanceKind {
+        fn from(value: &TypedUuidForInstanceKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForInstanceKind {
+        fn from(value: ::uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for TypedUuidForInstanceKind {
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TypedUuidForInstanceKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for TypedUuidForInstanceKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for TypedUuidForInstanceKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for TypedUuidForInstanceKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// `TypedUuidForSupportBundleKind`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26552,10 +27573,10 @@ pub mod types {
     impl ::std::str::FromStr for UserId {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.len() > 63usize {
+            if value.chars().count() > 63usize {
                 return Err("longer than 63 characters".into());
             }
-            if value.len() < 1usize {
+            if value.chars().count() < 1usize {
                 return Err("shorter than 1 characters".into());
             }
             if regress :: Regex :: new ("^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$") . unwrap () . find (value) . is_none () { return Err ("doesn't match pattern \"^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z]([a-zA-Z0-9-]*[a-zA-Z0-9]+)?$\"" . into ()) ; }
@@ -30078,6 +31099,422 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct AffinityGroup {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AffinityGroup {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    failure_domain: Err("no value supplied for failure_domain".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl AffinityGroup {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn failure_domain<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::FailureDomain>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failure_domain = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for failure_domain: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn policy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AffinityPolicy>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AffinityGroup> for super::AffinityGroup {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AffinityGroup,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    failure_domain: value.failure_domain?,
+                    id: value.id?,
+                    name: value.name?,
+                    policy: value.policy?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AffinityGroup> for AffinityGroup {
+            fn from(value: super::AffinityGroup) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    failure_domain: Ok(value.failure_domain),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    policy: Ok(value.policy),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AffinityGroupCreate {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AffinityGroupCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    failure_domain: Err("no value supplied for failure_domain".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
+                }
+            }
+        }
+
+        impl AffinityGroupCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn failure_domain<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::FailureDomain>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failure_domain = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for failure_domain: {}", e)
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn policy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AffinityPolicy>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AffinityGroupCreate> for super::AffinityGroupCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AffinityGroupCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    failure_domain: value.failure_domain?,
+                    name: value.name?,
+                    policy: value.policy?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AffinityGroupCreate> for AffinityGroupCreate {
+            fn from(value: super::AffinityGroupCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    failure_domain: Ok(value.failure_domain),
+                    name: Ok(value.name),
+                    policy: Ok(value.policy),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AffinityGroupMemberResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::AffinityGroupMember>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AffinityGroupMemberResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AffinityGroupMemberResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AffinityGroupMember>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AffinityGroupMemberResultsPage>
+            for super::AffinityGroupMemberResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AffinityGroupMemberResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AffinityGroupMemberResultsPage>
+            for AffinityGroupMemberResultsPage
+        {
+            fn from(value: super::AffinityGroupMemberResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AffinityGroupResultsPage {
+            items:
+                ::std::result::Result<::std::vec::Vec<super::AffinityGroup>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AffinityGroupResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AffinityGroupResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AffinityGroup>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AffinityGroupResultsPage> for super::AffinityGroupResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AffinityGroupResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AffinityGroupResultsPage> for AffinityGroupResultsPage {
+            fn from(value: super::AffinityGroupResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AffinityGroupUpdate {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AffinityGroupUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AffinityGroupUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AffinityGroupUpdate> for super::AffinityGroupUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AffinityGroupUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AffinityGroupUpdate> for AffinityGroupUpdate {
+            fn from(value: super::AffinityGroupUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct AggregateBgpMessageHistory {
             switch_histories: ::std::result::Result<
                 ::std::vec::Vec<super::SwitchBgpHistory>,
@@ -30248,6 +31685,424 @@ pub mod types {
             fn from(value: super::AllowListUpdate) -> Self {
                 Self {
                     allowed_ips: Ok(value.allowed_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AntiAffinityGroup {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AntiAffinityGroup {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    failure_domain: Err("no value supplied for failure_domain".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl AntiAffinityGroup {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn failure_domain<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::FailureDomain>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failure_domain = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for failure_domain: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn policy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AffinityPolicy>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AntiAffinityGroup> for super::AntiAffinityGroup {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AntiAffinityGroup,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    failure_domain: value.failure_domain?,
+                    id: value.id?,
+                    name: value.name?,
+                    policy: value.policy?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AntiAffinityGroup> for AntiAffinityGroup {
+            fn from(value: super::AntiAffinityGroup) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    failure_domain: Ok(value.failure_domain),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    policy: Ok(value.policy),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AntiAffinityGroupCreate {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AntiAffinityGroupCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    failure_domain: Err("no value supplied for failure_domain".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
+                }
+            }
+        }
+
+        impl AntiAffinityGroupCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn failure_domain<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::FailureDomain>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failure_domain = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for failure_domain: {}", e)
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn policy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AffinityPolicy>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AntiAffinityGroupCreate> for super::AntiAffinityGroupCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AntiAffinityGroupCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    failure_domain: value.failure_domain?,
+                    name: value.name?,
+                    policy: value.policy?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AntiAffinityGroupCreate> for AntiAffinityGroupCreate {
+            fn from(value: super::AntiAffinityGroupCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    failure_domain: Ok(value.failure_domain),
+                    name: Ok(value.name),
+                    policy: Ok(value.policy),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AntiAffinityGroupMemberResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::AntiAffinityGroupMember>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AntiAffinityGroupMemberResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AntiAffinityGroupMemberResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AntiAffinityGroupMember>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AntiAffinityGroupMemberResultsPage>
+            for super::AntiAffinityGroupMemberResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AntiAffinityGroupMemberResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AntiAffinityGroupMemberResultsPage>
+            for AntiAffinityGroupMemberResultsPage
+        {
+            fn from(value: super::AntiAffinityGroupMemberResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AntiAffinityGroupResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::AntiAffinityGroup>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AntiAffinityGroupResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AntiAffinityGroupResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AntiAffinityGroup>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AntiAffinityGroupResultsPage> for super::AntiAffinityGroupResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AntiAffinityGroupResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AntiAffinityGroupResultsPage> for AntiAffinityGroupResultsPage {
+            fn from(value: super::AntiAffinityGroupResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AntiAffinityGroupUpdate {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AntiAffinityGroupUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AntiAffinityGroupUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AntiAffinityGroupUpdate> for super::AntiAffinityGroupUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AntiAffinityGroupUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AntiAffinityGroupUpdate> for AntiAffinityGroupUpdate {
+            fn from(value: super::AntiAffinityGroupUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
                 }
             }
         }
@@ -51766,6 +53621,419 @@ impl Client {
     }
 }
 
+/// Affinity and anti-affinity groups give control over instance placement.
+pub trait ClientAffinityExt {
+    /// List affinity groups
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.affinity_group_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_list(&self) -> builder::AffinityGroupList;
+    /// Create affinity group
+    ///
+    /// Sends a `POST` request to `/v1/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.affinity_group_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_create(&self) -> builder::AffinityGroupCreate;
+    /// Fetch affinity group
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_view()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_view(&self) -> builder::AffinityGroupView;
+    /// Update affinity group
+    ///
+    /// Sends a `PUT` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.affinity_group_update()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate;
+    /// Delete affinity group
+    ///
+    /// Sends a `DELETE` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_delete()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete;
+    /// List affinity group members
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}/members`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.affinity_group_member_list()
+    ///    .affinity_group(affinity_group)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList;
+    /// Fetch affinity group member
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_view()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView;
+    /// Add member to affinity group
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_add()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd;
+    /// Remove member from affinity group
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_delete()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete;
+    /// List anti-affinity groups
+    ///
+    /// Sends a `GET` request to `/v1/anti-affinity-groups`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.anti_affinity_group_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_list(&self) -> builder::AntiAffinityGroupList;
+    /// Create anti-affinity group
+    ///
+    /// Sends a `POST` request to `/v1/anti-affinity-groups`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.anti_affinity_group_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_create(&self) -> builder::AntiAffinityGroupCreate;
+    /// Fetch anti-affinity group
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`: Name or ID of the anti affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.anti_affinity_group_view()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_view(&self) -> builder::AntiAffinityGroupView;
+    /// Update anti-affinity group
+    ///
+    /// Sends a `PUT` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`: Name or ID of the anti affinity group
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.anti_affinity_group_update()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_update(&self) -> builder::AntiAffinityGroupUpdate;
+    /// Delete anti-affinity group
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`: Name or ID of the anti affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.anti_affinity_group_delete()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_delete(&self) -> builder::AntiAffinityGroupDelete;
+    /// List anti-affinity group members
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}/members`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`: Name or ID of the anti affinity group
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.anti_affinity_group_member_list()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_member_list(&self) -> builder::AntiAffinityGroupMemberList;
+    /// Fetch anti-affinity group member
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+    /// {instance}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.anti_affinity_group_member_instance_view()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_member_instance_view(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceView;
+    /// Add member to anti-affinity group
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+    /// {instance}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.anti_affinity_group_member_instance_add()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_member_instance_add(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceAdd;
+    /// Remove member from anti-affinity group
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+    /// {instance}`
+    ///
+    /// Arguments:
+    /// - `anti_affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.anti_affinity_group_member_instance_delete()
+    ///    .anti_affinity_group(anti_affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn anti_affinity_group_member_instance_delete(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceDelete;
+}
+
+impl ClientAffinityExt for Client {
+    fn affinity_group_list(&self) -> builder::AffinityGroupList {
+        builder::AffinityGroupList::new(self)
+    }
+
+    fn affinity_group_create(&self) -> builder::AffinityGroupCreate {
+        builder::AffinityGroupCreate::new(self)
+    }
+
+    fn affinity_group_view(&self) -> builder::AffinityGroupView {
+        builder::AffinityGroupView::new(self)
+    }
+
+    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate {
+        builder::AffinityGroupUpdate::new(self)
+    }
+
+    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete {
+        builder::AffinityGroupDelete::new(self)
+    }
+
+    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList {
+        builder::AffinityGroupMemberList::new(self)
+    }
+
+    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView {
+        builder::AffinityGroupMemberInstanceView::new(self)
+    }
+
+    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd {
+        builder::AffinityGroupMemberInstanceAdd::new(self)
+    }
+
+    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete {
+        builder::AffinityGroupMemberInstanceDelete::new(self)
+    }
+
+    fn anti_affinity_group_list(&self) -> builder::AntiAffinityGroupList {
+        builder::AntiAffinityGroupList::new(self)
+    }
+
+    fn anti_affinity_group_create(&self) -> builder::AntiAffinityGroupCreate {
+        builder::AntiAffinityGroupCreate::new(self)
+    }
+
+    fn anti_affinity_group_view(&self) -> builder::AntiAffinityGroupView {
+        builder::AntiAffinityGroupView::new(self)
+    }
+
+    fn anti_affinity_group_update(&self) -> builder::AntiAffinityGroupUpdate {
+        builder::AntiAffinityGroupUpdate::new(self)
+    }
+
+    fn anti_affinity_group_delete(&self) -> builder::AntiAffinityGroupDelete {
+        builder::AntiAffinityGroupDelete::new(self)
+    }
+
+    fn anti_affinity_group_member_list(&self) -> builder::AntiAffinityGroupMemberList {
+        builder::AntiAffinityGroupMemberList::new(self)
+    }
+
+    fn anti_affinity_group_member_instance_view(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceView {
+        builder::AntiAffinityGroupMemberInstanceView::new(self)
+    }
+
+    fn anti_affinity_group_member_instance_add(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceAdd {
+        builder::AntiAffinityGroupMemberInstanceAdd::new(self)
+    }
+
+    fn anti_affinity_group_member_instance_delete(
+        &self,
+    ) -> builder::AntiAffinityGroupMemberInstanceDelete {
+        builder::AntiAffinityGroupMemberInstanceDelete::new(self)
+    }
+}
+
 /// Virtual disks are used to store instance-local data which includes the
 /// operating system.
 pub trait ClientDisksExt {
@@ -57797,6 +60065,2005 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_list`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_list`]: super::ClientAffinityExt::affinity_group_list
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> AffinityGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroupResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/affinity-groups", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/affinity-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AffinityGroup, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_create`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_create`]: super::ClientAffinityExt::affinity_group_create
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::AffinityGroupCreate, String>,
+    }
+
+    impl<'a> AffinityGroupCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AffinityGroupCreate>,
+            <V as std::convert::TryInto<types::AffinityGroupCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AffinityGroupCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AffinityGroupCreate,
+            ) -> types::builder::AffinityGroupCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::AffinityGroupCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/affinity-groups", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_view`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_view`]: super::ClientAffinityExt::affinity_group_view
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupView<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AffinityGroupView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                project,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_update`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_update`]: super::ClientAffinityExt::affinity_group_update
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupUpdate<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::AffinityGroupUpdate, String>,
+    }
+
+    impl<'a> AffinityGroupUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AffinityGroupUpdate>,
+            <V as std::convert::TryInto<types::AffinityGroupUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AffinityGroupUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AffinityGroupUpdate,
+            ) -> types::builder::AffinityGroupUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/affinity-groups/{affinity_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                project,
+                body,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::AffinityGroupUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_delete`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_delete`]: super::ClientAffinityExt::affinity_group_delete
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupDelete<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AffinityGroupDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/affinity-groups/{affinity_group}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                project,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_member_list`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_member_list`]: super::ClientAffinityExt::affinity_group_member_list
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupMemberList<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> AffinityGroupMemberList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/affinity-groups/{affinity_group}/members`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroupMemberResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                affinity_group,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}/members",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/affinity-groups/{affinity_group}/members`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AffinityGroupMember, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_view`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_member_instance_view`]: super::ClientAffinityExt::affinity_group_member_instance_view
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupMemberInstanceView<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AffinityGroupMemberInstanceView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                instance,
+                project,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_add`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_member_instance_add`]: super::ClientAffinityExt::affinity_group_member_instance_add
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupMemberInstanceAdd<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AffinityGroupMemberInstanceAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                instance,
+                project,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_delete`]
+    ///
+    /// [`ClientAffinityExt::affinity_group_member_instance_delete`]: super::ClientAffinityExt::affinity_group_member_instance_delete
+    #[derive(Debug, Clone)]
+    pub struct AffinityGroupMemberInstanceDelete<'a> {
+        client: &'a super::Client,
+        affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AffinityGroupMemberInstanceDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                affinity_group: Err("affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                affinity_group,
+                instance,
+                project,
+            } = self;
+            let affinity_group = affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_list`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_list`]: super::ClientAffinityExt::anti_affinity_group_list
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/anti-affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroupResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/anti-affinity-groups", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/anti-affinity-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AntiAffinityGroup, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_create`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_create`]: super::ClientAffinityExt::anti_affinity_group_create
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::AntiAffinityGroupCreate, String>,
+    }
+
+    impl<'a> AntiAffinityGroupCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AntiAffinityGroupCreate>,
+            <V as std::convert::TryInto<types::AntiAffinityGroupCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `AntiAffinityGroupCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AntiAffinityGroupCreate,
+            ) -> types::builder::AntiAffinityGroupCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/anti-affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::AntiAffinityGroupCreate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/anti-affinity-groups", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_view`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_view`]: super::ClientAffinityExt::anti_affinity_group_view
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupView<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                project,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_update`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_update`]: super::ClientAffinityExt::anti_affinity_group_update
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupUpdate<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::AntiAffinityGroupUpdate, String>,
+    }
+
+    impl<'a> AntiAffinityGroupUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AntiAffinityGroupUpdate>,
+            <V as std::convert::TryInto<types::AntiAffinityGroupUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `AntiAffinityGroupUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AntiAffinityGroupUpdate,
+            ) -> types::builder::AntiAffinityGroupUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                project,
+                body,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::AntiAffinityGroupUpdate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_delete`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_delete`]: super::ClientAffinityExt::anti_affinity_group_delete
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupDelete<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                project,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientAffinityExt::anti_affinity_group_member_list`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_member_list`]: super::ClientAffinityExt::anti_affinity_group_member_list
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupMemberList<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupMemberList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}/members`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroupMemberResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                anti_affinity_group,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}/members",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}/members`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AntiAffinityGroupMember, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_view`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_view`]: super::ClientAffinityExt::anti_affinity_group_member_instance_view
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupMemberInstanceView<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupMemberInstanceView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+        /// {instance}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                instance,
+                project,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_add`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_add`]: super::ClientAffinityExt::anti_affinity_group_member_instance_add
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupMemberInstanceAdd<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupMemberInstanceAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+        /// {instance}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                instance,
+                project,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_delete`]
+    ///
+    /// [`ClientAffinityExt::anti_affinity_group_member_instance_delete`]: super::ClientAffinityExt::anti_affinity_group_member_instance_delete
+    #[derive(Debug, Clone)]
+    pub struct AntiAffinityGroupMemberInstanceDelete<'a> {
+        client: &'a super::Client,
+        anti_affinity_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> AntiAffinityGroupMemberInstanceDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                anti_affinity_group: Err("anti_affinity_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn anti_affinity_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.anti_affinity_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for anti_affinity_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/anti-affinity-groups/{anti_affinity_group}/members/instance/
+        /// {instance}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                anti_affinity_group,
+                instance,
+                project,
+            } = self;
+            let anti_affinity_group = anti_affinity_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/anti-affinity-groups/{}/members/instance/{}",
+                client.baseurl,
+                encode_path(&anti_affinity_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -78647,6 +82914,7 @@ pub mod builder {
 pub mod prelude {
     #[allow(unused_imports)]
     pub use super::Client;
+    pub use super::ClientAffinityExt;
     pub use super::ClientDisksExt;
     pub use super::ClientFloatingIpsExt;
     pub use super::ClientHiddenExt;

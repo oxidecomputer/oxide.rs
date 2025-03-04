@@ -346,6 +346,37 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceEphemeralIpDetach => Some("instance external-ip detach-ephemeral"),
         CliCommand::InstanceSshPublicKeyList => Some("instance ssh-key list"),
 
+        CliCommand::AffinityGroupList => Some("instance group affinity list"),
+        CliCommand::AffinityGroupCreate => Some("instance group affinity create"),
+        CliCommand::AffinityGroupView => Some("instance group affinity view"),
+        CliCommand::AffinityGroupUpdate => Some("instance group affinity update"),
+        CliCommand::AffinityGroupDelete => Some("instance group affinity delete"),
+        CliCommand::AffinityGroupMemberList => Some("instance group affinity member list"),
+        CliCommand::AffinityGroupMemberInstanceView => {
+            Some("instance group affinity member view-instance")
+        }
+        CliCommand::AffinityGroupMemberInstanceAdd => {
+            Some("instance group affinity member add-instance")
+        }
+        CliCommand::AffinityGroupMemberInstanceDelete => {
+            Some("instance group affinity member remove-instance")
+        }
+        CliCommand::AntiAffinityGroupList => Some("instance group anti-affinity list"),
+        CliCommand::AntiAffinityGroupCreate => Some("instance group anti-affinity create"),
+        CliCommand::AntiAffinityGroupView => Some("instance group anti-affinity view"),
+        CliCommand::AntiAffinityGroupUpdate => Some("instance group anti-affinity update"),
+        CliCommand::AntiAffinityGroupDelete => Some("instance group anti-affinity delete"),
+        CliCommand::AntiAffinityGroupMemberList => Some("instance group anti-affinity member list"),
+        CliCommand::AntiAffinityGroupMemberInstanceView => {
+            Some("instance group anti-affinity member view-instance")
+        }
+        CliCommand::AntiAffinityGroupMemberInstanceAdd => {
+            Some("instance group anti-affinity member add-instance")
+        }
+        CliCommand::AntiAffinityGroupMemberInstanceDelete => {
+            Some("instance group anti-affinity member remove-instance")
+        }
+
         CliCommand::ProjectList => Some("project list"),
         CliCommand::ProjectCreate => Some("project create"),
         CliCommand::ProjectView => Some("project view"),
