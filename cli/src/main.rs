@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 #![cfg_attr(not(test), deny(clippy::print_stdout, clippy::print_stderr))]
@@ -100,7 +100,12 @@ pub fn make_cli() -> NewCli<'static> {
 async fn main() {
     let new_cli = make_cli();
 
-    if let Err(e) = new_cli.run().await {
+    // Spawn a task so we get this potentially chunky Future off the
+    // main thread's stack.
+    let result = tokio::spawn(async move { new_cli.run().await })
+        .await
+        .unwrap();
+    if let Err(e) = result {
         if let Some(io_err) = e.downcast_ref::<io::Error>() {
             if io_err.kind() == io::ErrorKind::BrokenPipe {
                 return;
