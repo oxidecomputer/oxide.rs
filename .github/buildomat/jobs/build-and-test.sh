@@ -10,6 +10,8 @@ set -o errexit
 set -o pipefail
 set -o xtrace
 
+rustup show active-toolchain || rustup toolchain install
+
 cargo --version
 rustc --version
 
