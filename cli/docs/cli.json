@@ -1766,6 +1766,530 @@
           ]
         },
         {
+          "name": "group",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "affinity",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create affinity group",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "failure-domain",
+                      "values": [
+                        "sled"
+                      ]
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "policy",
+                      "values": [
+                        "allow",
+                        "fail"
+                      ]
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete affinity group",
+                  "args": [
+                    {
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List affinity groups",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "member",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add-instance",
+                      "about": "Add member to affinity group",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List affinity group members",
+                      "args": [
+                        {
+                          "long": "affinity-group",
+                          "help": "Name or ID of the affinity group"
+                        },
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove-instance",
+                      "about": "Remove member from affinity group",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view-instance",
+                      "about": "Fetch affinity group member",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update affinity group",
+                  "args": [
+                    {
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch affinity group",
+                  "args": [
+                    {
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "anti-affinity",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create anti-affinity group",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "failure-domain",
+                      "values": [
+                        "sled"
+                      ]
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "policy",
+                      "values": [
+                        "allow",
+                        "fail"
+                      ]
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete anti-affinity group",
+                  "args": [
+                    {
+                      "long": "anti-affinity-group",
+                      "help": "Name or ID of the anti affinity group"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List anti-affinity groups",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "member",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add-instance",
+                      "about": "Add member to anti-affinity group",
+                      "args": [
+                        {
+                          "long": "anti-affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List anti-affinity group members",
+                      "args": [
+                        {
+                          "long": "anti-affinity-group",
+                          "help": "Name or ID of the anti affinity group"
+                        },
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove-instance",
+                      "about": "Remove member from anti-affinity group",
+                      "args": [
+                        {
+                          "long": "anti-affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view-instance",
+                      "about": "Fetch anti-affinity group member",
+                      "args": [
+                        {
+                          "long": "anti-affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update anti-affinity group",
+                  "args": [
+                    {
+                      "long": "anti-affinity-group",
+                      "help": "Name or ID of the anti affinity group"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch anti-affinity group",
+                  "args": [
+                    {
+                      "long": "anti-affinity-group",
+                      "help": "Name or ID of the anti affinity group"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "list",
           "about": "List instances",
           "args": [
