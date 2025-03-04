@@ -11,7 +11,7 @@ on:
 
 jobs:
   check-style:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Report cargo version
@@ -22,7 +22,7 @@ jobs:
         run: cargo fmt -- --check
 
   clippy-lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Report cargo version
@@ -36,7 +36,7 @@ jobs:
         run: cargo clippy --all-targets -- --deny warnings --allow clippy::style
 
   check-generation:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install nightly rustfmt
@@ -54,7 +54,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-latest]
+        os: [ubuntu-24.04, windows-2022, macos-latest]
         features: [ all, default ]
         include:
           - features: all
