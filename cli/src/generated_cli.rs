@@ -280,6 +280,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
+            CliCommand::TargetReleaseGet => Self::cli_target_release_get(),
+            CliCommand::TargetReleaseSet => Self::cli_target_release_set(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -6378,6 +6380,50 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
+    pub fn cli_target_release_get() -> ::clap::Command {
+        ::clap::Command::new("")
+            .about("Get the current target release of the rack's system software")
+            .long_about(
+                "This may not correspond to the actual software running on the rack at the time \
+                 of request; it is instead the release that the rack reconfigurator should be \
+                 moving towards as a goal state. After some number of planning and execution \
+                 phases, the software running on the rack should eventually correspond to the \
+                 release described here.",
+            )
+    }
+
+    pub fn cli_target_release_set() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("system-version")
+                    .long("system-version")
+                    .value_parser(::clap::value_parser!(
+                        types::SetTargetReleaseParamsSystemVersion
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Version of the system software to make the target release."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set the current target release of the rack's system software")
+            .long_about(
+                "The rack reconfigurator will treat the software specified here as a goal state \
+                 for the rack's software, and attempt to asynchronously update to that release.",
+            )
+    }
+
     pub fn cli_silo_user_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -7951,6 +7997,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
             }
+            CliCommand::TargetReleaseGet => self.execute_target_release_get(matches).await,
+            CliCommand::TargetReleaseSet => self.execute_target_release_set(matches).await,
             CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
             CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
             CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
@@ -14980,6 +15028,59 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_target_release_get(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.target_release_get();
+        self.config
+            .execute_target_release_get(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_target_release_set(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.target_release_set();
+        if let Some(value) =
+            matches.get_one::<types::SetTargetReleaseParamsSystemVersion>("system-version")
+        {
+            request = request.body_map(|body| body.system_version(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_target_release_set(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_silo_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
@@ -17861,6 +17962,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_target_release_get(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::TargetReleaseGet,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_target_release_set(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::TargetReleaseSet,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_silo_user_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -18327,6 +18444,8 @@ pub enum CliCommand {
     SiloQuotasUpdate,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
+    TargetReleaseGet,
+    TargetReleaseSet,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -18571,6 +18690,8 @@ impl CliCommand {
             CliCommand::SiloQuotasUpdate,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
+            CliCommand::TargetReleaseGet,
+            CliCommand::TargetReleaseSet,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
