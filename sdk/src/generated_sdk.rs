@@ -55180,11 +55180,11 @@ pub trait ClientHiddenExt {
     /// Sends a `GET` request to `/v1/system/update/target-release`
     ///
     /// ```ignore
-    /// let response = client.target_release_get()
+    /// let response = client.target_release_view()
     ///    .send()
     ///    .await;
     /// ```
-    fn target_release_get(&self) -> builder::TargetReleaseGet;
+    fn target_release_view(&self) -> builder::TargetReleaseView;
     /// Set the current target release of the rack's system software
     ///
     /// The rack reconfigurator will treat the software specified here as a goal
@@ -55194,12 +55194,12 @@ pub trait ClientHiddenExt {
     /// Sends a `PUT` request to `/v1/system/update/target-release`
     ///
     /// ```ignore
-    /// let response = client.target_release_set()
+    /// let response = client.target_release_update()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn target_release_set(&self) -> builder::TargetReleaseSet;
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -55290,12 +55290,12 @@ impl ClientHiddenExt for Client {
         builder::Logout::new(self)
     }
 
-    fn target_release_get(&self) -> builder::TargetReleaseGet {
-        builder::TargetReleaseGet::new(self)
+    fn target_release_view(&self) -> builder::TargetReleaseView {
+        builder::TargetReleaseView::new(self)
     }
 
-    fn target_release_set(&self) -> builder::TargetReleaseSet {
-        builder::TargetReleaseSet::new(self)
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate {
+        builder::TargetReleaseUpdate::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery {
@@ -79784,15 +79784,15 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::target_release_get`]
+    /// Builder for [`ClientHiddenExt::target_release_view`]
     ///
-    /// [`ClientHiddenExt::target_release_get`]: super::ClientHiddenExt::target_release_get
+    /// [`ClientHiddenExt::target_release_view`]: super::ClientHiddenExt::target_release_view
     #[derive(Debug, Clone)]
-    pub struct TargetReleaseGet<'a> {
+    pub struct TargetReleaseView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> TargetReleaseGet<'a> {
+    impl<'a> TargetReleaseView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
@@ -79827,16 +79827,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::target_release_set`]
+    /// Builder for [`ClientHiddenExt::target_release_update`]
     ///
-    /// [`ClientHiddenExt::target_release_set`]: super::ClientHiddenExt::target_release_set
+    /// [`ClientHiddenExt::target_release_update`]: super::ClientHiddenExt::target_release_update
     #[derive(Debug, Clone)]
-    pub struct TargetReleaseSet<'a> {
+    pub struct TargetReleaseUpdate<'a> {
         client: &'a super::Client,
         body: Result<types::builder::SetTargetReleaseParams, String>,
     }
 
-    impl<'a> TargetReleaseSet<'a> {
+    impl<'a> TargetReleaseUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,

@@ -16416,8 +16416,8 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseGetWhen(::httpmock::When);
-    impl TargetReleaseGetWhen {
+    pub struct TargetReleaseViewWhen(::httpmock::When);
+    impl TargetReleaseViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -16431,8 +16431,8 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseGetThen(::httpmock::Then);
-    impl TargetReleaseGetThen {
+    pub struct TargetReleaseViewThen(::httpmock::Then);
+    impl TargetReleaseViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -16471,8 +16471,8 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseSetWhen(::httpmock::When);
-    impl TargetReleaseSetWhen {
+    pub struct TargetReleaseUpdateWhen(::httpmock::When);
+    impl TargetReleaseUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -16490,8 +16490,8 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseSetThen(::httpmock::Then);
-    impl TargetReleaseSetThen {
+    pub struct TargetReleaseUpdateThen(::httpmock::Then);
+    impl TargetReleaseUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -20326,12 +20326,12 @@ pub trait MockServerExt {
             operations::SystemTimeseriesSchemaListWhen,
             operations::SystemTimeseriesSchemaListThen,
         );
-    fn target_release_get<F>(&self, config_fn: F) -> ::httpmock::Mock
+    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
-        F: FnOnce(operations::TargetReleaseGetWhen, operations::TargetReleaseGetThen);
-    fn target_release_set<F>(&self, config_fn: F) -> ::httpmock::Mock
+        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen);
+    fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
-        F: FnOnce(operations::TargetReleaseSetWhen, operations::TargetReleaseSetThen);
+        F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen);
     fn silo_user_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
@@ -23086,26 +23086,26 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn target_release_get<F>(&self, config_fn: F) -> ::httpmock::Mock
+    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
-        F: FnOnce(operations::TargetReleaseGetWhen, operations::TargetReleaseGetThen),
+        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::TargetReleaseGetWhen::new(when),
-                operations::TargetReleaseGetThen::new(then),
+                operations::TargetReleaseViewWhen::new(when),
+                operations::TargetReleaseViewThen::new(then),
             )
         })
     }
 
-    fn target_release_set<F>(&self, config_fn: F) -> ::httpmock::Mock
+    fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
-        F: FnOnce(operations::TargetReleaseSetWhen, operations::TargetReleaseSetThen),
+        F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::TargetReleaseSetWhen::new(when),
-                operations::TargetReleaseSetThen::new(then),
+                operations::TargetReleaseUpdateWhen::new(when),
+                operations::TargetReleaseUpdateThen::new(then),
             )
         })
     }

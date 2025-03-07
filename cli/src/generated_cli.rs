@@ -280,8 +280,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
-            CliCommand::TargetReleaseGet => Self::cli_target_release_get(),
-            CliCommand::TargetReleaseSet => Self::cli_target_release_set(),
+            CliCommand::TargetReleaseView => Self::cli_target_release_view(),
+            CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -6380,7 +6380,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
-    pub fn cli_target_release_get() -> ::clap::Command {
+    pub fn cli_target_release_view() -> ::clap::Command {
         ::clap::Command::new("")
             .about("Get the current target release of the rack's system software")
             .long_about(
@@ -6392,7 +6392,7 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_target_release_set() -> ::clap::Command {
+    pub fn cli_target_release_update() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("system-version")
@@ -7997,8 +7997,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
             }
-            CliCommand::TargetReleaseGet => self.execute_target_release_get(matches).await,
-            CliCommand::TargetReleaseSet => self.execute_target_release_set(matches).await,
+            CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
+            CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
             CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
             CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
             CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
@@ -15028,13 +15028,13 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_target_release_get(
+    pub async fn execute_target_release_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.target_release_get();
+        let mut request = self.client.target_release_view();
         self.config
-            .execute_target_release_get(matches, &mut request)?;
+            .execute_target_release_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -15048,11 +15048,11 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_target_release_set(
+    pub async fn execute_target_release_update(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.target_release_set();
+        let mut request = self.client.target_release_update();
         if let Some(value) =
             matches.get_one::<types::SetTargetReleaseParamsSystemVersion>("system-version")
         {
@@ -15067,7 +15067,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_target_release_set(matches, &mut request)?;
+            .execute_target_release_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -17962,18 +17962,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_target_release_get(
+    fn execute_target_release_view(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::TargetReleaseGet,
+        request: &mut builder::TargetReleaseView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_target_release_set(
+    fn execute_target_release_update(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::TargetReleaseSet,
+        request: &mut builder::TargetReleaseUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -18444,8 +18444,8 @@ pub enum CliCommand {
     SiloQuotasUpdate,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
-    TargetReleaseGet,
-    TargetReleaseSet,
+    TargetReleaseView,
+    TargetReleaseUpdate,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -18690,8 +18690,8 @@ impl CliCommand {
             CliCommand::SiloQuotasUpdate,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
-            CliCommand::TargetReleaseGet,
-            CliCommand::TargetReleaseSet,
+            CliCommand::TargetReleaseView,
+            CliCommand::TargetReleaseUpdate,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
