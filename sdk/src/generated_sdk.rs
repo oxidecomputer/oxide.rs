@@ -678,15 +678,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// View of an Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "View of an Affinity Group",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -694,6 +692,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "policy",
+    ///    "project_id",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -723,6 +722,10 @@ pub mod types {
     ///    "policy": {
     ///      "$ref": "#/components/schemas/AffinityPolicy"
     ///    },
+    ///    "project_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -749,6 +752,7 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
+        pub project_id: ::uuid::Uuid,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -1387,15 +1391,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// View of an Anti-Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "View of an Anti-Affinity Group",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -1403,6 +1405,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "policy",
+    ///    "project_id",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -1432,6 +1435,10 @@ pub mod types {
     ///    "policy": {
     ///      "$ref": "#/components/schemas/AffinityPolicy"
     ///    },
+    ///    "project_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -1458,6 +1465,7 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
+        pub project_id: ::uuid::Uuid,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -31504,6 +31512,7 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -31522,6 +31531,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     policy: Err("no value supplied for policy".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -31579,6 +31589,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -31612,6 +31632,7 @@ pub mod types {
                     id: value.id?,
                     name: value.name?,
                     policy: value.policy?,
+                    project_id: value.project_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -31626,6 +31647,7 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     policy: Ok(value.policy),
+                    project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -32095,6 +32117,7 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -32113,6 +32136,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     policy: Err("no value supplied for policy".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -32170,6 +32194,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -32203,6 +32237,7 @@ pub mod types {
                     id: value.id?,
                     name: value.name?,
                     policy: value.policy?,
+                    project_id: value.project_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -32217,6 +32252,7 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     policy: Ok(value.policy),
+                    project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
