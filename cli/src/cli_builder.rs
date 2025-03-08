@@ -635,6 +635,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SupportBundleHeadFile
         | CliCommand::SupportBundleIndex => None,
 
+        // Update is not fully implemented.
+        CliCommand::TargetReleaseView | CliCommand::TargetReleaseUpdate => None,
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
