@@ -678,15 +678,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// View of an Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "View of an Affinity Group",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -694,6 +692,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "policy",
+    ///    "project_id",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -723,6 +722,10 @@ pub mod types {
     ///    "policy": {
     ///      "$ref": "#/components/schemas/AffinityPolicy"
     ///    },
+    ///    "project_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -749,6 +752,7 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
+        pub project_id: ::uuid::Uuid,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -1387,15 +1391,13 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// View of an Anti-Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "View of an Anti-Affinity Group",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -1403,6 +1405,7 @@ pub mod types {
     ///    "id",
     ///    "name",
     ///    "policy",
+    ///    "project_id",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -1432,6 +1435,10 @@ pub mod types {
     ///    "policy": {
     ///      "$ref": "#/components/schemas/AffinityPolicy"
     ///    },
+    ///    "project_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -1458,6 +1465,7 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub policy: AffinityPolicy,
+        pub project_id: ::uuid::Uuid,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -21510,6 +21518,163 @@ pub mod types {
         }
     }
 
+    /// Parameters for PUT requests to `/v1/system/update/target-release`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for PUT requests to
+    /// `/v1/system/update/target-release`.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "system_version"
+    ///  ],
+    ///  "properties": {
+    ///    "system_version": {
+    ///      "description": "Version of the system software to make the target
+    /// release.",
+    ///      "type": "string",
+    ///      "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SetTargetReleaseParams {
+        /// Version of the system software to make the target release.
+        pub system_version: SetTargetReleaseParamsSystemVersion,
+    }
+
+    impl ::std::convert::From<&SetTargetReleaseParams> for SetTargetReleaseParams {
+        fn from(value: &SetTargetReleaseParams) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SetTargetReleaseParams {
+        pub fn builder() -> builder::SetTargetReleaseParams {
+            Default::default()
+        }
+    }
+
+    /// Version of the system software to make the target release.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Version of the system software to make the target
+    /// release.",
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct SetTargetReleaseParamsSystemVersion(::std::string::String);
+    impl ::std::ops::Deref for SetTargetReleaseParamsSystemVersion {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<SetTargetReleaseParamsSystemVersion> for ::std::string::String {
+        fn from(value: SetTargetReleaseParamsSystemVersion) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&SetTargetReleaseParamsSystemVersion>
+        for SetTargetReleaseParamsSystemVersion
+    {
+        fn from(value: &SetTargetReleaseParamsSystemVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for SetTargetReleaseParamsSystemVersion {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if regress::Regex::new(
+                "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                 [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+                 +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*\
+                            |\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*\
+                            [a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.\
+                            [0-9a-zA-Z-]+)*))?$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SetTargetReleaseParamsSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SetTargetReleaseParamsSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SetTargetReleaseParamsSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for SetTargetReleaseParamsSystemVersion {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// View of a Silo
     ///
     /// A Silo is the highest level unit of isolation.
@@ -26341,6 +26506,248 @@ pub mod types {
         }
     }
 
+    /// View of a system software target release.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a system software target release.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "generation",
+    ///    "release_source",
+    ///    "time_requested"
+    ///  ],
+    ///  "properties": {
+    ///    "generation": {
+    ///      "description": "The target-release generation number.",
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "release_source": {
+    ///      "description": "The source of the target release.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TargetReleaseSource"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_requested": {
+    ///      "description": "The time it was set as the target release.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TargetRelease {
+        /// The target-release generation number.
+        pub generation: i64,
+        /// The source of the target release.
+        pub release_source: TargetReleaseSource,
+        /// The time it was set as the target release.
+        pub time_requested: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&TargetRelease> for TargetRelease {
+        fn from(value: &TargetRelease) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TargetRelease {
+        pub fn builder() -> builder::TargetRelease {
+            Default::default()
+        }
+    }
+
+    /// Source of a system software target release.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Source of a system software target release.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Unspecified or unknown source (probably MUPdate).",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "unspecified"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The specified release of the rack's system
+    /// software.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "version"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "system_version"
+    ///          ]
+    ///        },
+    ///        "version": {
+    ///          "type": "string",
+    ///          "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "version")]
+    pub enum TargetReleaseSource {
+        #[serde(rename = "unspecified")]
+        Unspecified,
+        /// The specified release of the rack's system software.
+        #[serde(rename = "system_version")]
+        SystemVersion(TargetReleaseSourceVersion),
+    }
+
+    impl ::std::convert::From<&Self> for TargetReleaseSource {
+        fn from(value: &TargetReleaseSource) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<TargetReleaseSourceVersion> for TargetReleaseSource {
+        fn from(value: TargetReleaseSourceVersion) -> Self {
+            Self::SystemVersion(value)
+        }
+    }
+
+    /// `TargetReleaseSourceVersion`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TargetReleaseSourceVersion(::std::string::String);
+    impl ::std::ops::Deref for TargetReleaseSourceVersion {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TargetReleaseSourceVersion> for ::std::string::String {
+        fn from(value: TargetReleaseSourceVersion) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TargetReleaseSourceVersion> for TargetReleaseSourceVersion {
+        fn from(value: &TargetReleaseSourceVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for TargetReleaseSourceVersion {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if regress::Regex::new(
+                "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                 [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
+                 +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*\
+                            |\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*\
+                            [a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.\
+                            [0-9a-zA-Z-]+)*))?$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TargetReleaseSourceVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseSourceVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseSourceVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for TargetReleaseSourceVersion {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// A timeseries contains a timestamped set of values from one source.
     ///
     /// This includes the typed key-value pairs that uniquely identify it, and
@@ -31105,6 +31512,7 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -31123,6 +31531,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     policy: Err("no value supplied for policy".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -31180,6 +31589,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -31213,6 +31632,7 @@ pub mod types {
                     id: value.id?,
                     name: value.name?,
                     policy: value.policy?,
+                    project_id: value.project_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -31227,6 +31647,7 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     policy: Ok(value.policy),
+                    project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -31696,6 +32117,7 @@ pub mod types {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             policy: ::std::result::Result<super::AffinityPolicy, ::std::string::String>,
+            project_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -31714,6 +32136,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     policy: Err("no value supplied for policy".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -31771,6 +32194,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -31804,6 +32237,7 @@ pub mod types {
                     id: value.id?,
                     name: value.name?,
                     policy: value.policy?,
+                    project_id: value.project_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -31818,6 +32252,7 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     policy: Ok(value.policy),
+                    project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -46209,6 +46644,54 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SetTargetReleaseParams {
+            system_version: ::std::result::Result<
+                super::SetTargetReleaseParamsSystemVersion,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SetTargetReleaseParams {
+            fn default() -> Self {
+                Self {
+                    system_version: Err("no value supplied for system_version".to_string()),
+                }
+            }
+        }
+
+        impl SetTargetReleaseParams {
+            pub fn system_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SetTargetReleaseParamsSystemVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for system_version: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SetTargetReleaseParams> for super::SetTargetReleaseParams {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SetTargetReleaseParams,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    system_version: value.system_version?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SetTargetReleaseParams> for SetTargetReleaseParams {
+            fn from(value: super::SetTargetReleaseParams) -> Self {
+                Self {
+                    system_version: Ok(value.system_version),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Silo {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             discoverable: ::std::result::Result<bool, ::std::string::String>,
@@ -50595,6 +51078,83 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct TargetRelease {
+            generation: ::std::result::Result<i64, ::std::string::String>,
+            release_source:
+                ::std::result::Result<super::TargetReleaseSource, ::std::string::String>,
+            time_requested: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for TargetRelease {
+            fn default() -> Self {
+                Self {
+                    generation: Err("no value supplied for generation".to_string()),
+                    release_source: Err("no value supplied for release_source".to_string()),
+                    time_requested: Err("no value supplied for time_requested".to_string()),
+                }
+            }
+        }
+
+        impl TargetRelease {
+            pub fn generation<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.generation = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for generation: {}", e));
+                self
+            }
+            pub fn release_source<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TargetReleaseSource>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_source = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for release_source: {}", e)
+                });
+                self
+            }
+            pub fn time_requested<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_requested = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_requested: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TargetRelease> for super::TargetRelease {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TargetRelease,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    generation: value.generation?,
+                    release_source: value.release_source?,
+                    time_requested: value.time_requested?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TargetRelease> for TargetRelease {
+            fn from(value: super::TargetRelease) -> Self {
+                Self {
+                    generation: Ok(value.generation),
+                    release_source: Ok(value.release_source),
+                    time_requested: Ok(value.time_requested),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Timeseries {
             fields: ::std::result::Result<
                 ::std::collections::HashMap<::std::string::String, super::FieldValue>,
@@ -54645,6 +55205,37 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn logout(&self) -> builder::Logout;
+    /// Get the current target release of the rack's system software
+    ///
+    /// This may not correspond to the actual software running on the rack at
+    /// the time of request; it is instead the release that the rack
+    /// reconfigurator should be moving towards as a goal state. After some
+    /// number of planning and execution phases, the software running on the
+    /// rack should eventually correspond to the release described here.
+    ///
+    /// Sends a `GET` request to `/v1/system/update/target-release`
+    ///
+    /// ```ignore
+    /// let response = client.target_release_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn target_release_view(&self) -> builder::TargetReleaseView;
+    /// Set the current target release of the rack's system software
+    ///
+    /// The rack reconfigurator will treat the software specified here as a goal
+    /// state for the rack's software, and attempt to asynchronously update to
+    /// that release.
+    ///
+    /// Sends a `PUT` request to `/v1/system/update/target-release`
+    ///
+    /// ```ignore
+    /// let response = client.target_release_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -54733,6 +55324,14 @@ impl ClientHiddenExt for Client {
 
     fn logout(&self) -> builder::Logout {
         builder::Logout::new(self)
+    }
+
+    fn target_release_view(&self) -> builder::TargetReleaseView {
+        builder::TargetReleaseView::new(self)
+    }
+
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate {
+        builder::TargetReleaseUpdate::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery {
@@ -79218,6 +79817,124 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::target_release_view`]
+    ///
+    /// [`ClientHiddenExt::target_release_view`]: super::ClientHiddenExt::target_release_view
+    #[derive(Debug, Clone)]
+    pub struct TargetReleaseView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> TargetReleaseView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/update/target-release`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/update/target-release", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::target_release_update`]
+    ///
+    /// [`ClientHiddenExt::target_release_update`]: super::ClientHiddenExt::target_release_update
+    #[derive(Debug, Clone)]
+    pub struct TargetReleaseUpdate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SetTargetReleaseParams, String>,
+    }
+
+    impl<'a> TargetReleaseUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SetTargetReleaseParams>,
+            <V as std::convert::TryInto<types::SetTargetReleaseParams>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SetTargetReleaseParams` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SetTargetReleaseParams,
+            ) -> types::builder::SetTargetReleaseParams,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/update/target-release`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SetTargetReleaseParams::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/target-release", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
