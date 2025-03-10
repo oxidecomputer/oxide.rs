@@ -59,7 +59,7 @@ thiserror = "2.0.11"
 tempfile = "3.17.1"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
-tokio = { version = "1.43.0", features = ["full"] }
+tokio = { version = "1.44.0", features = ["full"] }
 toml = "0.8.20"
 toml_edit = "0.22.24"
 url = "2.5.4"
