@@ -2512,7 +2512,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#41458fb323061c51e9ecd4920794119e48ff293d"
+source = "git+https://github.com/oxidecomputer/progenitor#5d52ee7df3783cd3ea47d1674beae63c045389e7"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2535,7 +2535,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#41458fb323061c51e9ecd4920794119e48ff293d"
+source = "git+https://github.com/oxidecomputer/progenitor#5d52ee7df3783cd3ea47d1674beae63c045389e7"
 dependencies = [
  "heck",
  "http 1.2.0",
@@ -2607,9 +2607,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.38"
+version = "1.0.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e4dccaaaf89514f546c693ddc140f729f958c247918a13380cccc6078391acc"
+checksum = "c1f1914ce909e1658d9907913b4b91947430c7d9be598b15a1912935b8c04801"
 dependencies = [
  "proc-macro2",
 ]
@@ -3878,9 +3878,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.17"
+version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00e2473a93778eb0bad35909dff6a10d28e63f792f16ed15e404fca9d5eeedbe"
+checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
 name = "unicode-segmentation"
