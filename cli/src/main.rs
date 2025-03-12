@@ -100,12 +100,7 @@ pub fn make_cli() -> NewCli<'static> {
 async fn main() {
     let new_cli = make_cli();
 
-    // Spawn a task so we get this potentially chunky Future off the
-    // main thread's stack.
-    let result = tokio::spawn(async move { new_cli.run().await })
-        .await
-        .unwrap();
-    if let Err(e) = result {
+    if let Err(e) = new_cli.run().await {
         if let Some(io_err) = e.downcast_ref::<io::Error>() {
             if io_err.kind() == io::ErrorKind::BrokenPipe {
                 return;
