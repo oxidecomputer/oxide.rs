@@ -54128,6 +54128,7 @@ pub mod types {
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
+    pub(crate) inner: crate::LogCtx,
 }
 
 impl Client {
@@ -54136,7 +54137,7 @@ impl Client {
     /// `baseurl` is the base URL provided to the internal
     /// `reqwest::Client`, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
-    pub fn new(baseurl: &str) -> Self {
+    pub fn new(baseurl: &str, inner: crate::LogCtx) -> Self {
         #[cfg(not(target_arch = "wasm32"))]
         let client = {
             let dur = std::time::Duration::from_secs(15);
@@ -54146,7 +54147,7 @@ impl Client {
         };
         #[cfg(target_arch = "wasm32")]
         let client = reqwest::ClientBuilder::new();
-        Self::new_with_client(baseurl, client.build().unwrap())
+        Self::new_with_client(baseurl, client.build().unwrap(), inner)
     }
 
     /// Construct a new client with an existing `reqwest::Client`,
@@ -54155,10 +54156,11 @@ impl Client {
     /// `baseurl` is the base URL provided to the internal
     /// `reqwest::Client`, and should include a scheme and hostname,
     /// as well as port and a path stem if applicable.
-    pub fn new_with_client(baseurl: &str, client: reqwest::Client) -> Self {
+    pub fn new_with_client(baseurl: &str, client: reqwest::Client, inner: crate::LogCtx) -> Self {
         Self {
             baseurl: baseurl.to_string(),
             client,
+            inner,
         }
     }
 
@@ -54178,6 +54180,11 @@ impl Client {
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
         "20250212.0.0"
+    }
+
+    /// Return a reference to the inner type stored in `self`.
+    pub fn inner(&self) -> &crate::LogCtx {
+        &self.inner
     }
 }
 
@@ -59435,7 +59442,9 @@ pub mod builder {
             let url = format!("{}/device/auth", client.baseurl,);
             #[allow(unused_mut)]
             let mut request = client.client.post(url).form_urlencoded(&body)?.build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -59500,7 +59509,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -59567,7 +59578,9 @@ pub mod builder {
             let url = format!("{}/device/token", client.baseurl,);
             #[allow(unused_mut)]
             let mut request = client.client.post(url).form_urlencoded(&body)?.build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -59673,7 +59686,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -59807,7 +59822,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -59885,7 +59902,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -59963,7 +59982,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -60060,7 +60081,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60150,7 +60173,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -60216,7 +60241,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60280,7 +60307,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -60337,7 +60366,9 @@ pub mod builder {
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60388,7 +60419,9 @@ pub mod builder {
             );
             #[allow(unused_mut)]
             let mut request = client.client.head(url).build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60455,7 +60488,9 @@ pub mod builder {
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60522,7 +60557,9 @@ pub mod builder {
             );
             #[allow(unused_mut)]
             let mut request = client.client.head(url).build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60573,7 +60610,9 @@ pub mod builder {
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60660,7 +60699,9 @@ pub mod builder {
                 )
                 .body(body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60772,7 +60813,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60910,7 +60953,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -60991,7 +61036,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61101,7 +61148,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61180,7 +61229,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -61312,7 +61363,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61458,7 +61511,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61555,7 +61610,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -61650,7 +61707,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -61763,7 +61822,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61906,7 +61967,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -61988,7 +62051,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62103,7 +62168,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62183,7 +62250,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -62315,7 +62384,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62463,7 +62534,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62562,7 +62635,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -62659,7 +62734,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -62755,7 +62832,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62872,7 +62951,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -62935,7 +63016,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62998,7 +63081,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63110,7 +63195,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63244,7 +63331,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -63323,7 +63412,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63402,7 +63493,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63512,7 +63605,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63591,7 +63686,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63670,7 +63767,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63776,7 +63875,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63958,7 +64059,9 @@ pub mod builder {
                     &start_time,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64119,7 +64222,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64255,7 +64360,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -64334,7 +64441,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64442,7 +64551,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64521,7 +64632,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64629,7 +64742,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -64708,7 +64823,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -64804,7 +64921,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64910,7 +65029,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65022,7 +65143,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65157,7 +65280,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -65236,7 +65361,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65315,7 +65442,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -65393,7 +65522,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -65472,7 +65603,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -65584,7 +65717,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65718,7 +65853,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -65797,7 +65934,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65903,7 +66042,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65982,7 +66123,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -66112,7 +66255,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66265,7 +66410,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66371,7 +66518,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66452,7 +66601,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66561,7 +66712,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66641,7 +66794,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -66720,7 +66875,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66855,7 +67012,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66962,7 +67121,9 @@ pub mod builder {
                     ),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 101u16 => ResponseValue::upgrade(response).await,
@@ -67087,7 +67248,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67213,7 +67376,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -67292,7 +67457,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -67437,7 +67604,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67615,7 +67784,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -67743,7 +67914,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -67888,7 +68061,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68066,7 +68241,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -68193,7 +68370,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -68321,7 +68500,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68478,7 +68659,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -68575,7 +68758,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68686,7 +68871,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -68782,7 +68969,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68888,7 +69077,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68985,7 +69176,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -69026,7 +69219,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -69067,7 +69262,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69163,7 +69360,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69305,7 +69504,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69420,7 +69621,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -69480,7 +69683,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69540,7 +69745,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -69707,7 +69914,9 @@ pub mod builder {
                     &start_time,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69885,7 +70094,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70046,7 +70257,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("instance", &instance))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -70143,7 +70356,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("instance", &instance))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70274,7 +70489,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("instance", &instance))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70369,7 +70586,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("instance", &instance))
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -70410,7 +70629,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70453,7 +70674,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70524,7 +70747,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70620,7 +70845,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70735,7 +70962,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -70795,7 +71024,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70885,7 +71116,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70945,7 +71178,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -71007,7 +71242,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71101,7 +71338,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71213,7 +71452,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71347,7 +71588,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -71426,7 +71669,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71505,7 +71750,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -71601,7 +71848,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71707,7 +71956,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71854,7 +72105,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71998,7 +72251,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72104,7 +72359,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72200,7 +72457,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72317,7 +72576,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -72377,7 +72638,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72491,7 +72754,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72653,7 +72918,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72801,7 +73068,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72882,7 +73151,9 @@ pub mod builder {
                     &page_token,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73042,7 +73313,9 @@ pub mod builder {
                     &switch_port_id,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73189,7 +73462,9 @@ pub mod builder {
                     &switch_location,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73314,7 +73589,9 @@ pub mod builder {
                     &switch_location,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -73445,7 +73722,9 @@ pub mod builder {
                     &switch_location,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -73543,7 +73822,9 @@ pub mod builder {
                     &switch_location,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -73642,7 +73923,9 @@ pub mod builder {
                     &switch_location,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73738,7 +74021,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73844,7 +74129,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73957,7 +74244,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74091,7 +74380,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -74170,7 +74461,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -74264,7 +74557,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -74356,7 +74651,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -74437,7 +74734,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74533,7 +74832,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74648,7 +74949,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -74708,7 +75011,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74794,7 +75099,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74854,7 +75161,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -74952,7 +75261,9 @@ pub mod builder {
                     &page_token,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75071,7 +75382,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -75145,7 +75458,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75259,7 +75574,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75393,7 +75710,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -75502,7 +75821,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75577,7 +75898,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75639,7 +75962,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75680,7 +76005,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75760,7 +76087,9 @@ pub mod builder {
                     &page_token,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75862,7 +76191,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -75923,7 +76254,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76090,7 +76423,9 @@ pub mod builder {
                     &start_time,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76235,7 +76570,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76354,7 +76691,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -76418,7 +76757,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76534,7 +76875,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76622,7 +76965,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76691,7 +77036,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76762,7 +77109,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76833,7 +77182,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76876,7 +77227,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76972,7 +77325,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77087,7 +77442,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -77147,7 +77504,9 @@ pub mod builder {
                     &name_or_id,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -77245,7 +77604,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77321,7 +77682,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -77386,7 +77749,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -77454,7 +77819,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77495,7 +77862,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77558,7 +77927,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77619,7 +77990,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77663,7 +78036,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77760,7 +78135,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77882,7 +78259,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -77993,7 +78372,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -78114,7 +78495,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78245,7 +78628,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -78314,7 +78699,9 @@ pub mod builder {
                     &port_settings,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -78378,7 +78765,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78421,7 +78810,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78492,7 +78883,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78572,7 +78965,9 @@ pub mod builder {
                     &page_token,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78677,7 +79072,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78773,7 +79170,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78915,7 +79314,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79030,7 +79431,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -79090,7 +79493,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79150,7 +79555,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -79264,7 +79671,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79372,7 +79781,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79460,7 +79871,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79520,7 +79933,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79608,7 +80023,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79679,7 +80096,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79760,7 +80179,9 @@ pub mod builder {
                     &page_token,
                 ))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79848,7 +80269,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79923,7 +80346,9 @@ pub mod builder {
                 )
                 .json(&body)
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -80035,7 +80460,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80160,7 +80587,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80256,7 +80685,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80362,7 +80793,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80458,7 +80891,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80566,7 +81001,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80655,7 +81092,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80767,7 +81206,9 @@ pub mod builder {
                 ))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80855,7 +81296,9 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80933,7 +81376,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81045,7 +81490,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81189,7 +81636,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81359,7 +81808,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("router", &router))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -81469,7 +81920,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("router", &router))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81609,7 +82062,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("router", &router))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81720,7 +82175,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("router", &router))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -81848,7 +82305,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81999,7 +82458,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -82094,7 +82555,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82216,7 +82679,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82311,7 +82776,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -82439,7 +82906,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82590,7 +83059,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -82685,7 +83156,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82807,7 +83280,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82902,7 +83377,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -83050,7 +83527,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83212,7 +83691,9 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83346,7 +83827,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -83425,7 +83908,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83531,7 +84016,9 @@ pub mod builder {
                 .json(&body)
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83610,7 +84097,9 @@ pub mod builder {
                 )
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .build()?;
+            (crate::tracing::on_request_start)(&client.inner, &request);
             let result = client.client.execute(request).await;
+            (crate::tracing::on_request_end)(&client.inner, &result);
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),

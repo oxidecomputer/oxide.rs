@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 
@@ -11,6 +11,7 @@ use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 use clap::Parser;
 use newline_converter::dos2unix;
 use progenitor::{GenerationSettings, Generator, TagStyle};
+use quote::quote;
 use similar::{Algorithm, ChangeTag, TextDiff};
 
 #[derive(Parser)]
@@ -72,7 +73,14 @@ fn generate(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
             .with_tag(TagStyle::Separate)
-            .with_derive("schemars::JsonSchema"),
+            .with_derive("schemars::JsonSchema")
+            .with_inner_type(quote! { crate::LogCtx })
+            .with_pre_hook(quote! {
+                crate::tracing::on_request_start
+            })
+            .with_post_hook(quote! {
+                crate::tracing::on_request_end
+            }),
     );
 
     let mut error = false;

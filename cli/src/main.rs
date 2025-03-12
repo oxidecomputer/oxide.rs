@@ -100,16 +100,21 @@ pub fn make_cli() -> NewCli<'static> {
 async fn main() {
     let new_cli = make_cli();
 
-    if let Err(e) = new_cli.run().await {
-        if let Some(io_err) = e.downcast_ref::<io::Error>() {
-            if io_err.kind() == io::ErrorKind::BrokenPipe {
-                return;
-            }
-        }
+    // Spawn a task to ensure we have a task ID, which is needed capture complete debug logs.
+    let e = match tokio::spawn(async move { new_cli.run().await }).await {
+        Err(e) => e.into(),
+        Ok(Err(e)) => e,
+        Ok(Ok(())) => return,
+    };
 
-        eprintln_nopipe!("{e:#}");
-        std::process::exit(1)
+    if let Some(io_err) = e.downcast_ref::<io::Error>() {
+        if io_err.kind() == io::ErrorKind::BrokenPipe {
+            return;
+        }
     }
+
+    eprintln_nopipe!("{e:#}");
+    std::process::exit(1)
 }
 
 #[derive(Default)]
