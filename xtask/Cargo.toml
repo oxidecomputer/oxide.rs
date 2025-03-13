@@ -8,6 +8,7 @@ publish = false
 clap = { workspace = true }
 newline-converter = { workspace = true }
 progenitor = { workspace = true, default-features = false }
+quote = { workspace = true }
 regex = { workspace = true }
 rustfmt-wrapper = { workspace = true }
 serde_json = { workspace = true }

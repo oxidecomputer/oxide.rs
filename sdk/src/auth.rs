@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{
     collections::BTreeMap,
@@ -10,7 +10,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{Client, OxideAuthError};
+use crate::{Client, LogCtx, OxideAuthError};
 use reqwest::ClientBuilder;
 use serde::Deserialize;
 
@@ -178,6 +178,7 @@ impl Client {
             client_builder
                 .build()
                 .expect("failure to construct underlying client object"),
+            LogCtx::new(),
         ))
     }
 }
