@@ -230,7 +230,7 @@ impl<'a> NewCli<'a> {
         } = OxideCli::from_arg_matches(&matches).expect("failed to parse OxideCli from args");
 
         let env_filter = if debug {
-            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("debug"))
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("oxide=debug"))
         } else {
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
         };

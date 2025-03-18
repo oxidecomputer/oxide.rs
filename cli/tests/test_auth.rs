@@ -589,9 +589,9 @@ fn test_cmd_auth_debug_logging() {
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
+        .arg("--debug")
         .arg("auth")
         .arg("status")
-        .env("RUST_LOG", "oxide=debug")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "oxide-token-good")
         .assert()
