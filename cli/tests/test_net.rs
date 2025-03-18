@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use assert_cmd::Command;
 use chrono::prelude::*;
@@ -295,7 +295,7 @@ fn test_port_config() {
             then.ok(&switch1_qsfp0_view);
         });
 
-    env_logger::init();
+    tracing_subscriber::fmt().init();
 
     Command::cargo_bin("oxide")
         .unwrap()
