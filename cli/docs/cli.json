@@ -1928,6 +1928,8 @@
                         {
                           "long": "sort-by",
                           "values": [
+                            "name_ascending",
+                            "name_descending",
                             "id_ascending"
                           ]
                         }
@@ -2184,6 +2186,8 @@
                         {
                           "long": "sort-by",
                           "values": [
+                            "name_ascending",
+                            "name_descending",
                             "id_ascending"
                           ]
                         }

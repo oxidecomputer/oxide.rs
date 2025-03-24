@@ -890,9 +890,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -1175,9 +1177,11 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string(),
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -8719,7 +8723,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -9055,7 +9059,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
