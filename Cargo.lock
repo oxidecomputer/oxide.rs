@@ -853,7 +853,7 @@ dependencies = [
  "form_urlencoded",
  "futures",
  "hostname 0.4.0",
- "http 1.2.0",
+ "http 1.3.1",
  "http-body-util",
  "hyper 1.5.2",
  "hyper-util",
@@ -1253,7 +1253,7 @@ dependencies = [
  "fnv",
  "futures-core",
  "futures-sink",
- "http 1.2.0",
+ "http 1.3.1",
  "indexmap",
  "slab",
  "tokio",
@@ -1328,9 +1328,9 @@ dependencies = [
 
 [[package]]
 name = "http"
-version = "1.2.0"
+version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f16ca2af56261c99fba8bac40a10251ce8188205a4c448fbb745a2e4daa76fea"
+checksum = "f4a85d31aea989eead29a3aaf9e1115a180df8282431156e533de47660892565"
 dependencies = [
  "bytes",
  "fnv",
@@ -1355,7 +1355,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1efedce1fb8e6913f23e0c92de8e62cd5b772a67e7b3946df930a62566c93184"
 dependencies = [
  "bytes",
- "http 1.2.0",
+ "http 1.3.1",
 ]
 
 [[package]]
@@ -1366,7 +1366,7 @@ checksum = "793429d76616a256bcb62c2a2ec2bed781c8307e797e2598c50010f2bee2544f"
 dependencies = [
  "bytes",
  "futures-util",
- "http 1.2.0",
+ "http 1.3.1",
  "http-body 1.0.1",
  "pin-project-lite",
 ]
@@ -1450,7 +1450,7 @@ dependencies = [
  "futures-channel",
  "futures-util",
  "h2",
- "http 1.2.0",
+ "http 1.3.1",
  "http-body 1.0.1",
  "httparse",
  "httpdate",
@@ -1468,7 +1468,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d191583f3da1305256f22463b9bb0471acad48a4e534a5218b9963e9c1f59b2"
 dependencies = [
  "futures-util",
- "http 1.2.0",
+ "http 1.3.1",
  "hyper 1.5.2",
  "hyper-util",
  "rustls 0.23.20",
@@ -1504,7 +1504,7 @@ dependencies = [
  "bytes",
  "futures-channel",
  "futures-util",
- "http 1.2.0",
+ "http 1.3.1",
  "http-body 1.0.1",
  "hyper 1.5.2",
  "pin-project-lite",
@@ -2017,7 +2017,7 @@ dependencies = [
  "bytes",
  "encoding_rs",
  "futures-util",
- "http 1.2.0",
+ "http 1.3.1",
  "httparse",
  "memchr",
  "mime",
@@ -2111,7 +2111,7 @@ dependencies = [
  "base64 0.22.1",
  "chrono",
  "getrandom 0.2.15",
- "http 1.2.0",
+ "http 1.3.1",
  "rand",
  "reqwest",
  "serde",
@@ -2518,7 +2518,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#670cd38cc78e48a094e037568b9942cc5c6adc18"
+source = "git+https://github.com/oxidecomputer/progenitor#30a1da5fa064192a534ea9aa851b444e381656f0"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2541,10 +2541,10 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#670cd38cc78e48a094e037568b9942cc5c6adc18"
+source = "git+https://github.com/oxidecomputer/progenitor#30a1da5fa064192a534ea9aa851b444e381656f0"
 dependencies = [
  "heck",
- "http 1.2.0",
+ "http 1.3.1",
  "indexmap",
  "openapiv3",
  "proc-macro2",
@@ -2753,7 +2753,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "h2",
- "http 1.2.0",
+ "http 1.3.1",
  "http-body 1.0.1",
  "http-body-util",
  "hyper 1.5.2",
@@ -3853,7 +3853,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#ec9b7ae79c6cf50a7d618f4ddedf107a580584dd"
+source = "git+https://github.com/oxidecomputer/typify#6cf0d5b5632cc2c171ba46d93eeb23c6bff39ae4"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3862,7 +3862,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#ec9b7ae79c6cf50a7d618f4ddedf107a580584dd"
+source = "git+https://github.com/oxidecomputer/typify#6cf0d5b5632cc2c171ba46d93eeb23c6bff39ae4"
 dependencies = [
  "heck",
  "log",
@@ -3881,7 +3881,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#ec9b7ae79c6cf50a7d618f4ddedf107a580584dd"
+source = "git+https://github.com/oxidecomputer/typify#6cf0d5b5632cc2c171ba46d93eeb23c6bff39ae4"
 dependencies = [
  "proc-macro2",
  "quote",
