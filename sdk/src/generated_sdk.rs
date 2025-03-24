@@ -12351,22 +12351,6 @@ pub mod types {
     ///          ]
     ///        }
     ///      }
-    ///    },
-    ///    {
-    ///      "description": "Boot the Alpine ISO that ships with the Propolis
-    /// zone. Intended for development purposes only.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "you_can_boot_anything_as_long_as_its_alpine"
-    ///          ]
-    ///        }
-    ///      }
     ///    }
     ///  ]
     /// }
@@ -12379,8 +12363,6 @@ pub mod types {
     pub enum ImageSource {
         #[serde(rename = "snapshot")]
         Snapshot(::uuid::Uuid),
-        #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
-        YouCanBootAnythingAsLongAsItsAlpine,
     }
 
     impl ::std::convert::From<&Self> for ImageSource {
