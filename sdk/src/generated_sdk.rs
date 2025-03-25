@@ -55574,6 +55574,50 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
+    /// List affinity groups containing instance
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_affinity_group_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList;
+    /// List anti-affinity groups containing instance
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/anti-affinity-groups`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_anti_affinity_group_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_anti_affinity_group_list(&self) -> builder::InstanceAntiAffinityGroupList;
     /// List disks for instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/disks`
@@ -55924,6 +55968,14 @@ impl ClientInstancesExt for Client {
 
     fn instance_delete(&self) -> builder::InstanceDelete {
         builder::InstanceDelete::new(self)
+    }
+
+    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList {
+        builder::InstanceAffinityGroupList::new(self)
+    }
+
+    fn instance_anti_affinity_group_list(&self) -> builder::InstanceAntiAffinityGroupList {
+        builder::InstanceAntiAffinityGroupList::new(self)
     }
 
     fn instance_disk_list(&self) -> builder::InstanceDiskList {
@@ -66002,6 +66054,364 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_affinity_group_list`]
+    ///
+    /// [`ClientInstancesExt::instance_affinity_group_list`]: super::ClientInstancesExt::instance_affinity_group_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceAffinityGroupList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> InstanceAffinityGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AffinityGroupResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/affinity-groups",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/instances/{instance}/affinity-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AffinityGroup, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_anti_affinity_group_list`]
+    ///
+    /// [`ClientInstancesExt::instance_anti_affinity_group_list`]: super::ClientInstancesExt::instance_anti_affinity_group_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceAntiAffinityGroupList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> InstanceAntiAffinityGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/instances/{instance}/anti-affinity-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AntiAffinityGroupResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                instance,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/anti-affinity-groups",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/instances/{instance}/anti-affinity-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AntiAffinityGroup, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
         }
     }
 
