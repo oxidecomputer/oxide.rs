@@ -838,8 +838,7 @@ pub mod types {
     /// anti-affinity groups.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "An instance belonging to this group, identified by
-    /// UUID.",
+    ///      "description": "An instance belonging to this group",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -853,7 +852,23 @@ pub mod types {
     ///          ]
     ///        },
     ///        "value": {
-    ///          "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///          "type": "object",
+    ///          "required": [
+    ///            "id",
+    ///            "name",
+    ///            "run_state"
+    ///          ],
+    ///          "properties": {
+    ///            "id": {
+    ///              "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///            },
+    ///            "name": {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            },
+    ///            "run_state": {
+    ///              "$ref": "#/components/schemas/InstanceState"
+    ///            }
+    ///          }
     ///        }
     ///      }
     ///    }
@@ -866,20 +881,18 @@ pub mod types {
     )]
     #[serde(tag = "type", content = "value")]
     pub enum AffinityGroupMember {
-        /// An instance belonging to this group, identified by UUID.
+        /// An instance belonging to this group
         #[serde(rename = "instance")]
-        Instance(TypedUuidForInstanceKind),
+        Instance {
+            id: TypedUuidForInstanceKind,
+            name: Name,
+            run_state: InstanceState,
+        },
     }
 
     impl ::std::convert::From<&Self> for AffinityGroupMember {
         fn from(value: &AffinityGroupMember) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForInstanceKind> for AffinityGroupMember {
-        fn from(value: TypedUuidForInstanceKind) -> Self {
-            Self::Instance(value)
         }
     }
 
@@ -1551,8 +1564,7 @@ pub mod types {
     /// anti-affinity groups.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "An instance belonging to this group, identified by
-    /// UUID.",
+    ///      "description": "An instance belonging to this group",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -1566,7 +1578,23 @@ pub mod types {
     ///          ]
     ///        },
     ///        "value": {
-    ///          "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///          "type": "object",
+    ///          "required": [
+    ///            "id",
+    ///            "name",
+    ///            "run_state"
+    ///          ],
+    ///          "properties": {
+    ///            "id": {
+    ///              "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///            },
+    ///            "name": {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            },
+    ///            "run_state": {
+    ///              "$ref": "#/components/schemas/InstanceState"
+    ///            }
+    ///          }
     ///        }
     ///      }
     ///    }
@@ -1579,20 +1607,18 @@ pub mod types {
     )]
     #[serde(tag = "type", content = "value")]
     pub enum AntiAffinityGroupMember {
-        /// An instance belonging to this group, identified by UUID.
+        /// An instance belonging to this group
         #[serde(rename = "instance")]
-        Instance(TypedUuidForInstanceKind),
+        Instance {
+            id: TypedUuidForInstanceKind,
+            name: Name,
+            run_state: InstanceState,
+        },
     }
 
     impl ::std::convert::From<&Self> for AntiAffinityGroupMember {
         fn from(value: &AntiAffinityGroupMember) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForInstanceKind> for AntiAffinityGroupMember {
-        fn from(value: TypedUuidForInstanceKind) -> Self {
-            Self::Instance(value)
         }
     }
 
@@ -12325,22 +12351,6 @@ pub mod types {
     ///          ]
     ///        }
     ///      }
-    ///    },
-    ///    {
-    ///      "description": "Boot the Alpine ISO that ships with the Propolis
-    /// zone. Intended for development purposes only.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "you_can_boot_anything_as_long_as_its_alpine"
-    ///          ]
-    ///        }
-    ///      }
     ///    }
     ///  ]
     /// }
@@ -12353,8 +12363,6 @@ pub mod types {
     pub enum ImageSource {
         #[serde(rename = "snapshot")]
         Snapshot(::uuid::Uuid),
-        #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
-        YouCanBootAnythingAsLongAsItsAlpine,
     }
 
     impl ::std::convert::From<&Self> for ImageSource {
@@ -61205,7 +61213,7 @@ pub mod builder {
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> AffinityGroupMemberList<'a> {
@@ -61263,12 +61271,12 @@ pub mod builder {
 
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::IdSortMode>,
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
         {
             self.sort_by = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
             self
         }
 
@@ -62208,7 +62216,7 @@ pub mod builder {
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> AntiAffinityGroupMemberList<'a> {
@@ -62266,12 +62274,12 @@ pub mod builder {
 
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::IdSortMode>,
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
         {
             self.sort_by = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
             self
         }
 
