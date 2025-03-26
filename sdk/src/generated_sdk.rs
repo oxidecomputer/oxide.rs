@@ -829,16 +829,17 @@ pub mod types {
     /// Membership in a group is not exclusive - members may belong to multiple
     /// affinity / anti-affinity groups.
     ///
+    /// Affinity Groups can contain up to 32 members.
+    ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A member of an Affinity Group\n\nMembership in a group
-    /// is not exclusive - members may belong to multiple affinity /
-    /// anti-affinity groups.",
+    ///  "description": "A member of an Affinity Group\n\nMembership in a group is not exclusive - members may belong to multiple affinity / anti-affinity groups.\n\nAffinity Groups can contain up to 32 members.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "An instance belonging to this group",
+    ///      "description": "An instance belonging to this group\n\nInstances
+    /// can belong to up to 16 affinity groups.",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -882,6 +883,8 @@ pub mod types {
     #[serde(tag = "type", content = "value")]
     pub enum AffinityGroupMember {
         /// An instance belonging to this group
+        ///
+        /// Instances can belong to up to 16 affinity groups.
         #[serde(rename = "instance")]
         Instance {
             id: TypedUuidForInstanceKind,
@@ -1555,16 +1558,20 @@ pub mod types {
     /// Membership in a group is not exclusive - members may belong to multiple
     /// affinity / anti-affinity groups.
     ///
+    /// Anti-Affinity Groups can contain up to 32 members.
+    ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "A member of an Anti-Affinity Group\n\nMembership in a
     /// group is not exclusive - members may belong to multiple affinity /
-    /// anti-affinity groups.",
+    /// anti-affinity groups.\n\nAnti-Affinity Groups can contain up to 32
+    /// members.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "An instance belonging to this group",
+    ///      "description": "An instance belonging to this group\n\nInstances
+    /// can belong to up to 16 anti-affinity groups.",
     ///      "type": "object",
     ///      "required": [
     ///        "type",
@@ -1608,6 +1615,8 @@ pub mod types {
     #[serde(tag = "type", content = "value")]
     pub enum AntiAffinityGroupMember {
         /// An instance belonging to this group
+        ///
+        /// Instances can belong to up to 16 anti-affinity groups.
         #[serde(rename = "instance")]
         Instance {
             id: TypedUuidForInstanceKind,
