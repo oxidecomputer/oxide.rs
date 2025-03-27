@@ -12935,6 +12935,15 @@ pub mod types {
     ///    "ncpus"
     ///  ],
     ///  "properties": {
+    ///    "anti_affinity_groups": {
+    ///      "description": "Anti-Affinity groups which this instance should be
+    /// added.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
+    ///    },
     ///    "auto_restart_policy": {
     ///      "description": "The auto-restart policy for this instance.\n\nThis
     /// policy determines whether the instance should be automatically restarted
@@ -13089,6 +13098,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceCreate {
+        /// Anti-Affinity groups which this instance should be added.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub anti_affinity_groups: ::std::vec::Vec<NameOrId>,
         /// The auto-restart policy for this instance.
         ///
         /// This policy determines whether the instance should be automatically
@@ -40016,6 +40028,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
+            anti_affinity_groups:
+                ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
             auto_restart_policy: ::std::result::Result<
                 ::std::option::Option<super::InstanceAutoRestartPolicy>,
                 ::std::string::String,
@@ -40052,6 +40066,7 @@ pub mod types {
         impl ::std::default::Default for InstanceCreate {
             fn default() -> Self {
                 Self {
+                    anti_affinity_groups: Ok(Default::default()),
                     auto_restart_policy: Ok(Default::default()),
                     boot_disk: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
@@ -40070,6 +40085,19 @@ pub mod types {
         }
 
         impl InstanceCreate {
+            pub fn anti_affinity_groups<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::NameOrId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.anti_affinity_groups = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for anti_affinity_groups: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn auto_restart_policy<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<super::InstanceAutoRestartPolicy>>,
@@ -40214,6 +40242,7 @@ pub mod types {
                 value: InstanceCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    anti_affinity_groups: value.anti_affinity_groups?,
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
                     description: value.description?,
@@ -40234,6 +40263,7 @@ pub mod types {
         impl ::std::convert::From<super::InstanceCreate> for InstanceCreate {
             fn from(value: super::InstanceCreate) -> Self {
                 Self {
+                    anti_affinity_groups: Ok(value.anti_affinity_groups),
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk: Ok(value.boot_disk),
                     description: Ok(value.description),
