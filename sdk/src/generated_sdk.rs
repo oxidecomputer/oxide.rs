@@ -54228,166 +54228,8 @@ impl Client {
     }
 }
 
-/// Affinity and anti-affinity groups give control over instance placement.
+/// Anti-affinity groups give control over instance placement.
 pub trait ClientAffinityExt {
-    /// List affinity groups
-    ///
-    /// Sends a `GET` request to `/v1/affinity-groups`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `project`: Name or ID of the project
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.affinity_group_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .project(project)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_list(&self) -> builder::AffinityGroupList;
-    /// Create affinity group
-    ///
-    /// Sends a `POST` request to `/v1/affinity-groups`
-    ///
-    /// Arguments:
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.affinity_group_create()
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_create(&self) -> builder::AffinityGroupCreate;
-    /// Fetch affinity group
-    ///
-    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`: Name or ID of the affinity group
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.affinity_group_view()
-    ///    .affinity_group(affinity_group)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_view(&self) -> builder::AffinityGroupView;
-    /// Update affinity group
-    ///
-    /// Sends a `PUT` request to `/v1/affinity-groups/{affinity_group}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`: Name or ID of the affinity group
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.affinity_group_update()
-    ///    .affinity_group(affinity_group)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate;
-    /// Delete affinity group
-    ///
-    /// Sends a `DELETE` request to `/v1/affinity-groups/{affinity_group}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`: Name or ID of the affinity group
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.affinity_group_delete()
-    ///    .affinity_group(affinity_group)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete;
-    /// List affinity group members
-    ///
-    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}/members`
-    ///
-    /// Arguments:
-    /// - `affinity_group`: Name or ID of the affinity group
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `project`: Name or ID of the project
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.affinity_group_member_list()
-    ///    .affinity_group(affinity_group)
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .project(project)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList;
-    /// Fetch affinity group member
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`
-    /// - `instance`
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.affinity_group_member_instance_view()
-    ///    .affinity_group(affinity_group)
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView;
-    /// Add member to affinity group
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`
-    /// - `instance`
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.affinity_group_member_instance_add()
-    ///    .affinity_group(affinity_group)
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd;
-    /// Remove member from affinity group
-    ///
-    /// Sends a `DELETE` request to
-    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
-    ///
-    /// Arguments:
-    /// - `affinity_group`
-    /// - `instance`
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.affinity_group_member_instance_delete()
-    ///    .affinity_group(affinity_group)
-    ///    .instance(instance)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete;
     /// List anti-affinity groups
     ///
     /// Sends a `GET` request to `/v1/anti-affinity-groups`
@@ -54562,42 +54404,6 @@ pub trait ClientAffinityExt {
 }
 
 impl ClientAffinityExt for Client {
-    fn affinity_group_list(&self) -> builder::AffinityGroupList {
-        builder::AffinityGroupList::new(self)
-    }
-
-    fn affinity_group_create(&self) -> builder::AffinityGroupCreate {
-        builder::AffinityGroupCreate::new(self)
-    }
-
-    fn affinity_group_view(&self) -> builder::AffinityGroupView {
-        builder::AffinityGroupView::new(self)
-    }
-
-    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate {
-        builder::AffinityGroupUpdate::new(self)
-    }
-
-    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete {
-        builder::AffinityGroupDelete::new(self)
-    }
-
-    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList {
-        builder::AffinityGroupMemberList::new(self)
-    }
-
-    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView {
-        builder::AffinityGroupMemberInstanceView::new(self)
-    }
-
-    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd {
-        builder::AffinityGroupMemberInstanceAdd::new(self)
-    }
-
-    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete {
-        builder::AffinityGroupMemberInstanceDelete::new(self)
-    }
-
     fn anti_affinity_group_list(&self) -> builder::AntiAffinityGroupList {
         builder::AntiAffinityGroupList::new(self)
     }
@@ -55242,6 +55048,186 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn support_bundle_index(&self) -> builder::SupportBundleIndex;
+    /// List affinity groups
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.affinity_group_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_list(&self) -> builder::AffinityGroupList;
+    /// Create affinity group
+    ///
+    /// Sends a `POST` request to `/v1/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.affinity_group_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_create(&self) -> builder::AffinityGroupCreate;
+    /// Fetch affinity group
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_view()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_view(&self) -> builder::AffinityGroupView;
+    /// Update affinity group
+    ///
+    /// Sends a `PUT` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.affinity_group_update()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate;
+    /// Delete affinity group
+    ///
+    /// Sends a `DELETE` request to `/v1/affinity-groups/{affinity_group}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_delete()
+    ///    .affinity_group(affinity_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete;
+    /// List affinity group members
+    ///
+    /// Sends a `GET` request to `/v1/affinity-groups/{affinity_group}/members`
+    ///
+    /// Arguments:
+    /// - `affinity_group`: Name or ID of the affinity group
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.affinity_group_member_list()
+    ///    .affinity_group(affinity_group)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList;
+    /// Fetch affinity group member
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_view()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView;
+    /// Add member to affinity group
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_add()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd;
+    /// Remove member from affinity group
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/affinity-groups/{affinity_group}/members/instance/{instance}`
+    ///
+    /// Arguments:
+    /// - `affinity_group`
+    /// - `instance`
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.affinity_group_member_instance_delete()
+    ///    .affinity_group(affinity_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete;
+    /// List affinity groups containing instance
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/affinity-groups`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_affinity_group_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList;
     /// Log user out of web console by deleting session on client and server
     ///
     /// Sends a `POST` request to `/v1/logout`
@@ -55367,6 +55353,46 @@ impl ClientHiddenExt for Client {
 
     fn support_bundle_index(&self) -> builder::SupportBundleIndex {
         builder::SupportBundleIndex::new(self)
+    }
+
+    fn affinity_group_list(&self) -> builder::AffinityGroupList {
+        builder::AffinityGroupList::new(self)
+    }
+
+    fn affinity_group_create(&self) -> builder::AffinityGroupCreate {
+        builder::AffinityGroupCreate::new(self)
+    }
+
+    fn affinity_group_view(&self) -> builder::AffinityGroupView {
+        builder::AffinityGroupView::new(self)
+    }
+
+    fn affinity_group_update(&self) -> builder::AffinityGroupUpdate {
+        builder::AffinityGroupUpdate::new(self)
+    }
+
+    fn affinity_group_delete(&self) -> builder::AffinityGroupDelete {
+        builder::AffinityGroupDelete::new(self)
+    }
+
+    fn affinity_group_member_list(&self) -> builder::AffinityGroupMemberList {
+        builder::AffinityGroupMemberList::new(self)
+    }
+
+    fn affinity_group_member_instance_view(&self) -> builder::AffinityGroupMemberInstanceView {
+        builder::AffinityGroupMemberInstanceView::new(self)
+    }
+
+    fn affinity_group_member_instance_add(&self) -> builder::AffinityGroupMemberInstanceAdd {
+        builder::AffinityGroupMemberInstanceAdd::new(self)
+    }
+
+    fn affinity_group_member_instance_delete(&self) -> builder::AffinityGroupMemberInstanceDelete {
+        builder::AffinityGroupMemberInstanceDelete::new(self)
+    }
+
+    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList {
+        builder::InstanceAffinityGroupList::new(self)
     }
 
     fn logout(&self) -> builder::Logout {
@@ -55613,28 +55639,6 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
-    /// List affinity groups containing instance
-    ///
-    /// Sends a `GET` request to `/v1/instances/{instance}/affinity-groups`
-    ///
-    /// Arguments:
-    /// - `instance`: Name or ID of the instance
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `project`: Name or ID of the project
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.instance_affinity_group_list()
-    ///    .instance(instance)
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .project(project)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList;
     /// List anti-affinity groups containing instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/anti-affinity-groups`
@@ -56007,10 +56011,6 @@ impl ClientInstancesExt for Client {
 
     fn instance_delete(&self) -> builder::InstanceDelete {
         builder::InstanceDelete::new(self)
-    }
-
-    fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList {
-        builder::InstanceAffinityGroupList::new(self)
     }
 
     fn instance_anti_affinity_group_list(&self) -> builder::InstanceAntiAffinityGroupList {
@@ -60774,9 +60774,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_list`]
+    /// Builder for [`ClientHiddenExt::affinity_group_list`]
     ///
-    /// [`ClientAffinityExt::affinity_group_list`]: super::ClientAffinityExt::affinity_group_list
+    /// [`ClientHiddenExt::affinity_group_list`]: super::ClientHiddenExt::affinity_group_list
     #[derive(Debug, Clone)]
     pub struct AffinityGroupList<'a> {
         client: &'a super::Client,
@@ -60933,9 +60933,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_create`]
+    /// Builder for [`ClientHiddenExt::affinity_group_create`]
     ///
-    /// [`ClientAffinityExt::affinity_group_create`]: super::ClientAffinityExt::affinity_group_create
+    /// [`ClientHiddenExt::affinity_group_create`]: super::ClientHiddenExt::affinity_group_create
     #[derive(Debug, Clone)]
     pub struct AffinityGroupCreate<'a> {
         client: &'a super::Client,
@@ -61024,9 +61024,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_view`]
+    /// Builder for [`ClientHiddenExt::affinity_group_view`]
     ///
-    /// [`ClientAffinityExt::affinity_group_view`]: super::ClientAffinityExt::affinity_group_view
+    /// [`ClientHiddenExt::affinity_group_view`]: super::ClientHiddenExt::affinity_group_view
     #[derive(Debug, Clone)]
     pub struct AffinityGroupView<'a> {
         client: &'a super::Client,
@@ -61105,9 +61105,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_update`]
+    /// Builder for [`ClientHiddenExt::affinity_group_update`]
     ///
-    /// [`ClientAffinityExt::affinity_group_update`]: super::ClientAffinityExt::affinity_group_update
+    /// [`ClientHiddenExt::affinity_group_update`]: super::ClientHiddenExt::affinity_group_update
     #[derive(Debug, Clone)]
     pub struct AffinityGroupUpdate<'a> {
         client: &'a super::Client,
@@ -61215,9 +61215,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_delete`]
+    /// Builder for [`ClientHiddenExt::affinity_group_delete`]
     ///
-    /// [`ClientAffinityExt::affinity_group_delete`]: super::ClientAffinityExt::affinity_group_delete
+    /// [`ClientHiddenExt::affinity_group_delete`]: super::ClientHiddenExt::affinity_group_delete
     #[derive(Debug, Clone)]
     pub struct AffinityGroupDelete<'a> {
         client: &'a super::Client,
@@ -61294,9 +61294,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_member_list`]
+    /// Builder for [`ClientHiddenExt::affinity_group_member_list`]
     ///
-    /// [`ClientAffinityExt::affinity_group_member_list`]: super::ClientAffinityExt::affinity_group_member_list
+    /// [`ClientHiddenExt::affinity_group_member_list`]: super::ClientHiddenExt::affinity_group_member_list
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberList<'a> {
         client: &'a super::Client,
@@ -61475,9 +61475,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_view`]
+    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_view`]
     ///
-    /// [`ClientAffinityExt::affinity_group_member_instance_view`]: super::ClientAffinityExt::affinity_group_member_instance_view
+    /// [`ClientHiddenExt::affinity_group_member_instance_view`]: super::ClientHiddenExt::affinity_group_member_instance_view
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceView<'a> {
         client: &'a super::Client,
@@ -61572,9 +61572,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_add`]
+    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_add`]
     ///
-    /// [`ClientAffinityExt::affinity_group_member_instance_add`]: super::ClientAffinityExt::affinity_group_member_instance_add
+    /// [`ClientHiddenExt::affinity_group_member_instance_add`]: super::ClientHiddenExt::affinity_group_member_instance_add
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceAdd<'a> {
         client: &'a super::Client,
@@ -61669,9 +61669,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientAffinityExt::affinity_group_member_instance_delete`]
+    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_delete`]
     ///
-    /// [`ClientAffinityExt::affinity_group_member_instance_delete`]: super::ClientAffinityExt::affinity_group_member_instance_delete
+    /// [`ClientHiddenExt::affinity_group_member_instance_delete`]: super::ClientHiddenExt::affinity_group_member_instance_delete
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceDelete<'a> {
         client: &'a super::Client,
@@ -66096,9 +66096,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientInstancesExt::instance_affinity_group_list`]
+    /// Builder for [`ClientHiddenExt::instance_affinity_group_list`]
     ///
-    /// [`ClientInstancesExt::instance_affinity_group_list`]: super::ClientInstancesExt::instance_affinity_group_list
+    /// [`ClientHiddenExt::instance_affinity_group_list`]: super::ClientHiddenExt::instance_affinity_group_list
     #[derive(Debug, Clone)]
     pub struct InstanceAffinityGroupList<'a> {
         client: &'a super::Client,
