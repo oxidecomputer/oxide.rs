@@ -2518,7 +2518,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#725f09d714a73092ce9410723e35fcd3fecb6158"
+source = "git+https://github.com/oxidecomputer/progenitor#b22ebc2a97f566712d21ae435419978f13c64769"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2541,7 +2541,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.9.1"
-source = "git+https://github.com/oxidecomputer/progenitor#725f09d714a73092ce9410723e35fcd3fecb6158"
+source = "git+https://github.com/oxidecomputer/progenitor#b22ebc2a97f566712d21ae435419978f13c64769"
 dependencies = [
  "heck",
  "http 1.3.1",
@@ -3853,7 +3853,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#4bffebfaa538108cd041e677f2fdca159eee2119"
+source = "git+https://github.com/oxidecomputer/typify#630fc450a2f6127dd9b6d82efaf8f1eb020dc365"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3862,7 +3862,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#4bffebfaa538108cd041e677f2fdca159eee2119"
+source = "git+https://github.com/oxidecomputer/typify#630fc450a2f6127dd9b6d82efaf8f1eb020dc365"
 dependencies = [
  "heck",
  "log",
@@ -3881,7 +3881,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/typify#4bffebfaa538108cd041e677f2fdca159eee2119"
+source = "git+https://github.com/oxidecomputer/typify#630fc450a2f6127dd9b6d82efaf8f1eb020dc365"
 dependencies = [
  "proc-macro2",
  "quote",

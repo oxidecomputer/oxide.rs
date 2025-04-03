@@ -93,6 +93,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceView => Self::cli_instance_view(),
             CliCommand::InstanceUpdate => Self::cli_instance_update(),
             CliCommand::InstanceDelete => Self::cli_instance_delete(),
+            CliCommand::InstanceAffinityGroupList => Self::cli_instance_affinity_group_list(),
+            CliCommand::InstanceAntiAffinityGroupList => {
+                Self::cli_instance_anti_affinity_group_list()
+            }
             CliCommand::InstanceDiskList => Self::cli_instance_disk_list(),
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
             CliCommand::InstanceDiskDetach => Self::cli_instance_disk_detach(),
@@ -2400,6 +2404,84 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Delete instance")
+    }
+
+    pub fn cli_instance_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List affinity groups containing instance")
+    }
+
+    pub fn cli_instance_anti_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List anti-affinity groups containing instance")
     }
 
     pub fn cli_instance_disk_list() -> ::clap::Command {
@@ -7712,6 +7794,13 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceView => self.execute_instance_view(matches).await,
             CliCommand::InstanceUpdate => self.execute_instance_update(matches).await,
             CliCommand::InstanceDelete => self.execute_instance_delete(matches).await,
+            CliCommand::InstanceAffinityGroupList => {
+                self.execute_instance_affinity_group_list(matches).await
+            }
+            CliCommand::InstanceAntiAffinityGroupList => {
+                self.execute_instance_anti_affinity_group_list(matches)
+                    .await
+            }
             CliCommand::InstanceDiskList => self.execute_instance_disk_list(matches).await,
             CliCommand::InstanceDiskAttach => self.execute_instance_disk_attach(matches).await,
             CliCommand::InstanceDiskDetach => self.execute_instance_disk_detach(matches).await,
@@ -10337,6 +10426,103 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_affinity_group_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_instance_affinity_group_list(matches, &mut request)?;
+        self.config.list_start::<types::AffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_instance_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_anti_affinity_group_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_instance_anti_affinity_group_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::AntiAffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AntiAffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -16854,6 +17040,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceAffinityGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_instance_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceAntiAffinityGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_disk_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -18309,6 +18511,8 @@ pub enum CliCommand {
     InstanceView,
     InstanceUpdate,
     InstanceDelete,
+    InstanceAffinityGroupList,
+    InstanceAntiAffinityGroupList,
     InstanceDiskList,
     InstanceDiskAttach,
     InstanceDiskDetach,
@@ -18555,6 +18759,8 @@ impl CliCommand {
             CliCommand::InstanceView,
             CliCommand::InstanceUpdate,
             CliCommand::InstanceDelete,
+            CliCommand::InstanceAffinityGroupList,
+            CliCommand::InstanceAntiAffinityGroupList,
             CliCommand::InstanceDiskList,
             CliCommand::InstanceDiskAttach,
             CliCommand::InstanceDiskDetach,
