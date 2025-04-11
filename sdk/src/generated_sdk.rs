@@ -14229,6 +14229,77 @@ pub mod types {
         }
     }
 
+    /// `InterfaceNum`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "unknown"
+    ///      ],
+    ///      "properties": {
+    ///        "unknown": {
+    ///          "type": "integer",
+    ///          "format": "uint32",
+    ///          "minimum": 0.0
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "if_index"
+    ///      ],
+    ///      "properties": {
+    ///        "if_index": {
+    ///          "type": "integer",
+    ///          "format": "uint32",
+    ///          "minimum": 0.0
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "port_number"
+    ///      ],
+    ///      "properties": {
+    ///        "port_number": {
+    ///          "type": "integer",
+    ///          "format": "uint32",
+    ///          "minimum": 0.0
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub enum InterfaceNum {
+        #[serde(rename = "unknown")]
+        Unknown(u32),
+        #[serde(rename = "if_index")]
+        IfIndex(u32),
+        #[serde(rename = "port_number")]
+        PortNumber(u32),
+    }
+
+    impl ::std::convert::From<&Self> for InterfaceNum {
+        fn from(value: &InterfaceNum) -> Self {
+            value.clone()
+        }
+    }
+
     /// An internet gateway provides a path between VPC networks and external
     /// networks.
     ///
@@ -16834,7 +16905,7 @@ pub mod types {
     /// neighbor",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/IpNet"
+    ///        "$ref": "#/components/schemas/ManagementAddress"
     ///      }
     ///    },
     ///    "system_description": {
@@ -16874,7 +16945,7 @@ pub mod types {
         /// The port on which the neighbor was seen
         pub local_port: ::std::string::String,
         /// The LLDP management IP(s) advertised by the neighbor
-        pub management_ip: ::std::vec::Vec<IpNet>,
+        pub management_ip: ::std::vec::Vec<ManagementAddress>,
         /// The LLDP system description advertised by the neighbor
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
@@ -17285,6 +17356,61 @@ pub mod types {
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
+        }
+    }
+
+    /// `ManagementAddress`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "addr",
+    ///    "interface_num"
+    ///  ],
+    ///  "properties": {
+    ///    "addr": {
+    ///      "$ref": "#/components/schemas/NetworkAddress"
+    ///    },
+    ///    "interface_num": {
+    ///      "$ref": "#/components/schemas/InterfaceNum"
+    ///    },
+    ///    "oid": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint8",
+    ///        "minimum": 0.0
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ManagementAddress {
+        pub addr: NetworkAddress,
+        pub interface_num: InterfaceNum,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub oid: ::std::option::Option<::std::vec::Vec<u8>>,
+    }
+
+    impl ::std::convert::From<&ManagementAddress> for ManagementAddress {
+        fn from(value: &ManagementAddress) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ManagementAddress {
+        pub fn builder() -> builder::ManagementAddress {
+            Default::default()
         }
     }
 
@@ -17956,6 +18082,75 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// `NetworkAddress`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip_addr"
+    ///      ],
+    ///      "properties": {
+    ///        "ip_addr": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "i_e_e_e802"
+    ///      ],
+    ///      "properties": {
+    ///        "i_e_e_e802": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "type": "integer",
+    ///            "format": "uint8",
+    ///            "minimum": 0.0
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub enum NetworkAddress {
+        #[serde(rename = "ip_addr")]
+        IpAddr(::std::net::IpAddr),
+        #[serde(rename = "i_e_e_e802")]
+        IEEE802(::std::vec::Vec<u8>),
+    }
+
+    impl ::std::convert::From<&Self> for NetworkAddress {
+        fn from(value: &NetworkAddress) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::std::net::IpAddr> for NetworkAddress {
+        fn from(value: ::std::net::IpAddr) -> Self {
+            Self::IpAddr(value)
+        }
+    }
+
+    impl ::std::convert::From<::std::vec::Vec<u8>> for NetworkAddress {
+        fn from(value: ::std::vec::Vec<u8>) -> Self {
+            Self::IEEE802(value)
         }
     }
 
@@ -43226,8 +43421,10 @@ pub mod types {
             >,
             link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             local_port: ::std::result::Result<::std::string::String, ::std::string::String>,
-            management_ip:
-                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
+            management_ip: ::std::result::Result<
+                ::std::vec::Vec<super::ManagementAddress>,
+                ::std::string::String,
+            >,
             system_description: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -43320,7 +43517,7 @@ pub mod types {
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::ManagementAddress>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.management_ip = value.try_into().map_err(|e| {
@@ -43733,6 +43930,82 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ManagementAddress {
+            addr: ::std::result::Result<super::NetworkAddress, ::std::string::String>,
+            interface_num: ::std::result::Result<super::InterfaceNum, ::std::string::String>,
+            oid: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<u8>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ManagementAddress {
+            fn default() -> Self {
+                Self {
+                    addr: Err("no value supplied for addr".to_string()),
+                    interface_num: Err("no value supplied for interface_num".to_string()),
+                    oid: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ManagementAddress {
+            pub fn addr<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NetworkAddress>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.addr = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn interface_num<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::InterfaceNum>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.interface_num = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_num: {}", e)
+                });
+                self
+            }
+            pub fn oid<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<u8>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.oid = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for oid: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ManagementAddress> for super::ManagementAddress {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ManagementAddress,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    addr: value.addr?,
+                    interface_num: value.interface_num?,
+                    oid: value.oid?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ManagementAddress> for ManagementAddress {
+            fn from(value: super::ManagementAddress) -> Self {
+                Self {
+                    addr: Ok(value.addr),
+                    interface_num: Ok(value.interface_num),
+                    oid: Ok(value.oid),
                 }
             }
         }
