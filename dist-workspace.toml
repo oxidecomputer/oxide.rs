@@ -10,7 +10,8 @@ ci = "github"
 # The installers to generate for each app
 installers = []
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+#targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+targets = ["x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl"]
 # Which actions to run on pull requests
 pr-run-mode = "plan"
 # Install `perl-IPC-Cmd` on manylinux as required to build OpenSSL
@@ -21,7 +22,7 @@ global = "ubuntu-22.04"
 
 [dist.github-custom-runners.x86_64-unknown-linux-musl]
 runner = "ubuntu-22.04"
-#container = { image = "quay.io/pypa/manylinux_2_28_x86_64", host = "x86_64-unknown-linux-gnu" }
+container = { image = "quay.io/pypa/manylinux_2_28_x86_64", host = "x86_64-unknown-linux-gnu" }
 
 [dist.github-custom-runners.x86_64-unknown-linux-gnu]
 runner = "ubuntu-22.04"
