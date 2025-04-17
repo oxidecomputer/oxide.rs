@@ -82112,7 +82112,7 @@ pub mod builder {
         client: &'a super::Client,
         route: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        router: Result<types::NameOrId, String>,
+        router: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
@@ -82122,7 +82122,7 @@ pub mod builder {
                 client: client,
                 route: Err("route was not initialized".to_string()),
                 project: Ok(None),
-                router: Err("router was not initialized".to_string()),
+                router: Ok(None),
                 vpc: Ok(None),
             }
         }
@@ -82154,6 +82154,7 @@ pub mod builder {
         {
             self.router = value
                 .try_into()
+                .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
             self
         }
