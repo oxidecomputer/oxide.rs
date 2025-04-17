@@ -12937,12 +12937,9 @@ pub mod types {
     ///  "properties": {
     ///    "anti_affinity_groups": {
     ///      "description": "Anti-Affinity groups which this instance should be
-    /// added.\n\nA \"null\" set of groups is equivalent to an empty set of
-    /// groups.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
+    /// added.",
+    ///      "default": [],
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/NameOrId"
     ///      }
@@ -13102,10 +13099,8 @@ pub mod types {
     )]
     pub struct InstanceCreate {
         /// Anti-Affinity groups which this instance should be added.
-        ///
-        /// A "null" set of groups is equivalent to an empty set of groups.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub anti_affinity_groups: ::std::option::Option<::std::vec::Vec<NameOrId>>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub anti_affinity_groups: ::std::vec::Vec<NameOrId>,
         /// The auto-restart policy for this instance.
         ///
         /// This policy determines whether the instance should be automatically
@@ -40228,10 +40223,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct InstanceCreate {
-            anti_affinity_groups: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<super::NameOrId>>,
-                ::std::string::String,
-            >,
+            anti_affinity_groups:
+                ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
             auto_restart_policy: ::std::result::Result<
                 ::std::option::Option<super::InstanceAutoRestartPolicy>,
                 ::std::string::String,
@@ -40289,7 +40282,7 @@ pub mod types {
         impl InstanceCreate {
             pub fn anti_affinity_groups<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::NameOrId>>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::NameOrId>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.anti_affinity_groups = value.try_into().map_err(|e| {
