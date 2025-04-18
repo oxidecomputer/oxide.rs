@@ -17973,8 +17973,20 @@ pub mod operations {
             }
         }
 
-        pub fn router(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("router", value.to_string()))
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc<'a, T>(self, value: T) -> Self
