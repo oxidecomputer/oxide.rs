@@ -13,7 +13,7 @@ use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
-use oxide::Client;
+use oxide::{Client, ClientInfo};
 use serde::Deserialize;
 use serde_json::Value;
 

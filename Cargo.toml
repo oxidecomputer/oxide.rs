@@ -62,6 +62,8 @@ thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.44.2", features = ["full"] }
 toml = "0.8.20"
 toml_edit = "0.22.24"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 url = "2.5.4"
 uuid = { version = "1.16.0", features = ["serde", "v4"] }
 
@@ -70,7 +72,10 @@ uuid = { version = "1.16.0", features = ["serde", "v4"] }
 inherits = "release"
 lto = "thin"
 
-#[patch."https://github.com/oxidecomputer/progenitor"]
-#progenitor = { path = "../progenitor/progenitor" }
+[patch."https://github.com/oxidecomputer/progenitor"]
+progenitor = { path = "../progenitor/progenitor" }
 #[patch."https://github.com/oxidecomputer/typify"]
 #typify = { path = "../typify/typify" }
+
+[patch.crates-io]
+progenitor-client = { path = "../progenitor/progenitor-client" }
