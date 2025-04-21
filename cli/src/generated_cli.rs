@@ -6897,7 +6897,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("router")
                     .long("router")
                     .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
+                    .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
