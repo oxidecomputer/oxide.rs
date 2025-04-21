@@ -11,12 +11,12 @@ resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.98"
-assert_cmd = "2.0.16"
+assert_cmd = "2.0.17"
 async-trait = "0.1.88"
 base64 = "0.22.1"
 built = { version = "0.7.7", features = ["git2"] }
 chrono = { version = "0.4.40", features = ["serde"] }
-clap = { version = "4.5.36", features = ["derive", "string", "env", "wrap_help"] }
+clap = { version = "4.5.37", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.47"
 colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
@@ -30,7 +30,7 @@ futures = "0.3.31"
 httpmock = "0.7.0"
 humantime = "2"
 indicatif = "0.17"
-libc = "0.2.171"
+libc = "0.2.172"
 log = "0.4.26"
 md5 = "0.7.0"
 newline-converter = "0.3.0"
