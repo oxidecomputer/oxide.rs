@@ -8132,7 +8132,7 @@ pub mod types {
     ///  "properties": {
     ///    "pool": {
     ///      "description": "Name or ID of the IP pool used to allocate an
-    /// address",
+    /// address. If unspecified, the default IP pool will be used.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -8154,7 +8154,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct EphemeralIpCreate {
-        /// Name or ID of the IP pool used to allocate an address
+        /// Name or ID of the IP pool used to allocate an address. If
+        /// unspecified, the default IP pool will be used.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub pool: ::std::option::Option<NameOrId>,
     }
@@ -8389,8 +8390,8 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is automatically-assigned from the provided IP Pool,
-    /// or the current silo's default pool if not specified.",
+    /// access. The address is automatically assigned from the provided IP pool
+    /// or the default IP pool if not specified.",
     ///      "type": "object",
     ///      "required": [
     ///        "type"
@@ -8450,8 +8451,8 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
         /// An IP address providing both inbound and outbound access. The
-        /// address is automatically-assigned from the provided IP Pool, or the
-        /// current silo's default pool if not specified.
+        /// address is automatically assigned from the provided IP pool or the
+        /// default IP pool if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
             #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]

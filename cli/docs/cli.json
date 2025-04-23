@@ -2181,7 +2181,7 @@
                 },
                 {
                   "long": "pool",
-                  "help": "Name or ID of the IP pool used to allocate an address"
+                  "help": "Name or ID of the IP pool used to allocate an address. If unspecified, the default IP pool will be used."
                 },
                 {
                   "long": "profile",

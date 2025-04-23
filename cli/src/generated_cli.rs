@@ -2636,7 +2636,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("pool")
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("Name or ID of the IP pool used to allocate an address"),
+                    .help(
+                        "Name or ID of the IP pool used to allocate an address. If unspecified, \
+                         the default IP pool will be used.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
