@@ -4757,7 +4757,8 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List a silo's IdP's name")
+            .about("List identity providers for silo")
+            .long_about("List identity providers for silo by silo name or ID.")
     }
 
     pub fn cli_local_idp_user_create() -> ::clap::Command {
@@ -4934,7 +4935,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create SAML IdP")
+            .about("Create SAML identity provider")
     }
 
     pub fn cli_saml_identity_provider_view() -> ::clap::Command {
@@ -4953,7 +4954,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch SAML IdP")
+            .about("Fetch SAML identity provider")
     }
 
     pub fn cli_ip_pool_list() -> ::clap::Command {

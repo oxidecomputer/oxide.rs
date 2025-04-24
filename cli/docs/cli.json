@@ -3989,7 +3989,8 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List a silo's IdP's name",
+              "about": "List identity providers for silo",
+              "long_about": "List identity providers for silo by silo name or ID.",
               "args": [
                 {
                   "long": "limit",
@@ -4125,7 +4126,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create SAML IdP",
+                  "about": "Create SAML identity provider",
                   "args": [
                     {
                       "long": "acs-url",
@@ -4184,7 +4185,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch SAML IdP",
+                  "about": "Fetch SAML identity provider",
                   "args": [
                     {
                       "long": "profile",

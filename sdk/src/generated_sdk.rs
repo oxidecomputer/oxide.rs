@@ -58457,7 +58457,9 @@ impl ClientSystemNetworkingExt for Client {
 
 /// Silos represent a logical partition of users and resources.
 pub trait ClientSystemSilosExt {
-    /// List a silo's IdP's name
+    /// List identity providers for silo
+    ///
+    /// List identity providers for silo by silo name or ID.
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers`
     ///
@@ -58533,7 +58535,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    /// Create SAML IdP
+    /// Create SAML identity provider
     ///
     /// Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
@@ -58548,7 +58550,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    /// Fetch SAML IdP
+    /// Fetch SAML identity provider
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
