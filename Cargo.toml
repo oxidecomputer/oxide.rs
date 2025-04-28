@@ -17,7 +17,7 @@ base64 = "0.22.1"
 built = { version = "0.7.7", features = ["git2"] }
 chrono = { version = "0.4.40", features = ["serde"] }
 clap = { version = "4.5.37", features = ["derive", "string", "env", "wrap_help"] }
-clap_complete = "4.5.47"
+clap_complete = "4.5.48"
 colored = "2.2.0"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
