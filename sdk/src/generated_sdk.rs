@@ -32334,7 +32334,7 @@ pub mod types {
     ///    "secrets": {
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSecretId"
+    ///        "$ref": "#/components/schemas/WebhookSecret"
     ///      }
     ///    },
     ///    "subscriptions": {
@@ -32371,7 +32371,7 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        pub secrets: ::std::vec::Vec<WebhookSecretId>,
+        pub secrets: ::std::vec::Vec<WebhookSecret>,
         /// The list of event classes to which this receiver is subscribed.
         pub subscriptions: ::std::vec::Vec<WebhookSubscription>,
         /// timestamp when this resource was created
@@ -32523,6 +32523,63 @@ pub mod types {
         }
     }
 
+    /// A view of a shared secret key assigned to a webhook receiver.
+    ///
+    /// Once a secret is created, the value of the secret is not available in
+    /// the API, as it must remain secret. Instead, secrets are referenced by
+    /// their unique IDs assigned when they are created.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A view of a shared secret key assigned to a webhook
+    /// receiver.\n\nOnce a secret is created, the value of the secret is not
+    /// available in the API, as it must remain secret. Instead, secrets are
+    /// referenced by their unique IDs assigned when they are created.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "The public unique ID of the secret.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "The UTC timestamp at which this secret was
+    /// created.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct WebhookSecret {
+        /// The public unique ID of the secret.
+        pub id: ::uuid::Uuid,
+        /// The UTC timestamp at which this secret was created.
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&WebhookSecret> for WebhookSecret {
+        fn from(value: &WebhookSecret) -> Self {
+            value.clone()
+        }
+    }
+
+    impl WebhookSecret {
+        pub fn builder() -> builder::WebhookSecret {
+            Default::default()
+        }
+    }
+
     /// `WebhookSecretCreate`
     ///
     /// <details><summary>JSON schema</summary>
@@ -32562,45 +32619,6 @@ pub mod types {
         }
     }
 
-    /// The public ID of a secret key assigned to a webhook.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The public ID of a secret key assigned to a webhook.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "id"
-    ///  ],
-    ///  "properties": {
-    ///    "id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookSecretId {
-        pub id: ::uuid::Uuid,
-    }
-
-    impl ::std::convert::From<&WebhookSecretId> for WebhookSecretId {
-        fn from(value: &WebhookSecretId) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookSecretId {
-        pub fn builder() -> builder::WebhookSecretId {
-            Default::default()
-        }
-    }
-
     /// A list of the IDs of secrets associated with a webhook.
     ///
     /// <details><summary>JSON schema</summary>
@@ -32617,7 +32635,7 @@ pub mod types {
     ///    "secrets": {
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSecretId"
+    ///        "$ref": "#/components/schemas/WebhookSecret"
     ///      }
     ///    }
     ///  }
@@ -32628,7 +32646,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct WebhookSecrets {
-        pub secrets: ::std::vec::Vec<WebhookSecretId>,
+        pub secrets: ::std::vec::Vec<WebhookSecret>,
     }
 
     impl ::std::convert::From<&WebhookSecrets> for WebhookSecrets {
@@ -56892,10 +56910,8 @@ pub mod types {
             endpoint: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            secrets: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookSecretId>,
-                ::std::string::String,
-            >,
+            secrets:
+                ::std::result::Result<::std::vec::Vec<super::WebhookSecret>, ::std::string::String>,
             subscriptions: ::std::result::Result<
                 ::std::vec::Vec<super::WebhookSubscription>,
                 ::std::string::String,
@@ -56968,7 +56984,7 @@ pub mod types {
             }
             pub fn secrets<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecretId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecret>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.secrets = value
@@ -57186,6 +57202,68 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct WebhookSecret {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for WebhookSecret {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                }
+            }
+        }
+
+        impl WebhookSecret {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<WebhookSecret> for super::WebhookSecret {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: WebhookSecret,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    time_created: value.time_created?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::WebhookSecret> for WebhookSecret {
+            fn from(value: super::WebhookSecret) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct WebhookSecretCreate {
             secret: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
@@ -57231,52 +57309,9 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct WebhookSecretId {
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookSecretId {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                }
-            }
-        }
-
-        impl WebhookSecretId {
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookSecretId> for super::WebhookSecretId {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookSecretId,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self { id: value.id? })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookSecretId> for WebhookSecretId {
-            fn from(value: super::WebhookSecretId) -> Self {
-                Self { id: Ok(value.id) }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct WebhookSecrets {
-            secrets: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookSecretId>,
-                ::std::string::String,
-            >,
+            secrets:
+                ::std::result::Result<::std::vec::Vec<super::WebhookSecret>, ::std::string::String>,
         }
 
         impl ::std::default::Default for WebhookSecrets {
@@ -57290,7 +57325,7 @@ pub mod types {
         impl WebhookSecrets {
             pub fn secrets<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecretId>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecret>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.secrets = value
@@ -90394,7 +90429,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/webhooks/secrets`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::WebhookSecretId>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::WebhookSecret>, Error<types::Error>> {
             let Self {
                 client,
                 receiver,

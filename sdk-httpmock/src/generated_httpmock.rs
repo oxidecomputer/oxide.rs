@@ -20767,7 +20767,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::WebhookSecretId) -> Self {
+        pub fn created(self, value: &types::WebhookSecret) -> Self {
             Self(
                 self.0
                     .status(201u16)
