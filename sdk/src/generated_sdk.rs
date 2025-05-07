@@ -1,9 +1,9 @@
 // The contents of this file are generated; do not modify them.
 
 #[allow(unused_imports)]
-use progenitor_client::{encode_path, RequestBuilderExt};
+use progenitor_client::{encode_path, ClientHooks, OperationInfo, RequestBuilderExt};
 #[allow(unused_imports)]
-pub use progenitor_client::{ByteStream, Error, ResponseValue};
+pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -54481,26 +54481,27 @@ impl Client {
             client,
         }
     }
+}
 
-    /// Get the base URL to which requests are made.
-    pub fn baseurl(&self) -> &String {
-        &self.baseurl
+impl ClientInfo<()> for Client {
+    fn api_version() -> &'static str {
+        "20250409.0.0"
     }
 
-    /// Get the internal `reqwest::Client` used to make requests.
-    pub fn client(&self) -> &reqwest::Client {
+    fn baseurl(&self) -> &str {
+        self.baseurl.as_str()
+    }
+
+    fn client(&self) -> &reqwest::Client {
         &self.client
     }
 
-    /// Get the version of this API.
-    ///
-    /// This string is pulled directly from the source OpenAPI
-    /// document and may be in any format the API selects.
-    pub fn api_version(&self) -> &'static str {
-        "20250409.0.0"
+    fn inner(&self) -> &() {
+        &()
     }
 }
 
+impl ClientHooks<()> for &Client {}
 /// Anti-affinity groups give control over instance placement.
 pub trait ClientAffinityExt {
     /// List anti-affinity groups
@@ -59758,7 +59759,10 @@ impl ClientVpcsExt for Client {
 pub mod builder {
     use super::types;
     #[allow(unused_imports)]
-    use super::{encode_path, ByteStream, Error, RequestBuilderExt, ResponseValue};
+    use super::{
+        encode_path, ByteStream, ClientHooks, ClientInfo, Error, OperationInfo, RequestBuilderExt,
+        ResponseValue,
+    };
     /// Builder for [`ClientHiddenExt::device_auth_request`]
     ///
     /// [`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
@@ -59808,7 +59812,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -59817,7 +59821,12 @@ pub mod builder {
                 .form_urlencoded(&body)?
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "device_auth_request",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -59875,7 +59884,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -59888,7 +59897,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "device_auth_confirm",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -59956,7 +59970,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -59965,7 +59979,12 @@ pub mod builder {
                 .form_urlencoded(&body)?
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "device_access_token",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60058,7 +60077,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60077,7 +60096,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "probe_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60203,7 +60227,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60217,7 +60241,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "probe_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -60288,7 +60317,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60301,7 +60330,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "probe_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60372,7 +60406,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60385,7 +60419,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "probe_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -60470,7 +60509,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60488,7 +60527,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60572,7 +60616,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60584,7 +60628,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -60644,7 +60693,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60656,7 +60705,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -60714,7 +60768,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -60726,7 +60780,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -60784,11 +60843,16 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).headers(header_map).build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_download",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60840,11 +60904,16 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client.client.head(url).headers(header_map).build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_head",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60912,11 +60981,16 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).headers(header_map).build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_download_file",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -60984,11 +61058,16 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client.client.head(url).headers(header_map).build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_head_file",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -61040,11 +61119,16 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client.client.get(url).headers(header_map).build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "support_bundle_index",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -61124,7 +61208,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61137,7 +61221,12 @@ pub mod builder {
                 .body(body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "login_saml",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
@@ -61236,7 +61325,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61255,7 +61344,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61385,7 +61479,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61399,7 +61493,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -61473,7 +61572,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61486,7 +61585,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61588,7 +61692,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61602,7 +61706,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61674,7 +61783,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61687,7 +61796,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -61806,7 +61920,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61825,7 +61939,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_member_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -61964,7 +62083,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -61977,7 +62096,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_member_instance_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62067,7 +62191,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62080,7 +62204,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_member_instance_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -62168,7 +62297,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62181,7 +62310,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "affinity_group_member_instance_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -62281,7 +62415,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62300,7 +62434,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62435,7 +62574,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62449,7 +62588,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -62524,7 +62668,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62537,7 +62681,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62644,7 +62793,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62658,7 +62807,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -62731,7 +62885,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62744,7 +62898,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -62863,7 +63022,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -62882,7 +63041,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_member_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63023,7 +63187,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63036,7 +63200,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_member_instance_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63128,7 +63297,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63141,7 +63310,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_member_instance_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -63231,7 +63405,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63244,7 +63418,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "anti_affinity_group_member_instance_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63328,7 +63507,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63346,7 +63525,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "certificate_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63456,7 +63640,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63469,7 +63653,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "certificate_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -63526,7 +63715,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63538,7 +63727,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "certificate_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63595,7 +63789,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63607,7 +63801,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "certificate_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -63706,7 +63905,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63725,7 +63924,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -63851,7 +64055,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63865,7 +64069,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -63937,7 +64146,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -63950,7 +64159,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64022,7 +64236,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64035,7 +64249,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64137,7 +64356,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64151,7 +64370,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_bulk_write_import",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64223,7 +64447,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64236,7 +64460,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_bulk_write_import_start",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64308,7 +64537,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64321,7 +64550,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_bulk_write_import_stop",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64419,7 +64653,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64433,7 +64667,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_finalize_import",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -64597,7 +64836,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64621,7 +64860,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "disk_metrics_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64769,7 +65013,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64788,7 +65032,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -64916,7 +65165,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -64930,7 +65179,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -65002,7 +65256,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65015,7 +65269,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65115,7 +65374,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65129,7 +65388,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65201,7 +65465,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65214,7 +65478,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -65314,7 +65583,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65328,7 +65597,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_attach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -65400,7 +65674,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65413,7 +65687,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "floating_ip_detach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -65497,7 +65776,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65515,7 +65794,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65615,7 +65899,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65627,7 +65911,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "group_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65726,7 +66015,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65745,7 +66034,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -65872,7 +66166,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65886,7 +66180,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -65958,7 +66257,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -65971,7 +66270,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66043,7 +66347,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66056,7 +66360,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -66127,7 +66436,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66140,7 +66449,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_demote",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66212,7 +66526,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66225,7 +66539,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "image_promote",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -66324,7 +66643,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66343,7 +66662,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66469,7 +66793,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66483,7 +66807,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -66555,7 +66884,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66568,7 +66897,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66666,7 +67000,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66680,7 +67014,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -66752,7 +67091,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66765,7 +67104,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -66882,7 +67226,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -66901,7 +67245,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_affinity_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67067,7 +67416,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67086,7 +67435,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_anti_affinity_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67252,7 +67606,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67271,7 +67625,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_disk_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67416,7 +67775,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67430,7 +67789,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_disk_attach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -67528,7 +67892,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67542,7 +67906,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_disk_detach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -67616,7 +67985,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67629,7 +67998,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_external_ip_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -67730,7 +68104,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67744,7 +68118,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_ephemeral_ip_attach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -67817,7 +68196,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67830,7 +68209,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_ephemeral_ip_detach",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -67902,7 +68286,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -67915,7 +68299,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_reboot",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -68034,7 +68423,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68056,7 +68445,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_serial_console",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68146,7 +68540,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68169,7 +68563,12 @@ pub mod builder {
                     ),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_serial_console_stream",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 101u16 => ResponseValue::upgrade(response).await,
@@ -68281,7 +68680,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68300,7 +68699,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_ssh_public_key_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68419,7 +68823,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68432,7 +68836,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_start",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -68504,7 +68913,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68517,7 +68926,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_stop",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
@@ -68647,7 +69061,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68668,7 +69082,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_address_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -68836,7 +69255,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68852,7 +69271,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_address_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -68970,7 +69394,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -68986,7 +69410,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_address_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -69116,7 +69545,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69137,7 +69566,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69305,7 +69739,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69321,7 +69755,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_pool_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -69438,7 +69877,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69454,7 +69893,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_ip_pool_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -69568,7 +70012,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69588,7 +70032,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69736,7 +70185,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69751,7 +70200,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -69840,7 +70294,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69854,7 +70308,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -69956,7 +70415,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -69971,7 +70430,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "internet_gateway_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -70055,7 +70519,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70073,7 +70537,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_ip_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70173,7 +70642,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70185,7 +70654,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_ip_pool_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70275,7 +70749,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70288,7 +70762,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "login_local",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -70323,7 +70802,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70335,7 +70814,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "logout",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -70370,7 +70854,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70382,7 +70866,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70466,7 +70955,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70484,7 +70973,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_groups",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70614,7 +71108,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70632,7 +71126,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_ssh_key_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70740,7 +71239,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70753,7 +71252,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_ssh_key_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -70807,7 +71311,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70819,7 +71323,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_ssh_key_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -70873,7 +71382,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -70885,7 +71394,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "current_user_ssh_key_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -71034,7 +71548,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71058,7 +71572,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_metric",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71222,7 +71741,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71242,7 +71761,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_network_interface_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71394,7 +71918,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71409,7 +71933,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_network_interface_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -71498,7 +72027,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71512,7 +72041,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_network_interface_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71634,7 +72168,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71649,7 +72183,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_network_interface_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71736,7 +72275,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71750,7 +72289,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "instance_network_interface_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -71785,7 +72329,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71797,7 +72341,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ping",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71834,7 +72383,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71846,7 +72395,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "policy_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -71910,7 +72464,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -71923,7 +72477,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "policy_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72007,7 +72566,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72025,7 +72584,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72133,7 +72697,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72146,7 +72710,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -72200,7 +72769,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72212,7 +72781,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72295,7 +72869,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72308,7 +72882,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72362,7 +72941,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72374,7 +72953,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -72430,7 +73014,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72442,7 +73026,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_policy_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72529,7 +73118,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72542,7 +73131,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "project_policy_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72641,7 +73235,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72660,7 +73254,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "snapshot_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72786,7 +73385,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72800,7 +73399,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "snapshot_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -72872,7 +73476,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72885,7 +73489,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "snapshot_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -72957,7 +73566,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -72970,7 +73579,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "snapshot_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -73054,7 +73668,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73072,7 +73686,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "physical_disk_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73172,7 +73791,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73184,7 +73803,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "physical_disk_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73319,7 +73943,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73337,7 +73961,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_lldp_neighbors",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73469,7 +74098,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73487,7 +74116,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "rack_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73587,7 +74221,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73599,7 +74233,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "rack_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73683,7 +74322,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73701,7 +74340,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73811,7 +74455,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73824,7 +74468,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -73878,7 +74527,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -73890,7 +74539,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -73992,7 +74646,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74010,7 +74664,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_physical_disk_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74160,7 +74819,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74178,7 +74837,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_instance_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74319,7 +74983,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74332,7 +74996,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_set_provision_policy",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74402,7 +75071,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74419,7 +75088,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "sled_list_uninitialized",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74563,7 +75237,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74585,7 +75259,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74721,7 +75400,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74738,7 +75417,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_lldp_config_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -74851,7 +75535,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -74869,7 +75553,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_lldp_config_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -74988,7 +75677,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75006,7 +75695,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_apply_settings",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75093,7 +75787,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75110,7 +75804,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_clear_settings",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75198,7 +75897,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75215,7 +75914,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_status",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75299,7 +76003,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75317,7 +76021,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "switch_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75417,7 +76126,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75429,7 +76138,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "switch_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75529,7 +76243,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75548,7 +76262,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_identity_provider_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -75674,7 +76393,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75688,7 +76407,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "local_idp_user_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -75760,7 +76484,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75773,7 +76497,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "local_idp_user_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75859,7 +76588,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75873,7 +76602,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "local_idp_user_set_password",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -75957,7 +76691,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -75971,7 +76705,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "saml_identity_provider_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -76045,7 +76784,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76058,7 +76797,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "saml_identity_provider_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76142,7 +76886,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76160,7 +76904,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76268,7 +77017,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76281,7 +77030,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -76335,7 +77089,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76347,7 +77101,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76426,7 +77185,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76439,7 +77198,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76493,7 +77257,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76505,7 +77269,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76592,7 +77361,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76609,7 +77378,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_range_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -76721,7 +77495,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76734,7 +77508,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_range_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -76801,7 +77580,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76814,7 +77593,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_range_remove",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -76916,7 +77700,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -76934,7 +77718,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_silo_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77061,7 +77850,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77074,7 +77863,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_silo_link",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -77176,7 +77970,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77189,7 +77983,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_silo_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77258,7 +78057,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77270,7 +78069,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_silo_unlink",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -77326,7 +78130,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77338,7 +78142,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_utilization_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77373,7 +78182,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77385,7 +78194,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_service_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77454,7 +78268,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77471,7 +78285,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_service_range_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77566,7 +78385,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77579,7 +78398,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_service_range_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -77633,7 +78457,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77646,7 +78470,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "ip_pool_service_range_remove",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -77795,7 +78624,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77819,7 +78648,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_metric",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -77952,7 +78786,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -77970,7 +78804,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_address_lot_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78082,7 +78921,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78095,7 +78934,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_address_lot_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -78153,7 +78997,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78165,7 +79009,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_address_lot_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -78269,7 +79118,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78287,7 +79136,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_address_lot_block_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78369,7 +79223,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78381,7 +79235,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_allow_list_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78443,7 +79302,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78456,7 +79315,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_allow_list_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78520,7 +79384,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78533,7 +79397,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bfd_disable",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -78597,7 +79466,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78610,7 +79479,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bfd_enable",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -78647,7 +79521,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78659,7 +79533,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bfd_status",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78743,7 +79622,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78761,7 +79640,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_config_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -78869,7 +79753,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78882,7 +79766,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_config_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -78932,7 +79821,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -78948,7 +79837,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_config_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -79034,7 +79928,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79052,7 +79946,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_announce_set_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79121,7 +80020,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79134,7 +80033,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_announce_set_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -79193,7 +80097,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79205,7 +80109,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_announce_set_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -79267,7 +80176,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79279,7 +80188,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_announcement_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79314,7 +80228,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79326,7 +80240,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_exported",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79382,7 +80301,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79395,7 +80314,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_message_history",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79449,7 +80373,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79462,7 +80386,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("asn", &asn))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_imported_routes_ipv4",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79500,7 +80429,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79512,7 +80441,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_bgp_status",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79597,7 +80531,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79615,7 +80549,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_loopback_address_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -79730,7 +80669,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79743,7 +80682,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_loopback_address_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -79848,7 +80792,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79860,7 +80804,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_loopback_address_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -79965,7 +80914,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -79987,7 +80936,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_settings_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80111,7 +81065,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80124,7 +81078,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_settings_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -80183,7 +81142,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80199,7 +81158,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_settings_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -80257,7 +81221,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80269,7 +81233,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "networking_switch_port_settings_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80306,7 +81275,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80318,7 +81287,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_policy_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80382,7 +81356,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80395,7 +81369,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_policy_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80464,7 +81443,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80481,7 +81460,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "role_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80580,7 +81564,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80592,7 +81576,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "role_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80676,7 +81665,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80694,7 +81683,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_quotas_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80824,7 +81818,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80842,7 +81836,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -80950,7 +81949,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -80963,7 +81962,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -81017,7 +82021,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81029,7 +82033,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81083,7 +82092,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81095,7 +82104,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -81197,7 +82211,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81215,7 +82229,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_ip_pool_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81317,7 +82336,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81329,7 +82348,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_policy_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81410,7 +82434,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81423,7 +82447,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_policy_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81477,7 +82506,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81489,7 +82518,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_quotas_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81570,7 +82604,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81583,7 +82617,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_quotas_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81647,7 +82686,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81660,7 +82699,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_timeseries_query",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81730,7 +82774,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81747,7 +82791,12 @@ pub mod builder {
                 ))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "system_timeseries_schema_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81829,7 +82878,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81841,7 +82890,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "target_release_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -81909,7 +82963,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -81922,7 +82976,12 @@ pub mod builder {
                 .json(&body)
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "target_release_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -82021,7 +83080,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82040,7 +83099,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_user_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82158,7 +83222,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82171,7 +83235,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("silo", &silo))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_user_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82255,7 +83324,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82273,7 +83342,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "user_builtin_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82373,7 +83447,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82385,7 +83459,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "user_builtin_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82469,7 +83548,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82487,7 +83566,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_utilization_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82589,7 +83673,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82601,7 +83685,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "silo_utilization_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82682,7 +83771,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82696,7 +83785,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "timeseries_query",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82795,7 +83889,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82814,7 +83908,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "user_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82896,7 +83995,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82908,7 +84007,12 @@ pub mod builder {
                 )
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "utilization_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -82978,7 +84082,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -82992,7 +84096,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_firewall_rules_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83095,7 +84204,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83110,7 +84219,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_firewall_rules_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83239,7 +84353,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83260,7 +84374,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_route_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83420,7 +84539,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83436,7 +84555,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_route_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -83538,7 +84662,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83553,7 +84677,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_route_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83683,7 +84812,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83699,7 +84828,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_route_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -83801,7 +84935,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83816,7 +84950,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_route_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -83930,7 +85069,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -83950,7 +85089,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -84092,7 +85236,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84107,7 +85251,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -84194,7 +85343,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84208,7 +85357,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -84321,7 +85475,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84336,7 +85490,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -84423,7 +85582,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84437,7 +85596,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_router_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -84551,7 +85715,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84571,7 +85735,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -84713,7 +85882,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84728,7 +85897,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -84815,7 +85989,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84829,7 +86003,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -84942,7 +86121,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -84957,7 +86136,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -85044,7 +86228,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85058,7 +86242,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
@@ -85192,7 +86381,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85212,7 +86401,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("vpc", &vpc))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_subnet_list_network_interfaces",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -85361,7 +86555,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85380,7 +86574,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -85506,7 +86705,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85520,7 +86719,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
@@ -85592,7 +86796,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85605,7 +86809,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -85703,7 +86912,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85717,7 +86926,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
@@ -85789,7 +87003,7 @@ pub mod builder {
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(client.api_version()),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
             #[allow(unused_mut)]
             let mut request = client
@@ -85802,7 +87016,12 @@ pub mod builder {
                 .query(&progenitor_client::QueryParam::new("project", &project))
                 .headers(header_map)
                 .build()?;
-            let result = client.client.execute(request).await;
+            let info = OperationInfo {
+                operation_id: "vpc_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
