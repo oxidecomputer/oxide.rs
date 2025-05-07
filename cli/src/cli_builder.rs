@@ -2,14 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
 use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
-use log::LevelFilter;
+use tracing_subscriber::EnvFilter;
 
 use crate::{
     context::Context,
@@ -229,11 +229,20 @@ impl<'a> NewCli<'a> {
             timeout,
         } = OxideCli::from_arg_matches(&matches).expect("failed to parse OxideCli from args");
 
-        let mut log_builder = env_logger::builder();
-        if debug {
-            log_builder.filter_level(LevelFilter::Debug);
-        }
-        log_builder.init();
+        let env_filter = if debug {
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("oxide=debug"))
+        } else {
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
+        };
+
+        tracing_subscriber::fmt()
+            .with_env_filter(env_filter)
+            .with_writer(std::io::stderr)
+            .json()
+            .flatten_event(true)
+            .with_current_span(false)
+            .with_span_list(false)
+            .init();
 
         let mut client_config = ClientConfig::default();
 
