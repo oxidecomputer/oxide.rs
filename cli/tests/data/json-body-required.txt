@@ -8,6 +8,7 @@ oxide silo policy update
 oxide vpc firewall-rules update
 oxide vpc router route create
 oxide vpc router route update
+oxide alert receiver webhook create
 oxide disk create
 oxide system policy update
 oxide system networking address-lot create

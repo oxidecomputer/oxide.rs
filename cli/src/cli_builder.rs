@@ -615,6 +615,24 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpUpdate => Some("floating-ip update"),
         CliCommand::FloatingIpView => Some("floating-ip view"),
 
+        // Alert subcommands
+        CliCommand::WebhookEventClassList => Some("alert class list"),
+        CliCommand::WebhookReceiverList => Some("alert receiver list"),
+        CliCommand::WebhookDeliveryList => Some("alert receiver log"),
+        CliCommand::WebhookReceiverProbe => Some("alert receiver probe"),
+        CliCommand::WebhookDeliveryResend => Some("alert receiver resend"),
+        CliCommand::WebhookReceiverView => Some("alert receiver view"),
+        CliCommand::WebhookReceiverDelete => Some("alert receiver delete"),
+        CliCommand::WebhookReceiverSubscriptionAdd => Some("alert receiver subscribe"),
+        CliCommand::WebhookReceiverSubscriptionRemove => Some("alert receiver unsubscribe"),
+
+        // Webhook specific subcommands (including secret management)
+        CliCommand::WebhookReceiverCreate => Some("alert receiver webhook create"),
+        CliCommand::WebhookReceiverUpdate => Some("alert receiver webhook update"),
+        CliCommand::WebhookSecretsList => Some("alert receiver webhook secret list"),
+        CliCommand::WebhookSecretsAdd => Some("alert receiver webhook secret add"),
+        CliCommand::WebhookSecretsDelete => Some("alert receiver webhook secret delete"),
+
         CliCommand::Ping => Some("ping"),
 
         CliCommand::ProbeCreate => Some("experimental probe create"),
