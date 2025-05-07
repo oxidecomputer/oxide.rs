@@ -320,6 +320,24 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => Self::cli_vpc_view(),
             CliCommand::VpcUpdate => Self::cli_vpc_update(),
             CliCommand::VpcDelete => Self::cli_vpc_delete(),
+            CliCommand::WebhookDeliveryList => Self::cli_webhook_delivery_list(),
+            CliCommand::WebhookDeliveryResend => Self::cli_webhook_delivery_resend(),
+            CliCommand::WebhookEventClassList => Self::cli_webhook_event_class_list(),
+            CliCommand::WebhookReceiverList => Self::cli_webhook_receiver_list(),
+            CliCommand::WebhookReceiverCreate => Self::cli_webhook_receiver_create(),
+            CliCommand::WebhookReceiverView => Self::cli_webhook_receiver_view(),
+            CliCommand::WebhookReceiverUpdate => Self::cli_webhook_receiver_update(),
+            CliCommand::WebhookReceiverDelete => Self::cli_webhook_receiver_delete(),
+            CliCommand::WebhookReceiverProbe => Self::cli_webhook_receiver_probe(),
+            CliCommand::WebhookReceiverSubscriptionAdd => {
+                Self::cli_webhook_receiver_subscription_add()
+            }
+            CliCommand::WebhookReceiverSubscriptionRemove => {
+                Self::cli_webhook_receiver_subscription_remove()
+            }
+            CliCommand::WebhookSecretsList => Self::cli_webhook_secrets_list(),
+            CliCommand::WebhookSecretsAdd => Self::cli_webhook_secrets_add(),
+            CliCommand::WebhookSecretsDelete => Self::cli_webhook_secrets_delete(),
         }
     }
 
@@ -2636,7 +2654,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("pool")
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("Name or ID of the IP pool used to allocate an address"),
+                    .help(
+                        "Name or ID of the IP pool used to allocate an address. If unspecified, \
+                         the default IP pool will be used.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -4754,7 +4775,8 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List a silo's IdP's name")
+            .about("List identity providers for silo")
+            .long_about("List identity providers for silo by silo name or ID.")
     }
 
     pub fn cli_local_idp_user_create() -> ::clap::Command {
@@ -4931,7 +4953,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create SAML IdP")
+            .about("Create SAML identity provider")
     }
 
     pub fn cli_saml_identity_provider_view() -> ::clap::Command {
@@ -4950,7 +4972,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch SAML IdP")
+            .about("Fetch SAML identity provider")
     }
 
     pub fn cli_ip_pool_list() -> ::clap::Command {
@@ -7678,6 +7700,415 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete VPC")
     }
 
+    pub fn cli_webhook_delivery_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("delivered")
+                    .long("delivered")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have succeeded.\n\nIf any of the \
+                         \"pending\", \"failed\", or \"delivered\" query parameters are set to \
+                         true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("failed")
+                    .long("failed")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have failed permanently.\n\nIf any of \
+                         the \"pending\", \"failed\", or \"delivered\" query parameters are set \
+                         to true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.\n\nA delivery fails permanently when the retry limit of three \
+                         total attempts is reached without a successful delivery.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("page-token")
+                    .long("page-token")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("Token returned by previous call to retrieve the subsequent page"),
+            )
+            .arg(
+                ::clap::Arg::new("pending")
+                    .long("pending")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which are currently in progress.\n\nIf any \
+                         of the \"pending\", \"failed\", or \"delivered\" query parameters are \
+                         set to true, only deliveries matching those state(s) will be included in \
+                         the response. If NO state filter parameters are set, then all deliveries \
+                         are included.\n\nA delivery is considered \"pending\" if it has not yet \
+                         been sent at all, or if a delivery attempt has failed but the delivery \
+                         has retries remaining.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::Ascending.to_string(),
+                            types::TimeAndIdSortMode::Descending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List delivery attempts to webhook receiver")
+            .long_about(
+                "Optional query parameters to this endpoint may be used to filter deliveries by \
+                 state. If none of the `failed`, `pending` or `delivered` query parameters are \
+                 present, all deliveries are returned. If one or more of these parameters are \
+                 provided, only those which are set to \"true\" are included in the response.",
+            )
+    }
+
+    pub fn cli_webhook_delivery_resend() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("event-id")
+                    .long("event-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("UUID of the event"),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Request re-delivery of webhook event")
+    }
+
+    pub fn cli_webhook_event_class_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("filter")
+                    .long("filter")
+                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
+                    .required(false)
+                    .help(
+                        "An optional glob pattern for filtering event class names.\n\nIf \
+                         provided, only event classes which match this glob pattern will be \
+                         included in the response.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List webhook event classes")
+    }
+
+    pub fn cli_webhook_receiver_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List webhook receivers")
+    }
+
+    pub fn cli_webhook_receiver_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("endpoint")
+                    .long("endpoint")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("The URL that webhook notification requests should be sent to"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create webhook receiver")
+    }
+
+    pub fn cli_webhook_receiver_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Fetch webhook receiver")
+    }
+
+    pub fn cli_webhook_receiver_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("endpoint")
+                    .long("endpoint")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The URL that webhook notification requests should be sent to"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update webhook receiver")
+            .long_about(
+                "Note that receiver secrets are NOT added or removed using this endpoint. \
+                 Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add \
+                 and remove secrets.",
+            )
+    }
+
+    pub fn cli_webhook_receiver_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Delete webhook receiver")
+    }
+
+    pub fn cli_webhook_receiver_probe() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("resend")
+                    .long("resend")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, resend all events that have not been delivered successfully if \
+                         the probe request succeeds.",
+                    ),
+            )
+            .about("Send liveness probe to webhook receiver")
+            .long_about(
+                "This endpoint synchronously sends a liveness probe request to the selected \
+                 webhook receiver. The response message describes the outcome of the probe \
+                 request: either the response from the receiver endpoint, or an indication of why \
+                 the probe failed.\n\nNote that the response status is `200 OK` as long as a \
+                 probe request was able to be sent to the receiver endpoint. If the receiver \
+                 responds with another status code, including an error, this will be indicated by \
+                 the response body, *not* the status of the response.\n\nThe `resend` query \
+                 parameter can be used to request re-delivery of failed events if the liveness \
+                 probe succeeds. If it is set to true and the webhook receiver responds to the \
+                 probe request with a `2xx` status code, any events for which delivery to this \
+                 receiver has failed will be queued for re-delivery.",
+            )
+    }
+
+    pub fn cli_webhook_receiver_subscription_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
+                    .required_unless_present("json-body")
+                    .help("The event class pattern to subscribe to."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add webhook receiver subscription")
+    }
+
+    pub fn cli_webhook_receiver_subscription_remove() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
+                    .required(true)
+                    .help("The event class subscription itself."),
+            )
+            .about("Remove webhook receiver subscription")
+    }
+
+    pub fn cli_webhook_secrets_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("List webhook receiver secret IDs")
+    }
+
+    pub fn cli_webhook_secrets_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("secret")
+                    .long("secret")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("The value of the shared secret key."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add secret to webhook receiver")
+    }
+
+    pub fn cli_webhook_secrets_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("secret-id")
+                    .long("secret-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the secret."),
+            )
+            .about("Remove secret from webhook receiver")
+    }
+
     pub async fn execute(
         &self,
         cmd: CliCommand,
@@ -8129,6 +8560,36 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => self.execute_vpc_view(matches).await,
             CliCommand::VpcUpdate => self.execute_vpc_update(matches).await,
             CliCommand::VpcDelete => self.execute_vpc_delete(matches).await,
+            CliCommand::WebhookDeliveryList => self.execute_webhook_delivery_list(matches).await,
+            CliCommand::WebhookDeliveryResend => {
+                self.execute_webhook_delivery_resend(matches).await
+            }
+            CliCommand::WebhookEventClassList => {
+                self.execute_webhook_event_class_list(matches).await
+            }
+            CliCommand::WebhookReceiverList => self.execute_webhook_receiver_list(matches).await,
+            CliCommand::WebhookReceiverCreate => {
+                self.execute_webhook_receiver_create(matches).await
+            }
+            CliCommand::WebhookReceiverView => self.execute_webhook_receiver_view(matches).await,
+            CliCommand::WebhookReceiverUpdate => {
+                self.execute_webhook_receiver_update(matches).await
+            }
+            CliCommand::WebhookReceiverDelete => {
+                self.execute_webhook_receiver_delete(matches).await
+            }
+            CliCommand::WebhookReceiverProbe => self.execute_webhook_receiver_probe(matches).await,
+            CliCommand::WebhookReceiverSubscriptionAdd => {
+                self.execute_webhook_receiver_subscription_add(matches)
+                    .await
+            }
+            CliCommand::WebhookReceiverSubscriptionRemove => {
+                self.execute_webhook_receiver_subscription_remove(matches)
+                    .await
+            }
+            CliCommand::WebhookSecretsList => self.execute_webhook_secrets_list(matches).await,
+            CliCommand::WebhookSecretsAdd => self.execute_webhook_secrets_add(matches).await,
+            CliCommand::WebhookSecretsDelete => self.execute_webhook_secrets_delete(matches).await,
         }
     }
 
@@ -16474,6 +16935,465 @@ impl<T: CliConfig> Cli<T> {
             }
         }
     }
+
+    pub async fn execute_webhook_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_delivery_list();
+        if let Some(value) = matches.get_one::<bool>("delivered") {
+            request = request.delivered(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("failed") {
+            request = request.failed(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("page-token") {
+            request = request.page_token(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("pending") {
+            request = request.pending(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_webhook_delivery_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_delivery_resend();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("event-id") {
+            request = request.event_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_webhook_delivery_resend(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_event_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_event_class_list();
+        if let Some(value) = matches.get_one::<types::WebhookSubscription>("filter") {
+            request = request.filter(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.config
+            .execute_webhook_event_class_list(matches, &mut request)?;
+        self.config.list_start::<types::EventClassResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::EventClassResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_webhook_receiver_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::WebhookReceiverResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::WebhookReceiverResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("endpoint") {
+            request = request.body_map(|body| body.endpoint(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_receiver_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_webhook_receiver_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("endpoint") {
+            request = request.body_map(|body| body.endpoint(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_receiver_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_webhook_receiver_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_probe();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("resend") {
+            request = request.resend(value.clone());
+        }
+
+        self.config
+            .execute_webhook_receiver_probe(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_subscription_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::WebhookSubscription>("subscription") {
+            request = request.body_map(|body| body.subscription(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::WebhookSubscriptionCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_receiver_subscription_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_subscription_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::WebhookSubscription>("subscription") {
+            request = request.subscription(value.clone());
+        }
+
+        self.config
+            .execute_webhook_receiver_subscription_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_webhook_secrets_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("secret") {
+            request = request.body_map(|body| body.secret(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_secrets_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_delete();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("secret-id") {
+            request = request.secret_id(value.clone());
+        }
+
+        self.config
+            .execute_webhook_secrets_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
 }
 
 pub trait CliConfig {
@@ -18439,6 +19359,118 @@ pub trait CliConfig {
     ) -> anyhow::Result<()> {
         Ok(())
     }
+
+    fn execute_webhook_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookDeliveryList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookDeliveryResend,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_event_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookEventClassList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverProbe,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverSubscriptionAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverSubscriptionRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -18686,6 +19718,20 @@ pub enum CliCommand {
     VpcView,
     VpcUpdate,
     VpcDelete,
+    WebhookDeliveryList,
+    WebhookDeliveryResend,
+    WebhookEventClassList,
+    WebhookReceiverList,
+    WebhookReceiverCreate,
+    WebhookReceiverView,
+    WebhookReceiverUpdate,
+    WebhookReceiverDelete,
+    WebhookReceiverProbe,
+    WebhookReceiverSubscriptionAdd,
+    WebhookReceiverSubscriptionRemove,
+    WebhookSecretsList,
+    WebhookSecretsAdd,
+    WebhookSecretsDelete,
 }
 
 impl CliCommand {
@@ -18934,6 +19980,20 @@ impl CliCommand {
             CliCommand::VpcView,
             CliCommand::VpcUpdate,
             CliCommand::VpcDelete,
+            CliCommand::WebhookDeliveryList,
+            CliCommand::WebhookDeliveryResend,
+            CliCommand::WebhookEventClassList,
+            CliCommand::WebhookReceiverList,
+            CliCommand::WebhookReceiverCreate,
+            CliCommand::WebhookReceiverView,
+            CliCommand::WebhookReceiverUpdate,
+            CliCommand::WebhookReceiverDelete,
+            CliCommand::WebhookReceiverProbe,
+            CliCommand::WebhookReceiverSubscriptionAdd,
+            CliCommand::WebhookReceiverSubscriptionRemove,
+            CliCommand::WebhookSecretsList,
+            CliCommand::WebhookSecretsAdd,
+            CliCommand::WebhookSecretsDelete,
         ]
         .into_iter()
     }
