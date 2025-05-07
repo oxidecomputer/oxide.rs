@@ -569,11 +569,8 @@ impl CmdAuthStatus {
             oxide::Error::InvalidUpgrade(_) => {
                 unreachable!("auth should not be establishing a websocket")
             }
-            oxide::Error::PreHookError(_) => {
-                unreachable!("there is no pre-hook")
-            }
-            oxide::Error::PostHookError(_) => {
-                unreachable!("there is no post-hook")
+            oxide::Error::Custom(_) => {
+                unreachable!("no custom hooks")
             }
         }
     }

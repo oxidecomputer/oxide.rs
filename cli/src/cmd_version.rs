@@ -7,7 +7,7 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide::Client;
+use oxide::{Client, ClientInfo};
 
 use crate::println_nopipe;
 use crate::{context::Context, RunnableCmd};
@@ -26,7 +26,7 @@ pub struct CmdVersion;
 impl RunnableCmd for CmdVersion {
     async fn run(&self, _ctx: &Context) -> Result<()> {
         let cli_version = built_info::PKG_VERSION;
-        let api_version = Client::new("").api_version();
+        let api_version = Client::api_version();
 
         println_nopipe!("Oxide CLI {}", cli_version);
 
@@ -52,7 +52,7 @@ fn version_success() {
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
     let cli_version = built_info::PKG_VERSION;
-    let api_version = Client::new("").api_version();
+    let api_version = Client::api_version();
 
     cmd.arg("version");
     cmd.assert().success().stdout(format!(
