@@ -48,6 +48,7 @@ pub enum OxideAuthError {
     NoAuthenticatedHosts,
 }
 
+// Hook into the generated API client to capture and log request metadata.
 impl progenitor_client::ClientHooks for Client {
     async fn exec(
         &self,
