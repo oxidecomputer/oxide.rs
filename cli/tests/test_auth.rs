@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{
     fs::{read_to_string, write, File},
@@ -14,6 +14,7 @@ use expectorate::assert_contents;
 use httpmock::{Method::POST, Mock, MockServer};
 use oxide::types::CurrentUser;
 use oxide_httpmock::MockServerExt;
+use predicates::prelude::*;
 use predicates::str;
 use serde_json::json;
 
@@ -572,17 +573,58 @@ fn test_cmd_auth_status_env() {
 
 #[test]
 fn test_cmd_auth_debug_logging() {
-    let bad_url = "sys.oxide.invalid";
+    let server = MockServer::start();
 
-    // Validate debug logs are printed
-    Command::cargo_bin("oxide")
+    let oxide_mock = server.current_user_view(|when, then| {
+        when.into_inner()
+            .header("authorization", "Bearer oxide-token-good");
+
+        then.ok(&oxide::types::CurrentUser {
+            display_name: "privileged".to_string(),
+            id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+            silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+            silo_name: "funky-town".parse().unwrap(),
+        });
+    });
+
+    let cmd = Command::cargo_bin("oxide")
         .unwrap()
         .arg("--debug")
         .arg("auth")
-        .arg("login")
-        .arg("--host")
-        .arg(bad_url)
+        .arg("status")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-good")
         .assert()
-        .failure()
-        .stderr(str::contains("DEBUG"));
+        .success();
+
+    let stderr_str = std::str::from_utf8(&cmd.get_output().stderr).unwrap();
+    assert!(str::is_match(r#""level":"DEBUG""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""message":"request succeeded""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""url":"http://127.0.0.1:\d+/v1/me""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""path":"/v1/me""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""remote_addr":"127.0.0.1:\d+""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""http.request.method":"GET""#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""http.response.content_length":\d+"#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""http.response.status_code":200"#)
+        .unwrap()
+        .eval(stderr_str));
+    assert!(str::is_match(r#""duration_ms":\d+"#)
+        .unwrap()
+        .eval(stderr_str));
+
+    oxide_mock.assert();
 }
