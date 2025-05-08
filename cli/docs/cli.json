@@ -557,6 +557,122 @@
       ]
     },
     {
+      "name": "bundle",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create a new support bundle",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete an existing support bundle",
+          "long_about": "May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "support-bundle",
+              "help": "ID of the support bundle"
+            }
+          ]
+        },
+        {
+          "name": "download",
+          "about": "Downloads a support bundle",
+          "args": [
+            {
+              "long": "id",
+              "help": "ID of the bundle"
+            },
+            {
+              "long": "output",
+              "short": "o",
+              "help": "Path where the bundle should be downloaded"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "inspect",
+          "about": "Inspects a support bundle",
+          "long_about": "Inspects a support bundle\n\nSupport bundles may be inspected before they are downloaded (via\nsmaller HTTP requests), or after the entire zip file has been\ndownloaded.",
+          "args": [
+            {
+              "long": "id",
+              "help": "ID of the bundle to be inspected, if accessing via API"
+            },
+            {
+              "long": "path",
+              "short": "p",
+              "help": "Path of the bundle to inspect, if downloaded"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List all support bundles",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "View a support bundle",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "support-bundle",
+              "help": "ID of the support bundle"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "certificate",
       "args": [
         {
