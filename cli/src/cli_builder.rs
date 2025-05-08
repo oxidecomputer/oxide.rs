@@ -647,13 +647,16 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("experimental system timeseries schema list")
         }
 
-        // Support bundles are not yet implemented.
-        CliCommand::SupportBundleList
-        | CliCommand::SupportBundleCreate
-        | CliCommand::SupportBundleView
-        | CliCommand::SupportBundleDelete
-        | CliCommand::SupportBundleDownload
-        | CliCommand::SupportBundleHead
+        // Support bundle commands
+        CliCommand::SupportBundleList => Some("bundle list"),
+        CliCommand::SupportBundleCreate => Some("bundle create"),
+        CliCommand::SupportBundleView => Some("bundle view"),
+        CliCommand::SupportBundleDelete => Some("bundle delete"),
+        // Implemented as custom command to specify output file
+        CliCommand::SupportBundleDownload => None,
+
+        // Support bundles are not fully implemented.
+        CliCommand::SupportBundleHead
         | CliCommand::SupportBundleDownloadFile
         | CliCommand::SupportBundleHeadFile
         | CliCommand::SupportBundleIndex => None,

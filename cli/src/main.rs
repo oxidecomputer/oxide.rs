@@ -30,6 +30,7 @@ mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
 mod cmd_net;
+mod cmd_support_bundle;
 mod cmd_timeseries;
 mod context;
 
@@ -94,6 +95,8 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_net::CmdBgpAuth>("system networking bgp auth")
         .add_custom::<cmd_net::CmdBgpLocalPref>("system networking bgp pref")
         .add_custom::<cmd_net::CmdStaticRoute>("system networking route")
+        .add_custom::<cmd_support_bundle::CmdDownload>("bundle download")
+        .add_custom::<cmd_support_bundle::CmdInspect>("bundle inspect")
 }
 
 #[tokio::main(flavor = "current_thread")]
