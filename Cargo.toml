@@ -15,6 +15,8 @@ assert_cmd = "2.0.17"
 async-trait = "0.1.88"
 base64 = "0.22.1"
 built = { version = "0.7.7", features = ["git2"] }
+bytes = "1.10.1"
+camino = { version = "1.1", features = ["serde1"] }
 chrono = { version = "0.4.41", features = ["serde"] }
 clap = { version = "4.5.37", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.48"
@@ -55,6 +57,7 @@ schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.139"
 similar = "2.7.0"
+support-bundle-viewer = "0.1.0"
 tabwriter = "1.4.1"
 thiserror = "2.0.11"
 tempfile = "3.19.1"
