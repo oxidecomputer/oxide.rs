@@ -46,10 +46,6 @@ pub struct CmdDownload {
 
 #[async_trait]
 impl crate::AuthenticatedCmd for CmdDownload {
-    fn is_subtree() -> bool {
-        false
-    }
-
     async fn run(&self, client: &Client) -> Result<()> {
         let mut output = tokio::fs::File::create(&self.output)
             .await
@@ -93,10 +89,6 @@ pub struct CmdInspect {
 
 #[async_trait]
 impl crate::AuthenticatedCmd for CmdInspect {
-    fn is_subtree() -> bool {
-        false
-    }
-
     async fn run(&self, client: &Client) -> Result<()> {
         let accessor: Box<dyn SupportBundleAccessor> = match (self.id, &self.path) {
             (None, Some(path)) => Box::new(LocalFileAccess::new(path)?),
