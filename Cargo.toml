@@ -21,7 +21,7 @@ chrono = { version = "0.4.41", features = ["serde"] }
 clap = { version = "4.5.38", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.50"
 colored = "2.2.0"
-crossterm = { version = "0.27.0", features = [ "event-stream" ] }
+crossterm = { version = "0.28.1", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
 dropshot = "0.13.0"
