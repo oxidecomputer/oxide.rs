@@ -7,6 +7,24 @@
 //! A Facility to generate valid, random data for types that are
 //! `schemars::JsonSchema + serde::Deserialize`. It generates a JSON value
 //! based on the JSON schema and then deserializes that into the given type.
+//!
+//! Notes
+//! Configuration we might want
+//! - Should we use examples if they're present? Seems like might be a enum
+//!   to select between "ignore examples", "exclusively use examples",
+//!   "choose between generated values and examples (with some weight)",
+//!   "choose examples for scalars (but not complex types)", etc.
+//! - One can imagine situations where it may not be tractable to know a priori
+//!   if a value validates, for example if there were a structure that
+//!   contained a complex regex or a `not` with a complex schema. The consumer
+//!   might want to decide how many times we try to generate a type before
+//!   giving up with an error.
+//! - Maximum array length.
+//!
+//! Do we need something to ensure that recursive types converge? For example,
+//! we could track the depth of an object (per-reference or in absolute terms)
+//! and bias towards simpler types as the depth increases (e.g. preferring to
+//! exclude non-required object properties or shortening arrays).
 
 use std::fmt::Display;
 
@@ -21,25 +39,6 @@ use schemars::{
 };
 use serde::de::DeserializeOwned;
 use serde_json::{json, Number, Value};
-
-/// Notes
-/// Configuration we might want
-/// - Should we use examples if they're present? Seems like might be a enum
-///   to select between "ignore examples", "exclusively use examples",
-///   "choose between generated values and examples (with some weight)",
-///   "choose examples for scalars (but not complex types)", etc.
-/// - One can imagine situations where it may not be tractable to know a priori
-///   if a value validates, for example if there were a structure that
-///   contained a complex regex or a `not` with a complex schema. The consumer
-///   might want to decide how many times we try to generate a type before
-///   giving up with an error.
-/// - Maximum array length.
-///
-///
-/// Do we need something to ensure that recursive types converge? For example,
-/// we could track the depth of an object (per-reference or in absolute terms)
-/// and bias towards simpler types as the depth increases (e.g. preferring to
-/// exclude non-required object properties or shortening arrays).
 
 // TODO This is going to let us have a fixed set of bytes or an RNG.
 pub trait Source: Rng {}
@@ -417,6 +416,7 @@ fn mock_bool(src: &mut impl Source) -> Result<Value, Error> {
     Ok(json! { b })
 }
 
+#[allow(clippy::manual_div_ceil)]
 fn mock_integer(
     format: &Option<String>,
     number: &Option<Box<NumberValidation>>,
