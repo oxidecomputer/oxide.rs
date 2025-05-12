@@ -117,7 +117,7 @@ impl<'a> Dashboard<'a> {
                 Constraint::Percentage(10),
             ],
         )
-        .split(frame.size());
+        .split(frame.area());
 
         // Render the timeseries data itself.
         let graph = TimeseriesGraph {
@@ -519,13 +519,14 @@ impl<'a> Widget for TimeseriesGraph<'a> {
             .title("Time")
             .style(Style::default())
             .bounds(self.graph_state.t_limits)
-            .labels(self.graph_state.t_labels.iter().map(|l| l.into()).collect())
+            .labels(self.graph_state.t_labels.clone())
+            // .labels(self.graph_state.t_labels.iter().map(|l| Line::from(l)))
             .labels_alignment(Alignment::Right);
         let y_axis = Axis::default()
             .title("Value")
             .style(Style::default())
             .bounds(self.graph_state.y_limits)
-            .labels(self.graph_state.y_labels.iter().map(|l| l.into()).collect())
+            .labels(self.graph_state.y_labels.clone())
             .labels_alignment(Alignment::Right);
         Chart::new(datasets)
             .x_axis(t_axis)
@@ -616,7 +617,7 @@ impl<'a> Widget for TimeseriesSchemaTable<'a> {
         let constraints = widths.into_iter().map(Constraint::Min).collect::<Vec<_>>();
         let table = Table::new(rows, constraints)
             .header(header)
-            .highlight_style(Style::new().reversed())
+            .row_highlight_style(Style::new().reversed())
             .block(
                 Block::default()
                     .title("Timeseries fields")
