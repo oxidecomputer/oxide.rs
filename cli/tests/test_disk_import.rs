@@ -578,7 +578,7 @@ fn test_disk_write_import_fail() {
         r#"\* Error Response: status: 503 Service Unavailable;.*$"#
     );
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let temp_dir = tempfile::tempdir().unwrap();
 
     Command::cargo_bin("oxide")
         .unwrap()
@@ -586,7 +586,7 @@ fn test_disk_write_import_fail() {
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -612,7 +612,7 @@ fn test_disk_write_import_fail() {
 // Test for required parameters being supplied
 #[test]
 fn test_disk_import_required_parameters() {
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let temp_dir = tempfile::tempdir().unwrap();
     let test_file = Testfile::new_random(512 + 1).unwrap();
 
     // only supplying --image-description won't work
@@ -628,7 +628,7 @@ fn test_disk_import_required_parameters() {
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -658,7 +658,7 @@ fn test_disk_import_required_parameters() {
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -685,7 +685,7 @@ fn test_disk_import_required_parameters() {
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -724,7 +724,7 @@ fn test_disk_import_required_parameters() {
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("disk")
         .arg("import")
         .arg("--project")
