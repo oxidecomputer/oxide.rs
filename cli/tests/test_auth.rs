@@ -136,10 +136,11 @@ fn test_auth_login_first() {
     let server = MockServer::start();
     let mock = MockOAuth::new(&server);
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
 
     // Make sure we know how to make non-existent directories.
-    let config_dir = temp_dir.join(".config").join("oxide");
+    let config_dir = temp_dir_path.join(".config").join("oxide");
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -211,14 +212,15 @@ fn test_auth_login_existing_default() {
     let server = MockServer::start();
     let mock = MockOAuth::new(&server);
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
 
-    write_first_creds(&temp_dir);
-    let creds_path = temp_dir.join("credentials.toml");
+    write_first_creds(temp_dir_path);
+    let creds_path = temp_dir_path.join("credentials.toml");
     assert_mode(&creds_path, 0o600);
 
-    write_first_config(&temp_dir);
-    assert_mode(&temp_dir.join("config.toml"), 0o644);
+    write_first_config(temp_dir_path);
+    assert_mode(&temp_dir_path.join("config.toml"), 0o644);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
@@ -226,7 +228,7 @@ fn test_auth_login_existing_default() {
         .arg("--profile")
         .arg("crystal-palace")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir_path.as_os_str())
         .arg("auth")
         .arg("login")
         .arg("--no-browser")
@@ -236,7 +238,7 @@ fn test_auth_login_existing_default() {
         .success();
     let stdout = String::from_utf8_lossy(&cmd.get_output().stdout);
 
-    let creds_path = temp_dir.join("credentials.toml");
+    let creds_path = temp_dir_path.join("credentials.toml");
     assert_contents(
         "tests/data/test_auth_existing_default.stdout",
         &scrub_server(stdout.to_string(), server.url("")),
@@ -252,9 +254,9 @@ fn test_auth_login_existing_default() {
 
     assert_contents(
         "tests/data/test_auth_existing_default_config.toml",
-        &read_to_string(temp_dir.join("config.toml")).unwrap(),
+        &read_to_string(temp_dir_path.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o644);
+    assert_mode(&temp_dir_path.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -262,15 +264,16 @@ fn test_auth_login_existing_no_default() {
     let server = MockServer::start();
     let mock = MockOAuth::new(&server);
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
-    write_first_creds(&temp_dir);
-    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
+    write_first_creds(temp_dir_path);
+    assert_mode(&temp_dir_path.join("credentials.toml"), 0o600);
 
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir_path.as_os_str())
         .arg("auth")
         .arg("login")
         .arg("--no-browser")
@@ -290,17 +293,17 @@ fn test_auth_login_existing_no_default() {
     assert_contents(
         "tests/data/test_auth_existing_no_default_credentials.toml",
         &scrub_server(
-            read_to_string(temp_dir.join("credentials.toml")).unwrap(),
+            read_to_string(temp_dir_path.join("credentials.toml")).unwrap(),
             server.url(""),
         ),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
+    assert_mode(&temp_dir_path.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_existing_no_default_config.toml",
-        &read_to_string(temp_dir.join("config.toml")).unwrap(),
+        &read_to_string(temp_dir_path.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o644);
+    assert_mode(&temp_dir_path.join("config.toml"), 0o644);
 }
 
 #[test]
@@ -308,8 +311,9 @@ fn test_auth_login_existing_no_default() {
 fn test_auth_credentials_permissions() {
     let server = MockServer::start();
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
-    let cred_path = temp_dir.join("credentials.toml");
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
+    let cred_path = temp_dir_path.join("credentials.toml");
     let creds = format!(
         "\
         [profile.lightman]\n\
@@ -327,7 +331,7 @@ fn test_auth_credentials_permissions() {
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir_path.as_os_str())
         .arg("auth")
         .arg("status")
         .assert()
@@ -351,13 +355,14 @@ fn test_auth_login_double() {
     let server = MockServer::start();
     let mock = MockOAuth::new(&server);
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
 
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir_path.as_os_str())
         .arg("auth")
         .arg("login")
         .arg("--no-browser")
@@ -369,7 +374,7 @@ fn test_auth_login_double() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir_path.as_os_str())
         .arg("auth")
         .arg("login")
         .arg("--no-browser")
@@ -389,25 +394,25 @@ fn test_auth_login_double() {
     assert_contents(
         "tests/data/test_auth_double_credentials.toml",
         &scrub_server(
-            read_to_string(temp_dir.join("credentials.toml")).unwrap(),
+            read_to_string(temp_dir_path.join("credentials.toml")).unwrap(),
             server.url(""),
         ),
     );
-    assert_mode(&temp_dir.join("credentials.toml"), 0o600);
+    assert_mode(&temp_dir_path.join("credentials.toml"), 0o600);
 
     assert_contents(
         "tests/data/test_auth_double_config.toml",
-        &read_to_string(temp_dir.join("config.toml")).unwrap(),
+        &read_to_string(temp_dir_path.join("config.toml")).unwrap(),
     );
-    assert_mode(&temp_dir.join("config.toml"), 0o644);
+    assert_mode(&temp_dir_path.join("config.toml"), 0o644);
 }
 
 #[test]
 fn test_cmd_auth_status() {
     let server = MockServer::start();
 
-    let temp_dir = tempfile::tempdir().unwrap().into_path();
-    let cred_path = temp_dir.join("credentials.toml");
+    let temp_dir = tempfile::tempdir().unwrap();
+    let cred_path = temp_dir.path().join("credentials.toml");
     let creds = format!(
         "\
         [profile.lightman]\n\
@@ -445,8 +450,8 @@ fn test_cmd_auth_status() {
         file.set_permissions(perms).unwrap()
     }
 
-    let empty_creds_dir = tempfile::tempdir().unwrap().into_path();
-    File::create(empty_creds_dir.join("credentials.toml")).unwrap();
+    let empty_creds_dir = tempfile::tempdir().unwrap();
+    File::create(empty_creds_dir.path().join("credentials.toml")).unwrap();
 
     let ok = server.current_user_view(|when, then| {
         when.into_inner()
@@ -477,7 +482,7 @@ fn test_cmd_auth_status() {
     let cmd = Command::cargo_bin("oxide")
         .unwrap()
         .arg("--config-dir")
-        .arg(temp_dir.as_os_str())
+        .arg(temp_dir.path().as_os_str())
         .arg("auth")
         .arg("status")
         .assert()
@@ -499,7 +504,7 @@ fn test_cmd_auth_status() {
     Command::cargo_bin("oxide")
         .unwrap()
         .arg("--config-dir")
-        .arg(empty_creds_dir.as_os_str())
+        .arg(empty_creds_dir.path().as_os_str())
         .arg("auth")
         .arg("status")
         .assert()
