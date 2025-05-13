@@ -4969,7 +4969,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("silo")
                     .long("silo")
                     .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
+                    .required(false)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch SAML identity provider")

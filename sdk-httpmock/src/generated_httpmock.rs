@@ -12236,8 +12236,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("silo", value.to_string()))
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
+                        .is_none()
+                }))
+            }
         }
     }
 
