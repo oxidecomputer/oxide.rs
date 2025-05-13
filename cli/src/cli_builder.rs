@@ -104,7 +104,7 @@ pub struct NewCli<'a> {
     runner: CommandBuilder<'a>,
 }
 
-impl<'a> Default for NewCli<'a> {
+impl Default for NewCli<'_> {
     fn default() -> Self {
         let mut parser = OxideCli::command().name("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
