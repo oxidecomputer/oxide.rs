@@ -242,7 +242,7 @@ fn get_profile_auth(
                     (profile_info.host == env_host).then_some(profile_name)
                 })
                 .next()
-                .ok_or_else(|| OxideAuthError::MissingToken(env_host))?
+                .ok_or(OxideAuthError::MissingToken(env_host))?
                 .clone()
         } else {
             let config_path = config_dir.join("config.toml");
@@ -263,7 +263,7 @@ fn get_profile_auth(
         let profile = creds
             .profile
             .get(&profile_name)
-            .ok_or_else(|| OxideAuthError::NoProfile(credentials_path, profile_name))?;
+            .ok_or(OxideAuthError::NoProfile(credentials_path, profile_name))?;
         Ok((profile.host.clone(), profile.token.clone()))
     }
 }
