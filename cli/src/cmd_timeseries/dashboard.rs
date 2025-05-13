@@ -491,7 +491,7 @@ struct TimeseriesGraph<'a> {
     graph_state: &'a GraphState,
 }
 
-impl<'a> Widget for TimeseriesGraph<'a> {
+impl Widget for TimeseriesGraph<'_> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,
@@ -549,7 +549,7 @@ struct TimeseriesSchemaTable<'a> {
     graph_state: &'a mut GraphState,
 }
 
-impl<'a> Widget for TimeseriesSchemaTable<'a> {
+impl Widget for TimeseriesSchemaTable<'_> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,
@@ -631,7 +631,7 @@ struct QueryString<'a> {
     query: &'a str,
 }
 
-impl<'a> Widget for QueryString<'a> {
+impl Widget for QueryString<'_> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,
