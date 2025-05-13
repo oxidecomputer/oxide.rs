@@ -80086,7 +80086,7 @@ pub mod builder {
     pub struct SamlIdentityProviderView<'a> {
         client: &'a super::Client,
         provider: Result<types::NameOrId, String>,
-        silo: Result<types::NameOrId, String>,
+        silo: Result<Option<types::NameOrId>, String>,
     }
 
     impl<'a> SamlIdentityProviderView<'a> {
@@ -80094,7 +80094,7 @@ pub mod builder {
             Self {
                 client: client,
                 provider: Err("provider was not initialized".to_string()),
-                silo: Err("silo was not initialized".to_string()),
+                silo: Ok(None),
             }
         }
 
@@ -80114,6 +80114,7 @@ pub mod builder {
         {
             self.silo = value
                 .try_into()
+                .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
             self
         }
