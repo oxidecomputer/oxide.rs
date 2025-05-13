@@ -520,7 +520,6 @@ impl Widget for TimeseriesGraph<'_> {
             .style(Style::default())
             .bounds(self.graph_state.t_limits)
             .labels(self.graph_state.t_labels.clone())
-            // .labels(self.graph_state.t_labels.iter().map(|l| Line::from(l)))
             .labels_alignment(Alignment::Right);
         let y_axis = Axis::default()
             .title("Value")
