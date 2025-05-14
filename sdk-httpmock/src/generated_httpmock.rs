@@ -611,7 +611,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}$",
                 value.to_string()
@@ -673,7 +673,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}$",
                 value.to_string()
@@ -733,7 +733,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download$",
                 value.to_string()
@@ -778,7 +778,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download$",
                 value.to_string()
@@ -825,7 +825,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download/.*$",
                 value.to_string()
@@ -881,7 +881,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download/.*$",
                 value.to_string()
@@ -932,7 +932,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/index$",
                 value.to_string()
