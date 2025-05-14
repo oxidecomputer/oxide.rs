@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{
     collections::BTreeMap,
@@ -38,6 +38,8 @@ pub struct ClientConfig {
     cert: Option<reqwest::Certificate>,
     insecure: bool,
     timeout: Option<u64>,
+    connect_timeout: Option<u64>,
+    read_timeout: Option<u64>,
 }
 
 #[derive(Clone)]
@@ -59,6 +61,8 @@ impl Default for ClientConfig {
             cert: None,
             insecure: false,
             timeout: None,
+            connect_timeout: None,
+            read_timeout: None,
         }
     }
 }
@@ -109,9 +113,21 @@ impl ClientConfig {
         self
     }
 
-    /// Specify the desired client timeout.
+    /// Specify the desired client timeout in seconds.
     pub fn with_timeout(mut self, timeout: u64) -> Self {
         self.timeout = Some(timeout);
+        self
+    }
+
+    /// Specify the desired client connect_timeout in seconds.
+    pub fn with_connect_timeout(mut self, connect_timeout: u64) -> Self {
+        self.connect_timeout = Some(connect_timeout);
+        self
+    }
+
+    /// Specify the desired client read_timeout in seconds.
+    pub fn with_read_timeout(mut self, read_timeout: u64) -> Self {
+        self.read_timeout = Some(read_timeout);
         self
     }
 
@@ -189,10 +205,27 @@ impl ClientConfig {
             cert,
             insecure,
             timeout,
+            connect_timeout,
+            read_timeout,
             ..
         } = self;
-        let dur = std::time::Duration::from_secs(timeout.unwrap_or(15));
-        let mut client_builder = ClientBuilder::new().connect_timeout(dur).timeout(dur);
+        const DEFAULT_TIMEOUT: u64 = 15;
+
+        let dur = std::time::Duration::from_secs(timeout.unwrap_or(DEFAULT_TIMEOUT));
+        let mut client_builder = ClientBuilder::new().timeout(dur);
+
+        // Use an explicit connect_timeout if provided, else fallack to timeout or default.
+        let connect_timeout = match (connect_timeout, timeout) {
+            (Some(ct), _) => std::time::Duration::from_secs(*ct),
+            (None, Some(t)) => std::time::Duration::from_secs(*t),
+            (None, None) => std::time::Duration::from_secs(DEFAULT_TIMEOUT),
+        };
+        client_builder = client_builder.connect_timeout(connect_timeout);
+
+        if let Some(rt) = read_timeout {
+            let read_dur = std::time::Duration::from_secs(*rt);
+            client_builder = client_builder.read_timeout(read_dur);
+        }
 
         if let Some(ResolveValue { domain, addr }) = resolve {
             client_builder = client_builder.resolve(domain, SocketAddr::new(*addr, 0));

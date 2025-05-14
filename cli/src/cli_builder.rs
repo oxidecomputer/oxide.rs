@@ -272,6 +272,18 @@ impl<'a> NewCli<'a> {
         if let Some(timeout) = timeout {
             client_config = client_config.with_timeout(timeout);
         }
+        if let Some("bundle") = matches.subcommand_name() {
+            // Keep a reasonable timeout for initial connection.
+            client_config = client_config.with_connect_timeout(15);
+
+            // Bundles may be tens of gigabytes, set a one hour timeout by default.
+            if timeout.is_none() {
+                client_config = client_config.with_timeout(60 * 60);
+            }
+
+            // Kill the connection if we stop receiving data before the connection timeout.
+            client_config = client_config.with_read_timeout(30);
+        }
 
         let ctx = Context::new(client_config)?;
 
