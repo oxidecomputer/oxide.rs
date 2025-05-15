@@ -272,7 +272,11 @@ impl<'a> NewCli<'a> {
         if let Some(timeout) = timeout {
             client_config = client_config.with_timeout(timeout);
         }
-        if let Some("bundle") = matches.subcommand_name() {
+
+        // Set longer timeouts for potentially slow support-bundle subcommands.
+        if matches.subcommand_matches("bundle").is_some_and(|bundle| {
+            matches!(bundle.subcommand_name(), Some("download") | Some("inspect"))
+        }) {
             // Keep a reasonable timeout for initial connection.
             client_config = client_config.with_connect_timeout(15);
 
