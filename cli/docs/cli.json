@@ -583,13 +583,13 @@
           "long_about": "May also be used to cancel a support bundle which is currently being collected, or to remove metadata for a support bundle that has failed.",
           "args": [
             {
+              "long": "bundle-id",
+              "help": "ID of the support bundle"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
-            },
-            {
-              "long": "support-bundle",
-              "help": "ID of the support bundle"
             }
           ]
         },
@@ -660,13 +660,13 @@
           "about": "View a support bundle",
           "args": [
             {
+              "long": "bundle-id",
+              "help": "ID of the support bundle"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
-            },
-            {
-              "long": "support-bundle",
-              "help": "ID of the support bundle"
             }
           ]
         }

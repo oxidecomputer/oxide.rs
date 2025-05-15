@@ -592,8 +592,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -604,8 +604,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_delete() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -620,8 +620,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_download() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -632,8 +632,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_head() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -644,18 +644,18 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_download_file() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .arg(
                 ::clap::Arg::new("file")
                     .long("file")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required(true)
                     .help("The file within the bundle to download"),
-            )
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
             )
             .about("Download a file within a support bundle")
     }
@@ -663,18 +663,18 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_head_file() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .arg(
                 ::clap::Arg::new("file")
                     .long("file")
                     .value_parser(::clap::value_parser!(::std::string::String))
                     .required(true)
                     .help("The file within the bundle to download"),
-            )
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
             )
             .about("Download the metadata of a file within the support bundle")
     }
@@ -682,8 +682,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_index() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -8884,8 +8884,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_view();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -8908,8 +8908,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_delete();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -8932,8 +8932,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_download();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -8954,8 +8954,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_head();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -8976,12 +8976,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_download_file();
-        if let Some(value) = matches.get_one::<::std::string::String>("file") {
-            request = request.file(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::std::string::String>("file") {
+            request = request.file(value.clone());
         }
 
         self.config
@@ -9002,12 +9002,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_head_file();
-        if let Some(value) = matches.get_one::<::std::string::String>("file") {
-            request = request.file(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::std::string::String>("file") {
+            request = request.file(value.clone());
         }
 
         self.config
@@ -9028,8 +9028,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_index();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
