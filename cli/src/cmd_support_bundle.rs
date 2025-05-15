@@ -54,7 +54,7 @@ impl crate::AuthenticatedCmd for CmdDownload {
         // NOTE: It might be worth adding a progress bar here?
         let mut stream = client
             .support_bundle_download()
-            .support_bundle(self.id)
+            .bundle_id(self.id)
             .send()
             .await?
             .into_inner_stream();
@@ -134,7 +134,7 @@ impl<'a> StreamedFile<'a> {
         let stream = self
             .client
             .support_bundle_download_file()
-            .support_bundle(self.id)
+            .bundle_id(self.id)
             .file(self.path.as_str())
             .send()
             .await
@@ -207,7 +207,7 @@ impl<'c> SupportBundleAccessor for ApiAccess<'c> {
         let stream = self
             .client
             .support_bundle_index()
-            .support_bundle(self.id)
+            .bundle_id(self.id)
             .send()
             .await
             .with_context(|| format!("downloading support bundle index {}", self.id))?
