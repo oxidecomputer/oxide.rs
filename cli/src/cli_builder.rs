@@ -273,6 +273,22 @@ impl<'a> NewCli<'a> {
             client_config = client_config.with_timeout(timeout);
         }
 
+        // Set longer timeouts for potentially slow support-bundle subcommands.
+        if matches.subcommand_matches("bundle").is_some_and(|bundle| {
+            matches!(bundle.subcommand_name(), Some("download") | Some("inspect"))
+        }) {
+            // Keep a reasonable timeout for initial connection.
+            client_config = client_config.with_connect_timeout(15);
+
+            // Bundles may be tens of gigabytes, set a one hour timeout by default.
+            if timeout.is_none() {
+                client_config = client_config.with_timeout(60 * 60);
+            }
+
+            // Kill the connection if we stop receiving data before the connection timeout.
+            client_config = client_config.with_read_timeout(30);
+        }
+
         let ctx = Context::new(client_config)?;
 
         let mut node = &runner;
