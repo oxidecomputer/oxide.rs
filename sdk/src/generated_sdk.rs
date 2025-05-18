@@ -30510,11 +30510,9 @@ pub mod types {
     ///  "description": "Updated list of firewall rules. Will replace all
     /// existing rules.",
     ///  "type": "object",
-    ///  "required": [
-    ///    "rules"
-    ///  ],
     ///  "properties": {
     ///    "rules": {
+    ///      "default": [],
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleUpdate"
@@ -30529,12 +30527,21 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct VpcFirewallRuleUpdateParams {
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub rules: ::std::vec::Vec<VpcFirewallRuleUpdate>,
     }
 
     impl ::std::convert::From<&VpcFirewallRuleUpdateParams> for VpcFirewallRuleUpdateParams {
         fn from(value: &VpcFirewallRuleUpdateParams) -> Self {
             value.clone()
+        }
+    }
+
+    impl ::std::default::Default for VpcFirewallRuleUpdateParams {
+        fn default() -> Self {
+            Self {
+                rules: Default::default(),
+            }
         }
     }
 
@@ -55366,7 +55373,7 @@ pub mod types {
         impl ::std::default::Default for VpcFirewallRuleUpdateParams {
             fn default() -> Self {
                 Self {
-                    rules: Err("no value supplied for rules".to_string()),
+                    rules: Ok(Default::default()),
                 }
             }
         }

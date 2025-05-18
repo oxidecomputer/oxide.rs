@@ -6766,7 +6766,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )

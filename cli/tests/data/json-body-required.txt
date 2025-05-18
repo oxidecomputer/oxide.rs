@@ -5,7 +5,6 @@ oxide silo idp local user create
 oxide silo idp local user set-password
 oxide silo create
 oxide silo policy update
-oxide vpc firewall-rules update
 oxide vpc router route create
 oxide vpc router route update
 oxide alert receiver webhook create
