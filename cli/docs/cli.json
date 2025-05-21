@@ -56,11 +56,11 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List webhook event classes",
+              "about": "List alert classes",
               "args": [
                 {
                   "long": "filter",
-                  "help": "An optional glob pattern for filtering event class names.\n\nIf provided, only event classes which match this glob pattern will be included in the response."
+                  "help": "An optional glob pattern for filtering alert class names.\n\nIf provided, only alert classes which match this glob pattern will be included in the response."
                 },
                 {
                   "long": "limit",
@@ -87,7 +87,7 @@
           "subcommands": [
             {
               "name": "delete",
-              "about": "Delete webhook receiver",
+              "about": "Delete alert receiver",
               "args": [
                 {
                   "long": "profile",
@@ -102,7 +102,7 @@
             },
             {
               "name": "list",
-              "about": "List webhook receivers",
+              "about": "List alert receivers",
               "args": [
                 {
                   "long": "limit",
@@ -125,7 +125,7 @@
             },
             {
               "name": "log",
-              "about": "List delivery attempts to webhook receiver",
+              "about": "List delivery attempts to alert receiver",
               "long_about": "Optional query parameters to this endpoint may be used to filter deliveries by state. If none of the `failed`, `pending` or `delivered` query parameters are present, all deliveries are returned. If one or more of these parameters are provided, only those which are set to \"true\" are included in the response.",
               "args": [
                 {
@@ -147,10 +147,6 @@
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "page-token",
-                  "help": "Token returned by previous call to retrieve the subsequent page"
                 },
                 {
                   "long": "pending",
@@ -180,8 +176,8 @@
             },
             {
               "name": "probe",
-              "about": "Send liveness probe to webhook receiver",
-              "long_about": "This endpoint synchronously sends a liveness probe request to the selected webhook receiver. The response message describes the outcome of the probe request: either the response from the receiver endpoint, or an indication of why the probe failed.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If the receiver responds with another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the webhook receiver responds to the probe request with a `2xx` status code, any events for which delivery to this receiver has failed will be queued for re-delivery.",
+              "about": "Send liveness probe to alert receiver",
+              "long_about": "This endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.",
               "args": [
                 {
                   "long": "profile",
@@ -204,11 +200,11 @@
             },
             {
               "name": "resend",
-              "about": "Request re-delivery of webhook event",
+              "about": "Request re-delivery of alert",
               "args": [
                 {
-                  "long": "event-id",
-                  "help": "UUID of the event"
+                  "long": "alert-id",
+                  "help": "UUID of the alert"
                 },
                 {
                   "long": "profile",
@@ -223,7 +219,7 @@
             },
             {
               "name": "subscribe",
-              "about": "Add webhook receiver subscription",
+              "about": "Add alert receiver subscription",
               "args": [
                 {
                   "long": "json-body",
@@ -250,7 +246,7 @@
             },
             {
               "name": "unsubscribe",
-              "about": "Remove webhook receiver subscription",
+              "about": "Remove alert receiver subscription",
               "args": [
                 {
                   "long": "profile",
@@ -269,7 +265,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch webhook receiver",
+              "about": "Fetch alert receiver",
               "args": [
                 {
                   "long": "profile",
