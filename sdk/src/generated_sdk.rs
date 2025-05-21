@@ -1223,6 +1223,1063 @@ pub mod types {
         }
     }
 
+    /// An alert class.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An alert class.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "A description of what this alert class
+    /// represents.",
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the alert class.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertClass {
+        /// A description of what this alert class represents.
+        pub description: ::std::string::String,
+        /// The name of the alert class.
+        pub name: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&AlertClass> for AlertClass {
+        fn from(value: &AlertClass) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertClass {
+        pub fn builder() -> builder::AlertClass {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AlertClass"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertClassResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AlertClass>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertClassResultsPage> for AlertClassResultsPage {
+        fn from(value: &AlertClassResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertClassResultsPage {
+        pub fn builder() -> builder::AlertClassResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A delivery of a webhook event.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A delivery of a webhook event.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "alert_class",
+    ///    "alert_id",
+    ///    "attempts",
+    ///    "id",
+    ///    "receiver_id",
+    ///    "state",
+    ///    "time_started",
+    ///    "trigger"
+    ///  ],
+    ///  "properties": {
+    ///    "alert_class": {
+    ///      "description": "The event class.",
+    ///      "type": "string"
+    ///    },
+    ///    "alert_id": {
+    ///      "description": "The UUID of the event.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TypedUuidForAlertKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "attempts": {
+    ///      "description": "Individual attempts to deliver this webhook event,
+    /// and their outcomes.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertDeliveryAttempts"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The UUID of this delivery attempt.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "receiver_id": {
+    ///      "description": "The UUID of the alert receiver that this event was
+    /// delivered to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TypedUuidForAlertReceiverKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "state": {
+    ///      "description": "The state of this delivery.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertDeliveryState"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_started": {
+    ///      "description": "The time at which this delivery began (i.e. the
+    /// event was dispatched to the receiver).",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "trigger": {
+    ///      "description": "Why this delivery was performed.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertDeliveryTrigger"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertDelivery {
+        /// The event class.
+        pub alert_class: ::std::string::String,
+        /// The UUID of the event.
+        pub alert_id: TypedUuidForAlertKind,
+        /// Individual attempts to deliver this webhook event, and their
+        /// outcomes.
+        pub attempts: AlertDeliveryAttempts,
+        /// The UUID of this delivery attempt.
+        pub id: ::uuid::Uuid,
+        /// The UUID of the alert receiver that this event was delivered to.
+        pub receiver_id: TypedUuidForAlertReceiverKind,
+        /// The state of this delivery.
+        pub state: AlertDeliveryState,
+        /// The time at which this delivery began (i.e. the event was dispatched
+        /// to the receiver).
+        pub time_started: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Why this delivery was performed.
+        pub trigger: AlertDeliveryTrigger,
+    }
+
+    impl ::std::convert::From<&AlertDelivery> for AlertDelivery {
+        fn from(value: &AlertDelivery) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertDelivery {
+        pub fn builder() -> builder::AlertDelivery {
+            Default::default()
+        }
+    }
+
+    /// A list of attempts to deliver an alert to a receiver.
+    ///
+    /// The type of the delivery attempt model depends on the receiver type, as
+    /// it may contain information specific to that delivery mechanism. For
+    /// example, webhook delivery attempts contain the HTTP status code of the
+    /// webhook request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A list of attempts to deliver an alert to a
+    /// receiver.\n\nThe type of the delivery attempt model depends on the
+    /// receiver type, as it may contain information specific to that delivery
+    /// mechanism. For example, webhook delivery attempts contain the HTTP
+    /// status code of the webhook request.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "A list of attempts to deliver an alert to a webhook
+    /// receiver.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "webhook"
+    ///      ],
+    ///      "properties": {
+    ///        "webhook": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/WebhookDeliveryAttempt"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub enum AlertDeliveryAttempts {
+        /// A list of attempts to deliver an alert to a webhook receiver.
+        #[serde(rename = "webhook")]
+        Webhook(::std::vec::Vec<WebhookDeliveryAttempt>),
+    }
+
+    impl ::std::convert::From<&Self> for AlertDeliveryAttempts {
+        fn from(value: &AlertDeliveryAttempts) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::std::vec::Vec<WebhookDeliveryAttempt>> for AlertDeliveryAttempts {
+        fn from(value: ::std::vec::Vec<WebhookDeliveryAttempt>) -> Self {
+            Self::Webhook(value)
+        }
+    }
+
+    /// `AlertDeliveryId`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "delivery_id"
+    ///  ],
+    ///  "properties": {
+    ///    "delivery_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertDeliveryId {
+        pub delivery_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&AlertDeliveryId> for AlertDeliveryId {
+        fn from(value: &AlertDeliveryId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertDeliveryId {
+        pub fn builder() -> builder::AlertDeliveryId {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AlertDelivery"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertDeliveryResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AlertDelivery>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertDeliveryResultsPage> for AlertDeliveryResultsPage {
+        fn from(value: &AlertDeliveryResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertDeliveryResultsPage {
+        pub fn builder() -> builder::AlertDeliveryResultsPage {
+            Default::default()
+        }
+    }
+
+    /// The state of a webhook delivery attempt.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The state of a webhook delivery attempt.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The webhook event has not yet been delivered
+    /// successfully.\n\nEither no delivery attempts have yet been performed, or
+    /// the delivery has failed at least once but has retries remaining.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "pending"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The webhook event has been delivered
+    /// successfully.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "delivered"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The webhook delivery attempt has failed permanently
+    /// and will not be retried again.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "failed"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum AlertDeliveryState {
+        /// The webhook event has not yet been delivered successfully.
+        ///
+        /// Either no delivery attempts have yet been performed, or the delivery
+        /// has failed at least once but has retries remaining.
+        #[serde(rename = "pending")]
+        Pending,
+        /// The webhook event has been delivered successfully.
+        #[serde(rename = "delivered")]
+        Delivered,
+        /// The webhook delivery attempt has failed permanently and will not be
+        /// retried again.
+        #[serde(rename = "failed")]
+        Failed,
+    }
+
+    impl ::std::convert::From<&Self> for AlertDeliveryState {
+        fn from(value: &AlertDeliveryState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for AlertDeliveryState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Pending => write!(f, "pending"),
+                Self::Delivered => write!(f, "delivered"),
+                Self::Failed => write!(f, "failed"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for AlertDeliveryState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "pending" => Ok(Self::Pending),
+                "delivered" => Ok(Self::Delivered),
+                "failed" => Ok(Self::Failed),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AlertDeliveryState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AlertDeliveryState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AlertDeliveryState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// The reason an alert was delivered
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The reason an alert was delivered",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Delivery was triggered by the alert itself.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "alert"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Delivery was triggered by a request to resend the
+    /// alert.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "resend"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "This delivery is a liveness probe.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "probe"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum AlertDeliveryTrigger {
+        /// Delivery was triggered by the alert itself.
+        #[serde(rename = "alert")]
+        Alert,
+        /// Delivery was triggered by a request to resend the alert.
+        #[serde(rename = "resend")]
+        Resend,
+        /// This delivery is a liveness probe.
+        #[serde(rename = "probe")]
+        Probe,
+    }
+
+    impl ::std::convert::From<&Self> for AlertDeliveryTrigger {
+        fn from(value: &AlertDeliveryTrigger) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for AlertDeliveryTrigger {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Alert => write!(f, "alert"),
+                Self::Resend => write!(f, "resend"),
+                Self::Probe => write!(f, "probe"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for AlertDeliveryTrigger {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "alert" => Ok(Self::Alert),
+                "resend" => Ok(Self::Resend),
+                "probe" => Ok(Self::Probe),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AlertDeliveryTrigger {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AlertDeliveryTrigger {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AlertDeliveryTrigger {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// Data describing the result of an alert receiver liveness probe attempt.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Data describing the result of an alert receiver
+    /// liveness probe attempt.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "probe"
+    ///  ],
+    ///  "properties": {
+    ///    "probe": {
+    ///      "description": "The outcome of the probe delivery.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertDelivery"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "resends_started": {
+    ///      "description": "If the probe request succeeded, and resending
+    /// failed deliveries on success was requested, the number of new delivery
+    /// attempts started. Otherwise, if the probe did not succeed, or resending
+    /// failed deliveries was not requested, this is null.\n\nNote that this may
+    /// be 0, if there were no events found which had not been delivered
+    /// successfully to this receiver.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertProbeResult {
+        /// The outcome of the probe delivery.
+        pub probe: AlertDelivery,
+        /// If the probe request succeeded, and resending failed deliveries on
+        /// success was requested, the number of new delivery attempts started.
+        /// Otherwise, if the probe did not succeed, or resending failed
+        /// deliveries was not requested, this is null.
+        ///
+        /// Note that this may be 0, if there were no events found which had not
+        /// been delivered successfully to this receiver.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub resends_started: ::std::option::Option<u32>,
+    }
+
+    impl ::std::convert::From<&AlertProbeResult> for AlertProbeResult {
+        fn from(value: &AlertProbeResult) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertProbeResult {
+        pub fn builder() -> builder::AlertProbeResult {
+            Default::default()
+        }
+    }
+
+    /// The configuration for an alert receiver.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The configuration for an alert receiver.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "kind",
+    ///    "name",
+    ///    "subscriptions",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "kind": {
+    ///      "description": "Configuration specific to the kind of alert
+    /// receiver that this is.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertReceiverKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "subscriptions": {
+    ///      "description": "The list of alert classes to which this receiver is
+    /// subscribed.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AlertSubscription"
+    ///      }
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertReceiver {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// Configuration specific to the kind of alert receiver that this is.
+        pub kind: AlertReceiverKind,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// The list of alert classes to which this receiver is subscribed.
+        pub subscriptions: ::std::vec::Vec<AlertSubscription>,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&AlertReceiver> for AlertReceiver {
+        fn from(value: &AlertReceiver) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertReceiver {
+        pub fn builder() -> builder::AlertReceiver {
+            Default::default()
+        }
+    }
+
+    /// The possible alert delivery mechanisms for an alert receiver.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The possible alert delivery mechanisms for an alert
+    /// receiver.",
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "webhook"
+    ///      ],
+    ///      "properties": {
+    ///        "webhook": {
+    ///          "$ref": "#/components/schemas/WebhookReceiverConfig"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub enum AlertReceiverKind {
+        #[serde(rename = "webhook")]
+        Webhook(WebhookReceiverConfig),
+    }
+
+    impl ::std::convert::From<&Self> for AlertReceiverKind {
+        fn from(value: &AlertReceiverKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<WebhookReceiverConfig> for AlertReceiverKind {
+        fn from(value: WebhookReceiverConfig) -> Self {
+            Self::Webhook(value)
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AlertReceiver"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertReceiverResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AlertReceiver>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AlertReceiverResultsPage> for AlertReceiverResultsPage {
+        fn from(value: &AlertReceiverResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertReceiverResultsPage {
+        pub fn builder() -> builder::AlertReceiverResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A webhook event class subscription matches either a single event class
+    /// exactly, or a glob pattern including wildcards that may match multiple
+    /// event classes
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "A webhook event class subscription",
+    ///  "description": "A webhook event class subscription matches either a
+    /// single event class exactly, or a glob pattern including wildcards that
+    /// may match multiple event classes",
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct AlertSubscription(::std::string::String);
+    impl ::std::ops::Deref for AlertSubscription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<AlertSubscription> for ::std::string::String {
+        fn from(value: AlertSubscription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&AlertSubscription> for AlertSubscription {
+        fn from(value: &AlertSubscription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for AlertSubscription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if regress::Regex::new("^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$")
+                .unwrap()
+                .find(value)
+                .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for AlertSubscription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for AlertSubscription {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for AlertSubscription {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for AlertSubscription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
+    /// `AlertSubscriptionCreate`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "subscription"
+    ///  ],
+    ///  "properties": {
+    ///    "subscription": {
+    ///      "description": "The event class pattern to subscribe to.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertSubscription"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertSubscriptionCreate {
+        /// The event class pattern to subscribe to.
+        pub subscription: AlertSubscription,
+    }
+
+    impl ::std::convert::From<&AlertSubscriptionCreate> for AlertSubscriptionCreate {
+        fn from(value: &AlertSubscriptionCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertSubscriptionCreate {
+        pub fn builder() -> builder::AlertSubscriptionCreate {
+            Default::default()
+        }
+    }
+
+    /// `AlertSubscriptionCreated`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "subscription"
+    ///  ],
+    ///  "properties": {
+    ///    "subscription": {
+    ///      "description": "The new subscription added to the receiver.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AlertSubscription"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AlertSubscriptionCreated {
+        /// The new subscription added to the receiver.
+        pub subscription: AlertSubscription,
+    }
+
+    impl ::std::convert::From<&AlertSubscriptionCreated> for AlertSubscriptionCreated {
+        fn from(value: &AlertSubscriptionCreated) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AlertSubscriptionCreated {
+        pub fn builder() -> builder::AlertSubscriptionCreated {
+            Default::default()
+        }
+    }
+
     /// Allowlist of IPs or subnets that can make requests to user-facing
     /// services.
     ///
@@ -8224,108 +9281,6 @@ pub mod types {
 
     impl Error {
         pub fn builder() -> builder::Error {
-            Default::default()
-        }
-    }
-
-    /// A webhook event class.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A webhook event class.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description",
-    ///    "name"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "A description of what this event class
-    /// represents.",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "description": "The name of the event class.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct EventClass {
-        /// A description of what this event class represents.
-        pub description: ::std::string::String,
-        /// The name of the event class.
-        pub name: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&EventClass> for EventClass {
-        fn from(value: &EventClass) -> Self {
-            value.clone()
-        }
-    }
-
-    impl EventClass {
-        pub fn builder() -> builder::EventClass {
-            Default::default()
-        }
-    }
-
-    /// A single page of results
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/EventClass"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct EventClassResultsPage {
-        /// list of items on this page of results
-        pub items: ::std::vec::Vec<EventClass>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub next_page: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&EventClassResultsPage> for EventClassResultsPage {
-        fn from(value: &EventClassResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl EventClassResultsPage {
-        pub fn builder() -> builder::EventClassResultsPage {
             Default::default()
         }
     }
@@ -27663,6 +28618,156 @@ pub mod types {
         }
     }
 
+    /// `TypedUuidForAlertKind`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TypedUuidForAlertKind(pub ::uuid::Uuid);
+    impl ::std::ops::Deref for TypedUuidForAlertKind {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForAlertKind> for ::uuid::Uuid {
+        fn from(value: TypedUuidForAlertKind) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TypedUuidForAlertKind> for TypedUuidForAlertKind {
+        fn from(value: &TypedUuidForAlertKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForAlertKind {
+        fn from(value: ::uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for TypedUuidForAlertKind {
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TypedUuidForAlertKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for TypedUuidForAlertKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for TypedUuidForAlertKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for TypedUuidForAlertKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
+    /// `TypedUuidForAlertReceiverKind`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TypedUuidForAlertReceiverKind(pub ::uuid::Uuid);
+    impl ::std::ops::Deref for TypedUuidForAlertReceiverKind {
+        type Target = ::uuid::Uuid;
+        fn deref(&self) -> &::uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TypedUuidForAlertReceiverKind> for ::uuid::Uuid {
+        fn from(value: TypedUuidForAlertReceiverKind) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TypedUuidForAlertReceiverKind> for TypedUuidForAlertReceiverKind {
+        fn from(value: &TypedUuidForAlertReceiverKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForAlertReceiverKind {
+        fn from(value: ::uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl ::std::str::FromStr for TypedUuidForAlertReceiverKind {
+        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TypedUuidForAlertReceiverKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&String> for TypedUuidForAlertReceiverKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<String> for TypedUuidForAlertReceiverKind {
+        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
+        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ::std::fmt::Display for TypedUuidForAlertReceiverKind {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            self.0.fmt(f)
+        }
+    }
+
     /// `TypedUuidForInstanceKind`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27808,156 +28913,6 @@ pub mod types {
     }
 
     impl ::std::fmt::Display for TypedUuidForSupportBundleKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
-    /// `TypedUuidForWebhookEventKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForWebhookEventKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForWebhookEventKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForWebhookEventKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForWebhookEventKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForWebhookEventKind> for TypedUuidForWebhookEventKind {
-        fn from(value: &TypedUuidForWebhookEventKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForWebhookEventKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForWebhookEventKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForWebhookEventKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForWebhookEventKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForWebhookEventKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForWebhookEventKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
-    /// `TypedUuidForWebhookReceiverKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForWebhookReceiverKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForWebhookReceiverKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForWebhookReceiverKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForWebhookReceiverKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForWebhookReceiverKind> for TypedUuidForWebhookReceiverKind {
-        fn from(value: &TypedUuidForWebhookReceiverKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForWebhookReceiverKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForWebhookReceiverKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForWebhookReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForWebhookReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForWebhookReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForWebhookReceiverKind {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             self.0.fmt(f)
         }
@@ -31481,7 +32436,7 @@ pub mod types {
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSubscription"
+    ///        "$ref": "#/components/schemas/AlertSubscription"
     ///      }
     ///    }
     ///  }
@@ -31503,7 +32458,7 @@ pub mod types {
         /// If this list is empty or is not included in the request body, the
         /// webhook will not be subscribed to any events.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub subscriptions: ::std::vec::Vec<WebhookSubscription>,
+        pub subscriptions: ::std::vec::Vec<AlertSubscription>,
     }
 
     impl ::std::convert::From<&WebhookCreate> for WebhookCreate {
@@ -31514,121 +32469,6 @@ pub mod types {
 
     impl WebhookCreate {
         pub fn builder() -> builder::WebhookCreate {
-            Default::default()
-        }
-    }
-
-    /// A delivery of a webhook event.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A delivery of a webhook event.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "attempts",
-    ///    "event_class",
-    ///    "event_id",
-    ///    "id",
-    ///    "state",
-    ///    "time_started",
-    ///    "trigger",
-    ///    "webhook_id"
-    ///  ],
-    ///  "properties": {
-    ///    "attempts": {
-    ///      "description": "Individual attempts to deliver this webhook event,
-    /// and their outcomes.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookDeliveryAttempt"
-    ///      }
-    ///    },
-    ///    "event_class": {
-    ///      "description": "The event class.",
-    ///      "type": "string"
-    ///    },
-    ///    "event_id": {
-    ///      "description": "The UUID of the event.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TypedUuidForWebhookEventKind"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "The UUID of this delivery attempt.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "state": {
-    ///      "description": "The state of this delivery.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookDeliveryState"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_started": {
-    ///      "description": "The time at which this delivery began (i.e. the
-    /// event was dispatched to the receiver).",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "trigger": {
-    ///      "description": "Why this delivery was performed.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookDeliveryTrigger"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "webhook_id": {
-    ///      "description": "The UUID of the webhook receiver that this event
-    /// was delivered to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TypedUuidForWebhookReceiverKind"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookDelivery {
-        /// Individual attempts to deliver this webhook event, and their
-        /// outcomes.
-        pub attempts: ::std::vec::Vec<WebhookDeliveryAttempt>,
-        /// The event class.
-        pub event_class: ::std::string::String,
-        /// The UUID of the event.
-        pub event_id: TypedUuidForWebhookEventKind,
-        /// The UUID of this delivery attempt.
-        pub id: ::uuid::Uuid,
-        /// The state of this delivery.
-        pub state: WebhookDeliveryState,
-        /// The time at which this delivery began (i.e. the event was dispatched
-        /// to the receiver).
-        pub time_started: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// Why this delivery was performed.
-        pub trigger: WebhookDeliveryTrigger,
-        /// The UUID of the webhook receiver that this event was delivered to.
-        pub webhook_id: TypedUuidForWebhookReceiverKind,
-    }
-
-    impl ::std::convert::From<&WebhookDelivery> for WebhookDelivery {
-        fn from(value: &WebhookDelivery) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookDelivery {
-        pub fn builder() -> builder::WebhookDelivery {
             Default::default()
         }
     }
@@ -31848,44 +32688,6 @@ pub mod types {
         }
     }
 
-    /// `WebhookDeliveryId`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "delivery_id"
-    ///  ],
-    ///  "properties": {
-    ///    "delivery_id": {
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookDeliveryId {
-        pub delivery_id: ::uuid::Uuid,
-    }
-
-    impl ::std::convert::From<&WebhookDeliveryId> for WebhookDeliveryId {
-        fn from(value: &WebhookDeliveryId) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookDeliveryId {
-        pub fn builder() -> builder::WebhookDeliveryId {
-            Default::default()
-        }
-    }
-
     /// The response received from a webhook receiver endpoint.
     ///
     /// <details><summary>JSON schema</summary>
@@ -31940,367 +32742,13 @@ pub mod types {
         }
     }
 
-    /// A single page of results
+    /// The configuration for a webhook alert receiver.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A single page of results",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "items"
-    ///  ],
-    ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookDelivery"
-    ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookDeliveryResultsPage {
-        /// list of items on this page of results
-        pub items: ::std::vec::Vec<WebhookDelivery>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub next_page: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&WebhookDeliveryResultsPage> for WebhookDeliveryResultsPage {
-        fn from(value: &WebhookDeliveryResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookDeliveryResultsPage {
-        pub fn builder() -> builder::WebhookDeliveryResultsPage {
-            Default::default()
-        }
-    }
-
-    /// The state of a webhook delivery attempt.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The state of a webhook delivery attempt.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The webhook event has not yet been delivered
-    /// successfully.\n\nEither no delivery attempts have yet been performed, or
-    /// the delivery has failed at least once but has retries remaining.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "pending"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The webhook event has been delivered
-    /// successfully.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "delivered"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The webhook delivery attempt has failed permanently
-    /// and will not be retried again.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "failed"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum WebhookDeliveryState {
-        /// The webhook event has not yet been delivered successfully.
-        ///
-        /// Either no delivery attempts have yet been performed, or the delivery
-        /// has failed at least once but has retries remaining.
-        #[serde(rename = "pending")]
-        Pending,
-        /// The webhook event has been delivered successfully.
-        #[serde(rename = "delivered")]
-        Delivered,
-        /// The webhook delivery attempt has failed permanently and will not be
-        /// retried again.
-        #[serde(rename = "failed")]
-        Failed,
-    }
-
-    impl ::std::convert::From<&Self> for WebhookDeliveryState {
-        fn from(value: &WebhookDeliveryState) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for WebhookDeliveryState {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Pending => write!(f, "pending"),
-                Self::Delivered => write!(f, "delivered"),
-                Self::Failed => write!(f, "failed"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for WebhookDeliveryState {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "pending" => Ok(Self::Pending),
-                "delivered" => Ok(Self::Delivered),
-                "failed" => Ok(Self::Failed),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for WebhookDeliveryState {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for WebhookDeliveryState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for WebhookDeliveryState {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    /// The reason a webhook event was delivered
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The reason a webhook event was delivered",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Delivery was triggered by the event occurring for
-    /// the first time.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "event"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "Delivery was triggered by a request to resend the
-    /// event.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "resend"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "This delivery is a liveness probe.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "probe"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum WebhookDeliveryTrigger {
-        /// Delivery was triggered by the event occurring for the first time.
-        #[serde(rename = "event")]
-        Event,
-        /// Delivery was triggered by a request to resend the event.
-        #[serde(rename = "resend")]
-        Resend,
-        /// This delivery is a liveness probe.
-        #[serde(rename = "probe")]
-        Probe,
-    }
-
-    impl ::std::convert::From<&Self> for WebhookDeliveryTrigger {
-        fn from(value: &WebhookDeliveryTrigger) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for WebhookDeliveryTrigger {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Event => write!(f, "event"),
-                Self::Resend => write!(f, "resend"),
-                Self::Probe => write!(f, "probe"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for WebhookDeliveryTrigger {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "event" => Ok(Self::Event),
-                "resend" => Ok(Self::Resend),
-                "probe" => Ok(Self::Probe),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for WebhookDeliveryTrigger {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for WebhookDeliveryTrigger {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for WebhookDeliveryTrigger {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    /// Data describing the result of a webhook liveness probe attempt.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Data describing the result of a webhook liveness probe
-    /// attempt.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "probe"
-    ///  ],
-    ///  "properties": {
-    ///    "probe": {
-    ///      "description": "The outcome of the probe request.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookDelivery"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "resends_started": {
-    ///      "description": "If the probe request succeeded, and resending
-    /// failed deliveries on success was requested, the number of new delivery
-    /// attempts started. Otherwise, if the probe did not succeed, or resending
-    /// failed deliveries was not requested, this is null.\n\nNote that this may
-    /// be 0, if there were no events found which had not been delivered
-    /// successfully to this receiver.",
-    ///      "type": [
-    ///        "integer",
-    ///        "null"
-    ///      ],
-    ///      "format": "uint",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookProbeResult {
-        /// The outcome of the probe request.
-        pub probe: WebhookDelivery,
-        /// If the probe request succeeded, and resending failed deliveries on
-        /// success was requested, the number of new delivery attempts started.
-        /// Otherwise, if the probe did not succeed, or resending failed
-        /// deliveries was not requested, this is null.
-        ///
-        /// Note that this may be 0, if there were no events found which had not
-        /// been delivered successfully to this receiver.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub resends_started: ::std::option::Option<u32>,
-    }
-
-    impl ::std::convert::From<&WebhookProbeResult> for WebhookProbeResult {
-        fn from(value: &WebhookProbeResult) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookProbeResult {
-        pub fn builder() -> builder::WebhookProbeResult {
-            Default::default()
-        }
-    }
-
-    /// The configuration for a webhook.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The configuration for a webhook.",
+    ///  "description": "The configuration for a webhook alert receiver.",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -32345,11 +32793,11 @@ pub mod types {
     ///      }
     ///    },
     ///    "subscriptions": {
-    ///      "description": "The list of event classes to which this receiver is
+    ///      "description": "The list of alert classes to which this receiver is
     /// subscribed.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSubscription"
+    ///        "$ref": "#/components/schemas/AlertSubscription"
     ///      }
     ///    },
     ///    "time_created": {
@@ -32379,8 +32827,8 @@ pub mod types {
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub secrets: ::std::vec::Vec<WebhookSecret>,
-        /// The list of event classes to which this receiver is subscribed.
-        pub subscriptions: ::std::vec::Vec<WebhookSubscription>,
+        /// The list of alert classes to which this receiver is subscribed.
+        pub subscriptions: ::std::vec::Vec<AlertSubscription>,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -32399,32 +32847,30 @@ pub mod types {
         }
     }
 
-    /// A single page of results
+    /// Webhook-specific alert receiver configuration.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A single page of results",
+    ///  "description": "Webhook-specific alert receiver configuration.",
     ///  "type": "object",
     ///  "required": [
-    ///    "items"
+    ///    "endpoint",
+    ///    "secrets"
     ///  ],
     ///  "properties": {
-    ///    "items": {
-    ///      "description": "list of items on this page of results",
+    ///    "endpoint": {
+    ///      "description": "The URL that webhook notification requests are sent
+    /// to.",
+    ///      "type": "string",
+    ///      "format": "uri"
+    ///    },
+    ///    "secrets": {
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookReceiver"
+    ///        "$ref": "#/components/schemas/WebhookSecret"
     ///      }
-    ///    },
-    ///    "next_page": {
-    ///      "description": "token used to fetch the next page of results (if
-    /// any)",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
     ///    }
     ///  }
     /// }
@@ -32433,22 +32879,20 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct WebhookReceiverResultsPage {
-        /// list of items on this page of results
-        pub items: ::std::vec::Vec<WebhookReceiver>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub next_page: ::std::option::Option<::std::string::String>,
+    pub struct WebhookReceiverConfig {
+        /// The URL that webhook notification requests are sent to.
+        pub endpoint: ::std::string::String,
+        pub secrets: ::std::vec::Vec<WebhookSecret>,
     }
 
-    impl ::std::convert::From<&WebhookReceiverResultsPage> for WebhookReceiverResultsPage {
-        fn from(value: &WebhookReceiverResultsPage) -> Self {
+    impl ::std::convert::From<&WebhookReceiverConfig> for WebhookReceiverConfig {
+        fn from(value: &WebhookReceiverConfig) -> Self {
             value.clone()
         }
     }
 
-    impl WebhookReceiverResultsPage {
-        pub fn builder() -> builder::WebhookReceiverResultsPage {
+    impl WebhookReceiverConfig {
+        pub fn builder() -> builder::WebhookReceiverConfig {
             Default::default()
         }
     }
@@ -32626,14 +33070,14 @@ pub mod types {
         }
     }
 
-    /// A list of the IDs of secrets associated with a webhook.
+    /// A list of the IDs of secrets associated with a webhook receiver.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A list of the IDs of secrets associated with a
-    /// webhook.",
+    ///  "description": "A list of the IDs of secrets associated with a webhook
+    /// receiver.",
     ///  "type": "object",
     ///  "required": [
     ///    "secrets"
@@ -32664,196 +33108,6 @@ pub mod types {
 
     impl WebhookSecrets {
         pub fn builder() -> builder::WebhookSecrets {
-            Default::default()
-        }
-    }
-
-    /// A webhook event class subscription matches either a single event class
-    /// exactly, or a glob pattern including wildcards that may match multiple
-    /// event classes
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "title": "A webhook event class subscription",
-    ///  "description": "A webhook event class subscription matches either a
-    /// single event class exactly, or a glob pattern including wildcards that
-    /// may match multiple event classes",
-    ///  "type": "string",
-    ///  "pattern":
-    /// "^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Serialize,
-        Clone,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct WebhookSubscription(::std::string::String);
-    impl ::std::ops::Deref for WebhookSubscription {
-        type Target = ::std::string::String;
-        fn deref(&self) -> &::std::string::String {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<WebhookSubscription> for ::std::string::String {
-        fn from(value: WebhookSubscription) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&WebhookSubscription> for WebhookSubscription {
-        fn from(value: &WebhookSubscription) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for WebhookSubscription {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if regress::Regex::new("^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$")
-                .unwrap()
-                .find(value)
-                .is_none()
-            {
-                return Err("doesn't match pattern \
-                            \"^([a-zA-Z0-9_]+|\\*|\\*\\*)(\\.([a-zA-Z0-9_]+|\\*|\\*\\*))*$\""
-                    .into());
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for WebhookSubscription {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for WebhookSubscription {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for WebhookSubscription {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl<'de> ::serde::Deserialize<'de> for WebhookSubscription {
-        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: self::error::ConversionError| {
-                    <D::Error as ::serde::de::Error>::custom(e.to_string())
-                })
-        }
-    }
-
-    /// `WebhookSubscriptionCreate`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subscription"
-    ///  ],
-    ///  "properties": {
-    ///    "subscription": {
-    ///      "description": "The event class pattern to subscribe to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookSubscription"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookSubscriptionCreate {
-        /// The event class pattern to subscribe to.
-        pub subscription: WebhookSubscription,
-    }
-
-    impl ::std::convert::From<&WebhookSubscriptionCreate> for WebhookSubscriptionCreate {
-        fn from(value: &WebhookSubscriptionCreate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookSubscriptionCreate {
-        pub fn builder() -> builder::WebhookSubscriptionCreate {
-            Default::default()
-        }
-    }
-
-    /// `WebhookSubscriptionCreated`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "subscription"
-    ///  ],
-    ///  "properties": {
-    ///    "subscription": {
-    ///      "description": "The new subscription added to the receiver.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/WebhookSubscription"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookSubscriptionCreated {
-        /// The new subscription added to the receiver.
-        pub subscription: WebhookSubscription,
-    }
-
-    impl ::std::convert::From<&WebhookSubscriptionCreated> for WebhookSubscriptionCreated {
-        fn from(value: &WebhookSubscriptionCreated) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookSubscriptionCreated {
-        pub fn builder() -> builder::WebhookSubscriptionCreated {
             Default::default()
         }
     }
@@ -33988,6 +34242,733 @@ pub mod types {
             fn from(value: super::AggregateBgpMessageHistory) -> Self {
                 Self {
                     switch_histories: Ok(value.switch_histories),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertClass {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertClass {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl AlertClass {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertClass> for super::AlertClass {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertClass,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertClass> for AlertClass {
+            fn from(value: super::AlertClass) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertClassResultsPage {
+            items: ::std::result::Result<::std::vec::Vec<super::AlertClass>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AlertClassResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AlertClassResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertClass>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertClassResultsPage> for super::AlertClassResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertClassResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertClassResultsPage> for AlertClassResultsPage {
+            fn from(value: super::AlertClassResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertDelivery {
+            alert_class: ::std::result::Result<::std::string::String, ::std::string::String>,
+            alert_id: ::std::result::Result<super::TypedUuidForAlertKind, ::std::string::String>,
+            attempts: ::std::result::Result<super::AlertDeliveryAttempts, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            receiver_id:
+                ::std::result::Result<super::TypedUuidForAlertReceiverKind, ::std::string::String>,
+            state: ::std::result::Result<super::AlertDeliveryState, ::std::string::String>,
+            time_started: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            trigger: ::std::result::Result<super::AlertDeliveryTrigger, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertDelivery {
+            fn default() -> Self {
+                Self {
+                    alert_class: Err("no value supplied for alert_class".to_string()),
+                    alert_id: Err("no value supplied for alert_id".to_string()),
+                    attempts: Err("no value supplied for attempts".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    receiver_id: Err("no value supplied for receiver_id".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_started: Err("no value supplied for time_started".to_string()),
+                    trigger: Err("no value supplied for trigger".to_string()),
+                }
+            }
+        }
+
+        impl AlertDelivery {
+            pub fn alert_class<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.alert_class = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for alert_class: {}", e));
+                self
+            }
+            pub fn alert_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TypedUuidForAlertKind>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.alert_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for alert_id: {}", e));
+                self
+            }
+            pub fn attempts<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertDeliveryAttempts>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.attempts = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for attempts: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn receiver_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TypedUuidForAlertReceiverKind>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.receiver_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for receiver_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertDeliveryState>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_started<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_started = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_started: {}", e)
+                });
+                self
+            }
+            pub fn trigger<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertDeliveryTrigger>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.trigger = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for trigger: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertDelivery> for super::AlertDelivery {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertDelivery,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    alert_class: value.alert_class?,
+                    alert_id: value.alert_id?,
+                    attempts: value.attempts?,
+                    id: value.id?,
+                    receiver_id: value.receiver_id?,
+                    state: value.state?,
+                    time_started: value.time_started?,
+                    trigger: value.trigger?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertDelivery> for AlertDelivery {
+            fn from(value: super::AlertDelivery) -> Self {
+                Self {
+                    alert_class: Ok(value.alert_class),
+                    alert_id: Ok(value.alert_id),
+                    attempts: Ok(value.attempts),
+                    id: Ok(value.id),
+                    receiver_id: Ok(value.receiver_id),
+                    state: Ok(value.state),
+                    time_started: Ok(value.time_started),
+                    trigger: Ok(value.trigger),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertDeliveryId {
+            delivery_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertDeliveryId {
+            fn default() -> Self {
+                Self {
+                    delivery_id: Err("no value supplied for delivery_id".to_string()),
+                }
+            }
+        }
+
+        impl AlertDeliveryId {
+            pub fn delivery_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.delivery_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for delivery_id: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertDeliveryId> for super::AlertDeliveryId {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertDeliveryId,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    delivery_id: value.delivery_id?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertDeliveryId> for AlertDeliveryId {
+            fn from(value: super::AlertDeliveryId) -> Self {
+                Self {
+                    delivery_id: Ok(value.delivery_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertDeliveryResultsPage {
+            items:
+                ::std::result::Result<::std::vec::Vec<super::AlertDelivery>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AlertDeliveryResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AlertDeliveryResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertDelivery>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertDeliveryResultsPage> for super::AlertDeliveryResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertDeliveryResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertDeliveryResultsPage> for AlertDeliveryResultsPage {
+            fn from(value: super::AlertDeliveryResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertProbeResult {
+            probe: ::std::result::Result<super::AlertDelivery, ::std::string::String>,
+            resends_started:
+                ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertProbeResult {
+            fn default() -> Self {
+                Self {
+                    probe: Err("no value supplied for probe".to_string()),
+                    resends_started: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AlertProbeResult {
+            pub fn probe<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertDelivery>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.probe = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for probe: {}", e));
+                self
+            }
+            pub fn resends_started<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.resends_started = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for resends_started: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertProbeResult> for super::AlertProbeResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertProbeResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    probe: value.probe?,
+                    resends_started: value.resends_started?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertProbeResult> for AlertProbeResult {
+            fn from(value: super::AlertProbeResult) -> Self {
+                Self {
+                    probe: Ok(value.probe),
+                    resends_started: Ok(value.resends_started),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertReceiver {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            kind: ::std::result::Result<super::AlertReceiverKind, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            subscriptions: ::std::result::Result<
+                ::std::vec::Vec<super::AlertSubscription>,
+                ::std::string::String,
+            >,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AlertReceiver {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    subscriptions: Err("no value supplied for subscriptions".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl AlertReceiver {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertReceiverKind>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn subscriptions<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subscriptions = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscriptions: {}", e)
+                });
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertReceiver> for super::AlertReceiver {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertReceiver,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    kind: value.kind?,
+                    name: value.name?,
+                    subscriptions: value.subscriptions?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertReceiver> for AlertReceiver {
+            fn from(value: super::AlertReceiver) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    subscriptions: Ok(value.subscriptions),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertReceiverResultsPage {
+            items:
+                ::std::result::Result<::std::vec::Vec<super::AlertReceiver>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AlertReceiverResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AlertReceiverResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertReceiver>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertReceiverResultsPage> for super::AlertReceiverResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertReceiverResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertReceiverResultsPage> for AlertReceiverResultsPage {
+            fn from(value: super::AlertReceiverResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertSubscriptionCreate {
+            subscription: ::std::result::Result<super::AlertSubscription, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertSubscriptionCreate {
+            fn default() -> Self {
+                Self {
+                    subscription: Err("no value supplied for subscription".to_string()),
+                }
+            }
+        }
+
+        impl AlertSubscriptionCreate {
+            pub fn subscription<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertSubscription>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subscription = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscription: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertSubscriptionCreate> for super::AlertSubscriptionCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertSubscriptionCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    subscription: value.subscription?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertSubscriptionCreate> for AlertSubscriptionCreate {
+            fn from(value: super::AlertSubscriptionCreate) -> Self {
+                Self {
+                    subscription: Ok(value.subscription),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AlertSubscriptionCreated {
+            subscription: ::std::result::Result<super::AlertSubscription, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AlertSubscriptionCreated {
+            fn default() -> Self {
+                Self {
+                    subscription: Err("no value supplied for subscription".to_string()),
+                }
+            }
+        }
+
+        impl AlertSubscriptionCreated {
+            pub fn subscription<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AlertSubscription>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subscription = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for subscription: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AlertSubscriptionCreated> for super::AlertSubscriptionCreated {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AlertSubscriptionCreated,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    subscription: value.subscription?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AlertSubscriptionCreated> for AlertSubscriptionCreated {
+            fn from(value: super::AlertSubscriptionCreated) -> Self {
+                Self {
+                    subscription: Ok(value.subscription),
                 }
             }
         }
@@ -38460,127 +39441,6 @@ pub mod types {
                     error_code: Ok(value.error_code),
                     message: Ok(value.message),
                     request_id: Ok(value.request_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct EventClass {
-            description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for EventClass {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                }
-            }
-        }
-
-        impl EventClass {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<EventClass> for super::EventClass {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: EventClass,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    description: value.description?,
-                    name: value.name?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::EventClass> for EventClass {
-            fn from(value: super::EventClass) -> Self {
-                Self {
-                    description: Ok(value.description),
-                    name: Ok(value.name),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct EventClassResultsPage {
-            items: ::std::result::Result<::std::vec::Vec<super::EventClass>, ::std::string::String>,
-            next_page: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for EventClassResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl EventClassResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::EventClass>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<EventClassResultsPage> for super::EventClassResultsPage {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: EventClassResultsPage,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::EventClassResultsPage> for EventClassResultsPage {
-            fn from(value: super::EventClassResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -56338,7 +57198,7 @@ pub mod types {
                 ::std::string::String,
             >,
             subscriptions: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookSubscription>,
+                ::std::vec::Vec<super::AlertSubscription>,
                 ::std::string::String,
             >,
         }
@@ -56398,7 +57258,7 @@ pub mod types {
             }
             pub fn subscriptions<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSubscription>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.subscriptions = value.try_into().map_err(|e| {
@@ -56431,159 +57291,6 @@ pub mod types {
                     name: Ok(value.name),
                     secrets: Ok(value.secrets),
                     subscriptions: Ok(value.subscriptions),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct WebhookDelivery {
-            attempts: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookDeliveryAttempt>,
-                ::std::string::String,
-            >,
-            event_class: ::std::result::Result<::std::string::String, ::std::string::String>,
-            event_id:
-                ::std::result::Result<super::TypedUuidForWebhookEventKind, ::std::string::String>,
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            state: ::std::result::Result<super::WebhookDeliveryState, ::std::string::String>,
-            time_started: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            trigger: ::std::result::Result<super::WebhookDeliveryTrigger, ::std::string::String>,
-            webhook_id: ::std::result::Result<
-                super::TypedUuidForWebhookReceiverKind,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for WebhookDelivery {
-            fn default() -> Self {
-                Self {
-                    attempts: Err("no value supplied for attempts".to_string()),
-                    event_class: Err("no value supplied for event_class".to_string()),
-                    event_id: Err("no value supplied for event_id".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    state: Err("no value supplied for state".to_string()),
-                    time_started: Err("no value supplied for time_started".to_string()),
-                    trigger: Err("no value supplied for trigger".to_string()),
-                    webhook_id: Err("no value supplied for webhook_id".to_string()),
-                }
-            }
-        }
-
-        impl WebhookDelivery {
-            pub fn attempts<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookDeliveryAttempt>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.attempts = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for attempts: {}", e));
-                self
-            }
-            pub fn event_class<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.event_class = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for event_class: {}", e));
-                self
-            }
-            pub fn event_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TypedUuidForWebhookEventKind>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.event_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for event_id: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn state<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::WebhookDeliveryState>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.state = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {}", e));
-                self
-            }
-            pub fn time_started<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.time_started = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_started: {}", e)
-                });
-                self
-            }
-            pub fn trigger<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::WebhookDeliveryTrigger>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.trigger = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for trigger: {}", e));
-                self
-            }
-            pub fn webhook_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TypedUuidForWebhookReceiverKind>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.webhook_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for webhook_id: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookDelivery> for super::WebhookDelivery {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookDelivery,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    attempts: value.attempts?,
-                    event_class: value.event_class?,
-                    event_id: value.event_id?,
-                    id: value.id?,
-                    state: value.state?,
-                    time_started: value.time_started?,
-                    trigger: value.trigger?,
-                    webhook_id: value.webhook_id?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookDelivery> for WebhookDelivery {
-            fn from(value: super::WebhookDelivery) -> Self {
-                Self {
-                    attempts: Ok(value.attempts),
-                    event_class: Ok(value.event_class),
-                    event_id: Ok(value.event_id),
-                    id: Ok(value.id),
-                    state: Ok(value.state),
-                    time_started: Ok(value.time_started),
-                    trigger: Ok(value.trigger),
-                    webhook_id: Ok(value.webhook_id),
                 }
             }
         }
@@ -56683,51 +57390,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct WebhookDeliveryId {
-            delivery_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookDeliveryId {
-            fn default() -> Self {
-                Self {
-                    delivery_id: Err("no value supplied for delivery_id".to_string()),
-                }
-            }
-        }
-
-        impl WebhookDeliveryId {
-            pub fn delivery_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.delivery_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for delivery_id: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookDeliveryId> for super::WebhookDeliveryId {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookDeliveryId,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    delivery_id: value.delivery_id?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookDeliveryId> for WebhookDeliveryId {
-            fn from(value: super::WebhookDeliveryId) -> Self {
-                Self {
-                    delivery_id: Ok(value.delivery_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct WebhookDeliveryResponse {
             duration_ms: ::std::result::Result<u32, ::std::string::String>,
             status: ::std::result::Result<u16, ::std::string::String>,
@@ -56787,131 +57449,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct WebhookDeliveryResultsPage {
-            items: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookDelivery>,
-                ::std::string::String,
-            >,
-            next_page: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for WebhookDeliveryResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl WebhookDeliveryResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookDelivery>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookDeliveryResultsPage> for super::WebhookDeliveryResultsPage {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookDeliveryResultsPage,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookDeliveryResultsPage> for WebhookDeliveryResultsPage {
-            fn from(value: super::WebhookDeliveryResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct WebhookProbeResult {
-            probe: ::std::result::Result<super::WebhookDelivery, ::std::string::String>,
-            resends_started:
-                ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookProbeResult {
-            fn default() -> Self {
-                Self {
-                    probe: Err("no value supplied for probe".to_string()),
-                    resends_started: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl WebhookProbeResult {
-            pub fn probe<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::WebhookDelivery>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.probe = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for probe: {}", e));
-                self
-            }
-            pub fn resends_started<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<u32>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.resends_started = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for resends_started: {}", e)
-                });
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookProbeResult> for super::WebhookProbeResult {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookProbeResult,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    probe: value.probe?,
-                    resends_started: value.resends_started?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookProbeResult> for WebhookProbeResult {
-            fn from(value: super::WebhookProbeResult) -> Self {
-                Self {
-                    probe: Ok(value.probe),
-                    resends_started: Ok(value.resends_started),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct WebhookReceiver {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             endpoint: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -56920,7 +57457,7 @@ pub mod types {
             secrets:
                 ::std::result::Result<::std::vec::Vec<super::WebhookSecret>, ::std::string::String>,
             subscriptions: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookSubscription>,
+                ::std::vec::Vec<super::AlertSubscription>,
                 ::std::string::String,
             >,
             time_created: ::std::result::Result<
@@ -57001,7 +57538,7 @@ pub mod types {
             }
             pub fn subscriptions<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSubscription>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AlertSubscription>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.subscriptions = value.try_into().map_err(|e| {
@@ -57065,66 +57602,61 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct WebhookReceiverResultsPage {
-            items: ::std::result::Result<
-                ::std::vec::Vec<super::WebhookReceiver>,
-                ::std::string::String,
-            >,
-            next_page: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
+        pub struct WebhookReceiverConfig {
+            endpoint: ::std::result::Result<::std::string::String, ::std::string::String>,
+            secrets:
+                ::std::result::Result<::std::vec::Vec<super::WebhookSecret>, ::std::string::String>,
         }
 
-        impl ::std::default::Default for WebhookReceiverResultsPage {
+        impl ::std::default::Default for WebhookReceiverConfig {
             fn default() -> Self {
                 Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
+                    endpoint: Err("no value supplied for endpoint".to_string()),
+                    secrets: Err("no value supplied for secrets".to_string()),
                 }
             }
         }
 
-        impl WebhookReceiverResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
+        impl WebhookReceiverConfig {
+            pub fn endpoint<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookReceiver>>,
+                T: ::std::convert::TryInto<::std::string::String>,
                 T::Error: ::std::fmt::Display,
             {
-                self.items = value
+                self.endpoint = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                    .map_err(|e| format!("error converting supplied value for endpoint: {}", e));
                 self
             }
-            pub fn next_page<T>(mut self, value: T) -> Self
+            pub fn secrets<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecret>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.next_page = value
+                self.secrets = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                    .map_err(|e| format!("error converting supplied value for secrets: {}", e));
                 self
             }
         }
 
-        impl ::std::convert::TryFrom<WebhookReceiverResultsPage> for super::WebhookReceiverResultsPage {
+        impl ::std::convert::TryFrom<WebhookReceiverConfig> for super::WebhookReceiverConfig {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: WebhookReceiverResultsPage,
+                value: WebhookReceiverConfig,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
+                    endpoint: value.endpoint?,
+                    secrets: value.secrets?,
                 })
             }
         }
 
-        impl ::std::convert::From<super::WebhookReceiverResultsPage> for WebhookReceiverResultsPage {
-            fn from(value: super::WebhookReceiverResultsPage) -> Self {
+        impl ::std::convert::From<super::WebhookReceiverConfig> for WebhookReceiverConfig {
+            fn from(value: super::WebhookReceiverConfig) -> Self {
                 Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
+                    endpoint: Ok(value.endpoint),
+                    secrets: Ok(value.secrets),
                 }
             }
         }
@@ -57357,96 +57889,6 @@ pub mod types {
             fn from(value: super::WebhookSecrets) -> Self {
                 Self {
                     secrets: Ok(value.secrets),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct WebhookSubscriptionCreate {
-            subscription: ::std::result::Result<super::WebhookSubscription, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookSubscriptionCreate {
-            fn default() -> Self {
-                Self {
-                    subscription: Err("no value supplied for subscription".to_string()),
-                }
-            }
-        }
-
-        impl WebhookSubscriptionCreate {
-            pub fn subscription<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::WebhookSubscription>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.subscription = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for subscription: {}", e)
-                });
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookSubscriptionCreate> for super::WebhookSubscriptionCreate {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookSubscriptionCreate,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    subscription: value.subscription?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookSubscriptionCreate> for WebhookSubscriptionCreate {
-            fn from(value: super::WebhookSubscriptionCreate) -> Self {
-                Self {
-                    subscription: Ok(value.subscription),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct WebhookSubscriptionCreated {
-            subscription: ::std::result::Result<super::WebhookSubscription, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookSubscriptionCreated {
-            fn default() -> Self {
-                Self {
-                    subscription: Err("no value supplied for subscription".to_string()),
-                }
-            }
-        }
-
-        impl WebhookSubscriptionCreated {
-            pub fn subscription<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::WebhookSubscription>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.subscription = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for subscription: {}", e)
-                });
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookSubscriptionCreated> for super::WebhookSubscriptionCreated {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookSubscriptionCreated,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    subscription: value.subscription?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookSubscriptionCreated> for WebhookSubscriptionCreated {
-            fn from(value: super::WebhookSubscriptionCreated) -> Self {
-                Self {
-                    subscription: Ok(value.subscription),
                 }
             }
         }
@@ -60118,6 +60560,343 @@ impl ClientSnapshotsExt for Client {
     }
 }
 
+/// Alerts deliver notifications for events that occur on the Oxide rack
+pub trait ClientSystemAlertsExt {
+    /// List alert classes
+    ///
+    /// Sends a `GET` request to `/v1/alert-classes`
+    ///
+    /// Arguments:
+    /// - `filter`: An optional glob pattern for filtering alert class names.
+    ///
+    /// If provided, only alert classes which match this glob pattern will be
+    /// included in the response.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.alert_class_list()
+    ///    .filter(filter)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_class_list(&self) -> builder::AlertClassList;
+    /// List alert receivers
+    ///
+    /// Sends a `GET` request to `/v1/alert-receivers`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.alert_receiver_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_list(&self) -> builder::AlertReceiverList;
+    /// Fetch alert receiver
+    ///
+    /// Sends a `GET` request to `/v1/alert-receivers/{receiver}`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// ```ignore
+    /// let response = client.alert_receiver_view()
+    ///    .receiver(receiver)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_view(&self) -> builder::AlertReceiverView;
+    /// Delete alert receiver
+    ///
+    /// Sends a `DELETE` request to `/v1/alert-receivers/{receiver}`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// ```ignore
+    /// let response = client.alert_receiver_delete()
+    ///    .receiver(receiver)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_delete(&self) -> builder::AlertReceiverDelete;
+    /// List delivery attempts to alert receiver
+    ///
+    /// Optional query parameters to this endpoint may be used to filter
+    /// deliveries by state. If none of the `failed`, `pending` or `delivered`
+    /// query parameters are present, all deliveries are returned. If one or
+    /// more of these parameters are provided, only those which are set to
+    /// "true" are included in the response.
+    ///
+    /// Sends a `GET` request to `/v1/alert-receivers/{receiver}/deliveries`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `delivered`: If true, include deliveries which have succeeded.
+    ///
+    /// If any of the "pending", "failed", or "delivered" query parameters are
+    /// set to true, only deliveries matching those state(s) will be included in
+    /// the response. If NO state filter parameters are set, then all deliveries
+    /// are included.
+    /// - `failed`: If true, include deliveries which have failed permanently.
+    ///
+    /// If any of the "pending", "failed", or "delivered" query parameters are
+    /// set to true, only deliveries matching those state(s) will be included in
+    /// the response. If NO state filter parameters are set, then all deliveries
+    /// are included.
+    ///
+    /// A delivery fails permanently when the retry limit of three total
+    /// attempts is reached without a successful delivery.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `pending`: If true, include deliveries which are currently in
+    ///   progress.
+    ///
+    /// If any of the "pending", "failed", or "delivered" query parameters are
+    /// set to true, only deliveries matching those state(s) will be included in
+    /// the response. If NO state filter parameters are set, then all deliveries
+    /// are included.
+    ///
+    /// A delivery is considered "pending" if it has not yet been sent at all,
+    /// or if a delivery attempt has failed but the delivery has retries
+    /// remaining.
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.alert_delivery_list()
+    ///    .receiver(receiver)
+    ///    .delivered(delivered)
+    ///    .failed(failed)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .pending(pending)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_delivery_list(&self) -> builder::AlertDeliveryList;
+    /// Send liveness probe to alert receiver
+    ///
+    /// This endpoint synchronously sends a liveness probe to the selected alert
+    /// receiver. The response message describes the outcome of the probe:
+    /// either the successful response (as appropriate), or indication of why
+    /// the probe failed.
+    ///
+    /// The result of the probe is represented as an `AlertDelivery` model.
+    /// Details relating to the status of the probe depend on the alert delivery
+    /// mechanism, and are included in the `AlertDeliveryAttempts` model. For
+    /// example, webhook receiver liveness probes include the HTTP status code
+    /// returned by the receiver endpoint.
+    ///
+    /// Note that the response status is `200 OK` as long as a probe request was
+    /// able to be sent to the receiver endpoint. If an HTTP-based receiver,
+    /// such as a webhook, responds to the another status code, including an
+    /// error, this will be indicated by the response body, *not* the status of
+    /// the response.
+    ///
+    /// The `resend` query parameter can be used to request re-delivery of
+    /// failed events if the liveness probe succeeds. If it is set to true and
+    /// the liveness probe succeeds, any alerts for which delivery to this
+    /// receiver has failed will be queued for re-delivery.
+    ///
+    /// Sends a `POST` request to `/v1/alert-receivers/{receiver}/probe`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `resend`: If true, resend all events that have not been delivered
+    ///   successfully if the probe request succeeds.
+    /// ```ignore
+    /// let response = client.alert_receiver_probe()
+    ///    .receiver(receiver)
+    ///    .resend(resend)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_probe(&self) -> builder::AlertReceiverProbe;
+    /// Add alert receiver subscription
+    ///
+    /// Sends a `POST` request to `/v1/alert-receivers/{receiver}/subscriptions`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.alert_receiver_subscription_add()
+    ///    .receiver(receiver)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_subscription_add(&self) -> builder::AlertReceiverSubscriptionAdd;
+    /// Remove alert receiver subscription
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/alert-receivers/{receiver}/subscriptions/{subscription}`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `subscription`: The event class subscription itself.
+    /// ```ignore
+    /// let response = client.alert_receiver_subscription_remove()
+    ///    .receiver(receiver)
+    ///    .subscription(subscription)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_receiver_subscription_remove(&self) -> builder::AlertReceiverSubscriptionRemove;
+    /// Request re-delivery of alert
+    ///
+    /// Sends a `POST` request to `/v1/alerts/{alert_id}/resend`
+    ///
+    /// Arguments:
+    /// - `alert_id`: UUID of the alert
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// ```ignore
+    /// let response = client.alert_delivery_resend()
+    ///    .alert_id(alert_id)
+    ///    .receiver(receiver)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn alert_delivery_resend(&self) -> builder::AlertDeliveryResend;
+    /// Create webhook receiver
+    ///
+    /// Sends a `POST` request to `/v1/webhook-receivers`
+    ///
+    /// ```ignore
+    /// let response = client.webhook_receiver_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn webhook_receiver_create(&self) -> builder::WebhookReceiverCreate;
+    /// Update webhook receiver
+    ///
+    /// Note that receiver secrets are NOT added or removed using this endpoint.
+    /// Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint
+    /// to add and remove secrets.
+    ///
+    /// Sends a `PUT` request to `/v1/webhook-receivers/{receiver}`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.webhook_receiver_update()
+    ///    .receiver(receiver)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn webhook_receiver_update(&self) -> builder::WebhookReceiverUpdate;
+    /// List webhook receiver secret IDs
+    ///
+    /// Sends a `GET` request to `/v1/webhook-secrets`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// ```ignore
+    /// let response = client.webhook_secrets_list()
+    ///    .receiver(receiver)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn webhook_secrets_list(&self) -> builder::WebhookSecretsList;
+    /// Add secret to webhook receiver
+    ///
+    /// Sends a `POST` request to `/v1/webhook-secrets`
+    ///
+    /// Arguments:
+    /// - `receiver`: The name or ID of the webhook receiver.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.webhook_secrets_add()
+    ///    .receiver(receiver)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn webhook_secrets_add(&self) -> builder::WebhookSecretsAdd;
+    /// Remove secret from webhook receiver
+    ///
+    /// Sends a `DELETE` request to `/v1/webhook-secrets/{secret_id}`
+    ///
+    /// Arguments:
+    /// - `secret_id`: ID of the secret.
+    /// ```ignore
+    /// let response = client.webhook_secrets_delete()
+    ///    .secret_id(secret_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn webhook_secrets_delete(&self) -> builder::WebhookSecretsDelete;
+}
+
+impl ClientSystemAlertsExt for Client {
+    fn alert_class_list(&self) -> builder::AlertClassList {
+        builder::AlertClassList::new(self)
+    }
+
+    fn alert_receiver_list(&self) -> builder::AlertReceiverList {
+        builder::AlertReceiverList::new(self)
+    }
+
+    fn alert_receiver_view(&self) -> builder::AlertReceiverView {
+        builder::AlertReceiverView::new(self)
+    }
+
+    fn alert_receiver_delete(&self) -> builder::AlertReceiverDelete {
+        builder::AlertReceiverDelete::new(self)
+    }
+
+    fn alert_delivery_list(&self) -> builder::AlertDeliveryList {
+        builder::AlertDeliveryList::new(self)
+    }
+
+    fn alert_receiver_probe(&self) -> builder::AlertReceiverProbe {
+        builder::AlertReceiverProbe::new(self)
+    }
+
+    fn alert_receiver_subscription_add(&self) -> builder::AlertReceiverSubscriptionAdd {
+        builder::AlertReceiverSubscriptionAdd::new(self)
+    }
+
+    fn alert_receiver_subscription_remove(&self) -> builder::AlertReceiverSubscriptionRemove {
+        builder::AlertReceiverSubscriptionRemove::new(self)
+    }
+
+    fn alert_delivery_resend(&self) -> builder::AlertDeliveryResend {
+        builder::AlertDeliveryResend::new(self)
+    }
+
+    fn webhook_receiver_create(&self) -> builder::WebhookReceiverCreate {
+        builder::WebhookReceiverCreate::new(self)
+    }
+
+    fn webhook_receiver_update(&self) -> builder::WebhookReceiverUpdate {
+        builder::WebhookReceiverUpdate::new(self)
+    }
+
+    fn webhook_secrets_list(&self) -> builder::WebhookSecretsList {
+        builder::WebhookSecretsList::new(self)
+    }
+
+    fn webhook_secrets_add(&self) -> builder::WebhookSecretsAdd {
+        builder::WebhookSecretsAdd::new(self)
+    }
+
+    fn webhook_secrets_delete(&self) -> builder::WebhookSecretsDelete {
+        builder::WebhookSecretsDelete::new(self)
+    }
+}
+
 /// These operations pertain to hardware inventory and management. Racks are the
 /// unit of expansion of an Oxide deployment. Racks are in turn composed of
 /// sleds, switches, power supplies, and a cabled backplane.
@@ -61956,339 +62735,6 @@ pub trait ClientSystemStatusExt {
 impl ClientSystemStatusExt for Client {
     fn ping(&self) -> builder::Ping {
         builder::Ping::new(self)
-    }
-}
-
-/// Webhooks deliver notifications for audit log events and fault management
-/// alerts.
-pub trait ClientSystemWebhooksExt {
-    /// List delivery attempts to webhook receiver
-    ///
-    /// Optional query parameters to this endpoint may be used to filter
-    /// deliveries by state. If none of the `failed`, `pending` or `delivered`
-    /// query parameters are present, all deliveries are returned. If one or
-    /// more of these parameters are provided, only those which are set to
-    /// "true" are included in the response.
-    ///
-    /// Sends a `GET` request to `/v1/webhooks/deliveries`
-    ///
-    /// Arguments:
-    /// - `delivered`: If true, include deliveries which have succeeded.
-    ///
-    /// If any of the "pending", "failed", or "delivered" query parameters are
-    /// set to true, only deliveries matching those state(s) will be included in
-    /// the response. If NO state filter parameters are set, then all deliveries
-    /// are included.
-    /// - `failed`: If true, include deliveries which have failed permanently.
-    ///
-    /// If any of the "pending", "failed", or "delivered" query parameters are
-    /// set to true, only deliveries matching those state(s) will be included in
-    /// the response. If NO state filter parameters are set, then all deliveries
-    /// are included.
-    ///
-    /// A delivery fails permanently when the retry limit of three total
-    /// attempts is reached without a successful delivery.
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `pending`: If true, include deliveries which are currently in
-    ///   progress.
-    ///
-    /// If any of the "pending", "failed", or "delivered" query parameters are
-    /// set to true, only deliveries matching those state(s) will be included in
-    /// the response. If NO state filter parameters are set, then all deliveries
-    /// are included.
-    ///
-    /// A delivery is considered "pending" if it has not yet been sent at all,
-    /// or if a delivery attempt has failed but the delivery has retries
-    /// remaining.
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.webhook_delivery_list()
-    ///    .delivered(delivered)
-    ///    .failed(failed)
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .pending(pending)
-    ///    .receiver(receiver)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_delivery_list(&self) -> builder::WebhookDeliveryList;
-    /// Request re-delivery of webhook event
-    ///
-    /// Sends a `POST` request to `/v1/webhooks/deliveries/{event_id}/resend`
-    ///
-    /// Arguments:
-    /// - `event_id`: UUID of the event
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// ```ignore
-    /// let response = client.webhook_delivery_resend()
-    ///    .event_id(event_id)
-    ///    .receiver(receiver)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_delivery_resend(&self) -> builder::WebhookDeliveryResend;
-    /// List webhook event classes
-    ///
-    /// Sends a `GET` request to `/v1/webhooks/event-classes`
-    ///
-    /// Arguments:
-    /// - `filter`: An optional glob pattern for filtering event class names.
-    ///
-    /// If provided, only event classes which match this glob pattern will be
-    /// included in the response.
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// ```ignore
-    /// let response = client.webhook_event_class_list()
-    ///    .filter(filter)
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_event_class_list(&self) -> builder::WebhookEventClassList;
-    /// List webhook receivers
-    ///
-    /// Sends a `GET` request to `/v1/webhooks/receivers`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.webhook_receiver_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_list(&self) -> builder::WebhookReceiverList;
-    /// Create webhook receiver
-    ///
-    /// Sends a `POST` request to `/v1/webhooks/receivers`
-    ///
-    /// ```ignore
-    /// let response = client.webhook_receiver_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_create(&self) -> builder::WebhookReceiverCreate;
-    /// Fetch webhook receiver
-    ///
-    /// Sends a `GET` request to `/v1/webhooks/receivers/{receiver}`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// ```ignore
-    /// let response = client.webhook_receiver_view()
-    ///    .receiver(receiver)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_view(&self) -> builder::WebhookReceiverView;
-    /// Update webhook receiver
-    ///
-    /// Note that receiver secrets are NOT added or removed using this endpoint.
-    /// Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint
-    /// to add and remove secrets.
-    ///
-    /// Sends a `PUT` request to `/v1/webhooks/receivers/{receiver}`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `body`
-    /// ```ignore
-    /// let response = client.webhook_receiver_update()
-    ///    .receiver(receiver)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_update(&self) -> builder::WebhookReceiverUpdate;
-    /// Delete webhook receiver
-    ///
-    /// Sends a `DELETE` request to `/v1/webhooks/receivers/{receiver}`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// ```ignore
-    /// let response = client.webhook_receiver_delete()
-    ///    .receiver(receiver)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_delete(&self) -> builder::WebhookReceiverDelete;
-    /// Send liveness probe to webhook receiver
-    ///
-    /// This endpoint synchronously sends a liveness probe request to the
-    /// selected webhook receiver. The response message describes the outcome of
-    /// the probe request: either the response from the receiver endpoint, or an
-    /// indication of why the probe failed.
-    ///
-    /// Note that the response status is `200 OK` as long as a probe request was
-    /// able to be sent to the receiver endpoint. If the receiver responds with
-    /// another status code, including an error, this will be indicated by the
-    /// response body, *not* the status of the response.
-    ///
-    /// The `resend` query parameter can be used to request re-delivery of
-    /// failed events if the liveness probe succeeds. If it is set to true and
-    /// the webhook receiver responds to the probe request with a `2xx` status
-    /// code, any events for which delivery to this receiver has failed will be
-    /// queued for re-delivery.
-    ///
-    /// Sends a `POST` request to `/v1/webhooks/receivers/{receiver}/probe`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `resend`: If true, resend all events that have not been delivered
-    ///   successfully if the probe request succeeds.
-    /// ```ignore
-    /// let response = client.webhook_receiver_probe()
-    ///    .receiver(receiver)
-    ///    .resend(resend)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_probe(&self) -> builder::WebhookReceiverProbe;
-    /// Add webhook receiver subscription
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/webhooks/receivers/{receiver}/subscriptions`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `body`
-    /// ```ignore
-    /// let response = client.webhook_receiver_subscription_add()
-    ///    .receiver(receiver)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_subscription_add(&self) -> builder::WebhookReceiverSubscriptionAdd;
-    /// Remove webhook receiver subscription
-    ///
-    /// Sends a `DELETE` request to
-    /// `/v1/webhooks/receivers/{receiver}/subscriptions/{subscription}`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `subscription`: The event class subscription itself.
-    /// ```ignore
-    /// let response = client.webhook_receiver_subscription_remove()
-    ///    .receiver(receiver)
-    ///    .subscription(subscription)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_receiver_subscription_remove(&self) -> builder::WebhookReceiverSubscriptionRemove;
-    /// List webhook receiver secret IDs
-    ///
-    /// Sends a `GET` request to `/v1/webhooks/secrets`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// ```ignore
-    /// let response = client.webhook_secrets_list()
-    ///    .receiver(receiver)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_secrets_list(&self) -> builder::WebhookSecretsList;
-    /// Add secret to webhook receiver
-    ///
-    /// Sends a `POST` request to `/v1/webhooks/secrets`
-    ///
-    /// Arguments:
-    /// - `receiver`: The name or ID of the webhook receiver.
-    /// - `body`
-    /// ```ignore
-    /// let response = client.webhook_secrets_add()
-    ///    .receiver(receiver)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_secrets_add(&self) -> builder::WebhookSecretsAdd;
-    /// Remove secret from webhook receiver
-    ///
-    /// Sends a `DELETE` request to `/v1/webhooks/secrets/{secret_id}`
-    ///
-    /// Arguments:
-    /// - `secret_id`: ID of the secret.
-    /// ```ignore
-    /// let response = client.webhook_secrets_delete()
-    ///    .secret_id(secret_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn webhook_secrets_delete(&self) -> builder::WebhookSecretsDelete;
-}
-
-impl ClientSystemWebhooksExt for Client {
-    fn webhook_delivery_list(&self) -> builder::WebhookDeliveryList {
-        builder::WebhookDeliveryList::new(self)
-    }
-
-    fn webhook_delivery_resend(&self) -> builder::WebhookDeliveryResend {
-        builder::WebhookDeliveryResend::new(self)
-    }
-
-    fn webhook_event_class_list(&self) -> builder::WebhookEventClassList {
-        builder::WebhookEventClassList::new(self)
-    }
-
-    fn webhook_receiver_list(&self) -> builder::WebhookReceiverList {
-        builder::WebhookReceiverList::new(self)
-    }
-
-    fn webhook_receiver_create(&self) -> builder::WebhookReceiverCreate {
-        builder::WebhookReceiverCreate::new(self)
-    }
-
-    fn webhook_receiver_view(&self) -> builder::WebhookReceiverView {
-        builder::WebhookReceiverView::new(self)
-    }
-
-    fn webhook_receiver_update(&self) -> builder::WebhookReceiverUpdate {
-        builder::WebhookReceiverUpdate::new(self)
-    }
-
-    fn webhook_receiver_delete(&self) -> builder::WebhookReceiverDelete {
-        builder::WebhookReceiverDelete::new(self)
-    }
-
-    fn webhook_receiver_probe(&self) -> builder::WebhookReceiverProbe {
-        builder::WebhookReceiverProbe::new(self)
-    }
-
-    fn webhook_receiver_subscription_add(&self) -> builder::WebhookReceiverSubscriptionAdd {
-        builder::WebhookReceiverSubscriptionAdd::new(self)
-    }
-
-    fn webhook_receiver_subscription_remove(&self) -> builder::WebhookReceiverSubscriptionRemove {
-        builder::WebhookReceiverSubscriptionRemove::new(self)
-    }
-
-    fn webhook_secrets_list(&self) -> builder::WebhookSecretsList {
-        builder::WebhookSecretsList::new(self)
-    }
-
-    fn webhook_secrets_add(&self) -> builder::WebhookSecretsAdd {
-        builder::WebhookSecretsAdd::new(self)
-    }
-
-    fn webhook_secrets_delete(&self) -> builder::WebhookSecretsDelete {
-        builder::WebhookSecretsDelete::new(self)
     }
 }
 
@@ -65663,6 +66109,1063 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_class_list`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_class_list`]: super::ClientSystemAlertsExt::alert_class_list
+    #[derive(Debug, Clone)]
+    pub struct AlertClassList<'a> {
+        client: &'a super::Client,
+        filter: Result<Option<types::AlertSubscription>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+    }
+
+    impl<'a> AlertClassList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                filter: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn filter<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AlertSubscription>,
+        {
+            self.filter = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `AlertSubscription` for filter failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alert-classes`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertClassResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                filter,
+                limit,
+                page_token,
+            } = self;
+            let filter = filter.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/alert-classes", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("filter", &filter))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_class_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/alert-classes`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AlertClass, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                filter: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_receiver_list`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_list`]: super::ClientSystemAlertsExt::alert_receiver_list
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> AlertReceiverList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alert-receivers`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertReceiverResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/alert-receivers", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/alert-receivers`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AlertReceiver, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_receiver_view`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_view`]: super::ClientSystemAlertsExt::alert_receiver_view
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverView<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> AlertReceiverView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alert-receivers/{receiver}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertReceiver>, Error<types::Error>> {
+            let Self { client, receiver } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_receiver_delete`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_delete`]: super::ClientSystemAlertsExt::alert_receiver_delete
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverDelete<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> AlertReceiverDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/alert-receivers/{receiver}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, receiver } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_delivery_list`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_delivery_list`]: super::ClientSystemAlertsExt::alert_delivery_list
+    #[derive(Debug, Clone)]
+    pub struct AlertDeliveryList<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+        delivered: Result<Option<bool>, String>,
+        failed: Result<Option<bool>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        pending: Result<Option<bool>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+    }
+
+    impl<'a> AlertDeliveryList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+                delivered: Ok(None),
+                failed: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+                pending: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        pub fn delivered<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.delivered = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for delivered failed".to_string());
+            self
+        }
+
+        pub fn failed<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.failed = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for failed failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn pending<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.pending = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for pending failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/alert-receivers/{receiver}/deliveries`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertDeliveryResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                receiver,
+                delivered,
+                failed,
+                limit,
+                page_token,
+                pending,
+                sort_by,
+            } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let delivered = delivered.map_err(Error::InvalidRequest)?;
+            let failed = failed.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let pending = pending.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}/deliveries",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("delivered", &delivered))
+                .query(&progenitor_client::QueryParam::new("failed", &failed))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("pending", &pending))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_delivery_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/alert-receivers/{receiver}/deliveries`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AlertDelivery, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                delivered: Ok(None),
+                failed: Ok(None),
+                page_token: Ok(None),
+                pending: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_receiver_probe`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_probe`]: super::ClientSystemAlertsExt::alert_receiver_probe
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverProbe<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+        resend: Result<Option<bool>, String>,
+    }
+
+    impl<'a> AlertReceiverProbe<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+                resend: Ok(None),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        pub fn resend<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.resend = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for resend failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/alert-receivers/{receiver}/probe`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertProbeResult>, Error<types::Error>> {
+            let Self {
+                client,
+                receiver,
+                resend,
+            } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let resend = resend.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}/probe",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("resend", &resend))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_probe",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_receiver_subscription_add`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_subscription_add`]: super::ClientSystemAlertsExt::alert_receiver_subscription_add
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverSubscriptionAdd<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+        body: Result<types::builder::AlertSubscriptionCreate, String>,
+    }
+
+    impl<'a> AlertReceiverSubscriptionAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AlertSubscriptionCreate>,
+            <V as std::convert::TryInto<types::AlertSubscriptionCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `AlertSubscriptionCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AlertSubscriptionCreate,
+            ) -> types::builder::AlertSubscriptionCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/alert-receivers/{receiver}/subscriptions`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertSubscriptionCreated>, Error<types::Error>> {
+            let Self {
+                client,
+                receiver,
+                body,
+            } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::AlertSubscriptionCreate::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}/subscriptions",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_subscription_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemAlertsExt::alert_receiver_subscription_remove`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_receiver_subscription_remove`]: super::ClientSystemAlertsExt::alert_receiver_subscription_remove
+    #[derive(Debug, Clone)]
+    pub struct AlertReceiverSubscriptionRemove<'a> {
+        client: &'a super::Client,
+        receiver: Result<types::NameOrId, String>,
+        subscription: Result<types::AlertSubscription, String>,
+    }
+
+    impl<'a> AlertReceiverSubscriptionRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                receiver: Err("receiver was not initialized".to_string()),
+                subscription: Err("subscription was not initialized".to_string()),
+            }
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        pub fn subscription<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AlertSubscription>,
+        {
+            self.subscription = value.try_into().map_err(|_| {
+                "conversion to `AlertSubscription` for subscription failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/alert-receivers/{receiver}/subscriptions/{subscription}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                receiver,
+                subscription,
+            } = self;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let subscription = subscription.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alert-receivers/{}/subscriptions/{}",
+                client.baseurl,
+                encode_path(&receiver.to_string()),
+                encode_path(&subscription.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_receiver_subscription_remove",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemAlertsExt::alert_delivery_resend`]
+    ///
+    /// [`ClientSystemAlertsExt::alert_delivery_resend`]: super::ClientSystemAlertsExt::alert_delivery_resend
+    #[derive(Debug, Clone)]
+    pub struct AlertDeliveryResend<'a> {
+        client: &'a super::Client,
+        alert_id: Result<::uuid::Uuid, String>,
+        receiver: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> AlertDeliveryResend<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                alert_id: Err("alert_id was not initialized".to_string()),
+                receiver: Err("receiver was not initialized".to_string()),
+            }
+        }
+
+        pub fn alert_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.alert_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for alert_id failed".to_string());
+            self
+        }
+
+        pub fn receiver<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.receiver = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/alerts/{alert_id}/resend`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AlertDeliveryId>, Error<types::Error>> {
+            let Self {
+                client,
+                alert_id,
+                receiver,
+            } = self;
+            let alert_id = alert_id.map_err(Error::InvalidRequest)?;
+            let receiver = receiver.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/alerts/{}/resend",
+                client.baseurl,
+                encode_path(&alert_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("receiver", &receiver))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "alert_delivery_resend",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -90381,577 +91884,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemWebhooksExt::webhook_delivery_list`]
+    /// Builder for [`ClientSystemAlertsExt::webhook_receiver_create`]
     ///
-    /// [`ClientSystemWebhooksExt::webhook_delivery_list`]: super::ClientSystemWebhooksExt::webhook_delivery_list
-    #[derive(Debug, Clone)]
-    pub struct WebhookDeliveryList<'a> {
-        client: &'a super::Client,
-        delivered: Result<Option<bool>, String>,
-        failed: Result<Option<bool>, String>,
-        limit: Result<Option<::std::num::NonZeroU32>, String>,
-        page_token: Result<Option<::std::string::String>, String>,
-        pending: Result<Option<bool>, String>,
-        receiver: Result<types::NameOrId, String>,
-        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
-    }
-
-    impl<'a> WebhookDeliveryList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                delivered: Ok(None),
-                failed: Ok(None),
-                limit: Ok(None),
-                page_token: Ok(None),
-                pending: Ok(None),
-                receiver: Err("receiver was not initialized".to_string()),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn delivered<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<bool>,
-        {
-            self.delivered = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `bool` for delivered failed".to_string());
-            self
-        }
-
-        pub fn failed<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<bool>,
-        {
-            self.failed = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `bool` for failed failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.page_token = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for page_token failed".to_string()
-            });
-            self
-        }
-
-        pub fn pending<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<bool>,
-        {
-            self.pending = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `bool` for pending failed".to_string());
-            self
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::TimeAndIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/webhooks/deliveries`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookDeliveryResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                delivered,
-                failed,
-                limit,
-                page_token,
-                pending,
-                receiver,
-                sort_by,
-            } = self;
-            let delivered = delivered.map_err(Error::InvalidRequest)?;
-            let failed = failed.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let pending = pending.map_err(Error::InvalidRequest)?;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/deliveries", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("delivered", &delivered))
-                .query(&progenitor_client::QueryParam::new("failed", &failed))
-                .query(&progenitor_client::QueryParam::new("limit", &limit))
-                .query(&progenitor_client::QueryParam::new(
-                    "page_token",
-                    &page_token,
-                ))
-                .query(&progenitor_client::QueryParam::new("pending", &pending))
-                .query(&progenitor_client::QueryParam::new("receiver", &receiver))
-                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_delivery_list",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_delivery_resend`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_delivery_resend`]: super::ClientSystemWebhooksExt::webhook_delivery_resend
-    #[derive(Debug, Clone)]
-    pub struct WebhookDeliveryResend<'a> {
-        client: &'a super::Client,
-        event_id: Result<::uuid::Uuid, String>,
-        receiver: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> WebhookDeliveryResend<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                event_id: Err("event_id was not initialized".to_string()),
-                receiver: Err("receiver was not initialized".to_string()),
-            }
-        }
-
-        pub fn event_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::uuid::Uuid>,
-        {
-            self.event_id = value
-                .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for event_id failed".to_string());
-            self
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/webhooks/deliveries/{event_id}/resend`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookDeliveryId>, Error<types::Error>> {
-            let Self {
-                client,
-                event_id,
-                receiver,
-            } = self;
-            let event_id = event_id.map_err(Error::InvalidRequest)?;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/deliveries/{}/resend",
-                client.baseurl,
-                encode_path(&event_id.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("receiver", &receiver))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_delivery_resend",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_event_class_list`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_event_class_list`]: super::ClientSystemWebhooksExt::webhook_event_class_list
-    #[derive(Debug, Clone)]
-    pub struct WebhookEventClassList<'a> {
-        client: &'a super::Client,
-        filter: Result<Option<types::WebhookSubscription>, String>,
-        limit: Result<Option<::std::num::NonZeroU32>, String>,
-        page_token: Result<Option<::std::string::String>, String>,
-    }
-
-    impl<'a> WebhookEventClassList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                filter: Ok(None),
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn filter<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::WebhookSubscription>,
-        {
-            self.filter = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `WebhookSubscription` for filter failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.page_token = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for page_token failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/webhooks/event-classes`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::EventClassResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                filter,
-                limit,
-                page_token,
-            } = self;
-            let filter = filter.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/event-classes", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("filter", &filter))
-                .query(&progenitor_client::QueryParam::new("limit", &limit))
-                .query(&progenitor_client::QueryParam::new(
-                    "page_token",
-                    &page_token,
-                ))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_event_class_list",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/webhooks/event-classes`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::EventClass, Error<types::Error>>> + Unpin + 'a
-        {
-            use ::futures::StreamExt;
-            use ::futures::TryFutureExt;
-            use ::futures::TryStreamExt;
-            let next = Self {
-                filter: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_list`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_list`]: super::ClientSystemWebhooksExt::webhook_receiver_list
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<::std::num::NonZeroU32>, String>,
-        page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> WebhookReceiverList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.page_token = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for page_token failed".to_string()
-            });
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/webhooks/receivers`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookReceiverResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/receivers", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("limit", &limit))
-                .query(&progenitor_client::QueryParam::new(
-                    "page_token",
-                    &page_token,
-                ))
-                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_list",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/webhooks/receivers`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::WebhookReceiver, Error<types::Error>>> + Unpin + 'a
-        {
-            use ::futures::StreamExt;
-            use ::futures::TryFutureExt;
-            use ::futures::TryStreamExt;
-            let next = Self {
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_create`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_create`]: super::ClientSystemWebhooksExt::webhook_receiver_create
+    /// [`ClientSystemAlertsExt::webhook_receiver_create`]: super::ClientSystemAlertsExt::webhook_receiver_create
     #[derive(Debug, Clone)]
     pub struct WebhookReceiverCreate<'a> {
         client: &'a super::Client,
@@ -90986,7 +91921,7 @@ pub mod builder {
             self
         }
 
-        /// Sends a `POST` request to `/v1/webhooks/receivers`
+        /// Sends a `POST` request to `/v1/webhook-receivers`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::WebhookReceiver>, Error<types::Error>> {
@@ -90994,7 +91929,7 @@ pub mod builder {
             let body = body
                 .and_then(|v| types::WebhookCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/receivers", client.baseurl,);
+            let url = format!("{}/v1/webhook-receivers", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -91031,82 +91966,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_view`]
+    /// Builder for [`ClientSystemAlertsExt::webhook_receiver_update`]
     ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_view`]: super::ClientSystemWebhooksExt::webhook_receiver_view
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverView<'a> {
-        client: &'a super::Client,
-        receiver: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> WebhookReceiverView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                receiver: Err("receiver was not initialized".to_string()),
-            }
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/webhooks/receivers/{receiver}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookReceiver>, Error<types::Error>> {
-            let Self { client, receiver } = self;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/receivers/{}",
-                client.baseurl,
-                encode_path(&receiver.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_view",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_update`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_update`]: super::ClientSystemWebhooksExt::webhook_receiver_update
+    /// [`ClientSystemAlertsExt::webhook_receiver_update`]: super::ClientSystemAlertsExt::webhook_receiver_update
     #[derive(Debug, Clone)]
     pub struct WebhookReceiverUpdate<'a> {
         client: &'a super::Client,
@@ -91157,7 +92019,7 @@ pub mod builder {
             self
         }
 
-        /// Sends a `PUT` request to `/v1/webhooks/receivers/{receiver}`
+        /// Sends a `PUT` request to `/v1/webhook-receivers/{receiver}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -91169,7 +92031,7 @@ pub mod builder {
                 .and_then(|v| types::WebhookReceiverUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/webhooks/receivers/{}",
+                "{}/v1/webhook-receivers/{}",
                 client.baseurl,
                 encode_path(&receiver.to_string()),
             );
@@ -91209,375 +92071,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_delete`]
+    /// Builder for [`ClientSystemAlertsExt::webhook_secrets_list`]
     ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_delete`]: super::ClientSystemWebhooksExt::webhook_receiver_delete
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverDelete<'a> {
-        client: &'a super::Client,
-        receiver: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> WebhookReceiverDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                receiver: Err("receiver was not initialized".to_string()),
-            }
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to `/v1/webhooks/receivers/{receiver}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, receiver } = self;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/receivers/{}",
-                client.baseurl,
-                encode_path(&receiver.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_delete",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_receiver_probe`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_probe`]: super::ClientSystemWebhooksExt::webhook_receiver_probe
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverProbe<'a> {
-        client: &'a super::Client,
-        receiver: Result<types::NameOrId, String>,
-        resend: Result<Option<bool>, String>,
-    }
-
-    impl<'a> WebhookReceiverProbe<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                receiver: Err("receiver was not initialized".to_string()),
-                resend: Ok(None),
-            }
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        pub fn resend<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<bool>,
-        {
-            self.resend = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `bool` for resend failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/webhooks/receivers/{receiver}/probe`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookProbeResult>, Error<types::Error>> {
-            let Self {
-                client,
-                receiver,
-                resend,
-            } = self;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let resend = resend.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/receivers/{}/probe",
-                client.baseurl,
-                encode_path(&receiver.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("resend", &resend))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_probe",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemWebhooksExt::webhook_receiver_subscription_add`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_subscription_add`]: super::ClientSystemWebhooksExt::webhook_receiver_subscription_add
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverSubscriptionAdd<'a> {
-        client: &'a super::Client,
-        receiver: Result<types::NameOrId, String>,
-        body: Result<types::builder::WebhookSubscriptionCreate, String>,
-    }
-
-    impl<'a> WebhookReceiverSubscriptionAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                receiver: Err("receiver was not initialized".to_string()),
-                body: Ok(::std::default::Default::default()),
-            }
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::WebhookSubscriptionCreate>,
-            <V as std::convert::TryInto<types::WebhookSubscriptionCreate>>::Error:
-                std::fmt::Display,
-        {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `WebhookSubscriptionCreate` for body failed: {}",
-                    s
-                )
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::WebhookSubscriptionCreate,
-            ) -> types::builder::WebhookSubscriptionCreate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/webhooks/receivers/{receiver}/subscriptions`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::WebhookSubscriptionCreated>, Error<types::Error>> {
-            let Self {
-                client,
-                receiver,
-                body,
-            } = self;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(|v| {
-                    types::WebhookSubscriptionCreate::try_from(v).map_err(|e| e.to_string())
-                })
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/receivers/{}/subscriptions",
-                client.baseurl,
-                encode_path(&receiver.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .post(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_subscription_add",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for
-    /// [`ClientSystemWebhooksExt::webhook_receiver_subscription_remove`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_receiver_subscription_remove`]: super::ClientSystemWebhooksExt::webhook_receiver_subscription_remove
-    #[derive(Debug, Clone)]
-    pub struct WebhookReceiverSubscriptionRemove<'a> {
-        client: &'a super::Client,
-        receiver: Result<types::NameOrId, String>,
-        subscription: Result<types::WebhookSubscription, String>,
-    }
-
-    impl<'a> WebhookReceiverSubscriptionRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                receiver: Err("receiver was not initialized".to_string()),
-                subscription: Err("subscription was not initialized".to_string()),
-            }
-        }
-
-        pub fn receiver<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.receiver = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for receiver failed".to_string());
-            self
-        }
-
-        pub fn subscription<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::WebhookSubscription>,
-        {
-            self.subscription = value.try_into().map_err(|_| {
-                "conversion to `WebhookSubscription` for subscription failed".to_string()
-            });
-            self
-        }
-
-        /// Sends a `DELETE` request to
-        /// `/v1/webhooks/receivers/{receiver}/subscriptions/{subscription}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                receiver,
-                subscription,
-            } = self;
-            let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let subscription = subscription.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/webhooks/receivers/{}/subscriptions/{}",
-                client.baseurl,
-                encode_path(&receiver.to_string()),
-                encode_path(&subscription.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "webhook_receiver_subscription_remove",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemWebhooksExt::webhook_secrets_list`]
-    ///
-    /// [`ClientSystemWebhooksExt::webhook_secrets_list`]: super::ClientSystemWebhooksExt::webhook_secrets_list
+    /// [`ClientSystemAlertsExt::webhook_secrets_list`]: super::ClientSystemAlertsExt::webhook_secrets_list
     #[derive(Debug, Clone)]
     pub struct WebhookSecretsList<'a> {
         client: &'a super::Client,
@@ -91602,13 +92098,13 @@ pub mod builder {
             self
         }
 
-        /// Sends a `GET` request to `/v1/webhooks/secrets`
+        /// Sends a `GET` request to `/v1/webhook-secrets`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::WebhookSecrets>, Error<types::Error>> {
             let Self { client, receiver } = self;
             let receiver = receiver.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/secrets", client.baseurl,);
+            let url = format!("{}/v1/webhook-secrets", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -91645,9 +92141,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemWebhooksExt::webhook_secrets_add`]
+    /// Builder for [`ClientSystemAlertsExt::webhook_secrets_add`]
     ///
-    /// [`ClientSystemWebhooksExt::webhook_secrets_add`]: super::ClientSystemWebhooksExt::webhook_secrets_add
+    /// [`ClientSystemAlertsExt::webhook_secrets_add`]: super::ClientSystemAlertsExt::webhook_secrets_add
     #[derive(Debug, Clone)]
     pub struct WebhookSecretsAdd<'a> {
         client: &'a super::Client,
@@ -91696,7 +92192,7 @@ pub mod builder {
             self
         }
 
-        /// Sends a `POST` request to `/v1/webhooks/secrets`
+        /// Sends a `POST` request to `/v1/webhook-secrets`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::WebhookSecret>, Error<types::Error>> {
@@ -91709,7 +92205,7 @@ pub mod builder {
             let body = body
                 .and_then(|v| types::WebhookSecretCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/webhooks/secrets", client.baseurl,);
+            let url = format!("{}/v1/webhook-secrets", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -91747,9 +92243,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemWebhooksExt::webhook_secrets_delete`]
+    /// Builder for [`ClientSystemAlertsExt::webhook_secrets_delete`]
     ///
-    /// [`ClientSystemWebhooksExt::webhook_secrets_delete`]: super::ClientSystemWebhooksExt::webhook_secrets_delete
+    /// [`ClientSystemAlertsExt::webhook_secrets_delete`]: super::ClientSystemAlertsExt::webhook_secrets_delete
     #[derive(Debug, Clone)]
     pub struct WebhookSecretsDelete<'a> {
         client: &'a super::Client,
@@ -91774,12 +92270,12 @@ pub mod builder {
             self
         }
 
-        /// Sends a `DELETE` request to `/v1/webhooks/secrets/{secret_id}`
+        /// Sends a `DELETE` request to `/v1/webhook-secrets/{secret_id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, secret_id } = self;
             let secret_id = secret_id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/webhooks/secrets/{}",
+                "{}/v1/webhook-secrets/{}",
                 client.baseurl,
                 encode_path(&secret_id.to_string()),
             );
@@ -91838,12 +92334,12 @@ pub mod prelude {
     pub use super::ClientSessionExt;
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
+    pub use super::ClientSystemAlertsExt;
     pub use super::ClientSystemHardwareExt;
     pub use super::ClientSystemIpPoolsExt;
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
-    pub use super::ClientSystemWebhooksExt;
     pub use super::ClientVpcsExt;
 }
