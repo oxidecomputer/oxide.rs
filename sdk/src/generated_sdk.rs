@@ -2001,16 +2001,33 @@ pub mod types {
     /// receiver.",
     ///  "oneOf": [
     ///    {
+    ///      "description": "Webhook-specific alert receiver configuration.",
     ///      "type": "object",
     ///      "required": [
-    ///        "webhook"
+    ///        "endpoint",
+    ///        "kind",
+    ///        "secrets"
     ///      ],
     ///      "properties": {
-    ///        "webhook": {
-    ///          "$ref": "#/components/schemas/WebhookReceiverConfig"
+    ///        "endpoint": {
+    ///          "description": "The URL that webhook notification requests are
+    /// sent to.",
+    ///          "type": "string",
+    ///          "format": "uri"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "webhook"
+    ///          ]
+    ///        },
+    ///        "secrets": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/WebhookSecret"
+    ///          }
     ///        }
-    ///      },
-    ///      "additionalProperties": false
+    ///      }
     ///    }
     ///  ]
     /// }
@@ -2019,20 +2036,20 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
+    #[serde(tag = "kind")]
     pub enum AlertReceiverKind {
+        /// Webhook-specific alert receiver configuration.
         #[serde(rename = "webhook")]
-        Webhook(WebhookReceiverConfig),
+        Webhook {
+            /// The URL that webhook notification requests are sent to.
+            endpoint: ::std::string::String,
+            secrets: ::std::vec::Vec<WebhookSecret>,
+        },
     }
 
     impl ::std::convert::From<&Self> for AlertReceiverKind {
         fn from(value: &AlertReceiverKind) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::convert::From<WebhookReceiverConfig> for AlertReceiverKind {
-        fn from(value: WebhookReceiverConfig) -> Self {
-            Self::Webhook(value)
         }
     }
 
@@ -32847,56 +32864,6 @@ pub mod types {
         }
     }
 
-    /// Webhook-specific alert receiver configuration.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Webhook-specific alert receiver configuration.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "endpoint",
-    ///    "secrets"
-    ///  ],
-    ///  "properties": {
-    ///    "endpoint": {
-    ///      "description": "The URL that webhook notification requests are sent
-    /// to.",
-    ///      "type": "string",
-    ///      "format": "uri"
-    ///    },
-    ///    "secrets": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/WebhookSecret"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct WebhookReceiverConfig {
-        /// The URL that webhook notification requests are sent to.
-        pub endpoint: ::std::string::String,
-        pub secrets: ::std::vec::Vec<WebhookSecret>,
-    }
-
-    impl ::std::convert::From<&WebhookReceiverConfig> for WebhookReceiverConfig {
-        fn from(value: &WebhookReceiverConfig) -> Self {
-            value.clone()
-        }
-    }
-
-    impl WebhookReceiverConfig {
-        pub fn builder() -> builder::WebhookReceiverConfig {
-            Default::default()
-        }
-    }
-
     /// Parameters to update a webhook configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -57597,66 +57564,6 @@ pub mod types {
                     subscriptions: Ok(value.subscriptions),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct WebhookReceiverConfig {
-            endpoint: ::std::result::Result<::std::string::String, ::std::string::String>,
-            secrets:
-                ::std::result::Result<::std::vec::Vec<super::WebhookSecret>, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for WebhookReceiverConfig {
-            fn default() -> Self {
-                Self {
-                    endpoint: Err("no value supplied for endpoint".to_string()),
-                    secrets: Err("no value supplied for secrets".to_string()),
-                }
-            }
-        }
-
-        impl WebhookReceiverConfig {
-            pub fn endpoint<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.endpoint = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for endpoint: {}", e));
-                self
-            }
-            pub fn secrets<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::WebhookSecret>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.secrets = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for secrets: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<WebhookReceiverConfig> for super::WebhookReceiverConfig {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: WebhookReceiverConfig,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    endpoint: value.endpoint?,
-                    secrets: value.secrets?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::WebhookReceiverConfig> for WebhookReceiverConfig {
-            fn from(value: super::WebhookReceiverConfig) -> Self {
-                Self {
-                    endpoint: Ok(value.endpoint),
-                    secrets: Ok(value.secrets),
                 }
             }
         }
