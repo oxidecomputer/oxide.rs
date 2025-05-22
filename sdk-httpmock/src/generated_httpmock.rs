@@ -741,6 +741,10 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range(self, value: &str) -> Self {
+            todo!()
+        }
     }
 
     pub struct SupportBundleDownloadThen(::httpmock::Then);

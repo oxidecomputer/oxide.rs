@@ -616,15 +616,7 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_download() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the contents of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as:\n\n```text bytes=0-499 ```\n\n<https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the contents of a support bundle")
     }
 
     pub fn cli_support_bundle_head() -> ::clap::Command {
@@ -8922,6 +8914,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.support_bundle_download();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
             request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
