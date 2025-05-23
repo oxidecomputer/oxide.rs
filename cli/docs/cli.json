@@ -1051,10 +1051,6 @@
               "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
             },
             {
-              "long": "parallelism",
-              "help": "The degree or parallelism to use during upload"
-            },
-            {
               "long": "path",
               "help": "Path to the file to import"
             },
@@ -4656,26 +4652,28 @@
                       "help": "idp's entity id"
                     },
                     {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "long": "metadata-path",
+                      "help": "the path to an XML file containing an identity provider metadata descriptor"
                     },
                     {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "metadata-url"
-                    },
-                    {
-                      "long": "metadata-value"
+                      "long": "metadata-url",
+                      "help": "the URL of an identity provider metadata descriptor"
                     },
                     {
                       "long": "name"
                     },
                     {
+                      "long": "private-key-path",
+                      "help": "the path to the request signing RSA private key in PKCS#1 DER format"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
+                    },
+                    {
+                      "long": "public-cert-path",
+                      "help": "the path to the request signing public certificate in DER format"
                     },
                     {
                       "long": "silo",
