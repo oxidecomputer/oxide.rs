@@ -35,7 +35,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -128,7 +128,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -742,8 +742,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn range(self, value: &str) -> Self {
-            todo!()
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -757,7 +769,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -802,7 +814,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -858,7 +870,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -914,7 +926,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -956,7 +968,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -990,7 +1002,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: serde_json::Value) -> Self {
+        pub fn body(self, value: ::serde_json::Value) -> Self {
             Self(self.0.json_body(value))
         }
     }
@@ -1029,7 +1041,7 @@ pub mod operations {
             )
         }
 
-        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn success(self, status: u16, value: ::serde_json::Value) -> Self {
             assert_eq!(status / 100u16, 2u16);
             Self(
                 self.0
