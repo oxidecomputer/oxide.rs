@@ -802,6 +802,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleHeadThen(::httpmock::Then);
@@ -857,6 +873,22 @@ pub mod operations {
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -914,6 +946,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleHeadFileThen(::httpmock::Then);
@@ -955,6 +1003,22 @@ pub mod operations {
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
