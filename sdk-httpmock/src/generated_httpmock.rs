@@ -35,7 +35,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -128,7 +128,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -741,6 +741,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleDownloadThen(::httpmock::Then);
@@ -753,7 +769,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -786,6 +802,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleHeadThen(::httpmock::Then);
@@ -798,7 +830,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -842,6 +874,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleDownloadFileThen(::httpmock::Then);
@@ -854,7 +902,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -898,6 +946,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleHeadFileThen(::httpmock::Then);
@@ -910,7 +974,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -940,6 +1004,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleIndexThen(::httpmock::Then);
@@ -952,7 +1032,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -986,7 +1066,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: serde_json::Value) -> Self {
+        pub fn body(self, value: ::serde_json::Value) -> Self {
             Self(self.0.json_body(value))
         }
     }
@@ -1025,7 +1105,7 @@ pub mod operations {
             )
         }
 
-        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn success(self, status: u16, value: ::serde_json::Value) -> Self {
             assert_eq!(status / 100u16, 2u16);
             Self(
                 self.0
@@ -1809,6 +1889,766 @@ pub mod operations {
 
         pub fn no_content(self) -> Self {
             Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertClassListWhen(::httpmock::When);
+    impl AlertClassListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-classes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn filter<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::AlertSubscription>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("filter", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "filter"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertClassListThen(::httpmock::Then);
+    impl AlertClassListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertClassResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverListWhen(::httpmock::When);
+    impl AlertReceiverListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertReceiverListThen(::httpmock::Then);
+    impl AlertReceiverListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertReceiverResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverViewWhen(::httpmock::When);
+    impl AlertReceiverViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alert-receivers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverViewThen(::httpmock::Then);
+    impl AlertReceiverViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertReceiver) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverDeleteWhen(::httpmock::When);
+    impl AlertReceiverDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alert-receivers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverDeleteThen(::httpmock::Then);
+    impl AlertReceiverDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertDeliveryListWhen(::httpmock::When);
+    impl AlertDeliveryListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/alert-receivers/[^/]*/deliveries$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/deliveries$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn delivered<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("delivered", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "delivered"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn failed<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("failed", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "failed"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn pending<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("pending", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "pending"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertDeliveryListThen(::httpmock::Then);
+    impl AlertDeliveryListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertDeliveryResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverProbeWhen(::httpmock::When);
+    impl AlertReceiverProbeWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*/probe$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/probe$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn resend<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("resend", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "resend"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertReceiverProbeThen(::httpmock::Then);
+    impl AlertReceiverProbeThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertProbeResult) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionAddWhen(::httpmock::When);
+    impl AlertReceiverSubscriptionAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/alert-receivers/[^/]*/subscriptions$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/subscriptions$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AlertSubscriptionCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionAddThen(::httpmock::Then);
+    impl AlertReceiverSubscriptionAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AlertSubscriptionCreated) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionRemoveWhen(::httpmock::When);
+    impl AlertReceiverSubscriptionRemoveWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/alert-receivers/[^/]*/subscriptions/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/subscriptions/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn subscription(self, value: &types::AlertSubscription) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/.*/subscriptions/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionRemoveThen(::httpmock::Then);
+    impl AlertReceiverSubscriptionRemoveThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertDeliveryResendWhen(::httpmock::When);
+    impl AlertDeliveryResendWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/alerts/[^/]*/resend$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn alert_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alerts/{}/resend$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("receiver", value.to_string()))
+        }
+    }
+
+    pub struct AlertDeliveryResendThen(::httpmock::Then);
+    impl AlertDeliveryResendThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AlertDeliveryId) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -19810,442 +20650,13 @@ pub mod operations {
         }
     }
 
-    pub struct WebhookDeliveryListWhen(::httpmock::When);
-    impl WebhookDeliveryListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/deliveries$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn delivered<T>(self, value: T) -> Self
-        where
-            T: Into<Option<bool>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("delivered", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "delivered"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn failed<T>(self, value: T) -> Self
-        where
-            T: Into<Option<bool>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("failed", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "failed"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn pending<T>(self, value: T) -> Self
-        where
-            T: Into<Option<bool>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("pending", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "pending"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("receiver", value.to_string()))
-        }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::TimeAndIdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct WebhookDeliveryListThen(::httpmock::Then);
-    impl WebhookDeliveryListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::WebhookDeliveryResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookDeliveryResendWhen(::httpmock::When);
-    impl WebhookDeliveryResendWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner.method(::httpmock::Method::POST).path_matches(
-                    regex::Regex::new("^/v1/webhooks/deliveries/[^/]*/resend$").unwrap(),
-                ),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn event_id(self, value: &::uuid::Uuid) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/webhooks/deliveries/{}/resend$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("receiver", value.to_string()))
-        }
-    }
-
-    pub struct WebhookDeliveryResendThen(::httpmock::Then);
-    impl WebhookDeliveryResendThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn created(self, value: &types::WebhookDeliveryId) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookEventClassListWhen(::httpmock::When);
-    impl WebhookEventClassListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/event-classes$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn filter<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a types::WebhookSubscription>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("filter", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "filter"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct WebhookEventClassListThen(::httpmock::Then);
-    impl WebhookEventClassListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::EventClassResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookReceiverListWhen(::httpmock::When);
-    impl WebhookReceiverListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/receivers$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::NameOrIdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct WebhookReceiverListThen(::httpmock::Then);
-    impl WebhookReceiverListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::WebhookReceiverResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct WebhookReceiverCreateWhen(::httpmock::When);
     impl WebhookReceiverCreateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
                     .method(::httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/receivers$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/webhook-receivers$").unwrap()),
             )
         }
 
@@ -20298,74 +20709,13 @@ pub mod operations {
         }
     }
 
-    pub struct WebhookReceiverViewWhen(::httpmock::When);
-    impl WebhookReceiverViewWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/receivers/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/webhooks/receivers/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct WebhookReceiverViewThen(::httpmock::Then);
-    impl WebhookReceiverViewThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::WebhookReceiver) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct WebhookReceiverUpdateWhen(::httpmock::When);
     impl WebhookReceiverUpdateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
                     .method(::httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/receivers/[^/]*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/webhook-receivers/[^/]*$").unwrap()),
             )
         }
 
@@ -20374,7 +20724,7 @@ pub mod operations {
         }
 
         pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/webhooks/receivers/{}$", value.to_string()))
+            let re = regex::Regex::new(&format!("^/v1/webhook-receivers/{}$", value.to_string()))
                 .unwrap();
             Self(self.0.path_matches(re))
         }
@@ -20419,281 +20769,13 @@ pub mod operations {
         }
     }
 
-    pub struct WebhookReceiverDeleteWhen(::httpmock::When);
-    impl WebhookReceiverDeleteWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/receivers/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/webhooks/receivers/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct WebhookReceiverDeleteThen(::httpmock::Then);
-    impl WebhookReceiverDeleteThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookReceiverProbeWhen(::httpmock::When);
-    impl WebhookReceiverProbeWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner.method(::httpmock::Method::POST).path_matches(
-                    regex::Regex::new("^/v1/webhooks/receivers/[^/]*/probe$").unwrap(),
-                ),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/webhooks/receivers/{}/probe$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn resend<T>(self, value: T) -> Self
-        where
-            T: Into<Option<bool>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("resend", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "resend"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct WebhookReceiverProbeThen(::httpmock::Then);
-    impl WebhookReceiverProbeThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::WebhookProbeResult) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookReceiverSubscriptionAddWhen(::httpmock::When);
-    impl WebhookReceiverSubscriptionAddWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(inner.method(::httpmock::Method::POST).path_matches(
-                regex::Regex::new("^/v1/webhooks/receivers/[^/]*/subscriptions$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/webhooks/receivers/{}/subscriptions$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn body(self, value: &types::WebhookSubscriptionCreate) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct WebhookReceiverSubscriptionAddThen(::httpmock::Then);
-    impl WebhookReceiverSubscriptionAddThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn created(self, value: &types::WebhookSubscriptionCreated) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct WebhookReceiverSubscriptionRemoveWhen(::httpmock::When);
-    impl WebhookReceiverSubscriptionRemoveWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(inner.method(::httpmock::Method::DELETE).path_matches(
-                regex::Regex::new("^/v1/webhooks/receivers/[^/]*/subscriptions/[^/]*$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn receiver(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/webhooks/receivers/{}/subscriptions/.*$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn subscription(self, value: &types::WebhookSubscription) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/webhooks/receivers/.*/subscriptions/{}$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct WebhookReceiverSubscriptionRemoveThen(::httpmock::Then);
-    impl WebhookReceiverSubscriptionRemoveThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct WebhookSecretsListWhen(::httpmock::When);
     impl WebhookSecretsListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
                     .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/secrets$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets$").unwrap()),
             )
         }
 
@@ -20752,7 +20834,7 @@ pub mod operations {
             Self(
                 inner
                     .method(::httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/secrets$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets$").unwrap()),
             )
         }
 
@@ -20815,7 +20897,7 @@ pub mod operations {
             Self(
                 inner
                     .method(::httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/webhooks/secrets/[^/]*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets/[^/]*$").unwrap()),
             )
         }
 
@@ -20824,8 +20906,8 @@ pub mod operations {
         }
 
         pub fn secret_id(self, value: &::uuid::Uuid) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/webhooks/secrets/{}$", value.to_string()))
-                .unwrap();
+            let re =
+                regex::Regex::new(&format!("^/v1/webhook-secrets/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
     }
@@ -20960,6 +21042,39 @@ pub trait MockServerExt {
             operations::AffinityGroupMemberInstanceDeleteWhen,
             operations::AffinityGroupMemberInstanceDeleteThen,
         );
+    fn alert_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertClassListWhen, operations::AlertClassListThen);
+    fn alert_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverListWhen, operations::AlertReceiverListThen);
+    fn alert_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverViewWhen, operations::AlertReceiverViewThen);
+    fn alert_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverDeleteWhen, operations::AlertReceiverDeleteThen);
+    fn alert_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryListWhen, operations::AlertDeliveryListThen);
+    fn alert_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverProbeWhen, operations::AlertReceiverProbeThen);
+    fn alert_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionAddWhen,
+            operations::AlertReceiverSubscriptionAddThen,
+        );
+    fn alert_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionRemoveWhen,
+            operations::AlertReceiverSubscriptionRemoveThen,
+        );
+    fn alert_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryResendWhen, operations::AlertDeliveryResendThen);
     fn anti_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::AntiAffinityGroupListWhen, operations::AntiAffinityGroupListThen);
@@ -21776,45 +21891,12 @@ pub trait MockServerExt {
     fn vpc_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::VpcDeleteWhen, operations::VpcDeleteThen);
-    fn webhook_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookDeliveryListWhen, operations::WebhookDeliveryListThen);
-    fn webhook_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookDeliveryResendWhen, operations::WebhookDeliveryResendThen);
-    fn webhook_event_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookEventClassListWhen, operations::WebhookEventClassListThen);
-    fn webhook_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverListWhen, operations::WebhookReceiverListThen);
     fn webhook_receiver_create<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::WebhookReceiverCreateWhen, operations::WebhookReceiverCreateThen);
-    fn webhook_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverViewWhen, operations::WebhookReceiverViewThen);
     fn webhook_receiver_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::WebhookReceiverUpdateWhen, operations::WebhookReceiverUpdateThen);
-    fn webhook_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverDeleteWhen, operations::WebhookReceiverDeleteThen);
-    fn webhook_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverProbeWhen, operations::WebhookReceiverProbeThen);
-    fn webhook_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(
-            operations::WebhookReceiverSubscriptionAddWhen,
-            operations::WebhookReceiverSubscriptionAddThen,
-        );
-    fn webhook_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(
-            operations::WebhookReceiverSubscriptionRemoveWhen,
-            operations::WebhookReceiverSubscriptionRemoveThen,
-        );
     fn webhook_secrets_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::WebhookSecretsListWhen, operations::WebhookSecretsListThen);
@@ -22147,6 +22229,120 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::AffinityGroupMemberInstanceDeleteWhen::new(when),
                 operations::AffinityGroupMemberInstanceDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn alert_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertClassListWhen, operations::AlertClassListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertClassListWhen::new(when),
+                operations::AlertClassListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverListWhen, operations::AlertReceiverListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverListWhen::new(when),
+                operations::AlertReceiverListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverViewWhen, operations::AlertReceiverViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverViewWhen::new(when),
+                operations::AlertReceiverViewThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverDeleteWhen, operations::AlertReceiverDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverDeleteWhen::new(when),
+                operations::AlertReceiverDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn alert_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryListWhen, operations::AlertDeliveryListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertDeliveryListWhen::new(when),
+                operations::AlertDeliveryListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverProbeWhen, operations::AlertReceiverProbeThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverProbeWhen::new(when),
+                operations::AlertReceiverProbeThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionAddWhen,
+            operations::AlertReceiverSubscriptionAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverSubscriptionAddWhen::new(when),
+                operations::AlertReceiverSubscriptionAddThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionRemoveWhen,
+            operations::AlertReceiverSubscriptionRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverSubscriptionRemoveWhen::new(when),
+                operations::AlertReceiverSubscriptionRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn alert_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryResendWhen, operations::AlertDeliveryResendThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertDeliveryResendWhen::new(when),
+                operations::AlertDeliveryResendThen::new(then),
             )
         })
     }
@@ -24920,54 +25116,6 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn webhook_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookDeliveryListWhen, operations::WebhookDeliveryListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookDeliveryListWhen::new(when),
-                operations::WebhookDeliveryListThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookDeliveryResendWhen, operations::WebhookDeliveryResendThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookDeliveryResendWhen::new(when),
-                operations::WebhookDeliveryResendThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_event_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookEventClassListWhen, operations::WebhookEventClassListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookEventClassListWhen::new(when),
-                operations::WebhookEventClassListThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverListWhen, operations::WebhookReceiverListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverListWhen::new(when),
-                operations::WebhookReceiverListThen::new(then),
-            )
-        })
-    }
-
     fn webhook_receiver_create<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::WebhookReceiverCreateWhen, operations::WebhookReceiverCreateThen),
@@ -24980,18 +25128,6 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn webhook_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverViewWhen, operations::WebhookReceiverViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverViewWhen::new(when),
-                operations::WebhookReceiverViewThen::new(then),
-            )
-        })
-    }
-
     fn webhook_receiver_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::WebhookReceiverUpdateWhen, operations::WebhookReceiverUpdateThen),
@@ -25000,60 +25136,6 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::WebhookReceiverUpdateWhen::new(when),
                 operations::WebhookReceiverUpdateThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverDeleteWhen, operations::WebhookReceiverDeleteThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverDeleteWhen::new(when),
-                operations::WebhookReceiverDeleteThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::WebhookReceiverProbeWhen, operations::WebhookReceiverProbeThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverProbeWhen::new(when),
-                operations::WebhookReceiverProbeThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(
-            operations::WebhookReceiverSubscriptionAddWhen,
-            operations::WebhookReceiverSubscriptionAddThen,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverSubscriptionAddWhen::new(when),
-                operations::WebhookReceiverSubscriptionAddThen::new(then),
-            )
-        })
-    }
-
-    fn webhook_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(
-            operations::WebhookReceiverSubscriptionRemoveWhen,
-            operations::WebhookReceiverSubscriptionRemoveThen,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::WebhookReceiverSubscriptionRemoveWhen::new(when),
-                operations::WebhookReceiverSubscriptionRemoveThen::new(then),
             )
         })
     }
