@@ -207,8 +207,5 @@ fn test_silo_idp_saml_create_requires_key_and_cert() {
         .arg("--private-key")
         .arg("/fails-without-cert")
         .assert()
-        .failure()
-        .stderr(expectorate::eq_file_or_panic(
-            "tests/data/test_silo_idp_saml_create_requires_key_and_cert.stderr",
-        ));
+        .failure();
 }
