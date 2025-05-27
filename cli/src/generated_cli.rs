@@ -45,6 +45,17 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::AffinityGroupMemberInstanceDelete => {
                 Self::cli_affinity_group_member_instance_delete()
             }
+            CliCommand::AlertClassList => Self::cli_alert_class_list(),
+            CliCommand::AlertReceiverList => Self::cli_alert_receiver_list(),
+            CliCommand::AlertReceiverView => Self::cli_alert_receiver_view(),
+            CliCommand::AlertReceiverDelete => Self::cli_alert_receiver_delete(),
+            CliCommand::AlertDeliveryList => Self::cli_alert_delivery_list(),
+            CliCommand::AlertReceiverProbe => Self::cli_alert_receiver_probe(),
+            CliCommand::AlertReceiverSubscriptionAdd => Self::cli_alert_receiver_subscription_add(),
+            CliCommand::AlertReceiverSubscriptionRemove => {
+                Self::cli_alert_receiver_subscription_remove()
+            }
+            CliCommand::AlertDeliveryResend => Self::cli_alert_delivery_resend(),
             CliCommand::AntiAffinityGroupList => Self::cli_anti_affinity_group_list(),
             CliCommand::AntiAffinityGroupCreate => Self::cli_anti_affinity_group_create(),
             CliCommand::AntiAffinityGroupView => Self::cli_anti_affinity_group_view(),
@@ -320,21 +331,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => Self::cli_vpc_view(),
             CliCommand::VpcUpdate => Self::cli_vpc_update(),
             CliCommand::VpcDelete => Self::cli_vpc_delete(),
-            CliCommand::WebhookDeliveryList => Self::cli_webhook_delivery_list(),
-            CliCommand::WebhookDeliveryResend => Self::cli_webhook_delivery_resend(),
-            CliCommand::WebhookEventClassList => Self::cli_webhook_event_class_list(),
-            CliCommand::WebhookReceiverList => Self::cli_webhook_receiver_list(),
             CliCommand::WebhookReceiverCreate => Self::cli_webhook_receiver_create(),
-            CliCommand::WebhookReceiverView => Self::cli_webhook_receiver_view(),
             CliCommand::WebhookReceiverUpdate => Self::cli_webhook_receiver_update(),
-            CliCommand::WebhookReceiverDelete => Self::cli_webhook_receiver_delete(),
-            CliCommand::WebhookReceiverProbe => Self::cli_webhook_receiver_probe(),
-            CliCommand::WebhookReceiverSubscriptionAdd => {
-                Self::cli_webhook_receiver_subscription_add()
-            }
-            CliCommand::WebhookReceiverSubscriptionRemove => {
-                Self::cli_webhook_receiver_subscription_remove()
-            }
             CliCommand::WebhookSecretsList => Self::cli_webhook_secrets_list(),
             CliCommand::WebhookSecretsAdd => Self::cli_webhook_secrets_add(),
             CliCommand::WebhookSecretsDelete => Self::cli_webhook_secrets_delete(),
@@ -618,77 +616,23 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_download() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the contents of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the contents of a support bundle")
     }
 
     pub fn cli_support_bundle_head() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the metadata of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a support bundle")
     }
 
     pub fn cli_support_bundle_download_file() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .arg(
-                ::clap::Arg::new("file")
-                    .long("file")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(true)
-                    .help("The file within the bundle to download"),
-            )
-            .about("Download a file within a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download a file within a support bundle")
     }
 
     pub fn cli_support_bundle_head_file() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .arg(
-                ::clap::Arg::new("file")
-                    .long("file")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(true)
-                    .help("The file within the bundle to download"),
-            )
-            .about("Download the metadata of a file within the support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a file within the support bundle")
     }
 
     pub fn cli_support_bundle_index() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("bundle-id")
-                    .long("bundle-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the index of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the index of a support bundle")
     }
 
     pub fn cli_login_saml() -> ::clap::Command {
@@ -993,6 +937,267 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Remove member from affinity group")
+    }
+
+    pub fn cli_alert_class_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("filter")
+                    .long("filter")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(false)
+                    .help(
+                        "An optional glob pattern for filtering alert class names.\n\nIf \
+                         provided, only alert classes which match this glob pattern will be \
+                         included in the response.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List alert classes")
+    }
+
+    pub fn cli_alert_receiver_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List alert receivers")
+    }
+
+    pub fn cli_alert_receiver_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Fetch alert receiver")
+    }
+
+    pub fn cli_alert_receiver_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Delete alert receiver")
+    }
+
+    pub fn cli_alert_delivery_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("delivered")
+                    .long("delivered")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have succeeded.\n\nIf any of the \
+                         \"pending\", \"failed\", or \"delivered\" query parameters are set to \
+                         true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("failed")
+                    .long("failed")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have failed permanently.\n\nIf any of \
+                         the \"pending\", \"failed\", or \"delivered\" query parameters are set \
+                         to true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.\n\nA delivery fails permanently when the retry limit of three \
+                         total attempts is reached without a successful delivery.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pending")
+                    .long("pending")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which are currently in progress.\n\nIf any \
+                         of the \"pending\", \"failed\", or \"delivered\" query parameters are \
+                         set to true, only deliveries matching those state(s) will be included in \
+                         the response. If NO state filter parameters are set, then all deliveries \
+                         are included.\n\nA delivery is considered \"pending\" if it has not yet \
+                         been sent at all, or if a delivery attempt has failed but the delivery \
+                         has retries remaining.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::Ascending.to_string(),
+                            types::TimeAndIdSortMode::Descending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List delivery attempts to alert receiver")
+            .long_about(
+                "Optional query parameters to this endpoint may be used to filter deliveries by \
+                 state. If none of the `failed`, `pending` or `delivered` query parameters are \
+                 present, all deliveries are returned. If one or more of these parameters are \
+                 provided, only those which are set to \"true\" are included in the response.",
+            )
+    }
+
+    pub fn cli_alert_receiver_probe() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("resend")
+                    .long("resend")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, resend all events that have not been delivered successfully if \
+                         the probe request succeeds.",
+                    ),
+            )
+            .about("Send liveness probe to alert receiver")
+            .long_about(
+                "This endpoint synchronously sends a liveness probe to the selected alert \
+                 receiver. The response message describes the outcome of the probe: either the \
+                 successful response (as appropriate), or indication of why the probe \
+                 failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. \
+                 Details relating to the status of the probe depend on the alert delivery \
+                 mechanism, and are included in the `AlertDeliveryAttempts` model. For example, \
+                 webhook receiver liveness probes include the HTTP status code returned by the \
+                 receiver endpoint.\n\nNote that the response status is `200 OK` as long as a \
+                 probe request was able to be sent to the receiver endpoint. If an HTTP-based \
+                 receiver, such as a webhook, responds to the another status code, including an \
+                 error, this will be indicated by the response body, *not* the status of the \
+                 response.\n\nThe `resend` query parameter can be used to request re-delivery of \
+                 failed events if the liveness probe succeeds. If it is set to true and the \
+                 liveness probe succeeds, any alerts for which delivery to this receiver has \
+                 failed will be queued for re-delivery.",
+            )
+    }
+
+    pub fn cli_alert_receiver_subscription_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required_unless_present("json-body")
+                    .help("The event class pattern to subscribe to."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add alert receiver subscription")
+    }
+
+    pub fn cli_alert_receiver_subscription_remove() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(true)
+                    .help("The event class subscription itself."),
+            )
+            .about("Remove alert receiver subscription")
+    }
+
+    pub fn cli_alert_delivery_resend() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("alert-id")
+                    .long("alert-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("UUID of the alert"),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Request re-delivery of alert")
     }
 
     pub fn cli_anti_affinity_group_list() -> ::clap::Command {
@@ -7700,159 +7905,6 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete VPC")
     }
 
-    pub fn cli_webhook_delivery_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("delivered")
-                    .long("delivered")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "If true, include deliveries which have succeeded.\n\nIf any of the \
-                         \"pending\", \"failed\", or \"delivered\" query parameters are set to \
-                         true, only deliveries matching those state(s) will be included in the \
-                         response. If NO state filter parameters are set, then all deliveries are \
-                         included.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("failed")
-                    .long("failed")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "If true, include deliveries which have failed permanently.\n\nIf any of \
-                         the \"pending\", \"failed\", or \"delivered\" query parameters are set \
-                         to true, only deliveries matching those state(s) will be included in the \
-                         response. If NO state filter parameters are set, then all deliveries are \
-                         included.\n\nA delivery fails permanently when the retry limit of three \
-                         total attempts is reached without a successful delivery.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                ::clap::Arg::new("page-token")
-                    .long("page-token")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(false)
-                    .help("Token returned by previous call to retrieve the subsequent page"),
-            )
-            .arg(
-                ::clap::Arg::new("pending")
-                    .long("pending")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "If true, include deliveries which are currently in progress.\n\nIf any \
-                         of the \"pending\", \"failed\", or \"delivered\" query parameters are \
-                         set to true, only deliveries matching those state(s) will be included in \
-                         the response. If NO state filter parameters are set, then all deliveries \
-                         are included.\n\nA delivery is considered \"pending\" if it has not yet \
-                         been sent at all, or if a delivery attempt has failed but the delivery \
-                         has retries remaining.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .arg(
-                ::clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::TimeAndIdSortMode::Ascending.to_string(),
-                            types::TimeAndIdSortMode::Descending.to_string(),
-                        ]),
-                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List delivery attempts to webhook receiver")
-            .long_about(
-                "Optional query parameters to this endpoint may be used to filter deliveries by \
-                 state. If none of the `failed`, `pending` or `delivered` query parameters are \
-                 present, all deliveries are returned. If one or more of these parameters are \
-                 provided, only those which are set to \"true\" are included in the response.",
-            )
-    }
-
-    pub fn cli_webhook_delivery_resend() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("event-id")
-                    .long("event-id")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("UUID of the event"),
-            )
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .about("Request re-delivery of webhook event")
-    }
-
-    pub fn cli_webhook_event_class_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("filter")
-                    .long("filter")
-                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
-                    .required(false)
-                    .help(
-                        "An optional glob pattern for filtering event class names.\n\nIf \
-                         provided, only event classes which match this glob pattern will be \
-                         included in the response.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List webhook event classes")
-    }
-
-    pub fn cli_webhook_receiver_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                ::clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode::NameAscending.to_string(),
-                            types::NameOrIdSortMode::NameDescending.to_string(),
-                            types::NameOrIdSortMode::IdAscending.to_string(),
-                        ]),
-                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List webhook receivers")
-    }
-
     pub fn cli_webhook_receiver_create() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -7889,18 +7941,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Create webhook receiver")
-    }
-
-    pub fn cli_webhook_receiver_view() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .about("Fetch webhook receiver")
     }
 
     pub fn cli_webhook_receiver_update() -> ::clap::Command {
@@ -7951,105 +7991,6 @@ impl<T: CliConfig> Cli<T> {
                  Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add \
                  and remove secrets.",
             )
-    }
-
-    pub fn cli_webhook_receiver_delete() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .about("Delete webhook receiver")
-    }
-
-    pub fn cli_webhook_receiver_probe() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .arg(
-                ::clap::Arg::new("resend")
-                    .long("resend")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "If true, resend all events that have not been delivered successfully if \
-                         the probe request succeeds.",
-                    ),
-            )
-            .about("Send liveness probe to webhook receiver")
-            .long_about(
-                "This endpoint synchronously sends a liveness probe request to the selected \
-                 webhook receiver. The response message describes the outcome of the probe \
-                 request: either the response from the receiver endpoint, or an indication of why \
-                 the probe failed.\n\nNote that the response status is `200 OK` as long as a \
-                 probe request was able to be sent to the receiver endpoint. If the receiver \
-                 responds with another status code, including an error, this will be indicated by \
-                 the response body, *not* the status of the response.\n\nThe `resend` query \
-                 parameter can be used to request re-delivery of failed events if the liveness \
-                 probe succeeds. If it is set to true and the webhook receiver responds to the \
-                 probe request with a `2xx` status code, any events for which delivery to this \
-                 receiver has failed will be queued for re-delivery.",
-            )
-    }
-
-    pub fn cli_webhook_receiver_subscription_add() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .arg(
-                ::clap::Arg::new("subscription")
-                    .long("subscription")
-                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
-                    .required_unless_present("json-body")
-                    .help("The event class pattern to subscribe to."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(::clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                ::clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(::clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add webhook receiver subscription")
-    }
-
-    pub fn cli_webhook_receiver_subscription_remove() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("receiver")
-                    .long("receiver")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("The name or ID of the webhook receiver."),
-            )
-            .arg(
-                ::clap::Arg::new("subscription")
-                    .long("subscription")
-                    .value_parser(::clap::value_parser!(types::WebhookSubscription))
-                    .required(true)
-                    .help("The event class subscription itself."),
-            )
-            .about("Remove webhook receiver subscription")
     }
 
     pub fn cli_webhook_secrets_list() -> ::clap::Command {
@@ -8158,6 +8099,20 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_affinity_group_member_instance_delete(matches)
                     .await
             }
+            CliCommand::AlertClassList => self.execute_alert_class_list(matches).await,
+            CliCommand::AlertReceiverList => self.execute_alert_receiver_list(matches).await,
+            CliCommand::AlertReceiverView => self.execute_alert_receiver_view(matches).await,
+            CliCommand::AlertReceiverDelete => self.execute_alert_receiver_delete(matches).await,
+            CliCommand::AlertDeliveryList => self.execute_alert_delivery_list(matches).await,
+            CliCommand::AlertReceiverProbe => self.execute_alert_receiver_probe(matches).await,
+            CliCommand::AlertReceiverSubscriptionAdd => {
+                self.execute_alert_receiver_subscription_add(matches).await
+            }
+            CliCommand::AlertReceiverSubscriptionRemove => {
+                self.execute_alert_receiver_subscription_remove(matches)
+                    .await
+            }
+            CliCommand::AlertDeliveryResend => self.execute_alert_delivery_resend(matches).await,
             CliCommand::AntiAffinityGroupList => {
                 self.execute_anti_affinity_group_list(matches).await
             }
@@ -8560,32 +8515,11 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => self.execute_vpc_view(matches).await,
             CliCommand::VpcUpdate => self.execute_vpc_update(matches).await,
             CliCommand::VpcDelete => self.execute_vpc_delete(matches).await,
-            CliCommand::WebhookDeliveryList => self.execute_webhook_delivery_list(matches).await,
-            CliCommand::WebhookDeliveryResend => {
-                self.execute_webhook_delivery_resend(matches).await
-            }
-            CliCommand::WebhookEventClassList => {
-                self.execute_webhook_event_class_list(matches).await
-            }
-            CliCommand::WebhookReceiverList => self.execute_webhook_receiver_list(matches).await,
             CliCommand::WebhookReceiverCreate => {
                 self.execute_webhook_receiver_create(matches).await
             }
-            CliCommand::WebhookReceiverView => self.execute_webhook_receiver_view(matches).await,
             CliCommand::WebhookReceiverUpdate => {
                 self.execute_webhook_receiver_update(matches).await
-            }
-            CliCommand::WebhookReceiverDelete => {
-                self.execute_webhook_receiver_delete(matches).await
-            }
-            CliCommand::WebhookReceiverProbe => self.execute_webhook_receiver_probe(matches).await,
-            CliCommand::WebhookReceiverSubscriptionAdd => {
-                self.execute_webhook_receiver_subscription_add(matches)
-                    .await
-            }
-            CliCommand::WebhookReceiverSubscriptionRemove => {
-                self.execute_webhook_receiver_subscription_remove(matches)
-                    .await
             }
             CliCommand::WebhookSecretsList => self.execute_webhook_secrets_list(matches).await,
             CliCommand::WebhookSecretsAdd => self.execute_webhook_secrets_add(matches).await,
@@ -8936,6 +8870,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.bundle_id(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
+        }
+
         self.config
             .execute_support_bundle_download(matches, &mut request)?;
         let result = request.send().await;
@@ -8956,6 +8894,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.support_bundle_head();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
             request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -8984,6 +8926,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.file(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
+        }
+
         self.config
             .execute_support_bundle_download_file(matches, &mut request)?;
         let result = request.send().await;
@@ -9010,6 +8956,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.file(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
+        }
+
         self.config
             .execute_support_bundle_head_file(matches, &mut request)?;
         let result = request.send().await;
@@ -9030,6 +8980,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.support_bundle_index();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
             request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -9392,6 +9346,309 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_class_list();
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("filter") {
+            request = request.filter(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.config
+            .execute_alert_class_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertClassResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertClassResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertReceiverResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertReceiverResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_delivery_list();
+        if let Some(value) = matches.get_one::<bool>("delivered") {
+            request = request.delivered(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("failed") {
+            request = request.failed(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("pending") {
+            request = request.pending(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_alert_delivery_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertDeliveryResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertDeliveryResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_probe();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("resend") {
+            request = request.resend(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_probe(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_subscription_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("subscription") {
+            request = request.body_map(|body| body.subscription(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_alert_receiver_subscription_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_subscription_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("subscription") {
+            request = request.subscription(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_subscription_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_delivery_resend();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("alert-id") {
+            request = request.alert_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_delivery_resend(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -16936,163 +17193,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_webhook_delivery_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_delivery_list();
-        if let Some(value) = matches.get_one::<bool>("delivered") {
-            request = request.delivered(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<bool>("failed") {
-            request = request.failed(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::string::String>("page-token") {
-            request = request.page_token(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<bool>("pending") {
-            request = request.pending(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.config
-            .execute_webhook_delivery_list(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_delivery_resend(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_delivery_resend();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("event-id") {
-            request = request.event_id(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        self.config
-            .execute_webhook_delivery_resend(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_event_class_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_event_class_list();
-        if let Some(value) = matches.get_one::<types::WebhookSubscription>("filter") {
-            request = request.filter(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config
-            .execute_webhook_event_class_list(matches, &mut request)?;
-        self.config.list_start::<types::EventClassResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::EventClassResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_list();
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.config
-            .execute_webhook_receiver_list(matches, &mut request)?;
-        self.config
-            .list_start::<types::WebhookReceiverResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::WebhookReceiverResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
     pub async fn execute_webhook_receiver_create(
         &self,
         matches: &::clap::ArgMatches,
@@ -17118,30 +17218,6 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_webhook_receiver_create(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_view(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        self.config
-            .execute_webhook_receiver_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -17185,121 +17261,6 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_webhook_receiver_update(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_delete(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        self.config
-            .execute_webhook_receiver_delete(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_probe(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_probe();
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<bool>("resend") {
-            request = request.resend(value.clone());
-        }
-
-        self.config
-            .execute_webhook_receiver_probe(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_subscription_add(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_subscription_add();
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::WebhookSubscription>("subscription") {
-            request = request.body_map(|body| body.subscription(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::WebhookSubscriptionCreate>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_webhook_receiver_subscription_add(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_webhook_receiver_subscription_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.webhook_receiver_subscription_remove();
-        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
-            request = request.receiver(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::WebhookSubscription>("subscription") {
-            request = request.subscription(value.clone());
-        }
-
-        self.config
-            .execute_webhook_receiver_subscription_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -17620,6 +17581,78 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::AffinityGroupMemberInstanceDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertClassList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertDeliveryList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverProbe,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverSubscriptionAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverSubscriptionRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertDeliveryResend,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -19360,38 +19393,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_webhook_delivery_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookDeliveryList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_delivery_resend(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookDeliveryResend,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_event_class_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookEventClassList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_receiver_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_webhook_receiver_create(
         &self,
         matches: &::clap::ArgMatches,
@@ -19400,50 +19401,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_webhook_receiver_view(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_webhook_receiver_update(
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::WebhookReceiverUpdate,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_receiver_delete(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverDelete,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_receiver_probe(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverProbe,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_receiver_subscription_add(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverSubscriptionAdd,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_webhook_receiver_subscription_remove(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::WebhookReceiverSubscriptionRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -19501,6 +19462,15 @@ pub enum CliCommand {
     AffinityGroupMemberInstanceView,
     AffinityGroupMemberInstanceAdd,
     AffinityGroupMemberInstanceDelete,
+    AlertClassList,
+    AlertReceiverList,
+    AlertReceiverView,
+    AlertReceiverDelete,
+    AlertDeliveryList,
+    AlertReceiverProbe,
+    AlertReceiverSubscriptionAdd,
+    AlertReceiverSubscriptionRemove,
+    AlertDeliveryResend,
     AntiAffinityGroupList,
     AntiAffinityGroupCreate,
     AntiAffinityGroupView,
@@ -19718,17 +19688,8 @@ pub enum CliCommand {
     VpcView,
     VpcUpdate,
     VpcDelete,
-    WebhookDeliveryList,
-    WebhookDeliveryResend,
-    WebhookEventClassList,
-    WebhookReceiverList,
     WebhookReceiverCreate,
-    WebhookReceiverView,
     WebhookReceiverUpdate,
-    WebhookReceiverDelete,
-    WebhookReceiverProbe,
-    WebhookReceiverSubscriptionAdd,
-    WebhookReceiverSubscriptionRemove,
     WebhookSecretsList,
     WebhookSecretsAdd,
     WebhookSecretsDelete,
@@ -19763,6 +19724,15 @@ impl CliCommand {
             CliCommand::AffinityGroupMemberInstanceView,
             CliCommand::AffinityGroupMemberInstanceAdd,
             CliCommand::AffinityGroupMemberInstanceDelete,
+            CliCommand::AlertClassList,
+            CliCommand::AlertReceiverList,
+            CliCommand::AlertReceiverView,
+            CliCommand::AlertReceiverDelete,
+            CliCommand::AlertDeliveryList,
+            CliCommand::AlertReceiverProbe,
+            CliCommand::AlertReceiverSubscriptionAdd,
+            CliCommand::AlertReceiverSubscriptionRemove,
+            CliCommand::AlertDeliveryResend,
             CliCommand::AntiAffinityGroupList,
             CliCommand::AntiAffinityGroupCreate,
             CliCommand::AntiAffinityGroupView,
@@ -19980,17 +19950,8 @@ impl CliCommand {
             CliCommand::VpcView,
             CliCommand::VpcUpdate,
             CliCommand::VpcDelete,
-            CliCommand::WebhookDeliveryList,
-            CliCommand::WebhookDeliveryResend,
-            CliCommand::WebhookEventClassList,
-            CliCommand::WebhookReceiverList,
             CliCommand::WebhookReceiverCreate,
-            CliCommand::WebhookReceiverView,
             CliCommand::WebhookReceiverUpdate,
-            CliCommand::WebhookReceiverDelete,
-            CliCommand::WebhookReceiverProbe,
-            CliCommand::WebhookReceiverSubscriptionAdd,
-            CliCommand::WebhookReceiverSubscriptionRemove,
             CliCommand::WebhookSecretsList,
             CliCommand::WebhookSecretsAdd,
             CliCommand::WebhookSecretsDelete,

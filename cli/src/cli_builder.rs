@@ -641,15 +641,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpView => Some("floating-ip view"),
 
         // Alert subcommands
-        CliCommand::WebhookEventClassList => Some("alert class list"),
-        CliCommand::WebhookReceiverList => Some("alert receiver list"),
-        CliCommand::WebhookDeliveryList => Some("alert receiver log"),
-        CliCommand::WebhookReceiverProbe => Some("alert receiver probe"),
-        CliCommand::WebhookDeliveryResend => Some("alert receiver resend"),
-        CliCommand::WebhookReceiverView => Some("alert receiver view"),
-        CliCommand::WebhookReceiverDelete => Some("alert receiver delete"),
-        CliCommand::WebhookReceiverSubscriptionAdd => Some("alert receiver subscribe"),
-        CliCommand::WebhookReceiverSubscriptionRemove => Some("alert receiver unsubscribe"),
+        CliCommand::AlertClassList => Some("alert class list"),
+        CliCommand::AlertReceiverList => Some("alert receiver list"),
+        CliCommand::AlertDeliveryList => Some("alert receiver log"),
+        CliCommand::AlertReceiverProbe => Some("alert receiver probe"),
+        CliCommand::AlertDeliveryResend => Some("alert receiver resend"),
+        CliCommand::AlertReceiverView => Some("alert receiver view"),
+        CliCommand::AlertReceiverDelete => Some("alert receiver delete"),
+        CliCommand::AlertReceiverSubscriptionAdd => Some("alert receiver subscribe"),
+        CliCommand::AlertReceiverSubscriptionRemove => Some("alert receiver unsubscribe"),
 
         // Webhook specific subcommands (including secret management)
         CliCommand::WebhookReceiverCreate => Some("alert receiver webhook create"),
