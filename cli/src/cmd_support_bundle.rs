@@ -21,6 +21,7 @@ use indicatif::ProgressStyle;
 use oxide::Client;
 use oxide::ClientHiddenExt;
 use std::io;
+use std::num::NonZeroU64;
 use std::pin::Pin;
 use std::task::Context;
 use std::task::Poll;
@@ -46,6 +47,10 @@ pub struct CmdDownload {
     /// Path where the bundle should be downloaded
     #[clap(short, long)]
     output: Utf8PathBuf,
+
+    /// The size of each range request to use when downloading bundles
+    #[clap(short, long, default_value_t = NonZeroU64::new(100 * (1 << 20)).unwrap())]
+    chunk_size: NonZeroU64,
 }
 
 // Downloads a portion of a support bundle using range requests.
@@ -76,24 +81,22 @@ async fn support_bundle_download_range(
 fn support_bundle_download_ranges(
     client: &Client,
     id: Uuid,
+    chunk_size: NonZeroU64,
     start: u64,
     end: u64,
 ) -> impl futures::Stream<Item = anyhow::Result<bytes::Bytes>> + use<'_> {
-    // Arbitrary chunk size of 100 MiB.
-    //
-    // Note that we'll still stream data in packets which are smaller than this,
-    // but we won't keep a single connection to Nexus open for longer than a 100
-    // MiB download.
-    const CHUNK_SIZE: u64 = 100 * (1 << 20);
-    futures::stream::try_unfold((start, start + CHUNK_SIZE - 1), move |range| async move {
-        if end <= range.0 {
-            return Ok(None);
-        }
+    futures::stream::try_unfold(
+        (start, start + chunk_size.get() - 1),
+        move |range| async move {
+            if end <= range.0 {
+                return Ok(None);
+            }
 
-        let stream = support_bundle_download_range(client, id, range).await?;
-        let next_range = (range.0 + CHUNK_SIZE, range.1 + CHUNK_SIZE);
-        Ok::<_, anyhow::Error>(Some((stream, next_range)))
-    })
+            let stream = support_bundle_download_range(client, id, range).await?;
+            let next_range = (range.0 + chunk_size.get(), range.1 + chunk_size.get());
+            Ok::<_, anyhow::Error>(Some((stream, next_range)))
+        },
+    )
     .try_flatten()
 }
 
@@ -116,7 +119,8 @@ impl crate::AuthenticatedCmd for CmdDownload {
 
         start_progress_bar(progress_rx, total_length, self.id)?;
 
-        let mut stream = support_bundle_download_ranges(client, self.id, 0, total_length);
+        let mut stream =
+            support_bundle_download_ranges(client, self.id, self.chunk_size, 0, total_length);
         let mut stream = std::pin::pin!(stream);
         while let Some(data) = stream.next().await {
             match data {
