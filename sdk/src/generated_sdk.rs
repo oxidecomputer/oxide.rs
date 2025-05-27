@@ -58636,11 +58636,10 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_download()
     ///    .bundle_id(bundle_id)
@@ -58656,9 +58655,14 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_head()
     ///    .bundle_id(bundle_id)
+    ///    .range(range)
     ///    .send()
     ///    .await;
     /// ```
@@ -58671,10 +58675,15 @@ pub trait ClientHiddenExt {
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
     /// - `file`: The file within the bundle to download
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_download_file()
     ///    .bundle_id(bundle_id)
     ///    .file(file)
+    ///    .range(range)
     ///    .send()
     ///    .await;
     /// ```
@@ -58687,10 +58696,15 @@ pub trait ClientHiddenExt {
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
     /// - `file`: The file within the bundle to download
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_head_file()
     ///    .bundle_id(bundle_id)
     ///    .file(file)
+    ///    .range(range)
     ///    .send()
     ///    .await;
     /// ```
@@ -58702,9 +58716,14 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
+    ///
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_index()
     ///    .bundle_id(bundle_id)
+    ///    .range(range)
     ///    .send()
     ///    .await;
     /// ```
@@ -64605,6 +64624,7 @@ pub mod builder {
     pub struct SupportBundleHead<'a> {
         client: &'a super::Client,
         bundle_id: Result<::uuid::Uuid, String>,
+        range: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SupportBundleHead<'a> {
@@ -64612,6 +64632,7 @@ pub mod builder {
             Self {
                 client: client,
                 bundle_id: Err("bundle_id was not initialized".to_string()),
+                range: Ok(None),
             }
         }
 
@@ -64625,21 +64646,39 @@ pub mod builder {
             self
         }
 
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
         /// Sends a `HEAD` request to
         /// `/experimental/v1/system/support-bundles/{bundle_id}/download`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self { client, bundle_id } = self;
+            let Self {
+                client,
+                bundle_id,
+                range,
+            } = self;
             let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/experimental/v1/system/support-bundles/{}/download",
                 client.baseurl,
                 encode_path(&bundle_id.to_string()),
             );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
                 ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
             #[allow(unused_mut)]
             let mut request = client.client.head(url).headers(header_map).build()?;
             let info = OperationInfo {
@@ -64664,6 +64703,7 @@ pub mod builder {
         client: &'a super::Client,
         bundle_id: Result<::uuid::Uuid, String>,
         file: Result<::std::string::String, String>,
+        range: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SupportBundleDownloadFile<'a> {
@@ -64672,6 +64712,7 @@ pub mod builder {
                 client: client,
                 bundle_id: Err("bundle_id was not initialized".to_string()),
                 file: Err("file was not initialized".to_string()),
+                range: Ok(None),
             }
         }
 
@@ -64695,6 +64736,16 @@ pub mod builder {
             self
         }
 
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
         /// Sends a `GET` request to
         /// `/experimental/v1/system/support-bundles/{bundle_id}/download/
         /// {file}`
@@ -64703,20 +64754,25 @@ pub mod builder {
                 client,
                 bundle_id,
                 file,
+                range,
             } = self;
             let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
             let file = file.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/experimental/v1/system/support-bundles/{}/download/{}",
                 client.baseurl,
                 encode_path(&bundle_id.to_string()),
                 encode_path(&file.to_string()),
             );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
                 ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
             #[allow(unused_mut)]
             let mut request = client.client.get(url).headers(header_map).build()?;
             let info = OperationInfo {
@@ -64741,6 +64797,7 @@ pub mod builder {
         client: &'a super::Client,
         bundle_id: Result<::uuid::Uuid, String>,
         file: Result<::std::string::String, String>,
+        range: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SupportBundleHeadFile<'a> {
@@ -64749,6 +64806,7 @@ pub mod builder {
                 client: client,
                 bundle_id: Err("bundle_id was not initialized".to_string()),
                 file: Err("file was not initialized".to_string()),
+                range: Ok(None),
             }
         }
 
@@ -64772,6 +64830,16 @@ pub mod builder {
             self
         }
 
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
         /// Sends a `HEAD` request to
         /// `/experimental/v1/system/support-bundles/{bundle_id}/download/
         /// {file}`
@@ -64780,20 +64848,25 @@ pub mod builder {
                 client,
                 bundle_id,
                 file,
+                range,
             } = self;
             let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
             let file = file.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/experimental/v1/system/support-bundles/{}/download/{}",
                 client.baseurl,
                 encode_path(&bundle_id.to_string()),
                 encode_path(&file.to_string()),
             );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
                 ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
             #[allow(unused_mut)]
             let mut request = client.client.head(url).headers(header_map).build()?;
             let info = OperationInfo {
@@ -64817,6 +64890,7 @@ pub mod builder {
     pub struct SupportBundleIndex<'a> {
         client: &'a super::Client,
         bundle_id: Result<::uuid::Uuid, String>,
+        range: Result<Option<::std::string::String>, String>,
     }
 
     impl<'a> SupportBundleIndex<'a> {
@@ -64824,6 +64898,7 @@ pub mod builder {
             Self {
                 client: client,
                 bundle_id: Err("bundle_id was not initialized".to_string()),
+                range: Ok(None),
             }
         }
 
@@ -64837,21 +64912,39 @@ pub mod builder {
             self
         }
 
+        pub fn range<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.range = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for range failed".to_string()
+            });
+            self
+        }
+
         /// Sends a `GET` request to
         /// `/experimental/v1/system/support-bundles/{bundle_id}/index`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self { client, bundle_id } = self;
+            let Self {
+                client,
+                bundle_id,
+                range,
+            } = self;
             let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let range = range.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/experimental/v1/system/support-bundles/{}/index",
                 client.baseurl,
                 encode_path(&bundle_id.to_string()),
             );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(2usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
                 ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
+            if let Some(value) = range {
+                header_map.append("range", value.to_string().try_into()?);
+            }
             #[allow(unused_mut)]
             let mut request = client.client.get(url).headers(header_map).build()?;
             let info = OperationInfo {
