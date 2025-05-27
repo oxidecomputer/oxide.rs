@@ -135,8 +135,7 @@ impl Default for NewCli<'_> {
                     ),
 
                 CliCommand::SamlIdentityProviderCreate => cmd
-                    .mut_arg("json-body", |arg| arg.required(false).hide(true))
-                    .mut_arg("json-body-template", |arg| arg.hide(true))
+                    .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("metadata-url")
                             .long("metadata-url")

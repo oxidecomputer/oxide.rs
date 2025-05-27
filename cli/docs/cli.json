@@ -4652,6 +4652,14 @@
                       "help": "idp's entity id"
                     },
                     {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
                       "long": "metadata-url",
                       "help": "the URL of an identity provider metadata descriptor"
                     },
