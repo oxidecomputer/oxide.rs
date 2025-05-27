@@ -1,0 +1,6 @@
+error: the following required arguments were not provided:
+  --public-cert <cert-file>
+
+Usage: oxide silo idp saml create --silo <silo> --private-key <key-file> --public-cert <cert-file> --name <name> --description <description> --acs-url <acs-url> --slo-url <slo-url> --sp-client-id <sp-client-id> --idp-entity-id <idp-entity-id> --technical-contact-email <technical-contact-email> <--metadata-url <url>|--metadata-value <xml-file>>
+
+For more information, try '--help'.

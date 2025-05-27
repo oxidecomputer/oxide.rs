@@ -145,35 +145,35 @@ impl Default for NewCli<'_> {
                             .help("the URL of an identity provider metadata descriptor"),
                     )
                     .arg(
-                        clap::Arg::new("metadata-path")
-                            .long("metadata-path")
-                            .value_name("xml_file")
+                        clap::Arg::new("metadata-value")
+                            .long("metadata-value")
+                            .value_name("xml-file")
                             .value_parser(clap::value_parser!(PathBuf))
-                            .help("the path to an XML file containing an identity provider metadata descriptor"),
+                            .help("path to an XML file containing an identity provider metadata descriptor"),
                     )
                     .arg(
-                        clap::Arg::new("private-key-path")
-                            .long("private-key-path")
-                            .value_name("key_file")
+                        clap::Arg::new("private-key")
+                            .long("private-key")
+                            .value_name("key-file")
                             .value_parser(clap::value_parser!(PathBuf))
-                            .help("the path to the request signing RSA private key in PKCS#1 DER format"),
+                            .help("path to the request signing RSA private key in PKCS#1 DER format"),
                     )
                     .arg(
-                        clap::Arg::new("public-cert-path")
-                            .long("public-cert-path")
-                            .value_name("cert_file")
+                        clap::Arg::new("public-cert")
+                            .long("public-cert")
+                            .value_name("cert-file")
                             .value_parser(clap::value_parser!(PathBuf))
-                            .help("the path to the request signing public certificate in DER format"),
+                            .help("path to the request signing public certificate in DER format"),
                     )
                     .group(
                         clap::ArgGroup::new("signing_keypair")
-                            .args(["private-key-path", "public-cert-path"])
-                            .requires_all(["private-key-path", "public-cert-path"])
+                            .args(["private-key", "public-cert"])
+                            .requires_all(["private-key", "public-cert"])
                             .multiple(true),
                     )
                     .group(
                         clap::ArgGroup::new("idp_metadata_source")
-                            .args(["metadata-url", "metadata-path"])
+                            .args(["metadata-url", "metadata-value"])
                             .required(true)
                             .multiple(false),
                     ),

@@ -255,8 +255,8 @@ impl CliConfig for OxideOverride {
                 });
                 Ok::<_, anyhow::Error>(())
             }
-            Some("metadata-path") => {
-                let xml_path = matches.get_one::<PathBuf>("metadata-path").unwrap();
+            Some("metadata-value") => {
+                let xml_path = matches.get_one::<PathBuf>("metadata-value").unwrap();
                 let xml_bytes = std::fs::read(xml_path).with_context(|| {
                     format!("failed to read metadata XML file {}", xml_path.display())
                 })?;
@@ -272,13 +272,13 @@ impl CliConfig for OxideOverride {
         }?;
 
         if matches.get_one::<clap::Id>("signing_keypair").is_some() {
-            let privkey_path = matches.get_one::<PathBuf>("private-key-path").unwrap();
+            let privkey_path = matches.get_one::<PathBuf>("private-key").unwrap();
             let privkey_bytes = std::fs::read(privkey_path).with_context(|| {
                 format!("failed to read private key file {}", privkey_path.display())
             })?;
             let encoded_privkey = base64::engine::general_purpose::STANDARD.encode(&privkey_bytes);
 
-            let cert_path = matches.get_one::<PathBuf>("public-cert-path").unwrap();
+            let cert_path = matches.get_one::<PathBuf>("public-cert").unwrap();
             let cert_bytes = std::fs::read(cert_path).with_context(|| {
                 format!("failed to read public cert file {}", cert_path.display())
             })?;

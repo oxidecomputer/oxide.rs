@@ -4652,19 +4652,19 @@
                       "help": "idp's entity id"
                     },
                     {
-                      "long": "metadata-path",
-                      "help": "the path to an XML file containing an identity provider metadata descriptor"
-                    },
-                    {
                       "long": "metadata-url",
                       "help": "the URL of an identity provider metadata descriptor"
+                    },
+                    {
+                      "long": "metadata-value",
+                      "help": "path to an XML file containing an identity provider metadata descriptor"
                     },
                     {
                       "long": "name"
                     },
                     {
-                      "long": "private-key-path",
-                      "help": "the path to the request signing RSA private key in PKCS#1 DER format"
+                      "long": "private-key",
+                      "help": "path to the request signing RSA private key in PKCS#1 DER format"
                     },
                     {
                       "long": "profile",
@@ -4672,8 +4672,8 @@
                       "global": true
                     },
                     {
-                      "long": "public-cert-path",
-                      "help": "the path to the request signing public certificate in DER format"
+                      "long": "public-cert",
+                      "help": "path to the request signing public certificate in DER format"
                     },
                     {
                       "long": "silo",
