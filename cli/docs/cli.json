@@ -594,6 +594,11 @@
           "about": "Downloads a support bundle",
           "args": [
             {
+              "long": "chunk-size",
+              "short": "c",
+              "help": "The size of each range request to use when downloading bundles"
+            },
+            {
               "long": "id",
               "help": "ID of the bundle"
             },
