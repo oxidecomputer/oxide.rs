@@ -58636,11 +58636,10 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_download()
     ///    .bundle_id(bundle_id)
@@ -58656,11 +58655,10 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_head()
     ///    .bundle_id(bundle_id)
@@ -58677,11 +58675,10 @@ pub trait ClientHiddenExt {
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
     /// - `file`: The file within the bundle to download
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_download_file()
     ///    .bundle_id(bundle_id)
@@ -58699,11 +58696,10 @@ pub trait ClientHiddenExt {
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
     /// - `file`: The file within the bundle to download
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_head_file()
     ///    .bundle_id(bundle_id)
@@ -58720,11 +58716,10 @@ pub trait ClientHiddenExt {
     ///
     /// Arguments:
     /// - `bundle_id`: ID of the support bundle
-    /// - `range`: A request to access a portion of the resource, such as:
+    /// - `range`: A request to access a portion of the resource, such as
+    ///   `bytes=0-499`
     ///
-    /// ```text bytes=0-499 ```
-    /// 
-    /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
+    /// See: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>
     /// ```ignore
     /// let response = client.support_bundle_index()
     ///    .bundle_id(bundle_id)
