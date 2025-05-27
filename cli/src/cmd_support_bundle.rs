@@ -56,21 +56,35 @@ pub struct CmdDownload {
 // Downloads a portion of a support bundle using range requests.
 //
 // "range" is in bytes, and is inclusive on both sides.
+//
+// Returns: The observed content length of the stream, and the stream.
 async fn support_bundle_download_range(
     client: &Client,
     id: Uuid,
     range: (u64, u64),
-) -> anyhow::Result<impl futures::Stream<Item = anyhow::Result<bytes::Bytes>>> {
-    let range = format!("bytes={}-{}", range.0, range.1);
-    Ok(client
+) -> anyhow::Result<(
+    u64,
+    impl futures::Stream<Item = anyhow::Result<bytes::Bytes>>,
+)> {
+    let range_str = format!("bytes={}-{}", range.0, range.1);
+    let response = client
         .support_bundle_download()
         .bundle_id(id)
-        .range(&range)
+        .range(&range_str)
         .send()
         .await
-        .with_context(|| format!("downloading support bundle {}", id))?
-        .into_inner_stream()
-        .map(|r| r.map_err(|err| anyhow::anyhow!(err))))
+        .with_context(|| format!("downloading support bundle {}", id))?;
+
+    let Some(len) = response.content_length() else {
+        bail!("No content length observed when downloading bundle");
+    };
+
+    Ok((
+        len,
+        response
+            .into_inner_stream()
+            .map(|r| r.map_err(|err| anyhow::anyhow!(err))),
+    ))
 }
 
 // Downloads all ranges of a support bundle, and combines them into a single
@@ -92,8 +106,8 @@ fn support_bundle_download_ranges(
                 return Ok(None);
             }
 
-            let stream = support_bundle_download_range(client, id, range).await?;
-            let next_range = (range.0 + chunk_size.get(), range.1 + chunk_size.get());
+            let (actual_len, stream) = support_bundle_download_range(client, id, range).await?;
+            let next_range = (range.0 + actual_len, range.1 + actual_len);
             Ok::<_, anyhow::Error>(Some((stream, next_range)))
         },
     )
