@@ -140,13 +140,35 @@ impl Default for NewCli<'_> {
                         clap::Arg::new("metadata-url")
                             .long("metadata-url")
                             .value_name("url")
-                            .value_parser(clap::value_parser!(String)),
+                            .value_parser(clap::value_parser!(String))
+                            .help("the URL of an identity provider metadata descriptor"),
                     )
                     .arg(
                         clap::Arg::new("metadata-value")
                             .long("metadata-value")
-                            .value_name("xml")
-                            .value_parser(clap::value_parser!(String)),
+                            .value_name("xml-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to an XML file containing an identity provider metadata descriptor"),
+                    )
+                    .arg(
+                        clap::Arg::new("private-key")
+                            .long("private-key")
+                            .value_name("key-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to the request signing RSA private key in PKCS#1 DER format"),
+                    )
+                    .arg(
+                        clap::Arg::new("public-cert")
+                            .long("public-cert")
+                            .value_name("cert-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to the request signing public certificate in DER format"),
+                    )
+                    .group(
+                        clap::ArgGroup::new("signing_keypair")
+                            .args(["private-key", "public-cert"])
+                            .requires_all(["private-key", "public-cert"])
+                            .multiple(true),
                     )
                     .group(
                         clap::ArgGroup::new("idp_metadata_source")

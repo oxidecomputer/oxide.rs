@@ -1047,10 +1047,6 @@
               "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
             },
             {
-              "long": "parallelism",
-              "help": "The degree or parallelism to use during upload"
-            },
-            {
               "long": "path",
               "help": "Path to the file to import"
             },
@@ -4660,18 +4656,28 @@
                       "help": "XXX"
                     },
                     {
-                      "long": "metadata-url"
+                      "long": "metadata-url",
+                      "help": "the URL of an identity provider metadata descriptor"
                     },
                     {
-                      "long": "metadata-value"
+                      "long": "metadata-value",
+                      "help": "path to an XML file containing an identity provider metadata descriptor"
                     },
                     {
                       "long": "name"
                     },
                     {
+                      "long": "private-key",
+                      "help": "path to the request signing RSA private key in PKCS#1 DER format"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
+                    },
+                    {
+                      "long": "public-cert",
+                      "help": "path to the request signing public certificate in DER format"
                     },
                     {
                       "long": "silo",
