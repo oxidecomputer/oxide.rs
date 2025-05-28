@@ -48,7 +48,7 @@ pub struct CmdDownload {
     #[clap(short, long)]
     output: Utf8PathBuf,
 
-    /// The size of each range request to use when downloading bundles
+    /// The size, in bytes, of each range request to use when downloading bundles
     #[clap(short, long, default_value_t = NonZeroU64::new(100 * (1 << 20)).unwrap())]
     chunk_size: NonZeroU64,
 }

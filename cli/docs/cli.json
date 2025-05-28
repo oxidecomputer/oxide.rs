@@ -596,7 +596,7 @@
             {
               "long": "chunk-size",
               "short": "c",
-              "help": "The size of each range request to use when downloading bundles"
+              "help": "The size, in bytes, of each range request to use when downloading bundles"
             },
             {
               "long": "id",
