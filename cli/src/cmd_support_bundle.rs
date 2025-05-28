@@ -15,9 +15,13 @@ use camino::Utf8PathBuf;
 use clap::Parser;
 use futures::Stream;
 use futures::StreamExt;
+use futures::TryStreamExt;
+use indicatif::ProgressBar;
+use indicatif::ProgressStyle;
 use oxide::Client;
 use oxide::ClientHiddenExt;
 use std::io;
+use std::num::NonZeroU64;
 use std::pin::Pin;
 use std::task::Context;
 use std::task::Poll;
@@ -28,6 +32,7 @@ use support_bundle_viewer::SupportBundleIndex;
 use tokio::io::AsyncRead;
 use tokio::io::AsyncWriteExt;
 use tokio::io::ReadBuf;
+use tokio::sync::watch;
 use uuid::Uuid;
 
 /// Downloads a support bundle
@@ -42,6 +47,71 @@ pub struct CmdDownload {
     /// Path where the bundle should be downloaded
     #[clap(short, long)]
     output: Utf8PathBuf,
+
+    /// The size, in bytes, of each range request to use when downloading bundles
+    #[clap(short, long, default_value_t = NonZeroU64::new(100 * (1 << 20)).unwrap())]
+    chunk_size: NonZeroU64,
+}
+
+// Downloads a portion of a support bundle using range requests.
+//
+// "range" is in bytes, and is inclusive on both sides.
+//
+// Returns: The observed content length of the stream, and the stream.
+async fn support_bundle_download_range(
+    client: &Client,
+    id: Uuid,
+    range: (u64, u64),
+) -> anyhow::Result<(
+    u64,
+    impl futures::Stream<Item = anyhow::Result<bytes::Bytes>>,
+)> {
+    let range_str = format!("bytes={}-{}", range.0, range.1);
+    let response = client
+        .support_bundle_download()
+        .bundle_id(id)
+        .range(&range_str)
+        .send()
+        .await
+        .with_context(|| format!("downloading support bundle {}", id))?;
+
+    let Some(len) = response.content_length() else {
+        bail!("No content length observed when downloading bundle");
+    };
+
+    Ok((
+        len,
+        response
+            .into_inner_stream()
+            .map(|r| r.map_err(|err| anyhow::anyhow!(err))),
+    ))
+}
+
+// Downloads all ranges of a support bundle, and combines them into a single
+// stream.
+//
+// Starts the download at "start" bytes (inclusive) and continues up to "end"
+// bytes (exclusive).
+fn support_bundle_download_ranges(
+    client: &Client,
+    id: Uuid,
+    chunk_size: NonZeroU64,
+    start: u64,
+    end: u64,
+) -> impl futures::Stream<Item = anyhow::Result<bytes::Bytes>> + use<'_> {
+    futures::stream::try_unfold(
+        (start, start + chunk_size.get() - 1),
+        move |range| async move {
+            if end <= range.0 {
+                return Ok(None);
+            }
+
+            let (actual_len, stream) = support_bundle_download_range(client, id, range).await?;
+            let next_range = (range.0 + actual_len, range.1 + actual_len);
+            Ok::<_, anyhow::Error>(Some((stream, next_range)))
+        },
+    )
+    .try_flatten()
 }
 
 #[async_trait]
@@ -51,22 +121,65 @@ impl crate::AuthenticatedCmd for CmdDownload {
             .await
             .with_context(|| format!("Cannot create output file: {}", self.output))?;
 
-        // NOTE: It might be worth adding a progress bar here?
-        let mut stream = client
-            .support_bundle_download()
+        let (progress_tx, progress_rx) = watch::channel(0);
+
+        let total_length = client
+            .support_bundle_head()
             .bundle_id(self.id)
             .send()
             .await?
-            .into_inner_stream();
+            .content_length()
+            .ok_or_else(|| anyhow::anyhow!("No content length"))?;
 
+        start_progress_bar(progress_rx, total_length, self.id)?;
+
+        let mut stream =
+            support_bundle_download_ranges(client, self.id, self.chunk_size, 0, total_length);
+        let mut stream = std::pin::pin!(stream);
         while let Some(data) = stream.next().await {
             match data {
                 Err(err) => bail!(err),
-                Ok(data) => output.write_all(&data).await?,
+                Ok(data) => {
+                    output.write_all(&data).await?;
+                    progress_tx.send_modify(|l| *l += data.len() as u64);
+                }
             }
         }
         Ok(())
     }
+}
+
+fn start_progress_bar(
+    mut progress_rx: watch::Receiver<u64>,
+    file_size: u64,
+    bundle_id: Uuid,
+) -> Result<ProgressBar> {
+    let pb = ProgressBar::new(file_size);
+    pb.set_style(ProgressStyle::default_bar().template(
+        "[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta}",
+    )?);
+    pb.set_position(0);
+    pb.println(format!("Downloading bundle \"{bundle_id}\""));
+    let pb_updater = pb.clone();
+
+    tokio::spawn(async move {
+        loop {
+            match progress_rx.changed().await {
+                Ok(_) => {
+                    let p = *progress_rx.borrow();
+                    pb_updater.set_position(p);
+
+                    if p >= file_size {
+                        pb_updater.finish();
+                        return;
+                    }
+                }
+                Err(_) => return, // Sender has dropped.
+            }
+        }
+    });
+
+    Ok(pb)
 }
 
 /// Inspects a support bundle
