@@ -4761,7 +4761,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("management-ip")
                     .long("management-ip")
-                    .value_parser(::clap::value_parser!(types::IpNet))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(false)
                     .help("The LLDP management IP TLV."),
             )
@@ -13571,7 +13571,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.link_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::IpNet>("management-ip") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("management-ip") {
             request = request.body_map(|body| body.management_ip(value.clone()))
         }
 
@@ -15343,7 +15343,7 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_networking_switch_port_settings_list(matches, &mut request)?;
         self.config
-            .list_start::<types::SwitchPortSettingsResultsPage>();
+            .list_start::<types::SwitchPortSettingsIdentityResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -15358,7 +15358,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SwitchPortSettingsResultsPage>();
+                        .list_end_success::<types::SwitchPortSettingsIdentityResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {

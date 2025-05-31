@@ -15443,10 +15443,10 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::BgpAnnounceSet) -> Self {
+        pub fn ok(self, value: &types::BgpAnnounceSet) -> Self {
             Self(
                 self.0
-                    .status(201u16)
+                    .status(200u16)
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
@@ -16155,7 +16155,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsResultsPage) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettingsIdentityResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -16212,7 +16212,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SwitchPortSettingsView) -> Self {
+        pub fn created(self, value: &types::SwitchPortSettings) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -16338,7 +16338,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsView) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettings) -> Self {
             Self(
                 self.0
                     .status(200u16)
