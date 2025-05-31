@@ -114,7 +114,8 @@ pub mod types {
     /// configuration.",
     ///  "type": "object",
     ///  "required": [
-    ///    "addresses"
+    ///    "addresses",
+    ///    "link_name"
     ///  ],
     ///  "properties": {
     ///    "addresses": {
@@ -124,6 +125,14 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Address"
     ///      }
+    ///    },
+    ///    "link_name": {
+    ///      "description": "Link to assign the address to",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -135,6 +144,8 @@ pub mod types {
     pub struct AddressConfig {
         /// The set of addresses assigned to the port configuration.
         pub addresses: ::std::vec::Vec<Address>,
+        /// Link to assign the address to
+        pub link_name: Name,
     }
 
     impl ::std::convert::From<&AddressConfig> for AddressConfig {
@@ -4413,9 +4424,18 @@ pub mod types {
     /// {
     ///  "type": "object",
     ///  "required": [
+    ///    "link_name",
     ///    "peers"
     ///  ],
     ///  "properties": {
+    ///    "link_name": {
+    ///      "description": "Link that the peer is reachable on",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
     ///    "peers": {
     ///      "type": "array",
     ///      "items": {
@@ -4430,6 +4450,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpPeerConfig {
+        /// Link that the peer is reachable on
+        pub link_name: Name,
         pub peers: ::std::vec::Vec<BgpPeer>,
     }
 
@@ -17323,6 +17345,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "autoneg",
+    ///    "link_name",
     ///    "lldp",
     ///    "mtu",
     ///    "speed"
@@ -17346,6 +17369,14 @@ pub mod types {
     ///              "$ref": "#/components/schemas/LinkFec"
     ///            }
     ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "link_name": {
+    ///      "description": "Link name",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
     ///    },
@@ -17402,6 +17433,8 @@ pub mod types {
         /// if it can be determined.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub fec: ::std::option::Option<LinkFec>,
+        /// Link name
+        pub link_name: Name,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
         pub lldp: LldpLinkConfigCreate,
         /// Maximum transmission unit for the link.
@@ -17765,18 +17798,11 @@ pub mod types {
     ///    },
     ///    "management_ip": {
     ///      "description": "The LLDP management IP TLV.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpNet"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
     ///    },
     ///    "system_description": {
     ///      "description": "The LLDP system description TLV.",
@@ -17815,7 +17841,7 @@ pub mod types {
         pub link_name: ::std::option::Option<::std::string::String>,
         /// The LLDP management IP TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub management_ip: ::std::option::Option<IpNet>,
+        pub management_ip: ::std::option::Option<::std::net::IpAddr>,
         /// The LLDP system description TLV.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub system_description: ::std::option::Option<::std::string::String>,
@@ -21681,9 +21707,18 @@ pub mod types {
     /// configuration.",
     ///  "type": "object",
     ///  "required": [
+    ///    "link_name",
     ///    "routes"
     ///  ],
     ///  "properties": {
+    ///    "link_name": {
+    ///      "description": "Link the route should be active on",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
     ///    "routes": {
     ///      "description": "The set of routes assigned to a switch port.",
     ///      "type": "array",
@@ -21699,6 +21734,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouteConfig {
+        /// Link the route should be active on
+        pub link_name: Name,
         /// The set of routes assigned to a switch port.
         pub routes: ::std::vec::Vec<Route>,
     }
@@ -25901,6 +25938,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "kind",
+    ///    "link_name",
     ///    "v6_enabled"
     ///  ],
     ///  "properties": {
@@ -25910,6 +25948,14 @@ pub mod types {
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "link_name": {
+    ///      "description": "Link the interface will be assigned to",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
     ///    },
@@ -25927,6 +25973,8 @@ pub mod types {
     pub struct SwitchInterfaceConfigCreate {
         /// What kind of switch interface this configuration represents.
         pub kind: SwitchInterfaceKind,
+        /// Link the interface will be assigned to
+        pub link_name: Name,
         /// Whether or not IPv6 is enabled.
         pub v6_enabled: bool,
     }
@@ -26387,6 +26435,8 @@ pub mod types {
     ///  "required": [
     ///    "address",
     ///    "address_lot_block_id",
+    ///    "address_lot_id",
+    ///    "address_lot_name",
     ///    "interface_name",
     ///    "port_settings_id"
     ///  ],
@@ -26404,6 +26454,21 @@ pub mod types {
     /// drawn from.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "address_lot_id": {
+    ///      "description": "The id of the address lot this address is drawn
+    /// from.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "address_lot_name": {
+    ///      "description": "The name of the address lot this address is drawn
+    /// from.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "interface_name": {
     ///      "description": "The interface name this address belongs to.",
@@ -26431,11 +26496,15 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct SwitchPortAddressConfig {
+    pub struct SwitchPortAddressView {
         /// The IP address and prefix.
         pub address: IpNet,
         /// The id of the address lot block this address is drawn from.
         pub address_lot_block_id: ::uuid::Uuid,
+        /// The id of the address lot this address is drawn from.
+        pub address_lot_id: ::uuid::Uuid,
+        /// The name of the address lot this address is drawn from.
+        pub address_lot_name: Name,
         /// The interface name this address belongs to.
         pub interface_name: ::std::string::String,
         /// The port settings object this address configuration belongs to.
@@ -26445,14 +26514,14 @@ pub mod types {
         pub vlan_id: ::std::option::Option<u16>,
     }
 
-    impl ::std::convert::From<&SwitchPortAddressConfig> for SwitchPortAddressConfig {
-        fn from(value: &SwitchPortAddressConfig) -> Self {
+    impl ::std::convert::From<&SwitchPortAddressView> for SwitchPortAddressView {
+        fn from(value: &SwitchPortAddressView) -> Self {
             value.clone()
         }
     }
 
-    impl SwitchPortAddressConfig {
-        pub fn builder() -> builder::SwitchPortAddressConfig {
+    impl SwitchPortAddressView {
+        pub fn builder() -> builder::SwitchPortAddressView {
             Default::default()
         }
     }
@@ -26870,14 +26939,21 @@ pub mod types {
     ///      "description": "The name of this link.",
     ///      "type": "string"
     ///    },
-    ///    "lldp_link_config_id": {
+    ///    "lldp_link_config": {
     ///      "description": "The link-layer discovery protocol service
-    /// configuration id for this link.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
+    /// configuration for this link.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/LldpLinkConfig"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
     ///    },
     ///    "mtu": {
     ///      "description": "The maximum transmission unit for this link.",
@@ -26899,13 +26975,20 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
-    ///    "tx_eq_config_id": {
-    ///      "description": "The tx_eq configuration id for this link.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
+    ///    "tx_eq_config": {
+    ///      "description": "The tx_eq configuration for this link.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/TxEqConfig2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -26924,19 +27007,19 @@ pub mod types {
         pub fec: ::std::option::Option<LinkFec>,
         /// The name of this link.
         pub link_name: ::std::string::String,
-        /// The link-layer discovery protocol service configuration id for this
+        /// The link-layer discovery protocol service configuration for this
         /// link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub lldp_link_config_id: ::std::option::Option<::uuid::Uuid>,
+        pub lldp_link_config: ::std::option::Option<LldpLinkConfig>,
         /// The maximum transmission unit for this link.
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
         /// The configured speed of the link.
         pub speed: LinkSpeed,
-        /// The tx_eq configuration id for this link.
+        /// The tx_eq configuration for this link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub tx_eq_config_id: ::std::option::Option<::uuid::Uuid>,
+        pub tx_eq_config: ::std::option::Option<TxEqConfig2>,
     }
 
     impl ::std::convert::From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
@@ -27030,11 +27113,8 @@ pub mod types {
     ///    },
     ///    "gw": {
     ///      "description": "The route's gateway address.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IpNet"
-    ///        }
-    ///      ]
+    ///      "type": "string",
+    ///      "format": "ip"
     ///    },
     ///    "interface_name": {
     ///      "description": "The interface name this route configuration is
@@ -27078,7 +27158,7 @@ pub mod types {
         /// The route's destination network.
         pub dst: IpNet,
         /// The route's gateway address.
-        pub gw: IpNet,
+        pub gw: ::std::net::IpAddr,
         /// The interface name this route configuration is assigned to.
         pub interface_name: ::std::string::String,
         /// The port settings object this route configuration belongs to.
@@ -27104,33 +27184,79 @@ pub mod types {
         }
     }
 
-    /// A switch port settings identity whose id may be used to view additional
-    /// details.
+    /// This structure contains all port settings information in one place. It's
+    /// a convenience data structure for getting a complete view of a particular
+    /// port's settings.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "A switch port settings identity whose id may be used to
-    /// view additional details.",
+    ///  "description": "This structure contains all port settings information
+    /// in one place. It's a convenience data structure for getting a complete
+    /// view of a particular port's settings.",
     ///  "type": "object",
     ///  "required": [
+    ///    "addresses",
+    ///    "bgp_peers",
     ///    "description",
+    ///    "groups",
     ///    "id",
+    ///    "interfaces",
+    ///    "links",
     ///    "name",
+    ///    "port",
+    ///    "routes",
     ///    "time_created",
-    ///    "time_modified"
+    ///    "time_modified",
+    ///    "vlan_interfaces"
     ///  ],
     ///  "properties": {
+    ///    "addresses": {
+    ///      "description": "Layer 3 IP address settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchPortAddressView"
+    ///      }
+    ///    },
+    ///    "bgp_peers": {
+    ///      "description": "BGP peer settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BgpPeer"
+    ///      }
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
+    ///    },
+    ///    "groups": {
+    ///      "description": "Switch port settings included from other switch
+    /// port settings groups.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchPortSettingsGroups"
+    ///      }
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "interfaces": {
+    ///      "description": "Layer 3 interface settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
+    ///      }
+    ///    },
+    ///    "links": {
+    ///      "description": "Layer 2 link settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchPortLinkConfig"
+    ///      }
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
@@ -27141,6 +27267,21 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "port": {
+    ///      "description": "Layer 1 physical port settings.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchPortConfig"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "routes": {
+    ///      "description": "IP route settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchPortRouteConfig"
+    ///      }
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -27150,6 +27291,13 @@ pub mod types {
     ///      "description": "timestamp when this resource was last modified",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "vlan_interfaces": {
+    ///      "description": "Vlan interface settings.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchVlanInterfaceConfig"
+    ///      }
     ///    }
     ///  }
     /// }
@@ -27159,16 +27307,33 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SwitchPortSettings {
+        /// Layer 3 IP address settings.
+        pub addresses: ::std::vec::Vec<SwitchPortAddressView>,
+        /// BGP peer settings.
+        pub bgp_peers: ::std::vec::Vec<BgpPeer>,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
+        /// Switch port settings included from other switch port settings
+        /// groups.
+        pub groups: ::std::vec::Vec<SwitchPortSettingsGroups>,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
+        /// Layer 3 interface settings.
+        pub interfaces: ::std::vec::Vec<SwitchInterfaceConfig>,
+        /// Layer 2 link settings.
+        pub links: ::std::vec::Vec<SwitchPortLinkConfig>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        /// Layer 1 physical port settings.
+        pub port: SwitchPortConfig,
+        /// IP route settings.
+        pub routes: ::std::vec::Vec<SwitchPortRouteConfig>,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Vlan interface settings.
+        pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
     }
 
     impl ::std::convert::From<&SwitchPortSettings> for SwitchPortSettings {
@@ -27199,27 +27364,24 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "addresses",
-    ///    "bgp_peers",
     ///    "description",
-    ///    "groups",
-    ///    "interfaces",
     ///    "links",
     ///    "name",
-    ///    "port_config",
-    ///    "routes"
+    ///    "port_config"
     ///  ],
     ///  "properties": {
     ///    "addresses": {
     ///      "description": "Addresses indexed by interface name.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
+    ///      "type": "array",
+    ///      "items": {
     ///        "$ref": "#/components/schemas/AddressConfig"
     ///      }
     ///    },
     ///    "bgp_peers": {
     ///      "description": "BGP peers indexed by interface name.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
     ///        "$ref": "#/components/schemas/BgpPeerConfig"
     ///      }
     ///    },
@@ -27227,6 +27389,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "groups": {
+    ///      "default": [],
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/NameOrId"
@@ -27234,8 +27397,9 @@ pub mod types {
     ///    },
     ///    "interfaces": {
     ///      "description": "Interfaces indexed by link name.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchInterfaceConfigCreate"
     ///      }
     ///    },
@@ -27243,8 +27407,8 @@ pub mod types {
     ///      "description": "Links indexed by phy name. On ports that are not
     /// broken out, this is always phy0. On a 2x breakout the options are phy0
     /// and phy1, on 4x phy0-phy3, etc.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
+    ///      "type": "array",
+    ///      "items": {
     ///        "$ref": "#/components/schemas/LinkConfigCreate"
     ///      }
     ///    },
@@ -27256,8 +27420,9 @@ pub mod types {
     ///    },
     ///    "routes": {
     ///      "description": "Routes indexed by interface name.",
-    ///      "type": "object",
-    ///      "additionalProperties": {
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
     ///        "$ref": "#/components/schemas/RouteConfig"
     ///      }
     ///    }
@@ -27270,22 +27435,25 @@ pub mod types {
     )]
     pub struct SwitchPortSettingsCreate {
         /// Addresses indexed by interface name.
-        pub addresses: ::std::collections::HashMap<::std::string::String, AddressConfig>,
+        pub addresses: ::std::vec::Vec<AddressConfig>,
         /// BGP peers indexed by interface name.
-        pub bgp_peers: ::std::collections::HashMap<::std::string::String, BgpPeerConfig>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub bgp_peers: ::std::vec::Vec<BgpPeerConfig>,
         pub description: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub groups: ::std::vec::Vec<NameOrId>,
         /// Interfaces indexed by link name.
-        pub interfaces:
-            ::std::collections::HashMap<::std::string::String, SwitchInterfaceConfigCreate>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub interfaces: ::std::vec::Vec<SwitchInterfaceConfigCreate>,
         /// Links indexed by phy name. On ports that are not broken out, this is
         /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
         /// phy0-phy3, etc.
-        pub links: ::std::collections::HashMap<::std::string::String, LinkConfigCreate>,
+        pub links: ::std::vec::Vec<LinkConfigCreate>,
         pub name: Name,
         pub port_config: SwitchPortConfigCreate,
         /// Routes indexed by interface name.
-        pub routes: ::std::collections::HashMap<::std::string::String, RouteConfig>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub routes: ::std::vec::Vec<RouteConfig>,
     }
 
     impl ::std::convert::From<&SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
@@ -27358,6 +27526,85 @@ pub mod types {
         }
     }
 
+    /// A switch port settings identity whose id may be used to view additional
+    /// details.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A switch port settings identity whose id may be used to
+    /// view additional details.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SwitchPortSettingsIdentity {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&SwitchPortSettingsIdentity> for SwitchPortSettingsIdentity {
+        fn from(value: &SwitchPortSettingsIdentity) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsIdentity {
+        pub fn builder() -> builder::SwitchPortSettingsIdentity {
+            Default::default()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -27374,7 +27621,7 @@ pub mod types {
     ///      "description": "list of items on this page of results",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortSettings"
+    ///        "$ref": "#/components/schemas/SwitchPortSettingsIdentity"
     ///      }
     ///    },
     ///    "next_page": {
@@ -27392,186 +27639,24 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct SwitchPortSettingsResultsPage {
+    pub struct SwitchPortSettingsIdentityResultsPage {
         /// list of items on this page of results
-        pub items: ::std::vec::Vec<SwitchPortSettings>,
+        pub items: ::std::vec::Vec<SwitchPortSettingsIdentity>,
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
-        fn from(value: &SwitchPortSettingsResultsPage) -> Self {
+    impl ::std::convert::From<&SwitchPortSettingsIdentityResultsPage>
+        for SwitchPortSettingsIdentityResultsPage
+    {
+        fn from(value: &SwitchPortSettingsIdentityResultsPage) -> Self {
             value.clone()
         }
     }
 
-    impl SwitchPortSettingsResultsPage {
-        pub fn builder() -> builder::SwitchPortSettingsResultsPage {
-            Default::default()
-        }
-    }
-
-    /// This structure contains all port settings information in one place. It's
-    /// a convenience data structure for getting a complete view of a particular
-    /// port's settings.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "This structure contains all port settings information
-    /// in one place. It's a convenience data structure for getting a complete
-    /// view of a particular port's settings.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addresses",
-    ///    "bgp_peers",
-    ///    "groups",
-    ///    "interfaces",
-    ///    "link_lldp",
-    ///    "links",
-    ///    "port",
-    ///    "routes",
-    ///    "settings",
-    ///    "tx_eq",
-    ///    "vlan_interfaces"
-    ///  ],
-    ///  "properties": {
-    ///    "addresses": {
-    ///      "description": "Layer 3 IP address settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortAddressConfig"
-    ///      }
-    ///    },
-    ///    "bgp_peers": {
-    ///      "description": "BGP peer settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/BgpPeer"
-    ///      }
-    ///    },
-    ///    "groups": {
-    ///      "description": "Switch port settings included from other switch
-    /// port settings groups.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortSettingsGroups"
-    ///      }
-    ///    },
-    ///    "interfaces": {
-    ///      "description": "Layer 3 interface settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
-    ///      }
-    ///    },
-    ///    "link_lldp": {
-    ///      "description": "Link-layer discovery protocol (LLDP) settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/LldpLinkConfig"
-    ///      }
-    ///    },
-    ///    "links": {
-    ///      "description": "Layer 2 link settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortLinkConfig"
-    ///      }
-    ///    },
-    ///    "port": {
-    ///      "description": "Layer 1 physical port settings.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortConfig"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "routes": {
-    ///      "description": "IP route settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortRouteConfig"
-    ///      }
-    ///    },
-    ///    "settings": {
-    ///      "description": "The primary switch port settings handle.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/SwitchPortSettings"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "tx_eq": {
-    ///      "description": "TX equalization settings.  These are optional, and
-    /// most links will not need them.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "oneOf": [
-    ///          {
-    ///            "type": "null"
-    ///          },
-    ///          {
-    ///            "allOf": [
-    ///              {
-    ///                "$ref": "#/components/schemas/TxEqConfig"
-    ///              }
-    ///            ]
-    ///          }
-    ///        ]
-    ///      }
-    ///    },
-    ///    "vlan_interfaces": {
-    ///      "description": "Vlan interface settings.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchVlanInterfaceConfig"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct SwitchPortSettingsView {
-        /// Layer 3 IP address settings.
-        pub addresses: ::std::vec::Vec<SwitchPortAddressConfig>,
-        /// BGP peer settings.
-        pub bgp_peers: ::std::vec::Vec<BgpPeer>,
-        /// Switch port settings included from other switch port settings
-        /// groups.
-        pub groups: ::std::vec::Vec<SwitchPortSettingsGroups>,
-        /// Layer 3 interface settings.
-        pub interfaces: ::std::vec::Vec<SwitchInterfaceConfig>,
-        /// Link-layer discovery protocol (LLDP) settings.
-        pub link_lldp: ::std::vec::Vec<LldpLinkConfig>,
-        /// Layer 2 link settings.
-        pub links: ::std::vec::Vec<SwitchPortLinkConfig>,
-        /// Layer 1 physical port settings.
-        pub port: SwitchPortConfig,
-        /// IP route settings.
-        pub routes: ::std::vec::Vec<SwitchPortRouteConfig>,
-        /// The primary switch port settings handle.
-        pub settings: SwitchPortSettings,
-        /// TX equalization settings.  These are optional, and most links will
-        /// not need them.
-        pub tx_eq: ::std::vec::Vec<::std::option::Option<TxEqConfig>>,
-        /// Vlan interface settings.
-        pub vlan_interfaces: ::std::vec::Vec<SwitchVlanInterfaceConfig>,
-    }
-
-    impl ::std::convert::From<&SwitchPortSettingsView> for SwitchPortSettingsView {
-        fn from(value: &SwitchPortSettingsView) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SwitchPortSettingsView {
-        pub fn builder() -> builder::SwitchPortSettingsView {
+    impl SwitchPortSettingsIdentityResultsPage {
+        pub fn builder() -> builder::SwitchPortSettingsIdentityResultsPage {
             Default::default()
         }
     }
@@ -28655,6 +28740,107 @@ pub mod types {
 
     impl TxEqConfig {
         pub fn builder() -> builder::TxEqConfig {
+            Default::default()
+        }
+    }
+
+    /// Per-port tx-eq overrides.  This can be used to fine-tune the transceiver
+    /// equalization settings to improve signal integrity.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Per-port tx-eq overrides.  This can be used to
+    /// fine-tune the transceiver equalization settings to improve signal
+    /// integrity.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "main": {
+    ///      "description": "Main tap",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "post1": {
+    ///      "description": "Post-cursor tap1",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "post2": {
+    ///      "description": "Post-cursor tap2",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "pre1": {
+    ///      "description": "Pre-cursor tap1",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "pre2": {
+    ///      "description": "Pre-cursor tap2",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TxEqConfig2 {
+        /// Main tap
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub main: ::std::option::Option<i32>,
+        /// Post-cursor tap1
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub post1: ::std::option::Option<i32>,
+        /// Post-cursor tap2
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub post2: ::std::option::Option<i32>,
+        /// Pre-cursor tap1
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pre1: ::std::option::Option<i32>,
+        /// Pre-cursor tap2
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pre2: ::std::option::Option<i32>,
+    }
+
+    impl ::std::convert::From<&TxEqConfig2> for TxEqConfig2 {
+        fn from(value: &TxEqConfig2) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for TxEqConfig2 {
+        fn default() -> Self {
+            Self {
+                main: Default::default(),
+                post1: Default::default(),
+                post2: Default::default(),
+                pre1: Default::default(),
+                pre2: Default::default(),
+            }
+        }
+    }
+
+    impl TxEqConfig2 {
+        pub fn builder() -> builder::TxEqConfig2 {
             Default::default()
         }
     }
@@ -33189,12 +33375,14 @@ pub mod types {
         pub struct AddressConfig {
             addresses:
                 ::std::result::Result<::std::vec::Vec<super::Address>, ::std::string::String>,
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
         impl ::std::default::Default for AddressConfig {
             fn default() -> Self {
                 Self {
                     addresses: Err("no value supplied for addresses".to_string()),
+                    link_name: Err("no value supplied for link_name".to_string()),
                 }
             }
         }
@@ -33210,6 +33398,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for addresses: {}", e));
                 self
             }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<AddressConfig> for super::AddressConfig {
@@ -33219,6 +33417,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addresses: value.addresses?,
+                    link_name: value.link_name?,
                 })
             }
         }
@@ -33227,6 +33426,7 @@ pub mod types {
             fn from(value: super::AddressConfig) -> Self {
                 Self {
                     addresses: Ok(value.addresses),
+                    link_name: Ok(value.link_name),
                 }
             }
         }
@@ -36983,18 +37183,30 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct BgpPeerConfig {
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
             peers: ::std::result::Result<::std::vec::Vec<super::BgpPeer>, ::std::string::String>,
         }
 
         impl ::std::default::Default for BgpPeerConfig {
             fn default() -> Self {
                 Self {
+                    link_name: Err("no value supplied for link_name".to_string()),
                     peers: Err("no value supplied for peers".to_string()),
                 }
             }
         }
 
         impl BgpPeerConfig {
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
             pub fn peers<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::vec::Vec<super::BgpPeer>>,
@@ -37013,6 +37225,7 @@ pub mod types {
                 value: BgpPeerConfig,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    link_name: value.link_name?,
                     peers: value.peers?,
                 })
             }
@@ -37021,6 +37234,7 @@ pub mod types {
         impl ::std::convert::From<super::BgpPeerConfig> for BgpPeerConfig {
             fn from(value: super::BgpPeerConfig) -> Self {
                 Self {
+                    link_name: Ok(value.link_name),
                     peers: Ok(value.peers),
                 }
             }
@@ -45733,6 +45947,7 @@ pub mod types {
             autoneg: ::std::result::Result<bool, ::std::string::String>,
             fec:
                 ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
             lldp: ::std::result::Result<super::LldpLinkConfigCreate, ::std::string::String>,
             mtu: ::std::result::Result<u16, ::std::string::String>,
             speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
@@ -45747,6 +45962,7 @@ pub mod types {
                 Self {
                     autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Ok(Default::default()),
+                    link_name: Err("no value supplied for link_name".to_string()),
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
@@ -45774,6 +45990,16 @@ pub mod types {
                 self.fec = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for fec: {}", e));
+                self
+            }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn lldp<T>(mut self, value: T) -> Self
@@ -45826,6 +46052,7 @@ pub mod types {
                 Ok(Self {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
+                    link_name: value.link_name?,
                     lldp: value.lldp?,
                     mtu: value.mtu?,
                     speed: value.speed?,
@@ -45839,6 +46066,7 @@ pub mod types {
                 Self {
                     autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
+                    link_name: Ok(value.link_name),
                     lldp: Ok(value.lldp),
                     mtu: Ok(value.mtu),
                     speed: Ok(value.speed),
@@ -45863,8 +46091,10 @@ pub mod types {
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
             >,
-            management_ip:
-                ::std::result::Result<::std::option::Option<super::IpNet>, ::std::string::String>,
+            management_ip: ::std::result::Result<
+                ::std::option::Option<::std::net::IpAddr>,
+                ::std::string::String,
+            >,
             system_description: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -45946,7 +46176,7 @@ pub mod types {
             }
             pub fn management_ip<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::IpNet>>,
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.management_ip = value.try_into().map_err(|e| {
@@ -48866,18 +49096,30 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct RouteConfig {
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
             routes: ::std::result::Result<::std::vec::Vec<super::Route>, ::std::string::String>,
         }
 
         impl ::std::default::Default for RouteConfig {
             fn default() -> Self {
                 Self {
+                    link_name: Err("no value supplied for link_name".to_string()),
                     routes: Err("no value supplied for routes".to_string()),
                 }
             }
         }
 
         impl RouteConfig {
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
             pub fn routes<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::vec::Vec<super::Route>>,
@@ -48896,6 +49138,7 @@ pub mod types {
                 value: RouteConfig,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    link_name: value.link_name?,
                     routes: value.routes?,
                 })
             }
@@ -48904,6 +49147,7 @@ pub mod types {
         impl ::std::convert::From<super::RouteConfig> for RouteConfig {
             fn from(value: super::RouteConfig) -> Self {
                 Self {
+                    link_name: Ok(value.link_name),
                     routes: Ok(value.routes),
                 }
             }
@@ -52572,6 +52816,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfigCreate {
             kind: ::std::result::Result<super::SwitchInterfaceKind, ::std::string::String>,
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
             v6_enabled: ::std::result::Result<bool, ::std::string::String>,
         }
 
@@ -52579,6 +52824,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     kind: Err("no value supplied for kind".to_string()),
+                    link_name: Err("no value supplied for link_name".to_string()),
                     v6_enabled: Err("no value supplied for v6_enabled".to_string()),
                 }
             }
@@ -52593,6 +52839,16 @@ pub mod types {
                 self.kind = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
             pub fn v6_enabled<T>(mut self, value: T) -> Self
@@ -52614,6 +52870,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     kind: value.kind?,
+                    link_name: value.link_name?,
                     v6_enabled: value.v6_enabled?,
                 })
             }
@@ -52623,6 +52880,7 @@ pub mod types {
             fn from(value: super::SwitchInterfaceConfigCreate) -> Self {
                 Self {
                     kind: Ok(value.kind),
+                    link_name: Ok(value.link_name),
                     v6_enabled: Ok(value.v6_enabled),
                 }
             }
@@ -52734,21 +52992,25 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SwitchPortAddressConfig {
+        pub struct SwitchPortAddressView {
             address: ::std::result::Result<super::IpNet, ::std::string::String>,
             address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            address_lot_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            address_lot_name: ::std::result::Result<super::Name, ::std::string::String>,
             interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
 
-        impl ::std::default::Default for SwitchPortAddressConfig {
+        impl ::std::default::Default for SwitchPortAddressView {
             fn default() -> Self {
                 Self {
                     address: Err("no value supplied for address".to_string()),
                     address_lot_block_id: Err(
                         "no value supplied for address_lot_block_id".to_string()
                     ),
+                    address_lot_id: Err("no value supplied for address_lot_id".to_string()),
+                    address_lot_name: Err("no value supplied for address_lot_name".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
                     vlan_id: Ok(Default::default()),
@@ -52756,7 +53018,7 @@ pub mod types {
             }
         }
 
-        impl SwitchPortAddressConfig {
+        impl SwitchPortAddressView {
             pub fn address<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::IpNet>,
@@ -52775,6 +53037,29 @@ pub mod types {
                 self.address_lot_block_id = value.try_into().map_err(|e| {
                     format!(
                         "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn address_lot_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.address_lot_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for address_lot_id: {}", e)
+                });
+                self
+            }
+            pub fn address_lot_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.address_lot_name = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_lot_name: {}",
                         e
                     )
                 });
@@ -52815,14 +53100,16 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::TryFrom<SwitchPortAddressConfig> for super::SwitchPortAddressConfig {
+        impl ::std::convert::TryFrom<SwitchPortAddressView> for super::SwitchPortAddressView {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SwitchPortAddressConfig,
+                value: SwitchPortAddressView,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     address: value.address?,
                     address_lot_block_id: value.address_lot_block_id?,
+                    address_lot_id: value.address_lot_id?,
+                    address_lot_name: value.address_lot_name?,
                     interface_name: value.interface_name?,
                     port_settings_id: value.port_settings_id?,
                     vlan_id: value.vlan_id?,
@@ -52830,11 +53117,13 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::From<super::SwitchPortAddressConfig> for SwitchPortAddressConfig {
-            fn from(value: super::SwitchPortAddressConfig) -> Self {
+        impl ::std::convert::From<super::SwitchPortAddressView> for SwitchPortAddressView {
+            fn from(value: super::SwitchPortAddressView) -> Self {
                 Self {
                     address: Ok(value.address),
                     address_lot_block_id: Ok(value.address_lot_block_id),
+                    address_lot_id: Ok(value.address_lot_id),
+                    address_lot_name: Ok(value.address_lot_name),
                     interface_name: Ok(value.interface_name),
                     port_settings_id: Ok(value.port_settings_id),
                     vlan_id: Ok(value.vlan_id),
@@ -53000,13 +53289,17 @@ pub mod types {
             fec:
                 ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
             link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            lldp_link_config_id:
-                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            lldp_link_config: ::std::result::Result<
+                ::std::option::Option<super::LldpLinkConfig>,
+                ::std::string::String,
+            >,
             mtu: ::std::result::Result<u16, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             speed: ::std::result::Result<super::LinkSpeed, ::std::string::String>,
-            tx_eq_config_id:
-                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            tx_eq_config: ::std::result::Result<
+                ::std::option::Option<super::TxEqConfig2>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SwitchPortLinkConfig {
@@ -53015,11 +53308,11 @@ pub mod types {
                     autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Ok(Default::default()),
                     link_name: Err("no value supplied for link_name".to_string()),
-                    lldp_link_config_id: Ok(Default::default()),
+                    lldp_link_config: Ok(Default::default()),
                     mtu: Err("no value supplied for mtu".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
                     speed: Err("no value supplied for speed".to_string()),
-                    tx_eq_config_id: Ok(Default::default()),
+                    tx_eq_config: Ok(Default::default()),
                 }
             }
         }
@@ -53055,14 +53348,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for link_name: {}", e));
                 self
             }
-            pub fn lldp_link_config_id<T>(mut self, value: T) -> Self
+            pub fn lldp_link_config<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::LldpLinkConfig>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.lldp_link_config_id = value.try_into().map_err(|e| {
+                self.lldp_link_config = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for lldp_link_config_id: {}",
+                        "error converting supplied value for lldp_link_config: {}",
                         e
                     )
                 });
@@ -53101,13 +53394,13 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for speed: {}", e));
                 self
             }
-            pub fn tx_eq_config_id<T>(mut self, value: T) -> Self
+            pub fn tx_eq_config<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::TxEqConfig2>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.tx_eq_config_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for tx_eq_config_id: {}", e)
+                self.tx_eq_config = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for tx_eq_config: {}", e)
                 });
                 self
             }
@@ -53122,11 +53415,11 @@ pub mod types {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
                     link_name: value.link_name?,
-                    lldp_link_config_id: value.lldp_link_config_id?,
+                    lldp_link_config: value.lldp_link_config?,
                     mtu: value.mtu?,
                     port_settings_id: value.port_settings_id?,
                     speed: value.speed?,
-                    tx_eq_config_id: value.tx_eq_config_id?,
+                    tx_eq_config: value.tx_eq_config?,
                 })
             }
         }
@@ -53137,11 +53430,11 @@ pub mod types {
                     autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
                     link_name: Ok(value.link_name),
-                    lldp_link_config_id: Ok(value.lldp_link_config_id),
+                    lldp_link_config: Ok(value.lldp_link_config),
                     mtu: Ok(value.mtu),
                     port_settings_id: Ok(value.port_settings_id),
                     speed: Ok(value.speed),
-                    tx_eq_config_id: Ok(value.tx_eq_config_id),
+                    tx_eq_config: Ok(value.tx_eq_config),
                 }
             }
         }
@@ -53211,7 +53504,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortRouteConfig {
             dst: ::std::result::Result<super::IpNet, ::std::string::String>,
-            gw: ::std::result::Result<super::IpNet, ::std::string::String>,
+            gw: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
             interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
@@ -53244,7 +53537,7 @@ pub mod types {
             }
             pub fn gw<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::IpNet>,
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
                 T::Error: ::std::fmt::Display,
             {
                 self.gw = value
@@ -53328,9 +53621,32 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettings {
+            addresses: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortAddressView>,
+                ::std::string::String,
+            >,
+            bgp_peers:
+                ::std::result::Result<::std::vec::Vec<super::BgpPeer>, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            groups: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortSettingsGroups>,
+                ::std::string::String,
+            >,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            interfaces: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchInterfaceConfig>,
+                ::std::string::String,
+            >,
+            links: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortLinkConfig>,
+                ::std::string::String,
+            >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
+            port: ::std::result::Result<super::SwitchPortConfig, ::std::string::String>,
+            routes: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchPortRouteConfig>,
+                ::std::string::String,
+            >,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -53339,21 +53655,53 @@ pub mod types {
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
+            vlan_interfaces: ::std::result::Result<
+                ::std::vec::Vec<super::SwitchVlanInterfaceConfig>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for SwitchPortSettings {
             fn default() -> Self {
                 Self {
+                    addresses: Err("no value supplied for addresses".to_string()),
+                    bgp_peers: Err("no value supplied for bgp_peers".to_string()),
                     description: Err("no value supplied for description".to_string()),
+                    groups: Err("no value supplied for groups".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    interfaces: Err("no value supplied for interfaces".to_string()),
+                    links: Err("no value supplied for links".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    port: Err("no value supplied for port".to_string()),
+                    routes: Err("no value supplied for routes".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
+                    vlan_interfaces: Err("no value supplied for vlan_interfaces".to_string()),
                 }
             }
         }
 
         impl SwitchPortSettings {
+            pub fn addresses<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortAddressView>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.addresses = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
+                self
+            }
+            pub fn bgp_peers<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BgpPeer>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bgp_peers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -53362,6 +53710,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn groups<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettingsGroups>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.groups = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -53374,6 +53732,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
+            pub fn interfaces<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchInterfaceConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.interfaces = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
+                self
+            }
+            pub fn links<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortLinkConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.links = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for links: {}", e));
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -53382,6 +53760,26 @@ pub mod types {
                 self.name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn port<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SwitchPortConfig>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for port: {}", e));
+                self
+            }
+            pub fn routes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortRouteConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.routes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -53404,6 +53802,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn vlan_interfaces<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchVlanInterfaceConfig>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.vlan_interfaces = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for vlan_interfaces: {}", e)
+                });
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<SwitchPortSettings> for super::SwitchPortSettings {
@@ -53412,11 +53820,19 @@ pub mod types {
                 value: SwitchPortSettings,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    addresses: value.addresses?,
+                    bgp_peers: value.bgp_peers?,
                     description: value.description?,
+                    groups: value.groups?,
                     id: value.id?,
+                    interfaces: value.interfaces?,
+                    links: value.links?,
                     name: value.name?,
+                    port: value.port?,
+                    routes: value.routes?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
+                    vlan_interfaces: value.vlan_interfaces?,
                 })
             }
         }
@@ -53424,59 +53840,58 @@ pub mod types {
         impl ::std::convert::From<super::SwitchPortSettings> for SwitchPortSettings {
             fn from(value: super::SwitchPortSettings) -> Self {
                 Self {
+                    addresses: Ok(value.addresses),
+                    bgp_peers: Ok(value.bgp_peers),
                     description: Ok(value.description),
+                    groups: Ok(value.groups),
                     id: Ok(value.id),
+                    interfaces: Ok(value.interfaces),
+                    links: Ok(value.links),
                     name: Ok(value.name),
+                    port: Ok(value.port),
+                    routes: Ok(value.routes),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
+                    vlan_interfaces: Ok(value.vlan_interfaces),
                 }
             }
         }
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsCreate {
-            addresses: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::AddressConfig>,
-                ::std::string::String,
-            >,
-            bgp_peers: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::BgpPeerConfig>,
-                ::std::string::String,
-            >,
+            addresses:
+                ::std::result::Result<::std::vec::Vec<super::AddressConfig>, ::std::string::String>,
+            bgp_peers:
+                ::std::result::Result<::std::vec::Vec<super::BgpPeerConfig>, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             groups: ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
             interfaces: ::std::result::Result<
-                ::std::collections::HashMap<
-                    ::std::string::String,
-                    super::SwitchInterfaceConfigCreate,
-                >,
+                ::std::vec::Vec<super::SwitchInterfaceConfigCreate>,
                 ::std::string::String,
             >,
             links: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::LinkConfigCreate>,
+                ::std::vec::Vec<super::LinkConfigCreate>,
                 ::std::string::String,
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             port_config:
                 ::std::result::Result<super::SwitchPortConfigCreate, ::std::string::String>,
-            routes: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::RouteConfig>,
-                ::std::string::String,
-            >,
+            routes:
+                ::std::result::Result<::std::vec::Vec<super::RouteConfig>, ::std::string::String>,
         }
 
         impl ::std::default::Default for SwitchPortSettingsCreate {
             fn default() -> Self {
                 Self {
                     addresses: Err("no value supplied for addresses".to_string()),
-                    bgp_peers: Err("no value supplied for bgp_peers".to_string()),
+                    bgp_peers: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
-                    groups: Err("no value supplied for groups".to_string()),
-                    interfaces: Err("no value supplied for interfaces".to_string()),
+                    groups: Ok(Default::default()),
+                    interfaces: Ok(Default::default()),
                     links: Err("no value supplied for links".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     port_config: Err("no value supplied for port_config".to_string()),
-                    routes: Err("no value supplied for routes".to_string()),
+                    routes: Ok(Default::default()),
                 }
             }
         }
@@ -53484,9 +53899,7 @@ pub mod types {
         impl SwitchPortSettingsCreate {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::AddressConfig>,
-                >,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AddressConfig>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.addresses = value
@@ -53496,9 +53909,7 @@ pub mod types {
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::BgpPeerConfig>,
-                >,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BgpPeerConfig>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.bgp_peers = value
@@ -53528,12 +53939,7 @@ pub mod types {
             }
             pub fn interfaces<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<
-                        ::std::string::String,
-                        super::SwitchInterfaceConfigCreate,
-                    >,
-                >,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchInterfaceConfigCreate>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interfaces = value
@@ -53543,9 +53949,7 @@ pub mod types {
             }
             pub fn links<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::LinkConfigCreate>,
-                >,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::LinkConfigCreate>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.links = value
@@ -53575,9 +53979,7 @@ pub mod types {
             }
             pub fn routes<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::RouteConfig>,
-                >,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::RouteConfig>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.routes = value
@@ -53690,9 +54092,116 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SwitchPortSettingsResultsPage {
+        pub struct SwitchPortSettingsIdentity {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SwitchPortSettingsIdentity {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsIdentity {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SwitchPortSettingsIdentity> for super::SwitchPortSettingsIdentity {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SwitchPortSettingsIdentity,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SwitchPortSettingsIdentity> for SwitchPortSettingsIdentity {
+            fn from(value: super::SwitchPortSettingsIdentity) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsIdentityResultsPage {
             items: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchPortSettings>,
+                ::std::vec::Vec<super::SwitchPortSettingsIdentity>,
                 ::std::string::String,
             >,
             next_page: ::std::result::Result<
@@ -53701,7 +54210,7 @@ pub mod types {
             >,
         }
 
-        impl ::std::default::Default for SwitchPortSettingsResultsPage {
+        impl ::std::default::Default for SwitchPortSettingsIdentityResultsPage {
             fn default() -> Self {
                 Self {
                     items: Err("no value supplied for items".to_string()),
@@ -53710,10 +54219,10 @@ pub mod types {
             }
         }
 
-        impl SwitchPortSettingsResultsPage {
+        impl SwitchPortSettingsIdentityResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettings>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettingsIdentity>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.items = value
@@ -53733,12 +54242,12 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::TryFrom<SwitchPortSettingsResultsPage>
-            for super::SwitchPortSettingsResultsPage
+        impl ::std::convert::TryFrom<SwitchPortSettingsIdentityResultsPage>
+            for super::SwitchPortSettingsIdentityResultsPage
         {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SwitchPortSettingsResultsPage,
+                value: SwitchPortSettingsIdentityResultsPage,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
@@ -53747,223 +54256,13 @@ pub mod types {
             }
         }
 
-        impl ::std::convert::From<super::SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
-            fn from(value: super::SwitchPortSettingsResultsPage) -> Self {
+        impl ::std::convert::From<super::SwitchPortSettingsIdentityResultsPage>
+            for SwitchPortSettingsIdentityResultsPage
+        {
+            fn from(value: super::SwitchPortSettingsIdentityResultsPage) -> Self {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SwitchPortSettingsView {
-            addresses: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchPortAddressConfig>,
-                ::std::string::String,
-            >,
-            bgp_peers:
-                ::std::result::Result<::std::vec::Vec<super::BgpPeer>, ::std::string::String>,
-            groups: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchPortSettingsGroups>,
-                ::std::string::String,
-            >,
-            interfaces: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchInterfaceConfig>,
-                ::std::string::String,
-            >,
-            link_lldp: ::std::result::Result<
-                ::std::vec::Vec<super::LldpLinkConfig>,
-                ::std::string::String,
-            >,
-            links: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchPortLinkConfig>,
-                ::std::string::String,
-            >,
-            port: ::std::result::Result<super::SwitchPortConfig, ::std::string::String>,
-            routes: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchPortRouteConfig>,
-                ::std::string::String,
-            >,
-            settings: ::std::result::Result<super::SwitchPortSettings, ::std::string::String>,
-            tx_eq: ::std::result::Result<
-                ::std::vec::Vec<::std::option::Option<super::TxEqConfig>>,
-                ::std::string::String,
-            >,
-            vlan_interfaces: ::std::result::Result<
-                ::std::vec::Vec<super::SwitchVlanInterfaceConfig>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for SwitchPortSettingsView {
-            fn default() -> Self {
-                Self {
-                    addresses: Err("no value supplied for addresses".to_string()),
-                    bgp_peers: Err("no value supplied for bgp_peers".to_string()),
-                    groups: Err("no value supplied for groups".to_string()),
-                    interfaces: Err("no value supplied for interfaces".to_string()),
-                    link_lldp: Err("no value supplied for link_lldp".to_string()),
-                    links: Err("no value supplied for links".to_string()),
-                    port: Err("no value supplied for port".to_string()),
-                    routes: Err("no value supplied for routes".to_string()),
-                    settings: Err("no value supplied for settings".to_string()),
-                    tx_eq: Err("no value supplied for tx_eq".to_string()),
-                    vlan_interfaces: Err("no value supplied for vlan_interfaces".to_string()),
-                }
-            }
-        }
-
-        impl SwitchPortSettingsView {
-            pub fn addresses<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortAddressConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.addresses = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
-                self
-            }
-            pub fn bgp_peers<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::BgpPeer>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.bgp_peers = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
-                self
-            }
-            pub fn groups<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortSettingsGroups>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.groups = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
-                self
-            }
-            pub fn interfaces<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchInterfaceConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.interfaces = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
-                self
-            }
-            pub fn link_lldp<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::LldpLinkConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.link_lldp = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for link_lldp: {}", e));
-                self
-            }
-            pub fn links<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortLinkConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.links = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for links: {}", e));
-                self
-            }
-            pub fn port<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::SwitchPortConfig>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.port = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for port: {}", e));
-                self
-            }
-            pub fn routes<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchPortRouteConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.routes = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
-                self
-            }
-            pub fn settings<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::SwitchPortSettings>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.settings = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for settings: {}", e));
-                self
-            }
-            pub fn tx_eq<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::vec::Vec<::std::option::Option<super::TxEqConfig>>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.tx_eq = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for tx_eq: {}", e));
-                self
-            }
-            pub fn vlan_interfaces<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::SwitchVlanInterfaceConfig>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.vlan_interfaces = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for vlan_interfaces: {}", e)
-                });
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<SwitchPortSettingsView> for super::SwitchPortSettingsView {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: SwitchPortSettingsView,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    addresses: value.addresses?,
-                    bgp_peers: value.bgp_peers?,
-                    groups: value.groups?,
-                    interfaces: value.interfaces?,
-                    link_lldp: value.link_lldp?,
-                    links: value.links?,
-                    port: value.port?,
-                    routes: value.routes?,
-                    settings: value.settings?,
-                    tx_eq: value.tx_eq?,
-                    vlan_interfaces: value.vlan_interfaces?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::SwitchPortSettingsView> for SwitchPortSettingsView {
-            fn from(value: super::SwitchPortSettingsView) -> Self {
-                Self {
-                    addresses: Ok(value.addresses),
-                    bgp_peers: Ok(value.bgp_peers),
-                    groups: Ok(value.groups),
-                    interfaces: Ok(value.interfaces),
-                    link_lldp: Ok(value.link_lldp),
-                    links: Ok(value.links),
-                    port: Ok(value.port),
-                    routes: Ok(value.routes),
-                    settings: Ok(value.settings),
-                    tx_eq: Ok(value.tx_eq),
-                    vlan_interfaces: Ok(value.vlan_interfaces),
                 }
             }
         }
@@ -54705,6 +55004,107 @@ pub mod types {
 
         impl ::std::convert::From<super::TxEqConfig> for TxEqConfig {
             fn from(value: super::TxEqConfig) -> Self {
+                Self {
+                    main: Ok(value.main),
+                    post1: Ok(value.post1),
+                    post2: Ok(value.post2),
+                    pre1: Ok(value.pre1),
+                    pre2: Ok(value.pre2),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TxEqConfig2 {
+            main: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            post1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            post2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            pre1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            pre2: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TxEqConfig2 {
+            fn default() -> Self {
+                Self {
+                    main: Ok(Default::default()),
+                    post1: Ok(Default::default()),
+                    post2: Ok(Default::default()),
+                    pre1: Ok(Default::default()),
+                    pre2: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl TxEqConfig2 {
+            pub fn main<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.main = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for main: {}", e));
+                self
+            }
+            pub fn post1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.post1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for post1: {}", e));
+                self
+            }
+            pub fn post2<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.post2 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for post2: {}", e));
+                self
+            }
+            pub fn pre1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pre1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pre1: {}", e));
+                self
+            }
+            pub fn pre2<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pre2 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pre2: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TxEqConfig2> for super::TxEqConfig2 {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TxEqConfig2,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    main: value.main?,
+                    post1: value.post1?,
+                    post2: value.post2?,
+                    pre1: value.pre1?,
+                    pre2: value.pre2?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TxEqConfig2> for TxEqConfig2 {
+            fn from(value: super::TxEqConfig2) -> Self {
                 Self {
                     main: Ok(value.main),
                     post1: Ok(value.post1),
@@ -84946,7 +85346,7 @@ pub mod builder {
             client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -85799,7 +86199,7 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SwitchPortSettingsResultsPage>, Error<types::Error>>
+        ) -> Result<ResponseValue<types::SwitchPortSettingsIdentityResultsPage>, Error<types::Error>>
         {
             let Self {
                 client,
@@ -85864,8 +86264,9 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings`
         pub fn stream(
             self,
-        ) -> impl futures::Stream<Item = Result<types::SwitchPortSettings, Error<types::Error>>>
-               + Unpin
+        ) -> impl futures::Stream<
+            Item = Result<types::SwitchPortSettingsIdentity, Error<types::Error>>,
+        > + Unpin
                + 'a {
             use ::futures::StreamExt;
             use ::futures::TryFutureExt;
@@ -85956,7 +86357,7 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SwitchPortSettings>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| {
@@ -86115,7 +86516,7 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings/{port}`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SwitchPortSettings>, Error<types::Error>> {
             let Self { client, port } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let url = format!(
