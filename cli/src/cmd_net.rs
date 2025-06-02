@@ -1705,17 +1705,15 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         })
         .collect();
 
-    let mut addresses = Vec::new();
-    addresses.push(AddressConfig {
+    let addresses = vec![AddressConfig {
         link_name: PHY0.parse().unwrap(),
         addresses: addrs,
-    });
+    }];
 
-    let mut bgp_peers = Vec::new();
-    bgp_peers.push(BgpPeerConfig {
+    let bgp_peers = vec![BgpPeerConfig {
         link_name: PHY0.parse().unwrap(),
         peers: current.bgp_peers,
-    });
+    }];
 
     let groups: Vec<NameOrId> = current
         .groups
