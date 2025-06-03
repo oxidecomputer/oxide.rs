@@ -178,12 +178,13 @@ fn format_code(code: String) -> String {
             // Hopefully this is enough information to help users figure out
             // what to investigate with their local toolchains, or if a nightly
             // is not installed at all.
-            let rustc_version = rustc_version::version_meta()
-                .expect("can get rustc version meta");
+            let rustc_version = rustc_version::version_meta().expect("can get rustc version meta");
             panic!(
                 "\"generate\" xtask requires a nightly rustfmt more recent \
                 than {} to be installed, as it uses the following features: {}",
-                rustc_version.commit_date.expect("version has a commit date"),
+                rustc_version
+                    .commit_date
+                    .expect("version has a commit date"),
                 msg
             );
         }
