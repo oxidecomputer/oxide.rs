@@ -9,10 +9,9 @@ use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
     AddressLot, AddressLotBlock, AddressLotBlockResultsPage, AddressLotKind, AddressLotResultsPage,
-    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, NameOrId,
-    SwitchPort, SwitchPortAddressConfig, SwitchPortConfig, SwitchPortGeometry2,
+    BgpConfig, BgpConfigResultsPage, BgpPeer, ImportExportPolicy, LinkFec, LinkSpeed, Name,
+    NameOrId, SwitchPort, SwitchPortAddressView, SwitchPortConfig, SwitchPortGeometry2,
     SwitchPortLinkConfig, SwitchPortResultsPage, SwitchPortRouteConfig, SwitchPortSettings,
-    SwitchPortSettingsView,
 };
 use oxide_httpmock::MockServerExt;
 use uuid::Uuid;
@@ -25,6 +24,7 @@ fn test_port_config() {
     let switch0_qsfp0_settings_id = Uuid::new_v4();
     let switch1_qsfp0_settings_id = Uuid::new_v4();
     let lot_id = Uuid::new_v4();
+    let lot_name = Name::try_from("nomen").unwrap();
     let lot_block_id = Uuid::new_v4();
 
     let ports = SwitchPortResultsPage {
@@ -101,18 +101,27 @@ fn test_port_config() {
         then.ok(&bgp_configs);
     });
 
-    let switch0_qsfp0_view = SwitchPortSettingsView {
+    let switch0_qsfp0_view = SwitchPortSettings {
+        description: String::from("default uplink 0 switch port settings"),
+        id: switch1_qsfp0_settings_id,
+        name: "default-uplink0".parse().unwrap(),
+        time_created: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
+        time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         addresses: vec![
-            SwitchPortAddressConfig {
+            SwitchPortAddressView {
                 address: "169.254.10.2/30".parse().unwrap(),
                 address_lot_block_id: lot_block_id,
+                address_lot_id: lot_id,
+                address_lot_name: lot_name.clone(),
                 interface_name: String::from("phy0"),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: None,
             },
-            SwitchPortAddressConfig {
+            SwitchPortAddressView {
                 address: "169.254.30.2/30".parse().unwrap(),
                 address_lot_block_id: lot_block_id,
+                address_lot_id: lot_id,
+                address_lot_name: lot_name.clone(),
                 interface_name: String::from("phy0"),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: Some(300),
@@ -162,16 +171,15 @@ fn test_port_config() {
         ],
         groups: Vec::new(),
         interfaces: Vec::new(),
-        link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: None,
             link_name: String::from("phy0"),
-            lldp_link_config_id: None,
+            lldp_link_config: None,
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
-            tx_eq_config_id: None,
+            tx_eq_config: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
@@ -179,34 +187,35 @@ fn test_port_config() {
         },
         routes: vec![SwitchPortRouteConfig {
             dst: "1.2.3.0/24".parse().unwrap(),
-            gw: "1.2.3.4/32".parse().unwrap(),
+            gw: "1.2.3.4".parse().unwrap(),
             interface_name: "qsfp0".to_owned(),
             rib_priority: Some(10),
             port_settings_id: Uuid::new_v4(),
             vlan_id: Some(1701),
         }],
-        settings: SwitchPortSettings {
-            description: String::from("default uplink 0 switch port settings"),
-            id: switch1_qsfp0_settings_id,
-            name: "default-uplink0".parse().unwrap(),
-            time_created: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
-            time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
-        },
         vlan_interfaces: Vec::new(),
-        tx_eq: vec![None],
     };
-    let switch1_qsfp0_view = SwitchPortSettingsView {
+    let switch1_qsfp0_view = SwitchPortSettings {
+        description: String::from("default uplink 1 switch port settings"),
+        id: switch1_qsfp0_settings_id,
+        name: "default-uplink1".parse().unwrap(),
+        time_created: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
+        time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
         addresses: vec![
-            SwitchPortAddressConfig {
+            SwitchPortAddressView {
                 address: "169.254.20.2/30".parse().unwrap(),
                 address_lot_block_id: lot_block_id,
+                address_lot_id: lot_id,
+                address_lot_name: lot_name.clone(),
                 interface_name: String::from("phy0"),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: None,
             },
-            SwitchPortAddressConfig {
+            SwitchPortAddressView {
                 address: "169.254.40.2/30".parse().unwrap(),
                 address_lot_block_id: lot_block_id,
+                address_lot_id: lot_id,
+                address_lot_name: lot_name.clone(),
                 interface_name: String::from("phy0"),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: Some(400),
@@ -256,31 +265,22 @@ fn test_port_config() {
         ],
         groups: Vec::new(),
         interfaces: Vec::new(),
-        link_lldp: Vec::new(),
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: Some(LinkFec::None),
             link_name: String::from("phy0"),
-            lldp_link_config_id: None,
+            lldp_link_config: None,
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
             speed: LinkSpeed::Speed100G,
-            tx_eq_config_id: None,
+            tx_eq_config: None,
         }],
         port: SwitchPortConfig {
             geometry: SwitchPortGeometry2::Qsfp28x1,
             port_settings_id: switch1_qsfp0_settings_id,
         },
         routes: Vec::new(),
-        settings: SwitchPortSettings {
-            description: String::from("default uplink 1 switch port settings"),
-            id: switch1_qsfp0_settings_id,
-            name: "default-uplink1".parse().unwrap(),
-            time_created: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
-            time_modified: Utc.with_ymd_and_hms(2024, 7, 8, 9, 10, 11).unwrap(),
-        },
         vlan_interfaces: Vec::new(),
-        tx_eq: vec![None],
     };
 
     let mock_switch0_qsfp0_settings_view =

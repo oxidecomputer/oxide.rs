@@ -112,19 +112,20 @@ impl AuthenticatedCmd for CmdLinkAdd {
         let mut settings = current_port_settings(client, &self.rack, &self.switch, &self.port)
             .await
             .unwrap_or(SwitchPortSettingsCreate {
-                addresses: HashMap::default(),
-                bgp_peers: HashMap::default(),
+                addresses: Default::default(),
+                bgp_peers: Default::default(),
                 description: String::default(),
                 groups: Vec::default(),
-                interfaces: HashMap::default(),
-                links: HashMap::default(),
+                interfaces: Default::default(),
+                links: Default::default(),
                 name: format!("{}-{}", self.switch, self.port).parse().unwrap(),
                 port_config: SwitchPortConfigCreate {
                     geometry: SwitchPortGeometry::Qsfp28x1,
                 },
-                routes: HashMap::default(),
+                routes: Default::default(),
             });
         let link = LinkConfigCreate {
+            link_name: PHY0.parse().unwrap(),
             autoneg: self.autoneg,
             fec: self.fec.map(|fec| fec.into()),
             mtu: self.mtu,
@@ -140,12 +141,12 @@ impl AuthenticatedCmd for CmdLinkAdd {
             },
             tx_eq: None,
         };
-        match settings.links.get(PHY0) {
+        match settings.links.iter().find(|link| *link.link_name == PHY0) {
             Some(_) => {
                 return Err(anyhow::anyhow!("only one link per port supported"));
             }
             None => {
-                settings.links.insert(String::from(PHY0), link);
+                settings.links.push(link);
             }
         }
         client
@@ -411,7 +412,11 @@ impl AuthenticatedCmd for CmdBgpFilter {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        match settings.bgp_peers.get_mut(PHY0) {
+        match settings
+            .bgp_peers
+            .iter_mut()
+            .find(|peer| *peer.link_name == PHY0)
+        {
             None => return Err(anyhow::anyhow!("no BGP peers configured")),
             Some(config) => {
                 let peer = config
@@ -488,7 +493,11 @@ impl AuthenticatedCmd for CmdBgpAuth {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        match settings.bgp_peers.get_mut(PHY0) {
+        match settings
+            .bgp_peers
+            .iter_mut()
+            .find(|peer| *peer.link_name == PHY0)
+        {
             None => return Err(anyhow::anyhow!("no BGP peers configured")),
             Some(config) => {
                 let peer = config
@@ -546,7 +555,11 @@ impl AuthenticatedCmd for CmdBgpLocalPref {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        match settings.bgp_peers.get_mut(PHY0) {
+        match settings
+            .bgp_peers
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             None => return Err(anyhow::anyhow!("no BGP peers configured")),
             Some(config) => {
                 let peer = config
@@ -640,19 +653,21 @@ impl AuthenticatedCmd for CmdStaticRouteSet {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
 
-        match settings.routes.get_mut(PHY0) {
+        match settings
+            .routes
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             None => {
-                settings.routes.insert(
-                    PHY0.to_owned(),
-                    RouteConfig {
-                        routes: vec![Route {
-                            dst: self.destination.clone(),
-                            gw: self.nexthop,
-                            rib_priority: self.rib_priority,
-                            vid: self.vlan_id,
-                        }],
-                    },
-                );
+                settings.routes.push(RouteConfig {
+                    link_name: PHY0.parse().unwrap(),
+                    routes: vec![Route {
+                        dst: self.destination.clone(),
+                        gw: self.nexthop,
+                        rib_priority: self.rib_priority,
+                        vid: self.vlan_id,
+                    }],
+                });
             }
             Some(config) => {
                 let exists = config.routes.iter_mut().find(|x| {
@@ -730,7 +745,11 @@ impl AuthenticatedCmd for CmdStaticRouteDelete {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
 
-        match settings.routes.get_mut(PHY0) {
+        match settings
+            .routes
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             None => {}
             Some(config) => {
                 let before = config.routes.len();
@@ -828,17 +847,19 @@ impl AuthenticatedCmd for CmdAddrAdd {
             address_lot: self.lot.clone(),
             vlan_id: self.vlan,
         };
-        match settings.addresses.get_mut(PHY0) {
+        match settings
+            .addresses
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             Some(ac) => {
                 ac.addresses.push(addr);
             }
             None => {
-                settings.addresses.insert(
-                    String::from(PHY0),
-                    AddressConfig {
-                        addresses: vec![addr],
-                    },
-                );
+                settings.addresses.push(AddressConfig {
+                    link_name: PHY0.parse().unwrap(),
+                    addresses: vec![addr],
+                });
             }
         }
         client
@@ -881,7 +902,11 @@ impl AuthenticatedCmd for CmdAddrDel {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        if let Some(addrs) = settings.addresses.get_mut(PHY0) {
+        if let Some(addrs) = settings
+            .addresses
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             let before = addrs.addresses.len();
             addrs
                 .addresses
@@ -1101,15 +1126,20 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             remote_asn: self.remote_asn,
             vlan_id: self.vlan_id,
         };
-        match settings.bgp_peers.get_mut(PHY0) {
+        match settings
+            .bgp_peers
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             Some(conf) => match conf.peers.iter_mut().find(|x| x.addr == peer.addr) {
                 Some(p) => *p = peer,
                 None => conf.peers.push(peer),
             },
             None => {
-                settings
-                    .bgp_peers
-                    .insert(String::from(PHY0), BgpPeerConfig { peers: vec![peer] });
+                settings.bgp_peers.push(BgpPeerConfig {
+                    peers: vec![peer],
+                    link_name: PHY0.parse().unwrap(),
+                });
             }
         }
         client
@@ -1151,7 +1181,11 @@ impl AuthenticatedCmd for CmdBgpPeerDel {
     async fn run(&self, client: &Client) -> Result<()> {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
-        if let Some(config) = settings.bgp_peers.get_mut(PHY0) {
+        if let Some(config) = settings
+            .bgp_peers
+            .iter_mut()
+            .find(|link| *link.link_name == PHY0)
+        {
             let before = config.peers.len();
             config.peers.retain(|x| x.addr != self.addr);
             let after = config.peers.len();
@@ -1671,16 +1705,15 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         })
         .collect();
 
-    let mut addresses = HashMap::new();
-    addresses.insert(String::from(PHY0), AddressConfig { addresses: addrs });
+    let addresses = vec![AddressConfig {
+        link_name: PHY0.parse().unwrap(),
+        addresses: addrs,
+    }];
 
-    let mut bgp_peers = HashMap::new();
-    bgp_peers.insert(
-        String::from(PHY0),
-        BgpPeerConfig {
-            peers: current.bgp_peers,
-        },
-    );
+    let bgp_peers = vec![BgpPeerConfig {
+        link_name: PHY0.parse().unwrap(),
+        peers: current.bgp_peers,
+    }];
 
     let groups: Vec<NameOrId> = current
         .groups
@@ -1688,60 +1721,50 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         .map(|x| NameOrId::Id(x.port_settings_group_id))
         .collect();
 
-    let mut interfaces: HashMap<String, SwitchInterfaceConfigCreate> = current
+    let mut interfaces = current
         .interfaces
         .iter()
-        .map(|x| {
-            (
-                x.interface_name.clone(),
-                SwitchInterfaceConfigCreate {
-                    kind: match x.kind {
-                        SwitchInterfaceKind2::Primary => SwitchInterfaceKind::Primary,
-                        SwitchInterfaceKind2::Loopback => SwitchInterfaceKind::Loopback,
-                        SwitchInterfaceKind2::Vlan => {
-                            todo!("vlan interface outside vlan interfaces?")
-                        }
-                    },
-                    v6_enabled: x.v6_enabled,
-                },
-            )
+        .map(|x| SwitchInterfaceConfigCreate {
+            link_name: x.interface_name.parse().unwrap(),
+            kind: match x.kind {
+                SwitchInterfaceKind2::Primary => SwitchInterfaceKind::Primary,
+                SwitchInterfaceKind2::Loopback => SwitchInterfaceKind::Loopback,
+                SwitchInterfaceKind2::Vlan => {
+                    todo!("vlan interface outside vlan interfaces?")
+                }
+            },
+            v6_enabled: x.v6_enabled,
         })
-        .collect();
+        .collect::<Vec<_>>();
 
     for v in current.vlan_interfaces.iter() {
-        interfaces.insert(
-            format!("vlan-{}", v.vlan_id),
-            SwitchInterfaceConfigCreate {
-                kind: SwitchInterfaceKind::Vlan(v.vlan_id),
-                v6_enabled: false,
-            },
-        );
+        interfaces.push(SwitchInterfaceConfigCreate {
+            link_name: format!("vlan-{}", v.vlan_id).parse().unwrap(),
+            kind: SwitchInterfaceKind::Vlan(v.vlan_id),
+            v6_enabled: false,
+        });
     }
 
-    let links: HashMap<String, LinkConfigCreate> = current
+    let links = current
         .links
         .iter()
         .enumerate()
-        .map(|(i, x)| {
-            (
-                format!("phy{}", i),
-                LinkConfigCreate {
-                    autoneg: x.autoneg,
-                    fec: x.fec,
-                    mtu: x.mtu,
-                    speed: x.speed,
-                    lldp: LldpLinkConfigCreate {
-                        enabled: false,
-                        link_name: None,
-                        link_description: None,
-                        chassis_id: None,
-                        system_name: None,
-                        system_description: None,
-                        management_ip: None,
-                    },
-                    tx_eq: None,
-                },
-            )
+        .map(|(i, x)| LinkConfigCreate {
+            link_name: format!("phy{}", i).parse().unwrap(),
+            autoneg: x.autoneg,
+            fec: x.fec,
+            mtu: x.mtu,
+            speed: x.speed,
+            lldp: LldpLinkConfigCreate {
+                enabled: false,
+                link_name: None,
+                link_description: None,
+                chassis_id: None,
+                system_name: None,
+                system_description: None,
+                management_ip: None,
+            },
+            tx_eq: None,
         })
         .collect();
 
@@ -1754,6 +1777,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
     };
 
     let route_config = RouteConfig {
+        link_name: PHY0.parse().unwrap(),
         routes: current
             .routes
             .iter()
@@ -1769,8 +1793,7 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
             .collect(),
     };
 
-    let mut routes = HashMap::new();
-    routes.insert(String::from(PHY0), route_config);
+    let routes = vec![route_config];
 
     let create = SwitchPortSettingsCreate {
         addresses,
