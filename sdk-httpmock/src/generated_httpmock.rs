@@ -35,7 +35,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -128,7 +128,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -611,7 +611,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}$",
                 value.to_string()
@@ -673,7 +673,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}$",
                 value.to_string()
@@ -733,13 +733,29 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download$",
                 value.to_string()
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -753,7 +769,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -778,13 +794,29 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download$",
                 value.to_string()
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -798,7 +830,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -825,7 +857,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download/.*$",
                 value.to_string()
@@ -842,6 +874,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleDownloadFileThen(::httpmock::Then);
@@ -854,7 +902,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -881,7 +929,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/download/.*$",
                 value.to_string()
@@ -898,6 +946,22 @@ pub mod operations {
             .unwrap();
             Self(self.0.path_matches(re))
         }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
+        }
     }
 
     pub struct SupportBundleHeadFileThen(::httpmock::Then);
@@ -910,7 +974,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -932,13 +996,29 @@ pub mod operations {
             self.0
         }
 
-        pub fn support_bundle(self, value: &::uuid::Uuid) -> Self {
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
                 "^/experimental/v1/system/support-bundles/{}/index$",
                 value.to_string()
             ))
             .unwrap();
             Self(self.0.path_matches(re))
+        }
+
+        pub fn range<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.header("range", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.headers
+                        .as_ref()
+                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -952,7 +1032,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn default_response(self, status: u16, value: ::serde_json::Value) -> Self {
             Self(
                 self.0
                     .status(status)
@@ -986,7 +1066,7 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: serde_json::Value) -> Self {
+        pub fn body(self, value: ::serde_json::Value) -> Self {
             Self(self.0.json_body(value))
         }
     }
@@ -1025,13 +1105,2375 @@ pub mod operations {
             )
         }
 
-        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+        pub fn success(self, status: u16, value: ::serde_json::Value) -> Self {
             assert_eq!(status / 100u16, 2u16);
             Self(
                 self.0
                     .status(status)
                     .header("content-type", "application/json")
                     .json_body(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupListWhen(::httpmock::When);
+    impl AffinityGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/affinity-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupListThen(::httpmock::Then);
+    impl AffinityGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroupResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupCreateWhen(::httpmock::When);
+    impl AffinityGroupCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/affinity-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::AffinityGroupCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AffinityGroupCreateThen(::httpmock::Then);
+    impl AffinityGroupCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupViewWhen(::httpmock::When);
+    impl AffinityGroupViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/affinity-groups/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupViewThen(::httpmock::Then);
+    impl AffinityGroupViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupUpdateWhen(::httpmock::When);
+    impl AffinityGroupUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/affinity-groups/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::AffinityGroupUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AffinityGroupUpdateThen(::httpmock::Then);
+    impl AffinityGroupUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupDeleteWhen(::httpmock::When);
+    impl AffinityGroupDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/affinity-groups/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupDeleteThen(::httpmock::Then);
+    impl AffinityGroupDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupMemberListWhen(::httpmock::When);
+    impl AffinityGroupMemberListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/affinity-groups/[^/]*/members$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/{}/members$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupMemberListThen(::httpmock::Then);
+    impl AffinityGroupMemberListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroupMemberResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceViewWhen(::httpmock::When);
+    impl AffinityGroupMemberInstanceViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/affinity-groups/[^/]*/members/instance/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceViewThen(::httpmock::Then);
+    impl AffinityGroupMemberInstanceViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceAddWhen(::httpmock::When);
+    impl AffinityGroupMemberInstanceAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/affinity-groups/[^/]*/members/instance/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceAddThen(::httpmock::Then);
+    impl AffinityGroupMemberInstanceAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AffinityGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceDeleteWhen(::httpmock::When);
+    impl AffinityGroupMemberInstanceDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/affinity-groups/[^/]*/members/instance/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AffinityGroupMemberInstanceDeleteThen(::httpmock::Then);
+    impl AffinityGroupMemberInstanceDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertClassListWhen(::httpmock::When);
+    impl AlertClassListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-classes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn filter<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::AlertSubscription>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("filter", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "filter"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertClassListThen(::httpmock::Then);
+    impl AlertClassListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertClassResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverListWhen(::httpmock::When);
+    impl AlertReceiverListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertReceiverListThen(::httpmock::Then);
+    impl AlertReceiverListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertReceiverResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverViewWhen(::httpmock::When);
+    impl AlertReceiverViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alert-receivers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverViewThen(::httpmock::Then);
+    impl AlertReceiverViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertReceiver) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverDeleteWhen(::httpmock::When);
+    impl AlertReceiverDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alert-receivers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverDeleteThen(::httpmock::Then);
+    impl AlertReceiverDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertDeliveryListWhen(::httpmock::When);
+    impl AlertDeliveryListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/alert-receivers/[^/]*/deliveries$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/deliveries$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn delivered<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("delivered", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "delivered"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn failed<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("failed", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "failed"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn pending<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("pending", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "pending"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::TimeAndIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertDeliveryListThen(::httpmock::Then);
+    impl AlertDeliveryListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertDeliveryResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverProbeWhen(::httpmock::When);
+    impl AlertReceiverProbeWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/alert-receivers/[^/]*/probe$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/probe$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn resend<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("resend", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "resend"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AlertReceiverProbeThen(::httpmock::Then);
+    impl AlertReceiverProbeThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AlertProbeResult) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionAddWhen(::httpmock::When);
+    impl AlertReceiverSubscriptionAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/alert-receivers/[^/]*/subscriptions$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/subscriptions$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::AlertSubscriptionCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionAddThen(::httpmock::Then);
+    impl AlertReceiverSubscriptionAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AlertSubscriptionCreated) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionRemoveWhen(::httpmock::When);
+    impl AlertReceiverSubscriptionRemoveWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/alert-receivers/[^/]*/subscriptions/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/{}/subscriptions/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn subscription(self, value: &types::AlertSubscription) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/alert-receivers/.*/subscriptions/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct AlertReceiverSubscriptionRemoveThen(::httpmock::Then);
+    impl AlertReceiverSubscriptionRemoveThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AlertDeliveryResendWhen(::httpmock::When);
+    impl AlertDeliveryResendWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/alerts/[^/]*/resend$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn alert_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/alerts/{}/resend$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("receiver", value.to_string()))
+        }
+    }
+
+    pub struct AlertDeliveryResendThen(::httpmock::Then);
+    impl AlertDeliveryResendThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AlertDeliveryId) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupListWhen(::httpmock::When);
+    impl AntiAffinityGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/anti-affinity-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupListThen(::httpmock::Then);
+    impl AntiAffinityGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroupResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupCreateWhen(::httpmock::When);
+    impl AntiAffinityGroupCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/anti-affinity-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::AntiAffinityGroupCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AntiAffinityGroupCreateThen(::httpmock::Then);
+    impl AntiAffinityGroupCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AntiAffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupViewWhen(::httpmock::When);
+    impl AntiAffinityGroupViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/anti-affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/anti-affinity-groups/{}$", value.to_string()))
+                    .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupViewThen(::httpmock::Then);
+    impl AntiAffinityGroupViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupUpdateWhen(::httpmock::When);
+    impl AntiAffinityGroupUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/anti-affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/anti-affinity-groups/{}$", value.to_string()))
+                    .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::AntiAffinityGroupUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AntiAffinityGroupUpdateThen(::httpmock::Then);
+    impl AntiAffinityGroupUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupDeleteWhen(::httpmock::When);
+    impl AntiAffinityGroupDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/anti-affinity-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/anti-affinity-groups/{}$", value.to_string()))
+                    .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupDeleteThen(::httpmock::Then);
+    impl AntiAffinityGroupDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberListWhen(::httpmock::When);
+    impl AntiAffinityGroupMemberListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/anti-affinity-groups/[^/]*/members$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/{}/members$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberListThen(::httpmock::Then);
+    impl AntiAffinityGroupMemberListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroupMemberResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceViewWhen(::httpmock::When);
+    impl AntiAffinityGroupMemberInstanceViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/anti-affinity-groups/[^/]*/members/instance/[^/]*$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceViewThen(::httpmock::Then);
+    impl AntiAffinityGroupMemberInstanceViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceAddWhen(::httpmock::When);
+    impl AntiAffinityGroupMemberInstanceAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/anti-affinity-groups/[^/]*/members/instance/[^/]*$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceAddThen(::httpmock::Then);
+    impl AntiAffinityGroupMemberInstanceAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::AntiAffinityGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceDeleteWhen(::httpmock::When);
+    impl AntiAffinityGroupMemberInstanceDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::DELETE).path_matches(
+                    regex::Regex::new("^/v1/anti-affinity-groups/[^/]*/members/instance/[^/]*$")
+                        .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn anti_affinity_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/{}/members/instance/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/anti-affinity-groups/.*/members/instance/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct AntiAffinityGroupMemberInstanceDeleteThen(::httpmock::Then);
+    impl AntiAffinityGroupMemberInstanceDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
             )
         }
     }
@@ -3711,6 +6153,260 @@ pub mod operations {
 
         pub fn no_content(self) -> Self {
             Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InstanceAffinityGroupListWhen(::httpmock::When);
+    impl InstanceAffinityGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/instances/[^/]*/affinity-groups$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/affinity-groups$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceAffinityGroupListThen(::httpmock::Then);
+    impl InstanceAffinityGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AffinityGroupResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InstanceAntiAffinityGroupListWhen(::httpmock::When);
+    impl InstanceAntiAffinityGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/instances/[^/]*/anti-affinity-groups$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/anti-affinity-groups$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceAntiAffinityGroupListThen(::httpmock::Then);
+    impl InstanceAntiAffinityGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AntiAffinityGroupResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -10380,8 +13076,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn silo(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("silo", value.to_string()))
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -12735,10 +15443,10 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::BgpAnnounceSet) -> Self {
+        pub fn ok(self, value: &types::BgpAnnounceSet) -> Self {
             Self(
                 self.0
-                    .status(201u16)
+                    .status(200u16)
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
@@ -13447,7 +16155,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsResultsPage) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettingsIdentityResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13504,7 +16212,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SwitchPortSettingsView) -> Self {
+        pub fn created(self, value: &types::SwitchPortSettings) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -13630,7 +16338,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsView) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettings) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14788,6 +17496,120 @@ pub mod operations {
             Self(
                 self.0
                     .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct TargetReleaseViewWhen(::httpmock::When);
+    impl TargetReleaseViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/target-release$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct TargetReleaseViewThen(::httpmock::Then);
+    impl TargetReleaseViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::TargetRelease) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct TargetReleaseUpdateWhen(::httpmock::When);
+    impl TargetReleaseUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/update/target-release$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SetTargetReleaseParams) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct TargetReleaseUpdateThen(::httpmock::Then);
+    impl TargetReleaseUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::TargetRelease) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
@@ -16003,8 +18825,20 @@ pub mod operations {
             }
         }
 
-        pub fn router(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("router", value.to_string()))
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc<'a, T>(self, value: T) -> Self
@@ -17815,6 +20649,303 @@ pub mod operations {
             )
         }
     }
+
+    pub struct WebhookReceiverCreateWhen(::httpmock::When);
+    impl WebhookReceiverCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/webhook-receivers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::WebhookCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct WebhookReceiverCreateThen(::httpmock::Then);
+    impl WebhookReceiverCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::WebhookReceiver) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct WebhookReceiverUpdateWhen(::httpmock::When);
+    impl WebhookReceiverUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/webhook-receivers/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/webhook-receivers/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::WebhookReceiverUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct WebhookReceiverUpdateThen(::httpmock::Then);
+    impl WebhookReceiverUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct WebhookSecretsListWhen(::httpmock::When);
+    impl WebhookSecretsListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("receiver", value.to_string()))
+        }
+    }
+
+    pub struct WebhookSecretsListThen(::httpmock::Then);
+    impl WebhookSecretsListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::WebhookSecrets) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct WebhookSecretsAddWhen(::httpmock::When);
+    impl WebhookSecretsAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn receiver(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("receiver", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::WebhookSecretCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct WebhookSecretsAddThen(::httpmock::Then);
+    impl WebhookSecretsAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::WebhookSecret) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct WebhookSecretsDeleteWhen(::httpmock::When);
+    impl WebhookSecretsDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/webhook-secrets/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn secret_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/webhook-secrets/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct WebhookSecretsDeleteThen(::httpmock::Then);
+    impl WebhookSecretsDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
 }
 
 /// An extension trait for [`MockServer`](::httpmock::MockServer) that
@@ -17875,6 +21006,114 @@ pub trait MockServerExt {
     fn login_saml<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
+    fn affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupListWhen, operations::AffinityGroupListThen);
+    fn affinity_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupCreateWhen, operations::AffinityGroupCreateThen);
+    fn affinity_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupViewWhen, operations::AffinityGroupViewThen);
+    fn affinity_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupUpdateWhen, operations::AffinityGroupUpdateThen);
+    fn affinity_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupDeleteWhen, operations::AffinityGroupDeleteThen);
+    fn affinity_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupMemberListWhen, operations::AffinityGroupMemberListThen);
+    fn affinity_group_member_instance_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceViewWhen,
+            operations::AffinityGroupMemberInstanceViewThen,
+        );
+    fn affinity_group_member_instance_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceAddWhen,
+            operations::AffinityGroupMemberInstanceAddThen,
+        );
+    fn affinity_group_member_instance_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceDeleteWhen,
+            operations::AffinityGroupMemberInstanceDeleteThen,
+        );
+    fn alert_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertClassListWhen, operations::AlertClassListThen);
+    fn alert_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverListWhen, operations::AlertReceiverListThen);
+    fn alert_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverViewWhen, operations::AlertReceiverViewThen);
+    fn alert_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverDeleteWhen, operations::AlertReceiverDeleteThen);
+    fn alert_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryListWhen, operations::AlertDeliveryListThen);
+    fn alert_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverProbeWhen, operations::AlertReceiverProbeThen);
+    fn alert_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionAddWhen,
+            operations::AlertReceiverSubscriptionAddThen,
+        );
+    fn alert_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionRemoveWhen,
+            operations::AlertReceiverSubscriptionRemoveThen,
+        );
+    fn alert_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryResendWhen, operations::AlertDeliveryResendThen);
+    fn anti_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupListWhen, operations::AntiAffinityGroupListThen);
+    fn anti_affinity_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupCreateWhen, operations::AntiAffinityGroupCreateThen);
+    fn anti_affinity_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupViewWhen, operations::AntiAffinityGroupViewThen);
+    fn anti_affinity_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupUpdateWhen, operations::AntiAffinityGroupUpdateThen);
+    fn anti_affinity_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupDeleteWhen, operations::AntiAffinityGroupDeleteThen);
+    fn anti_affinity_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberListWhen,
+            operations::AntiAffinityGroupMemberListThen,
+        );
+    fn anti_affinity_group_member_instance_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceViewWhen,
+            operations::AntiAffinityGroupMemberInstanceViewThen,
+        );
+    fn anti_affinity_group_member_instance_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceAddWhen,
+            operations::AntiAffinityGroupMemberInstanceAddThen,
+        );
+    fn anti_affinity_group_member_instance_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceDeleteWhen,
+            operations::AntiAffinityGroupMemberInstanceDeleteThen,
+        );
     fn certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
@@ -17977,6 +21216,18 @@ pub trait MockServerExt {
     fn instance_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::InstanceDeleteWhen, operations::InstanceDeleteThen);
+    fn instance_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceAffinityGroupListWhen,
+            operations::InstanceAffinityGroupListThen,
+        );
+    fn instance_anti_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceAntiAffinityGroupListWhen,
+            operations::InstanceAntiAffinityGroupListThen,
+        );
     fn instance_disk_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::InstanceDiskListWhen, operations::InstanceDiskListThen);
@@ -18535,6 +21786,12 @@ pub trait MockServerExt {
             operations::SystemTimeseriesSchemaListWhen,
             operations::SystemTimeseriesSchemaListThen,
         );
+    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen);
+    fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen);
     fn silo_user_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
@@ -18634,6 +21891,21 @@ pub trait MockServerExt {
     fn vpc_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::VpcDeleteWhen, operations::VpcDeleteThen);
+    fn webhook_receiver_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookReceiverCreateWhen, operations::WebhookReceiverCreateThen);
+    fn webhook_receiver_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookReceiverUpdateWhen, operations::WebhookReceiverUpdateThen);
+    fn webhook_secrets_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsListWhen, operations::WebhookSecretsListThen);
+    fn webhook_secrets_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsAddWhen, operations::WebhookSecretsAddThen);
+    fn webhook_secrets_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsDeleteWhen, operations::WebhookSecretsDeleteThen);
 }
 
 impl MockServerExt for ::httpmock::MockServer {
@@ -18840,6 +22112,357 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::LoginSamlWhen::new(when),
                 operations::LoginSamlThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupListWhen, operations::AffinityGroupListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupListWhen::new(when),
+                operations::AffinityGroupListThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupCreateWhen, operations::AffinityGroupCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupCreateWhen::new(when),
+                operations::AffinityGroupCreateThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupViewWhen, operations::AffinityGroupViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupViewWhen::new(when),
+                operations::AffinityGroupViewThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupUpdateWhen, operations::AffinityGroupUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupUpdateWhen::new(when),
+                operations::AffinityGroupUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupDeleteWhen, operations::AffinityGroupDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupDeleteWhen::new(when),
+                operations::AffinityGroupDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AffinityGroupMemberListWhen, operations::AffinityGroupMemberListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupMemberListWhen::new(when),
+                operations::AffinityGroupMemberListThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_member_instance_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceViewWhen,
+            operations::AffinityGroupMemberInstanceViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupMemberInstanceViewWhen::new(when),
+                operations::AffinityGroupMemberInstanceViewThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_member_instance_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceAddWhen,
+            operations::AffinityGroupMemberInstanceAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupMemberInstanceAddWhen::new(when),
+                operations::AffinityGroupMemberInstanceAddThen::new(then),
+            )
+        })
+    }
+
+    fn affinity_group_member_instance_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AffinityGroupMemberInstanceDeleteWhen,
+            operations::AffinityGroupMemberInstanceDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AffinityGroupMemberInstanceDeleteWhen::new(when),
+                operations::AffinityGroupMemberInstanceDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn alert_class_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertClassListWhen, operations::AlertClassListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertClassListWhen::new(when),
+                operations::AlertClassListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverListWhen, operations::AlertReceiverListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverListWhen::new(when),
+                operations::AlertReceiverListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverViewWhen, operations::AlertReceiverViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverViewWhen::new(when),
+                operations::AlertReceiverViewThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverDeleteWhen, operations::AlertReceiverDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverDeleteWhen::new(when),
+                operations::AlertReceiverDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn alert_delivery_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryListWhen, operations::AlertDeliveryListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertDeliveryListWhen::new(when),
+                operations::AlertDeliveryListThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_probe<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertReceiverProbeWhen, operations::AlertReceiverProbeThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverProbeWhen::new(when),
+                operations::AlertReceiverProbeThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_subscription_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionAddWhen,
+            operations::AlertReceiverSubscriptionAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverSubscriptionAddWhen::new(when),
+                operations::AlertReceiverSubscriptionAddThen::new(then),
+            )
+        })
+    }
+
+    fn alert_receiver_subscription_remove<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AlertReceiverSubscriptionRemoveWhen,
+            operations::AlertReceiverSubscriptionRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertReceiverSubscriptionRemoveWhen::new(when),
+                operations::AlertReceiverSubscriptionRemoveThen::new(then),
+            )
+        })
+    }
+
+    fn alert_delivery_resend<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AlertDeliveryResendWhen, operations::AlertDeliveryResendThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AlertDeliveryResendWhen::new(when),
+                operations::AlertDeliveryResendThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupListWhen, operations::AntiAffinityGroupListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupListWhen::new(when),
+                operations::AntiAffinityGroupListThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupCreateWhen, operations::AntiAffinityGroupCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupCreateWhen::new(when),
+                operations::AntiAffinityGroupCreateThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupViewWhen, operations::AntiAffinityGroupViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupViewWhen::new(when),
+                operations::AntiAffinityGroupViewThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupUpdateWhen, operations::AntiAffinityGroupUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupUpdateWhen::new(when),
+                operations::AntiAffinityGroupUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AntiAffinityGroupDeleteWhen, operations::AntiAffinityGroupDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupDeleteWhen::new(when),
+                operations::AntiAffinityGroupDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberListWhen,
+            operations::AntiAffinityGroupMemberListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupMemberListWhen::new(when),
+                operations::AntiAffinityGroupMemberListThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_member_instance_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceViewWhen,
+            operations::AntiAffinityGroupMemberInstanceViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupMemberInstanceViewWhen::new(when),
+                operations::AntiAffinityGroupMemberInstanceViewThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_member_instance_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceAddWhen,
+            operations::AntiAffinityGroupMemberInstanceAddThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupMemberInstanceAddWhen::new(when),
+                operations::AntiAffinityGroupMemberInstanceAddThen::new(then),
+            )
+        })
+    }
+
+    fn anti_affinity_group_member_instance_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::AntiAffinityGroupMemberInstanceDeleteWhen,
+            operations::AntiAffinityGroupMemberInstanceDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AntiAffinityGroupMemberInstanceDeleteWhen::new(when),
+                operations::AntiAffinityGroupMemberInstanceDeleteThen::new(then),
             )
         })
     }
@@ -19239,6 +22862,36 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::InstanceDeleteWhen::new(when),
                 operations::InstanceDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn instance_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceAffinityGroupListWhen,
+            operations::InstanceAffinityGroupListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceAffinityGroupListWhen::new(when),
+                operations::InstanceAffinityGroupListThen::new(then),
+            )
+        })
+    }
+
+    fn instance_anti_affinity_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceAntiAffinityGroupListWhen,
+            operations::InstanceAntiAffinityGroupListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceAntiAffinityGroupListWhen::new(when),
+                operations::InstanceAntiAffinityGroupListThen::new(then),
             )
         })
     }
@@ -21052,6 +24705,30 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::TargetReleaseViewWhen::new(when),
+                operations::TargetReleaseViewThen::new(then),
+            )
+        })
+    }
+
+    fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::TargetReleaseUpdateWhen::new(when),
+                operations::TargetReleaseUpdateThen::new(then),
+            )
+        })
+    }
+
     fn silo_user_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen),
@@ -21435,6 +25112,66 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::VpcDeleteWhen::new(when),
                 operations::VpcDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn webhook_receiver_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookReceiverCreateWhen, operations::WebhookReceiverCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::WebhookReceiverCreateWhen::new(when),
+                operations::WebhookReceiverCreateThen::new(then),
+            )
+        })
+    }
+
+    fn webhook_receiver_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookReceiverUpdateWhen, operations::WebhookReceiverUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::WebhookReceiverUpdateWhen::new(when),
+                operations::WebhookReceiverUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn webhook_secrets_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsListWhen, operations::WebhookSecretsListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::WebhookSecretsListWhen::new(when),
+                operations::WebhookSecretsListThen::new(then),
+            )
+        })
+    }
+
+    fn webhook_secrets_add<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsAddWhen, operations::WebhookSecretsAddThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::WebhookSecretsAddWhen::new(when),
+                operations::WebhookSecretsAddThen::new(then),
+            )
+        })
+    }
+
+    fn webhook_secrets_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::WebhookSecretsDeleteWhen, operations::WebhookSecretsDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::WebhookSecretsDeleteWhen::new(when),
+                operations::WebhookSecretsDeleteThen::new(then),
             )
         })
     }

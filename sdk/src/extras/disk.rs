@@ -255,7 +255,7 @@ pub mod types {
         pub cleanup_started: AtomicBool,
     }
 
-    impl<'a> DiskImport<'a> {
+    impl DiskImport<'_> {
         pub async fn run_with_cancel(
             self,
             cancel_rx: oneshot::Receiver<()>,

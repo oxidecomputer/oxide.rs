@@ -2,14 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
 use clap::{Arg, ArgMatches, Command, CommandFactory, FromArgMatches};
-use log::LevelFilter;
+use tracing_subscriber::EnvFilter;
 
 use crate::{
     context::Context,
@@ -104,7 +104,7 @@ pub struct NewCli<'a> {
     runner: CommandBuilder<'a>,
 }
 
-impl<'a> Default for NewCli<'a> {
+impl Default for NewCli<'_> {
     fn default() -> Self {
         let mut parser = OxideCli::command().name("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
@@ -140,13 +140,35 @@ impl<'a> Default for NewCli<'a> {
                         clap::Arg::new("metadata-url")
                             .long("metadata-url")
                             .value_name("url")
-                            .value_parser(clap::value_parser!(String)),
+                            .value_parser(clap::value_parser!(String))
+                            .help("the URL of an identity provider metadata descriptor"),
                     )
                     .arg(
                         clap::Arg::new("metadata-value")
                             .long("metadata-value")
-                            .value_name("xml")
-                            .value_parser(clap::value_parser!(String)),
+                            .value_name("xml-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to an XML file containing an identity provider metadata descriptor"),
+                    )
+                    .arg(
+                        clap::Arg::new("private-key")
+                            .long("private-key")
+                            .value_name("key-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to the request signing RSA private key in PKCS#1 DER format"),
+                    )
+                    .arg(
+                        clap::Arg::new("public-cert")
+                            .long("public-cert")
+                            .value_name("cert-file")
+                            .value_parser(clap::value_parser!(PathBuf))
+                            .help("path to the request signing public certificate in DER format"),
+                    )
+                    .group(
+                        clap::ArgGroup::new("signing_keypair")
+                            .args(["private-key", "public-cert"])
+                            .requires_all(["private-key", "public-cert"])
+                            .multiple(true),
                     )
                     .group(
                         clap::ArgGroup::new("idp_metadata_source")
@@ -229,11 +251,20 @@ impl<'a> NewCli<'a> {
             timeout,
         } = OxideCli::from_arg_matches(&matches).expect("failed to parse OxideCli from args");
 
-        let mut log_builder = env_logger::builder();
-        if debug {
-            log_builder.filter_level(LevelFilter::Debug);
-        }
-        log_builder.init();
+        let env_filter = if debug {
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("oxide=debug"))
+        } else {
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
+        };
+
+        tracing_subscriber::fmt()
+            .with_env_filter(env_filter)
+            .with_writer(std::io::stderr)
+            .json()
+            .flatten_event(true)
+            .with_current_span(false)
+            .with_span_list(false)
+            .init();
 
         let mut client_config = ClientConfig::default();
 
@@ -262,6 +293,22 @@ impl<'a> NewCli<'a> {
         client_config = client_config.with_insecure(insecure);
         if let Some(timeout) = timeout {
             client_config = client_config.with_timeout(timeout);
+        }
+
+        // Set longer timeouts for potentially slow support-bundle subcommands.
+        if matches.subcommand_matches("bundle").is_some_and(|bundle| {
+            matches!(bundle.subcommand_name(), Some("download") | Some("inspect"))
+        }) {
+            // Keep a reasonable timeout for initial connection.
+            client_config = client_config.with_connect_timeout(15);
+
+            // Bundles may be tens of gigabytes, set a one hour timeout by default.
+            if timeout.is_none() {
+                client_config = client_config.with_timeout(60 * 60);
+            }
+
+            // Kill the connection if we stop receiving data before the connection timeout.
+            client_config = client_config.with_read_timeout(30);
         }
 
         let ctx = Context::new(client_config)?;
@@ -344,7 +391,43 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceExternalIpList => Some("instance external-ip list"),
         CliCommand::InstanceEphemeralIpAttach => Some("instance external-ip attach-ephemeral"),
         CliCommand::InstanceEphemeralIpDetach => Some("instance external-ip detach-ephemeral"),
-        CliCommand::InstanceSshPublicKeyList => Some("instance ssh-key list"),
+
+        // Properties of the instance that--for one reason or another--are not
+        // available in the default "view" object.
+        CliCommand::InstanceSshPublicKeyList => Some("instance property ssh-key"),
+        CliCommand::InstanceAffinityGroupList => Some("instance property affinity"),
+        CliCommand::InstanceAntiAffinityGroupList => Some("instance property anti-affinity"),
+
+        CliCommand::AffinityGroupList => Some("experimental affinity list"),
+        CliCommand::AffinityGroupCreate => Some("experimental affinity create"),
+        CliCommand::AffinityGroupView => Some("experimental affinity view"),
+        CliCommand::AffinityGroupUpdate => Some("experimental affinity update"),
+        CliCommand::AffinityGroupDelete => Some("experimental affinity delete"),
+        CliCommand::AffinityGroupMemberList => Some("experimental affinity member list"),
+        CliCommand::AffinityGroupMemberInstanceView => {
+            Some("experimental affinity member view-instance")
+        }
+        CliCommand::AffinityGroupMemberInstanceAdd => {
+            Some("experimental affinity member add-instance")
+        }
+        CliCommand::AffinityGroupMemberInstanceDelete => {
+            Some("experimental affinity member remove-instance")
+        }
+        CliCommand::AntiAffinityGroupList => Some("instance anti-affinity list"),
+        CliCommand::AntiAffinityGroupCreate => Some("instance anti-affinity create"),
+        CliCommand::AntiAffinityGroupView => Some("instance anti-affinity view"),
+        CliCommand::AntiAffinityGroupUpdate => Some("instance anti-affinity update"),
+        CliCommand::AntiAffinityGroupDelete => Some("instance anti-affinity delete"),
+        CliCommand::AntiAffinityGroupMemberList => Some("instance anti-affinity member list"),
+        CliCommand::AntiAffinityGroupMemberInstanceView => {
+            Some("instance anti-affinity member view-instance")
+        }
+        CliCommand::AntiAffinityGroupMemberInstanceAdd => {
+            Some("instance anti-affinity member add-instance")
+        }
+        CliCommand::AntiAffinityGroupMemberInstanceDelete => {
+            Some("instance anti-affinity member remove-instance")
+        }
 
         CliCommand::ProjectList => Some("project list"),
         CliCommand::ProjectCreate => Some("project create"),
@@ -579,6 +662,24 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpUpdate => Some("floating-ip update"),
         CliCommand::FloatingIpView => Some("floating-ip view"),
 
+        // Alert subcommands
+        CliCommand::AlertClassList => Some("alert class list"),
+        CliCommand::AlertReceiverList => Some("alert receiver list"),
+        CliCommand::AlertDeliveryList => Some("alert receiver log"),
+        CliCommand::AlertReceiverProbe => Some("alert receiver probe"),
+        CliCommand::AlertDeliveryResend => Some("alert receiver resend"),
+        CliCommand::AlertReceiverView => Some("alert receiver view"),
+        CliCommand::AlertReceiverDelete => Some("alert receiver delete"),
+        CliCommand::AlertReceiverSubscriptionAdd => Some("alert receiver subscribe"),
+        CliCommand::AlertReceiverSubscriptionRemove => Some("alert receiver unsubscribe"),
+
+        // Webhook specific subcommands (including secret management)
+        CliCommand::WebhookReceiverCreate => Some("alert receiver webhook create"),
+        CliCommand::WebhookReceiverUpdate => Some("alert receiver webhook update"),
+        CliCommand::WebhookSecretsList => Some("alert receiver webhook secret list"),
+        CliCommand::WebhookSecretsAdd => Some("alert receiver webhook secret add"),
+        CliCommand::WebhookSecretsDelete => Some("alert receiver webhook secret delete"),
+
         CliCommand::Ping => Some("ping"),
 
         CliCommand::ProbeCreate => Some("experimental probe create"),
@@ -593,16 +694,22 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("experimental system timeseries schema list")
         }
 
-        // Support bundles are not yet implemented.
-        CliCommand::SupportBundleList
-        | CliCommand::SupportBundleCreate
-        | CliCommand::SupportBundleView
-        | CliCommand::SupportBundleDelete
-        | CliCommand::SupportBundleDownload
-        | CliCommand::SupportBundleHead
+        // Support bundle commands
+        CliCommand::SupportBundleList => Some("bundle list"),
+        CliCommand::SupportBundleCreate => Some("bundle create"),
+        CliCommand::SupportBundleView => Some("bundle view"),
+        CliCommand::SupportBundleDelete => Some("bundle delete"),
+        // Implemented as custom command to specify output file
+        CliCommand::SupportBundleDownload => None,
+
+        // Support bundles are not fully implemented.
+        CliCommand::SupportBundleHead
         | CliCommand::SupportBundleDownloadFile
         | CliCommand::SupportBundleHeadFile
         | CliCommand::SupportBundleIndex => None,
+
+        // Update is not fully implemented.
+        CliCommand::TargetReleaseView | CliCommand::TargetReleaseUpdate => None,
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken

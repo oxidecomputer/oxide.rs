@@ -2,22 +2,26 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 #![cfg_attr(not(test), deny(clippy::print_stdout, clippy::print_stderr))]
 
 use std::io;
 use std::net::IpAddr;
+use std::path::PathBuf;
 use std::sync::atomic::AtomicBool;
 
-use anyhow::Result;
+use anyhow::{Context as _, Result};
 use async_trait::async_trait;
+use base64::Engine;
 use cli_builder::NewCli;
 use context::Context;
 use generated_cli::CliConfig;
 use oxide::{
-    types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range},
+    types::{
+        AllowedSourceIps, DerEncodedKeyPair, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range,
+    },
     Client,
 };
 use url::Url;
@@ -30,6 +34,7 @@ mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
 mod cmd_net;
+mod cmd_support_bundle;
 mod cmd_timeseries;
 mod context;
 
@@ -94,6 +99,8 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_net::CmdBgpAuth>("system networking bgp auth")
         .add_custom::<cmd_net::CmdBgpLocalPref>("system networking bgp pref")
         .add_custom::<cmd_net::CmdStaticRoute>("system networking route")
+        .add_custom::<cmd_support_bundle::CmdDownload>("bundle download")
+        .add_custom::<cmd_support_bundle::CmdInspect>("bundle inspect")
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -246,16 +253,43 @@ impl CliConfig for OxideOverride {
                 *request = request.to_owned().body_map(|body| {
                     body.idp_metadata_source(IdpMetadataSource::Url { url: value.clone() })
                 });
+                Ok::<_, anyhow::Error>(())
             }
             Some("metadata-value") => {
-                let value = matches.get_one::<String>("metadata-value").unwrap();
+                let xml_path = matches.get_one::<PathBuf>("metadata-value").unwrap();
+                let xml_bytes = std::fs::read(xml_path).with_context(|| {
+                    format!("failed to read metadata XML file {}", xml_path.display())
+                })?;
+                let encoded_xml = base64::engine::general_purpose::STANDARD.encode(xml_bytes);
                 *request = request.to_owned().body_map(|body| {
                     body.idp_metadata_source(IdpMetadataSource::Base64EncodedXml {
-                        data: value.clone(),
+                        data: encoded_xml,
                     })
                 });
+                Ok(())
             }
             _ => unreachable!("invalid value for idp_metadata_source group"),
+        }?;
+
+        if matches.get_one::<clap::Id>("signing_keypair").is_some() {
+            let privkey_path = matches.get_one::<PathBuf>("private-key").unwrap();
+            let privkey_bytes = std::fs::read(privkey_path).with_context(|| {
+                format!("failed to read private key file {}", privkey_path.display())
+            })?;
+            let encoded_privkey = base64::engine::general_purpose::STANDARD.encode(&privkey_bytes);
+
+            let cert_path = matches.get_one::<PathBuf>("public-cert").unwrap();
+            let cert_bytes = std::fs::read(cert_path).with_context(|| {
+                format!("failed to read public cert file {}", cert_path.display())
+            })?;
+            let encoded_cert = base64::engine::general_purpose::STANDARD.encode(&cert_bytes);
+
+            *request = request.to_owned().body_map(|body| {
+                body.signing_keypair(DerEncodedKeyPair {
+                    private_key: encoded_privkey,
+                    public_cert: encoded_cert,
+                })
+            });
         }
         Ok(())
     }

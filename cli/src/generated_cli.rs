@@ -30,6 +30,47 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SupportBundleHeadFile => Self::cli_support_bundle_head_file(),
             CliCommand::SupportBundleIndex => Self::cli_support_bundle_index(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
+            CliCommand::AffinityGroupList => Self::cli_affinity_group_list(),
+            CliCommand::AffinityGroupCreate => Self::cli_affinity_group_create(),
+            CliCommand::AffinityGroupView => Self::cli_affinity_group_view(),
+            CliCommand::AffinityGroupUpdate => Self::cli_affinity_group_update(),
+            CliCommand::AffinityGroupDelete => Self::cli_affinity_group_delete(),
+            CliCommand::AffinityGroupMemberList => Self::cli_affinity_group_member_list(),
+            CliCommand::AffinityGroupMemberInstanceView => {
+                Self::cli_affinity_group_member_instance_view()
+            }
+            CliCommand::AffinityGroupMemberInstanceAdd => {
+                Self::cli_affinity_group_member_instance_add()
+            }
+            CliCommand::AffinityGroupMemberInstanceDelete => {
+                Self::cli_affinity_group_member_instance_delete()
+            }
+            CliCommand::AlertClassList => Self::cli_alert_class_list(),
+            CliCommand::AlertReceiverList => Self::cli_alert_receiver_list(),
+            CliCommand::AlertReceiverView => Self::cli_alert_receiver_view(),
+            CliCommand::AlertReceiverDelete => Self::cli_alert_receiver_delete(),
+            CliCommand::AlertDeliveryList => Self::cli_alert_delivery_list(),
+            CliCommand::AlertReceiverProbe => Self::cli_alert_receiver_probe(),
+            CliCommand::AlertReceiverSubscriptionAdd => Self::cli_alert_receiver_subscription_add(),
+            CliCommand::AlertReceiverSubscriptionRemove => {
+                Self::cli_alert_receiver_subscription_remove()
+            }
+            CliCommand::AlertDeliveryResend => Self::cli_alert_delivery_resend(),
+            CliCommand::AntiAffinityGroupList => Self::cli_anti_affinity_group_list(),
+            CliCommand::AntiAffinityGroupCreate => Self::cli_anti_affinity_group_create(),
+            CliCommand::AntiAffinityGroupView => Self::cli_anti_affinity_group_view(),
+            CliCommand::AntiAffinityGroupUpdate => Self::cli_anti_affinity_group_update(),
+            CliCommand::AntiAffinityGroupDelete => Self::cli_anti_affinity_group_delete(),
+            CliCommand::AntiAffinityGroupMemberList => Self::cli_anti_affinity_group_member_list(),
+            CliCommand::AntiAffinityGroupMemberInstanceView => {
+                Self::cli_anti_affinity_group_member_instance_view()
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceAdd => {
+                Self::cli_anti_affinity_group_member_instance_add()
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceDelete => {
+                Self::cli_anti_affinity_group_member_instance_delete()
+            }
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
             CliCommand::CertificateView => Self::cli_certificate_view(),
@@ -63,6 +104,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceView => Self::cli_instance_view(),
             CliCommand::InstanceUpdate => Self::cli_instance_update(),
             CliCommand::InstanceDelete => Self::cli_instance_delete(),
+            CliCommand::InstanceAffinityGroupList => Self::cli_instance_affinity_group_list(),
+            CliCommand::InstanceAntiAffinityGroupList => {
+                Self::cli_instance_anti_affinity_group_list()
+            }
             CliCommand::InstanceDiskList => Self::cli_instance_disk_list(),
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
             CliCommand::InstanceDiskDetach => Self::cli_instance_disk_detach(),
@@ -250,6 +295,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
+            CliCommand::TargetReleaseView => Self::cli_target_release_view(),
+            CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -284,6 +331,11 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => Self::cli_vpc_view(),
             CliCommand::VpcUpdate => Self::cli_vpc_update(),
             CliCommand::VpcDelete => Self::cli_vpc_delete(),
+            CliCommand::WebhookReceiverCreate => Self::cli_webhook_receiver_create(),
+            CliCommand::WebhookReceiverUpdate => Self::cli_webhook_receiver_update(),
+            CliCommand::WebhookSecretsList => Self::cli_webhook_secrets_list(),
+            CliCommand::WebhookSecretsAdd => Self::cli_webhook_secrets_add(),
+            CliCommand::WebhookSecretsDelete => Self::cli_webhook_secrets_delete(),
         }
     }
 
@@ -538,8 +590,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -550,8 +602,8 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_support_bundle_delete() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required(true)
                     .help("ID of the support bundle"),
@@ -564,77 +616,23 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_download() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the contents of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the contents of a support bundle")
     }
 
     pub fn cli_support_bundle_head() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the metadata of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a support bundle")
     }
 
     pub fn cli_support_bundle_download_file() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("file")
-                    .long("file")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(true)
-                    .help("The file within the bundle to download"),
-            )
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download a file within a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download a file within a support bundle")
     }
 
     pub fn cli_support_bundle_head_file() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("file")
-                    .long("file")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(true)
-                    .help("The file within the bundle to download"),
-            )
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the metadata of a file within the support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("file") . long ("file") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (true) . help ("The file within the bundle to download")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the metadata of a file within the support bundle")
     }
 
     pub fn cli_support_bundle_index() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("support-bundle")
-                    .long("support-bundle")
-                    .value_parser(::clap::value_parser!(::uuid::Uuid))
-                    .required(true)
-                    .help("ID of the support bundle"),
-            )
-            .about("Download the index of a support bundle")
+        :: clap :: Command :: new ("") . arg (:: clap :: Arg :: new ("bundle-id") . long ("bundle-id") . value_parser (:: clap :: value_parser ! (:: uuid :: Uuid)) . required (true) . help ("ID of the support bundle")) . arg (:: clap :: Arg :: new ("range") . long ("range") . value_parser (:: clap :: value_parser ! (:: std :: string :: String)) . required (false) . help ("A request to access a portion of the resource, such as `bytes=0-499`\n\nSee: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Range>")) . about ("Download the index of a support bundle")
     }
 
     pub fn cli_login_saml() -> ::clap::Command {
@@ -652,6 +650,841 @@ impl<T: CliConfig> Cli<T> {
                     .required(true),
             )
             .about("Authenticate a user via SAML")
+    }
+
+    pub fn cli_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List affinity groups")
+    }
+
+    pub fn cli_affinity_group_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("failure-domain")
+                    .long("failure-domain")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::FailureDomain::Sled.to_string()
+                        ]),
+                        |s| types::FailureDomain::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("policy")
+                    .long("policy")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::AffinityPolicy::Allow.to_string(),
+                            types::AffinityPolicy::Fail.to_string(),
+                        ]),
+                        |s| types::AffinityPolicy::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create affinity group")
+    }
+
+    pub fn cli_affinity_group_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch affinity group")
+    }
+
+    pub fn cli_affinity_group_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update affinity group")
+    }
+
+    pub fn cli_affinity_group_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete affinity group")
+    }
+
+    pub fn cli_affinity_group_member_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List affinity group members")
+    }
+
+    pub fn cli_affinity_group_member_instance_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch affinity group member")
+    }
+
+    pub fn cli_affinity_group_member_instance_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Add member to affinity group")
+    }
+
+    pub fn cli_affinity_group_member_instance_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("affinity-group")
+                    .long("affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Remove member from affinity group")
+    }
+
+    pub fn cli_alert_class_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("filter")
+                    .long("filter")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(false)
+                    .help(
+                        "An optional glob pattern for filtering alert class names.\n\nIf \
+                         provided, only alert classes which match this glob pattern will be \
+                         included in the response.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List alert classes")
+    }
+
+    pub fn cli_alert_receiver_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List alert receivers")
+    }
+
+    pub fn cli_alert_receiver_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Fetch alert receiver")
+    }
+
+    pub fn cli_alert_receiver_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Delete alert receiver")
+    }
+
+    pub fn cli_alert_delivery_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("delivered")
+                    .long("delivered")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have succeeded.\n\nIf any of the \
+                         \"pending\", \"failed\", or \"delivered\" query parameters are set to \
+                         true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("failed")
+                    .long("failed")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which have failed permanently.\n\nIf any of \
+                         the \"pending\", \"failed\", or \"delivered\" query parameters are set \
+                         to true, only deliveries matching those state(s) will be included in the \
+                         response. If NO state filter parameters are set, then all deliveries are \
+                         included.\n\nA delivery fails permanently when the retry limit of three \
+                         total attempts is reached without a successful delivery.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("pending")
+                    .long("pending")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, include deliveries which are currently in progress.\n\nIf any \
+                         of the \"pending\", \"failed\", or \"delivered\" query parameters are \
+                         set to true, only deliveries matching those state(s) will be included in \
+                         the response. If NO state filter parameters are set, then all deliveries \
+                         are included.\n\nA delivery is considered \"pending\" if it has not yet \
+                         been sent at all, or if a delivery attempt has failed but the delivery \
+                         has retries remaining.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::Ascending.to_string(),
+                            types::TimeAndIdSortMode::Descending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List delivery attempts to alert receiver")
+            .long_about(
+                "Optional query parameters to this endpoint may be used to filter deliveries by \
+                 state. If none of the `failed`, `pending` or `delivered` query parameters are \
+                 present, all deliveries are returned. If one or more of these parameters are \
+                 provided, only those which are set to \"true\" are included in the response.",
+            )
+    }
+
+    pub fn cli_alert_receiver_probe() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("resend")
+                    .long("resend")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "If true, resend all events that have not been delivered successfully if \
+                         the probe request succeeds.",
+                    ),
+            )
+            .about("Send liveness probe to alert receiver")
+            .long_about(
+                "This endpoint synchronously sends a liveness probe to the selected alert \
+                 receiver. The response message describes the outcome of the probe: either the \
+                 successful response (as appropriate), or indication of why the probe \
+                 failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. \
+                 Details relating to the status of the probe depend on the alert delivery \
+                 mechanism, and are included in the `AlertDeliveryAttempts` model. For example, \
+                 webhook receiver liveness probes include the HTTP status code returned by the \
+                 receiver endpoint.\n\nNote that the response status is `200 OK` as long as a \
+                 probe request was able to be sent to the receiver endpoint. If an HTTP-based \
+                 receiver, such as a webhook, responds to the another status code, including an \
+                 error, this will be indicated by the response body, *not* the status of the \
+                 response.\n\nThe `resend` query parameter can be used to request re-delivery of \
+                 failed events if the liveness probe succeeds. If it is set to true and the \
+                 liveness probe succeeds, any alerts for which delivery to this receiver has \
+                 failed will be queued for re-delivery.",
+            )
+    }
+
+    pub fn cli_alert_receiver_subscription_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required_unless_present("json-body")
+                    .help("The event class pattern to subscribe to."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add alert receiver subscription")
+    }
+
+    pub fn cli_alert_receiver_subscription_remove() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("subscription")
+                    .long("subscription")
+                    .value_parser(::clap::value_parser!(types::AlertSubscription))
+                    .required(true)
+                    .help("The event class subscription itself."),
+            )
+            .about("Remove alert receiver subscription")
+    }
+
+    pub fn cli_alert_delivery_resend() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("alert-id")
+                    .long("alert-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("UUID of the alert"),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("Request re-delivery of alert")
+    }
+
+    pub fn cli_anti_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List anti-affinity groups")
+    }
+
+    pub fn cli_anti_affinity_group_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("failure-domain")
+                    .long("failure-domain")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::FailureDomain::Sled.to_string()
+                        ]),
+                        |s| types::FailureDomain::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("policy")
+                    .long("policy")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::AffinityPolicy::Allow.to_string(),
+                            types::AffinityPolicy::Fail.to_string(),
+                        ]),
+                        |s| types::AffinityPolicy::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create anti-affinity group")
+    }
+
+    pub fn cli_anti_affinity_group_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the anti affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch anti-affinity group")
+    }
+
+    pub fn cli_anti_affinity_group_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the anti affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update anti-affinity group")
+    }
+
+    pub fn cli_anti_affinity_group_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the anti affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete anti-affinity group")
+    }
+
+    pub fn cli_anti_affinity_group_member_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the anti affinity group"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List anti-affinity group members")
+    }
+
+    pub fn cli_anti_affinity_group_member_instance_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch anti-affinity group member")
+    }
+
+    pub fn cli_anti_affinity_group_member_instance_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Add member to anti-affinity group")
+    }
+
+    pub fn cli_anti_affinity_group_member_instance_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("anti-affinity-group")
+                    .long("anti-affinity-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Remove member from anti-affinity group")
     }
 
     pub fn cli_certificate_list() -> ::clap::Command {
@@ -1796,6 +2629,84 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete instance")
     }
 
+    pub fn cli_instance_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List affinity groups containing instance")
+    }
+
+    pub fn cli_instance_anti_affinity_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List anti-affinity groups containing instance")
+    }
+
     pub fn cli_instance_disk_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -1948,7 +2859,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("pool")
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("Name or ID of the IP pool used to allocate an address"),
+                    .help(
+                        "Name or ID of the IP pool used to allocate an address. If unspecified, \
+                         the default IP pool will be used.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -3847,7 +4761,7 @@ impl<T: CliConfig> Cli<T> {
             .arg(
                 ::clap::Arg::new("management-ip")
                     .long("management-ip")
-                    .value_parser(::clap::value_parser!(types::IpNet))
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
                     .required(false)
                     .help("The LLDP management IP TLV."),
             )
@@ -4066,7 +4980,8 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List a silo's IdP's name")
+            .about("List identity providers for silo")
+            .long_about("List identity providers for silo by silo name or ID.")
     }
 
     pub fn cli_local_idp_user_create() -> ::clap::Command {
@@ -4243,7 +5158,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create SAML IdP")
+            .about("Create SAML identity provider")
     }
 
     pub fn cli_saml_identity_provider_view() -> ::clap::Command {
@@ -4259,10 +5174,10 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("silo")
                     .long("silo")
                     .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
+                    .required(false)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch SAML IdP")
+            .about("Fetch SAML identity provider")
     }
 
     pub fn cli_ip_pool_list() -> ::clap::Command {
@@ -5778,6 +6693,50 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
+    pub fn cli_target_release_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .about("Get the current target release of the rack's system software")
+            .long_about(
+                "This may not correspond to the actual software running on the rack at the time \
+                 of request; it is instead the release that the rack reconfigurator should be \
+                 moving towards as a goal state. After some number of planning and execution \
+                 phases, the software running on the rack should eventually correspond to the \
+                 release described here.",
+            )
+    }
+
+    pub fn cli_target_release_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("system-version")
+                    .long("system-version")
+                    .value_parser(::clap::value_parser!(
+                        types::SetTargetReleaseParamsSystemVersion
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Version of the system software to make the target release."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set the current target release of the rack's system software")
+            .long_about(
+                "The rack reconfigurator will treat the software specified here as a goal state \
+                 for the rack's software, and attempt to asynchronously update to that release.",
+            )
+    }
+
     pub fn cli_silo_user_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -6012,7 +6971,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(::clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -6165,7 +7124,7 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("router")
                     .long("router")
                     .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
+                    .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
@@ -6946,6 +7905,151 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete VPC")
     }
 
+    pub fn cli_webhook_receiver_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("endpoint")
+                    .long("endpoint")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("The URL that webhook notification requests should be sent to"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create webhook receiver")
+    }
+
+    pub fn cli_webhook_receiver_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("endpoint")
+                    .long("endpoint")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("The URL that webhook notification requests should be sent to"),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update webhook receiver")
+            .long_about(
+                "Note that receiver secrets are NOT added or removed using this endpoint. \
+                 Instead, use the `/v1/webhooks/{secrets}/?receiver={receiver}` endpoint to add \
+                 and remove secrets.",
+            )
+    }
+
+    pub fn cli_webhook_secrets_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .about("List webhook receiver secret IDs")
+    }
+
+    pub fn cli_webhook_secrets_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("receiver")
+                    .long("receiver")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("The name or ID of the webhook receiver."),
+            )
+            .arg(
+                ::clap::Arg::new("secret")
+                    .long("secret")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body")
+                    .help("The value of the shared secret key."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add secret to webhook receiver")
+    }
+
+    pub fn cli_webhook_secrets_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("secret-id")
+                    .long("secret-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the secret."),
+            )
+            .about("Remove secret from webhook receiver")
+    }
+
     pub async fn execute(
         &self,
         cmd: CliCommand,
@@ -6975,6 +8079,70 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SupportBundleIndex => self.execute_support_bundle_index(matches).await,
             CliCommand::LoginSaml => self.execute_login_saml(matches).await,
+            CliCommand::AffinityGroupList => self.execute_affinity_group_list(matches).await,
+            CliCommand::AffinityGroupCreate => self.execute_affinity_group_create(matches).await,
+            CliCommand::AffinityGroupView => self.execute_affinity_group_view(matches).await,
+            CliCommand::AffinityGroupUpdate => self.execute_affinity_group_update(matches).await,
+            CliCommand::AffinityGroupDelete => self.execute_affinity_group_delete(matches).await,
+            CliCommand::AffinityGroupMemberList => {
+                self.execute_affinity_group_member_list(matches).await
+            }
+            CliCommand::AffinityGroupMemberInstanceView => {
+                self.execute_affinity_group_member_instance_view(matches)
+                    .await
+            }
+            CliCommand::AffinityGroupMemberInstanceAdd => {
+                self.execute_affinity_group_member_instance_add(matches)
+                    .await
+            }
+            CliCommand::AffinityGroupMemberInstanceDelete => {
+                self.execute_affinity_group_member_instance_delete(matches)
+                    .await
+            }
+            CliCommand::AlertClassList => self.execute_alert_class_list(matches).await,
+            CliCommand::AlertReceiverList => self.execute_alert_receiver_list(matches).await,
+            CliCommand::AlertReceiverView => self.execute_alert_receiver_view(matches).await,
+            CliCommand::AlertReceiverDelete => self.execute_alert_receiver_delete(matches).await,
+            CliCommand::AlertDeliveryList => self.execute_alert_delivery_list(matches).await,
+            CliCommand::AlertReceiverProbe => self.execute_alert_receiver_probe(matches).await,
+            CliCommand::AlertReceiverSubscriptionAdd => {
+                self.execute_alert_receiver_subscription_add(matches).await
+            }
+            CliCommand::AlertReceiverSubscriptionRemove => {
+                self.execute_alert_receiver_subscription_remove(matches)
+                    .await
+            }
+            CliCommand::AlertDeliveryResend => self.execute_alert_delivery_resend(matches).await,
+            CliCommand::AntiAffinityGroupList => {
+                self.execute_anti_affinity_group_list(matches).await
+            }
+            CliCommand::AntiAffinityGroupCreate => {
+                self.execute_anti_affinity_group_create(matches).await
+            }
+            CliCommand::AntiAffinityGroupView => {
+                self.execute_anti_affinity_group_view(matches).await
+            }
+            CliCommand::AntiAffinityGroupUpdate => {
+                self.execute_anti_affinity_group_update(matches).await
+            }
+            CliCommand::AntiAffinityGroupDelete => {
+                self.execute_anti_affinity_group_delete(matches).await
+            }
+            CliCommand::AntiAffinityGroupMemberList => {
+                self.execute_anti_affinity_group_member_list(matches).await
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceView => {
+                self.execute_anti_affinity_group_member_instance_view(matches)
+                    .await
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceAdd => {
+                self.execute_anti_affinity_group_member_instance_add(matches)
+                    .await
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceDelete => {
+                self.execute_anti_affinity_group_member_instance_delete(matches)
+                    .await
+            }
             CliCommand::CertificateList => self.execute_certificate_list(matches).await,
             CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
             CliCommand::CertificateView => self.execute_certificate_view(matches).await,
@@ -7012,6 +8180,13 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceView => self.execute_instance_view(matches).await,
             CliCommand::InstanceUpdate => self.execute_instance_update(matches).await,
             CliCommand::InstanceDelete => self.execute_instance_delete(matches).await,
+            CliCommand::InstanceAffinityGroupList => {
+                self.execute_instance_affinity_group_list(matches).await
+            }
+            CliCommand::InstanceAntiAffinityGroupList => {
+                self.execute_instance_anti_affinity_group_list(matches)
+                    .await
+            }
             CliCommand::InstanceDiskList => self.execute_instance_disk_list(matches).await,
             CliCommand::InstanceDiskAttach => self.execute_instance_disk_attach(matches).await,
             CliCommand::InstanceDiskDetach => self.execute_instance_disk_detach(matches).await,
@@ -7301,6 +8476,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
             }
+            CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
+            CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
             CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
             CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
             CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
@@ -7338,6 +8515,15 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::VpcView => self.execute_vpc_view(matches).await,
             CliCommand::VpcUpdate => self.execute_vpc_update(matches).await,
             CliCommand::VpcDelete => self.execute_vpc_delete(matches).await,
+            CliCommand::WebhookReceiverCreate => {
+                self.execute_webhook_receiver_create(matches).await
+            }
+            CliCommand::WebhookReceiverUpdate => {
+                self.execute_webhook_receiver_update(matches).await
+            }
+            CliCommand::WebhookSecretsList => self.execute_webhook_secrets_list(matches).await,
+            CliCommand::WebhookSecretsAdd => self.execute_webhook_secrets_add(matches).await,
+            CliCommand::WebhookSecretsDelete => self.execute_webhook_secrets_delete(matches).await,
         }
     }
 
@@ -7632,8 +8818,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_view();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -7656,8 +8842,8 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_delete();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
         }
 
         self.config
@@ -7680,8 +8866,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_download();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -7702,8 +8892,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_head();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -7724,12 +8918,16 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_download_file();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("file") {
             request = request.file(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -7750,12 +8948,16 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_head_file();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("file") {
             request = request.file(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -7776,8 +8978,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_index();
-        if let Some(value) = matches.get_one::<::uuid::Uuid>("support-bundle") {
-            request = request.support_bundle(value.clone());
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("range") {
+            request = request.range(value.clone());
         }
 
         self.config
@@ -7808,6 +9014,978 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 todo!()
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_list(matches, &mut request)?;
+        self.config.list_start::<types::AffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::FailureDomain>("failure-domain") {
+            request = request.body_map(|body| body.failure_domain(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::AffinityPolicy>("policy") {
+            request = request.body_map(|body| body.policy(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::AffinityGroupCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_affinity_group_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_update();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::AffinityGroupUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_affinity_group_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_member_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_member_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::AffinityGroupMemberResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AffinityGroupMemberResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_member_instance_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_member_instance_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_member_instance_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_member_instance_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_member_instance_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_member_instance_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_affinity_group_member_instance_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.affinity_group_member_instance_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("affinity-group") {
+            request = request.affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_affinity_group_member_instance_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_class_list();
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("filter") {
+            request = request.filter(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.config
+            .execute_alert_class_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertClassResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertClassResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertReceiverResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertReceiverResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_delivery_list();
+        if let Some(value) = matches.get_one::<bool>("delivered") {
+            request = request.delivered(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("failed") {
+            request = request.failed(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("pending") {
+            request = request.pending(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_alert_delivery_list(matches, &mut request)?;
+        self.config.list_start::<types::AlertDeliveryResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AlertDeliveryResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_probe();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<bool>("resend") {
+            request = request.resend(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_probe(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_subscription_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("subscription") {
+            request = request.body_map(|body| body.subscription(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_alert_receiver_subscription_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_receiver_subscription_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::AlertSubscription>("subscription") {
+            request = request.subscription(value.clone());
+        }
+
+        self.config
+            .execute_alert_receiver_subscription_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_alert_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.alert_delivery_resend();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("alert-id") {
+            request = request.alert_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_alert_delivery_resend(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::AntiAffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AntiAffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::FailureDomain>("failure-domain") {
+            request = request.body_map(|body| body.failure_domain(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::AffinityPolicy>("policy") {
+            request = request.body_map(|body| body.policy(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AntiAffinityGroupCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_anti_affinity_group_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_update();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AntiAffinityGroupUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_anti_affinity_group_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_member_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_member_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::AntiAffinityGroupMemberResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AntiAffinityGroupMemberResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_member_instance_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_member_instance_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_member_instance_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_member_instance_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_member_instance_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_member_instance_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_anti_affinity_group_member_instance_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.anti_affinity_group_member_instance_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("anti-affinity-group") {
+            request = request.anti_affinity_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_anti_affinity_group_member_instance_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.error(&r);
@@ -8966,6 +11144,103 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_affinity_group_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_instance_affinity_group_list(matches, &mut request)?;
+        self.config.list_start::<types::AffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_instance_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_anti_affinity_group_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_instance_anti_affinity_group_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::AntiAffinityGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AntiAffinityGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -11296,7 +13571,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.link_name(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::IpNet>("management-ip") {
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("management-ip") {
             request = request.body_map(|body| body.management_ip(value.clone()))
         }
 
@@ -13068,7 +15343,7 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_networking_switch_port_settings_list(matches, &mut request)?;
         self.config
-            .list_start::<types::SwitchPortSettingsResultsPage>();
+            .list_start::<types::SwitchPortSettingsIdentityResultsPage>();
         let mut stream = futures::StreamExt::take(
             request.stream(),
             matches
@@ -13083,7 +15358,7 @@ impl<T: CliConfig> Cli<T> {
                 }
                 Ok(None) => {
                     self.config
-                        .list_end_success::<types::SwitchPortSettingsResultsPage>();
+                        .list_end_success::<types::SwitchPortSettingsIdentityResultsPage>();
                     return Ok(());
                 }
                 Ok(Some(value)) => {
@@ -13657,6 +15932,59 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_target_release_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.target_release_view();
+        self.config
+            .execute_target_release_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_target_release_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.target_release_update();
+        if let Some(value) =
+            matches.get_one::<types::SetTargetReleaseParamsSystemVersion>("system-version")
+        {
+            request = request.body_map(|body| body.system_version(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_target_release_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -14864,6 +17192,169 @@ impl<T: CliConfig> Cli<T> {
             }
         }
     }
+
+    pub async fn execute_webhook_receiver_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("endpoint") {
+            request = request.body_map(|body| body.endpoint(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_receiver_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_receiver_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_receiver_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("endpoint") {
+            request = request.body_map(|body| body.endpoint(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_receiver_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        self.config
+            .execute_webhook_secrets_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("receiver") {
+            request = request.receiver(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("secret") {
+            request = request.body_map(|body| body.secret(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_webhook_secrets_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_webhook_secrets_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.webhook_secrets_delete();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("secret-id") {
+            request = request.secret_id(value.clone());
+        }
+
+        self.config
+            .execute_webhook_secrets_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
 }
 
 pub trait CliConfig {
@@ -15018,6 +17509,222 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::LoginSaml,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupMemberList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_member_instance_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupMemberInstanceView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_member_instance_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupMemberInstanceAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_affinity_group_member_instance_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AffinityGroupMemberInstanceDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_class_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertClassList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_delivery_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertDeliveryList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_probe(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverProbe,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_subscription_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverSubscriptionAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_receiver_subscription_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertReceiverSubscriptionRemove,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_alert_delivery_resend(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AlertDeliveryResend,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupMemberList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_member_instance_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupMemberInstanceView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_member_instance_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupMemberInstanceAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_anti_affinity_group_member_instance_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AntiAffinityGroupMemberInstanceDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -15282,6 +17989,22 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::InstanceDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_instance_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceAffinityGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_instance_anti_affinity_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceAntiAffinityGroupList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -16398,6 +19121,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_target_release_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::TargetReleaseView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_target_release_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::TargetReleaseUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_silo_user_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -16653,6 +19392,46 @@ pub trait CliConfig {
     ) -> anyhow::Result<()> {
         Ok(())
     }
+
+    fn execute_webhook_receiver_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_receiver_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookReceiverUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_webhook_secrets_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::WebhookSecretsDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -16674,6 +19453,33 @@ pub enum CliCommand {
     SupportBundleHeadFile,
     SupportBundleIndex,
     LoginSaml,
+    AffinityGroupList,
+    AffinityGroupCreate,
+    AffinityGroupView,
+    AffinityGroupUpdate,
+    AffinityGroupDelete,
+    AffinityGroupMemberList,
+    AffinityGroupMemberInstanceView,
+    AffinityGroupMemberInstanceAdd,
+    AffinityGroupMemberInstanceDelete,
+    AlertClassList,
+    AlertReceiverList,
+    AlertReceiverView,
+    AlertReceiverDelete,
+    AlertDeliveryList,
+    AlertReceiverProbe,
+    AlertReceiverSubscriptionAdd,
+    AlertReceiverSubscriptionRemove,
+    AlertDeliveryResend,
+    AntiAffinityGroupList,
+    AntiAffinityGroupCreate,
+    AntiAffinityGroupView,
+    AntiAffinityGroupUpdate,
+    AntiAffinityGroupDelete,
+    AntiAffinityGroupMemberList,
+    AntiAffinityGroupMemberInstanceView,
+    AntiAffinityGroupMemberInstanceAdd,
+    AntiAffinityGroupMemberInstanceDelete,
     CertificateList,
     CertificateCreate,
     CertificateView,
@@ -16707,6 +19513,8 @@ pub enum CliCommand {
     InstanceView,
     InstanceUpdate,
     InstanceDelete,
+    InstanceAffinityGroupList,
+    InstanceAntiAffinityGroupList,
     InstanceDiskList,
     InstanceDiskAttach,
     InstanceDiskDetach,
@@ -16846,6 +19654,8 @@ pub enum CliCommand {
     SiloQuotasUpdate,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
+    TargetReleaseView,
+    TargetReleaseUpdate,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -16878,6 +19688,11 @@ pub enum CliCommand {
     VpcView,
     VpcUpdate,
     VpcDelete,
+    WebhookReceiverCreate,
+    WebhookReceiverUpdate,
+    WebhookSecretsList,
+    WebhookSecretsAdd,
+    WebhookSecretsDelete,
 }
 
 impl CliCommand {
@@ -16900,6 +19715,33 @@ impl CliCommand {
             CliCommand::SupportBundleHeadFile,
             CliCommand::SupportBundleIndex,
             CliCommand::LoginSaml,
+            CliCommand::AffinityGroupList,
+            CliCommand::AffinityGroupCreate,
+            CliCommand::AffinityGroupView,
+            CliCommand::AffinityGroupUpdate,
+            CliCommand::AffinityGroupDelete,
+            CliCommand::AffinityGroupMemberList,
+            CliCommand::AffinityGroupMemberInstanceView,
+            CliCommand::AffinityGroupMemberInstanceAdd,
+            CliCommand::AffinityGroupMemberInstanceDelete,
+            CliCommand::AlertClassList,
+            CliCommand::AlertReceiverList,
+            CliCommand::AlertReceiverView,
+            CliCommand::AlertReceiverDelete,
+            CliCommand::AlertDeliveryList,
+            CliCommand::AlertReceiverProbe,
+            CliCommand::AlertReceiverSubscriptionAdd,
+            CliCommand::AlertReceiverSubscriptionRemove,
+            CliCommand::AlertDeliveryResend,
+            CliCommand::AntiAffinityGroupList,
+            CliCommand::AntiAffinityGroupCreate,
+            CliCommand::AntiAffinityGroupView,
+            CliCommand::AntiAffinityGroupUpdate,
+            CliCommand::AntiAffinityGroupDelete,
+            CliCommand::AntiAffinityGroupMemberList,
+            CliCommand::AntiAffinityGroupMemberInstanceView,
+            CliCommand::AntiAffinityGroupMemberInstanceAdd,
+            CliCommand::AntiAffinityGroupMemberInstanceDelete,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
             CliCommand::CertificateView,
@@ -16933,6 +19775,8 @@ impl CliCommand {
             CliCommand::InstanceView,
             CliCommand::InstanceUpdate,
             CliCommand::InstanceDelete,
+            CliCommand::InstanceAffinityGroupList,
+            CliCommand::InstanceAntiAffinityGroupList,
             CliCommand::InstanceDiskList,
             CliCommand::InstanceDiskAttach,
             CliCommand::InstanceDiskDetach,
@@ -17072,6 +19916,8 @@ impl CliCommand {
             CliCommand::SiloQuotasUpdate,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
+            CliCommand::TargetReleaseView,
+            CliCommand::TargetReleaseUpdate,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
@@ -17104,6 +19950,11 @@ impl CliCommand {
             CliCommand::VpcView,
             CliCommand::VpcUpdate,
             CliCommand::VpcDelete,
+            CliCommand::WebhookReceiverCreate,
+            CliCommand::WebhookReceiverUpdate,
+            CliCommand::WebhookSecretsList,
+            CliCommand::WebhookSecretsAdd,
+            CliCommand::WebhookSecretsDelete,
         ]
         .into_iter()
     }

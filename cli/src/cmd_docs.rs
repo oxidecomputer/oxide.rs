@@ -66,6 +66,7 @@ fn to_json(cmd: &Command) -> JsonDoc {
     let mut args = cmd
         .get_arguments()
         .filter(|arg| arg.get_long() != Some("help"))
+        .filter(|arg| !arg.is_hide_set())
         .map(|arg| JsonArg {
             name: (arg.get_long().is_none() && arg.get_short().is_none())
                 .then_some(arg.get_id().to_string()),

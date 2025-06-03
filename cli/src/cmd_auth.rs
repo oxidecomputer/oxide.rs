@@ -569,11 +569,8 @@ impl CmdAuthStatus {
             oxide::Error::InvalidUpgrade(_) => {
                 unreachable!("auth should not be establishing a websocket")
             }
-            oxide::Error::PreHookError(_) => {
-                unreachable!("there is no pre-hook")
-            }
-            oxide::Error::PostHookError(_) => {
-                unreachable!("there is no post-hook")
+            oxide::Error::Custom(_) => {
+                unreachable!("no custom hooks")
             }
         }
     }
@@ -605,7 +602,7 @@ mod tests {
         use assert_cmd::Command;
         use predicates::str;
 
-        let temp_dir = tempfile::tempdir().unwrap().into_path();
+        let temp_dir = tempfile::tempdir().unwrap();
 
         let bad_url = "sys.oxide.invalid";
 
@@ -613,7 +610,7 @@ mod tests {
         Command::cargo_bin("oxide")
             .unwrap()
             .arg("--config-dir")
-            .arg(temp_dir.as_os_str())
+            .arg(temp_dir.path().as_os_str())
             .arg("auth")
             .arg("login")
             .arg("--host")
