@@ -9,6 +9,7 @@ clap = { workspace = true }
 newline-converter = { workspace = true }
 progenitor = { workspace = true, default-features = false }
 regex = { workspace = true }
+rustc_version = { workspace = true }
 rustfmt-wrapper = { workspace = true }
 serde_json = { workspace = true }
 similar = { workspace = true }
