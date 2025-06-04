@@ -3478,6 +3478,120 @@ pub mod operations {
         }
     }
 
+    pub struct AuthSettingsViewWhen(::httpmock::When);
+    impl AuthSettingsViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/auth-settings$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct AuthSettingsViewThen(::httpmock::Then);
+    impl AuthSettingsViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloAuthSettings) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AuthSettingsUpdateWhen(::httpmock::When);
+    impl AuthSettingsUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/auth-settings$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SiloAuthSettingsUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AuthSettingsUpdateThen(::httpmock::Then);
+    impl AuthSettingsUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloAuthSettings) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct CertificateListWhen(::httpmock::When);
     impl CertificateListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -21114,6 +21228,12 @@ pub trait MockServerExt {
             operations::AntiAffinityGroupMemberInstanceDeleteWhen,
             operations::AntiAffinityGroupMemberInstanceDeleteThen,
         );
+    fn auth_settings_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsViewWhen, operations::AuthSettingsViewThen);
+    fn auth_settings_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsUpdateWhen, operations::AuthSettingsUpdateThen);
     fn certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
@@ -22463,6 +22583,30 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::AntiAffinityGroupMemberInstanceDeleteWhen::new(when),
                 operations::AntiAffinityGroupMemberInstanceDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn auth_settings_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsViewWhen, operations::AuthSettingsViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AuthSettingsViewWhen::new(when),
+                operations::AuthSettingsViewThen::new(then),
+            )
+        })
+    }
+
+    fn auth_settings_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsUpdateWhen, operations::AuthSettingsUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AuthSettingsUpdateWhen::new(when),
+                operations::AuthSettingsUpdateThen::new(then),
             )
         })
     }

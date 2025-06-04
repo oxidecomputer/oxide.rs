@@ -71,6 +71,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::AntiAffinityGroupMemberInstanceDelete => {
                 Self::cli_anti_affinity_group_member_instance_delete()
             }
+            CliCommand::AuthSettingsView => Self::cli_auth_settings_view(),
+            CliCommand::AuthSettingsUpdate => Self::cli_auth_settings_update(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
             CliCommand::CertificateView => Self::cli_certificate_view(),
@@ -1485,6 +1487,39 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Remove member from anti-affinity group")
+    }
+
+    pub fn cli_auth_settings_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch current silo's auth settings")
+    }
+
+    pub fn cli_auth_settings_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("device-token-max-ttl-seconds")
+                    .long("device-token-max-ttl-seconds")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Maximum lifetime of a device token in seconds. If set to null, users \
+                         will be able to create tokens that do not expire.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update current silo's auth settings")
     }
 
     pub fn cli_certificate_list() -> ::clap::Command {
@@ -8143,6 +8178,8 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_anti_affinity_group_member_instance_delete(matches)
                     .await
             }
+            CliCommand::AuthSettingsView => self.execute_auth_settings_view(matches).await,
+            CliCommand::AuthSettingsUpdate => self.execute_auth_settings_update(matches).await,
             CliCommand::CertificateList => self.execute_certificate_list(matches).await,
             CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
             CliCommand::CertificateView => self.execute_certificate_view(matches).await,
@@ -9985,6 +10022,59 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_auth_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.auth_settings_view();
+        self.config
+            .execute_auth_settings_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_auth_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.auth_settings_update();
+        if let Some(value) =
+            matches.get_one::<::std::num::NonZeroU32>("device-token-max-ttl-seconds")
+        {
+            request = request.body_map(|body| body.device_token_max_ttl_seconds(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_auth_settings_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17729,6 +17819,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_auth_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AuthSettingsView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_auth_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AuthSettingsUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_certificate_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -19480,6 +19586,8 @@ pub enum CliCommand {
     AntiAffinityGroupMemberInstanceView,
     AntiAffinityGroupMemberInstanceAdd,
     AntiAffinityGroupMemberInstanceDelete,
+    AuthSettingsView,
+    AuthSettingsUpdate,
     CertificateList,
     CertificateCreate,
     CertificateView,
@@ -19742,6 +19850,8 @@ impl CliCommand {
             CliCommand::AntiAffinityGroupMemberInstanceView,
             CliCommand::AntiAffinityGroupMemberInstanceAdd,
             CliCommand::AntiAffinityGroupMemberInstanceDelete,
+            CliCommand::AuthSettingsView,
+            CliCommand::AuthSettingsUpdate,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
             CliCommand::CertificateView,

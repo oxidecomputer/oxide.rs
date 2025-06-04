@@ -23151,6 +23151,104 @@ pub mod types {
         }
     }
 
+    /// View of silo authentication settings
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of silo authentication settings",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "silo_id"
+    ///  ],
+    ///  "properties": {
+    ///    "device_token_max_ttl_seconds": {
+    ///      "description": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "silo_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloAuthSettings {
+        /// Maximum lifetime of a device token in seconds. If set to null, users
+        /// will be able to create tokens that do not expire.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub device_token_max_ttl_seconds: ::std::option::Option<u32>,
+        pub silo_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&SiloAuthSettings> for SiloAuthSettings {
+        fn from(value: &SiloAuthSettings) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloAuthSettings {
+        pub fn builder() -> builder::SiloAuthSettings {
+            Default::default()
+        }
+    }
+
+    /// Updateable properties of a silo's settings.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of a silo's settings.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "device_token_max_ttl_seconds"
+    ///  ],
+    ///  "properties": {
+    ///    "device_token_max_ttl_seconds": {
+    ///      "description": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 1.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SiloAuthSettingsUpdate {
+        /// Maximum lifetime of a device token in seconds. If set to null, users
+        /// will be able to create tokens that do not expire.
+        pub device_token_max_ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
+    }
+
+    impl ::std::convert::From<&SiloAuthSettingsUpdate> for SiloAuthSettingsUpdate {
+        fn from(value: &SiloAuthSettingsUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloAuthSettingsUpdate {
+        pub fn builder() -> builder::SiloAuthSettingsUpdate {
+            Default::default()
+        }
+    }
+
     /// Create-time parameters for a `Silo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -50172,6 +50270,122 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SiloAuthSettings {
+            device_token_max_ttl_seconds:
+                ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
+            silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for SiloAuthSettings {
+            fn default() -> Self {
+                Self {
+                    device_token_max_ttl_seconds: Ok(Default::default()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                }
+            }
+        }
+
+        impl SiloAuthSettings {
+            pub fn device_token_max_ttl_seconds<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.device_token_max_ttl_seconds = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for device_token_max_ttl_seconds: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloAuthSettings> for super::SiloAuthSettings {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloAuthSettings,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    device_token_max_ttl_seconds: value.device_token_max_ttl_seconds?,
+                    silo_id: value.silo_id?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloAuthSettings> for SiloAuthSettings {
+            fn from(value: super::SiloAuthSettings) -> Self {
+                Self {
+                    device_token_max_ttl_seconds: Ok(value.device_token_max_ttl_seconds),
+                    silo_id: Ok(value.silo_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloAuthSettingsUpdate {
+            device_token_max_ttl_seconds: ::std::result::Result<
+                ::std::option::Option<::std::num::NonZeroU32>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SiloAuthSettingsUpdate {
+            fn default() -> Self {
+                Self {
+                    device_token_max_ttl_seconds: Err("no value supplied for \
+                                                       device_token_max_ttl_seconds"
+                        .to_string()),
+                }
+            }
+        }
+
+        impl SiloAuthSettingsUpdate {
+            pub fn device_token_max_ttl_seconds<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::num::NonZeroU32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.device_token_max_ttl_seconds = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for device_token_max_ttl_seconds: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SiloAuthSettingsUpdate> for super::SiloAuthSettingsUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloAuthSettingsUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    device_token_max_ttl_seconds: value.device_token_max_ttl_seconds?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SiloAuthSettingsUpdate> for SiloAuthSettingsUpdate {
+            fn from(value: super::SiloAuthSettingsUpdate) -> Self {
+                Self {
+                    device_token_max_ttl_seconds: Ok(value.device_token_max_ttl_seconds),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SiloCreate {
             admin_group_name: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
@@ -60642,6 +60856,27 @@ impl ClientSessionExt for Client {
 
 /// Silos represent a logical partition of users and resources.
 pub trait ClientSilosExt {
+    /// Fetch current silo's auth settings
+    ///
+    /// Sends a `GET` request to `/v1/auth-settings`
+    ///
+    /// ```ignore
+    /// let response = client.auth_settings_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn auth_settings_view(&self) -> builder::AuthSettingsView;
+    /// Update current silo's auth settings
+    ///
+    /// Sends a `PUT` request to `/v1/auth-settings`
+    ///
+    /// ```ignore
+    /// let response = client.auth_settings_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn auth_settings_update(&self) -> builder::AuthSettingsUpdate;
     /// List certificates for external endpoints
     ///
     /// Returns a list of TLS certificates used for the external API (for the
@@ -60793,6 +61028,14 @@ pub trait ClientSilosExt {
 }
 
 impl ClientSilosExt for Client {
+    fn auth_settings_view(&self) -> builder::AuthSettingsView {
+        builder::AuthSettingsView::new(self)
+    }
+
+    fn auth_settings_update(&self) -> builder::AuthSettingsUpdate {
+        builder::AuthSettingsUpdate::new(self)
+    }
+
     fn certificate_list(&self) -> builder::CertificateList {
         builder::CertificateList::new(self)
     }
@@ -68731,6 +68974,146 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::auth_settings_view`]
+    ///
+    /// [`ClientSilosExt::auth_settings_view`]: super::ClientSilosExt::auth_settings_view
+    #[derive(Debug, Clone)]
+    pub struct AuthSettingsView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> AuthSettingsView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/auth-settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloAuthSettings>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/auth-settings", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "auth_settings_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::auth_settings_update`]
+    ///
+    /// [`ClientSilosExt::auth_settings_update`]: super::ClientSilosExt::auth_settings_update
+    #[derive(Debug, Clone)]
+    pub struct AuthSettingsUpdate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SiloAuthSettingsUpdate, String>,
+    }
+
+    impl<'a> AuthSettingsUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SiloAuthSettingsUpdate>,
+            <V as std::convert::TryInto<types::SiloAuthSettingsUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `SiloAuthSettingsUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SiloAuthSettingsUpdate,
+            ) -> types::builder::SiloAuthSettingsUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/auth-settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloAuthSettings>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SiloAuthSettingsUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/auth-settings", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "auth_settings_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
