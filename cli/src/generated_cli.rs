@@ -354,6 +354,16 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("ttl-seconds")
+                    .long("ttl-seconds")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help(
+                        "Optional lifetime for the access token in seconds. If not specified, the \
+                         silo's max TTL will be used (if set).",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
@@ -8618,6 +8628,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.device_auth_request();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("ttl-seconds") {
+            request = request.body_map(|body| body.ttl_seconds(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {

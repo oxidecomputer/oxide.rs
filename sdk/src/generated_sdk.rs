@@ -8182,6 +8182,16 @@ pub mod types {
     ///    "client_id": {
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "ttl_seconds": {
+    ///      "description": "Optional lifetime for the access token in seconds.
+    /// If not specified, the silo's max TTL will be used (if set).",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 1.0
     ///    }
     ///  }
     /// }
@@ -8192,6 +8202,10 @@ pub mod types {
     )]
     pub struct DeviceAuthRequest {
         pub client_id: ::uuid::Uuid,
+        /// Optional lifetime for the access token in seconds. If not specified,
+        /// the silo's max TTL will be used (if set).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
 
     impl ::std::convert::From<&DeviceAuthRequest> for DeviceAuthRequest {
@@ -39077,12 +39091,17 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct DeviceAuthRequest {
             client_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ttl_seconds: ::std::result::Result<
+                ::std::option::Option<::std::num::NonZeroU32>,
+                ::std::string::String,
+            >,
         }
 
         impl ::std::default::Default for DeviceAuthRequest {
             fn default() -> Self {
                 Self {
                     client_id: Err("no value supplied for client_id".to_string()),
+                    ttl_seconds: Ok(Default::default()),
                 }
             }
         }
@@ -39098,6 +39117,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for client_id: {}", e));
                 self
             }
+            pub fn ttl_seconds<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::num::NonZeroU32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ttl_seconds = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ttl_seconds: {}", e));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<DeviceAuthRequest> for super::DeviceAuthRequest {
@@ -39107,6 +39136,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     client_id: value.client_id?,
+                    ttl_seconds: value.ttl_seconds?,
                 })
             }
         }
@@ -39115,6 +39145,7 @@ pub mod types {
             fn from(value: super::DeviceAuthRequest) -> Self {
                 Self {
                     client_id: Ok(value.client_id),
+                    ttl_seconds: Ok(value.ttl_seconds),
                 }
             }
         }
