@@ -8006,6 +8006,66 @@ pub mod types {
         }
     }
 
+    /// View of a device access token
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a device access token",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "A unique, immutable, system-controlled identifier
+    /// for the token. Note that this ID is not the bearer token itself, which
+    /// starts with \"oxide-token-\"",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_expires": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct DeviceAccessToken {
+        /// A unique, immutable, system-controlled identifier for the token.
+        /// Note that this ID is not the bearer token itself, which starts with
+        /// "oxide-token-"
+        pub id: ::uuid::Uuid,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+    }
+
+    impl ::std::convert::From<&DeviceAccessToken> for DeviceAccessToken {
+        fn from(value: &DeviceAccessToken) -> Self {
+            value.clone()
+        }
+    }
+
+    impl DeviceAccessToken {
+        pub fn builder() -> builder::DeviceAccessToken {
+            Default::default()
+        }
+    }
+
     /// `DeviceAccessTokenRequest`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8050,6 +8110,60 @@ pub mod types {
 
     impl DeviceAccessTokenRequest {
         pub fn builder() -> builder::DeviceAccessTokenRequest {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/DeviceAccessToken"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct DeviceAccessTokenResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<DeviceAccessToken>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&DeviceAccessTokenResultsPage> for DeviceAccessTokenResultsPage {
+        fn from(value: &DeviceAccessTokenResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl DeviceAccessTokenResultsPage {
+        pub fn builder() -> builder::DeviceAccessTokenResultsPage {
             Default::default()
         }
     }
@@ -38742,6 +38856,87 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct DeviceAccessToken {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_expires: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for DeviceAccessToken {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_expires: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl DeviceAccessToken {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_expires<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<DeviceAccessToken> for super::DeviceAccessToken {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DeviceAccessToken,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    time_created: value.time_created?,
+                    time_expires: value.time_expires?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::DeviceAccessToken> for DeviceAccessToken {
+            fn from(value: super::DeviceAccessToken) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_expires: Ok(value.time_expires),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct DeviceAccessTokenRequest {
             client_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             device_code: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -38810,6 +39005,71 @@ pub mod types {
                     client_id: Ok(value.client_id),
                     device_code: Ok(value.device_code),
                     grant_type: Ok(value.grant_type),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct DeviceAccessTokenResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::DeviceAccessToken>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for DeviceAccessTokenResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl DeviceAccessTokenResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::DeviceAccessToken>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<DeviceAccessTokenResultsPage> for super::DeviceAccessTokenResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DeviceAccessTokenResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::DeviceAccessTokenResultsPage> for DeviceAccessTokenResultsPage {
+            fn from(value: super::DeviceAccessTokenResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -63344,6 +63604,55 @@ impl ClientSystemStatusExt for Client {
     }
 }
 
+/// API clients use device access tokens for authentication.
+pub trait ClientTokensExt {
+    /// List access tokens
+    ///
+    /// List device access tokens for the currently authenticated user.
+    ///
+    /// Sends a `GET` request to `/v1/me/access-tokens`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.current_user_access_token_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_access_token_list(&self) -> builder::CurrentUserAccessTokenList;
+    /// Delete access token
+    ///
+    /// Delete a device access token for the currently authenticated user.
+    ///
+    /// Sends a `DELETE` request to `/v1/me/access-tokens/{token_id}`
+    ///
+    /// Arguments:
+    /// - `token_id`: ID of the token
+    /// ```ignore
+    /// let response = client.current_user_access_token_delete()
+    ///    .token_id(token_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_access_token_delete(&self) -> builder::CurrentUserAccessTokenDelete;
+}
+
+impl ClientTokensExt for Client {
+    fn current_user_access_token_list(&self) -> builder::CurrentUserAccessTokenList {
+        builder::CurrentUserAccessTokenList::new(self)
+    }
+
+    fn current_user_access_token_delete(&self) -> builder::CurrentUserAccessTokenDelete {
+        builder::CurrentUserAccessTokenDelete::new(self)
+    }
+}
+
 /// Virtual Private Clouds (VPCs) provide isolated network environments for
 /// managing and deploying services.
 pub trait ClientVpcsExt {
@@ -76562,6 +76871,232 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientTokensExt::current_user_access_token_list`]
+    ///
+    /// [`ClientTokensExt::current_user_access_token_list`]: super::ClientTokensExt::current_user_access_token_list
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserAccessTokenList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> CurrentUserAccessTokenList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/me/access-tokens`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::DeviceAccessTokenResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/me/access-tokens", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "current_user_access_token_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/me/access-tokens`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::DeviceAccessToken, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientTokensExt::current_user_access_token_delete`]
+    ///
+    /// [`ClientTokensExt::current_user_access_token_delete`]: super::ClientTokensExt::current_user_access_token_delete
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserAccessTokenDelete<'a> {
+        client: &'a super::Client,
+        token_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> CurrentUserAccessTokenDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                token_id: Err("token_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn token_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.token_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for token_id failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/me/access-tokens/{token_id}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, token_id } = self;
+            let token_id = token_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/me/access-tokens/{}",
+                client.baseurl,
+                encode_path(&token_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "current_user_access_token_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -93182,5 +93717,6 @@ pub mod prelude {
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
+    pub use super::ClientTokensExt;
     pub use super::ClientVpcsExt;
 }

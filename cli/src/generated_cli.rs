@@ -143,6 +143,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::LoginLocal => Self::cli_login_local(),
             CliCommand::Logout => Self::cli_logout(),
             CliCommand::CurrentUserView => Self::cli_current_user_view(),
+            CliCommand::CurrentUserAccessTokenList => Self::cli_current_user_access_token_list(),
+            CliCommand::CurrentUserAccessTokenDelete => {
+                Self::cli_current_user_access_token_delete()
+            }
             CliCommand::CurrentUserGroups => Self::cli_current_user_groups(),
             CliCommand::CurrentUserSshKeyList => Self::cli_current_user_ssh_key_list(),
             CliCommand::CurrentUserSshKeyCreate => Self::cli_current_user_ssh_key_create(),
@@ -3676,6 +3680,43 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_current_user_view() -> ::clap::Command {
         ::clap::Command::new("").about("Fetch user for current session")
+    }
+
+    pub fn cli_current_user_access_token_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List access tokens")
+            .long_about("List device access tokens for the currently authenticated user.")
+    }
+
+    pub fn cli_current_user_access_token_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("token-id")
+                    .long("token-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the token"),
+            )
+            .about("Delete access token")
+            .long_about("Delete a device access token for the currently authenticated user.")
     }
 
     pub fn cli_current_user_groups() -> ::clap::Command {
@@ -8281,6 +8322,12 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::LoginLocal => self.execute_login_local(matches).await,
             CliCommand::Logout => self.execute_logout(matches).await,
             CliCommand::CurrentUserView => self.execute_current_user_view(matches).await,
+            CliCommand::CurrentUserAccessTokenList => {
+                self.execute_current_user_access_token_list(matches).await
+            }
+            CliCommand::CurrentUserAccessTokenDelete => {
+                self.execute_current_user_access_token_delete(matches).await
+            }
             CliCommand::CurrentUserGroups => self.execute_current_user_groups(matches).await,
             CliCommand::CurrentUserSshKeyList => {
                 self.execute_current_user_ssh_key_list(matches).await
@@ -12318,6 +12365,71 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_current_user_access_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.current_user_access_token_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_current_user_access_token_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::DeviceAccessTokenResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::DeviceAccessTokenResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_current_user_access_token_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.current_user_access_token_delete();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("token-id") {
+            request = request.token_id(value.clone());
+        }
+
+        self.config
+            .execute_current_user_access_token_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -18331,6 +18443,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_current_user_access_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::CurrentUserAccessTokenList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_current_user_access_token_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::CurrentUserAccessTokenDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_current_user_groups(
         &self,
         matches: &::clap::ArgMatches,
@@ -19650,6 +19778,8 @@ pub enum CliCommand {
     LoginLocal,
     Logout,
     CurrentUserView,
+    CurrentUserAccessTokenList,
+    CurrentUserAccessTokenDelete,
     CurrentUserGroups,
     CurrentUserSshKeyList,
     CurrentUserSshKeyCreate,
@@ -19914,6 +20044,8 @@ impl CliCommand {
             CliCommand::LoginLocal,
             CliCommand::Logout,
             CliCommand::CurrentUserView,
+            CliCommand::CurrentUserAccessTokenList,
+            CliCommand::CurrentUserAccessTokenDelete,
             CliCommand::CurrentUserGroups,
             CliCommand::CurrentUserSshKeyList,
             CliCommand::CurrentUserSshKeyCreate,
