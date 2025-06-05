@@ -8031,6 +8031,8 @@ pub mod types {
     ///      "format": "date-time"
     ///    },
     ///    "time_expires": {
+    ///      "description": "Expiration timestamp. A null value means the token
+    /// does not automatically expire.",
     ///      "type": [
     ///        "string",
     ///        "null"
@@ -8050,6 +8052,8 @@ pub mod types {
         /// "oxide-token-"
         pub id: ::uuid::Uuid,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// Expiration timestamp. A null value means the token does not
+        /// automatically expire.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
     }
