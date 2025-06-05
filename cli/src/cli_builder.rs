@@ -627,6 +627,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CertificateView => Some("certificate view"),
         CliCommand::CertificateDelete => Some("certificate delete"),
 
+        CliCommand::AuthSettingsView => Some("auth-settings view"),
+        CliCommand::AuthSettingsUpdate => Some("auth-settings update"),
+
         CliCommand::SwitchList => Some("system hardware switch list"),
         CliCommand::SwitchView => Some("system hardware switch view"),
         CliCommand::RackList => Some("system hardware rack list"),
@@ -653,6 +656,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyCreate => Some("current-user ssh-key create"),
         CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
+        CliCommand::CurrentUserAccessTokenList => Some("current-user access-token list"),
+        CliCommand::CurrentUserAccessTokenDelete => Some("current-user access-token delete"),
 
         CliCommand::FloatingIpAttach => Some("floating-ip attach"),
         CliCommand::FloatingIpCreate => Some("floating-ip create"),

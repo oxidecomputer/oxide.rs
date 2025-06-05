@@ -553,6 +553,52 @@
       ]
     },
     {
+      "name": "auth-settings",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "update",
+          "about": "Update current silo's auth settings",
+          "args": [
+            {
+              "long": "device-token-max-ttl-seconds",
+              "help": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire."
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch current silo's auth settings",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "bundle",
       "args": [
         {
@@ -816,6 +862,56 @@
         }
       ],
       "subcommands": [
+        {
+          "name": "access-token",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "delete",
+              "about": "Delete access token",
+              "long_about": "Delete a device access token for the currently authenticated user.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "token-id",
+                  "help": "ID of the token"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List access tokens",
+              "long_about": "List device access tokens for the currently authenticated user.",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "groups",
           "about": "Fetch current user's groups",
