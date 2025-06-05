@@ -14,6 +14,7 @@ use crate::{Client, OxideAuthError};
 use reqwest::ClientBuilder;
 use serde::Deserialize;
 
+/// Credentials for a particular profile.
 #[derive(Deserialize, Debug)]
 pub struct ProfileCredentials {
     pub token: String,
@@ -145,6 +146,7 @@ impl ClientConfig {
     }
 }
 
+// Structure of the credentials file.
 #[derive(Deserialize, Debug, Default)]
 #[serde(default)]
 pub struct CredentialsFile {

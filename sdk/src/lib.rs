@@ -20,6 +20,7 @@ use tracing::{Level, Span};
 mod auth;
 #[cfg(feature = "clap")]
 mod clap_feature;
+#[cfg(feature = "extras")]
 pub mod extras;
 mod generated_sdk;
 

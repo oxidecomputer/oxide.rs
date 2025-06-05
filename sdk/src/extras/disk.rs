@@ -4,6 +4,8 @@
 
 // Copyright 2025 Oxide Computer Company
 
+//! Types in service of the [ClientExtraDiskExt] trait.
+
 use super::ClientExtraDiskExt;
 use crate::Client;
 
@@ -13,6 +15,7 @@ impl ClientExtraDiskExt for Client {
     }
 }
 
+/// Builder for disk extra operations.
 pub mod builder {
     use crate::extras::disk::types::{DiskImportError, DiskImportHandle, DiskInfo, ImageInfo};
     use crate::types::{Name, NameOrId};
@@ -164,6 +167,7 @@ pub mod builder {
     }
 }
 
+/// Types for disk extra operations.
 pub mod types {
     use crate::types::{
         self, BlockSize, ByteCount, DiskCreate, DiskSource, DiskState, FinalizeDisk, ImageCreate,
