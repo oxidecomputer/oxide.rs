@@ -149,7 +149,7 @@ fn format_code(code: String) -> String {
         "// The contents of this file are generated; do not modify them.\n\n{}",
         code,
     );
-    let contents = rustfmt_wrapper::rustfmt_config(
+    let contents = match rustfmt_wrapper::rustfmt_config(
         rustfmt_wrapper::config::Config {
             format_strings: Some(true),
             normalize_doc_attributes: Some(true),
@@ -157,8 +157,41 @@ fn format_code(code: String) -> String {
             ..Default::default()
         },
         contents,
-    )
-    .unwrap();
+    ) {
+        Ok(contents) => contents,
+        Err(rustfmt_wrapper::Error::Unstable(msg)) => {
+            // rustfmt_wrapper uses `toolchain_find` to get a recent rustfmt.
+            // `toolchain_find`, then, picks the latest version (by date
+            // reported in `<component> -V`) as the path to return. This means
+            // that not only does `cargo xtask generate` require *a* nightly to
+            // be installed, it requires the installed nightly to be more recent
+            // than the latest stable toolchain.
+            //
+            // This is subtle, but it means that upgrading the stable toolchain
+            // used in oxide.rs can break some developers' environments by
+            // moving stable to a more recent version than their latest nightly.
+            //
+            // Even if that is not the case, one may reasonably use a nightly
+            // toolchain to `cargo +nightly xtask generate`, only for the most
+            // recent toolchain to be stable and for us to error below.
+            //
+            // Hopefully this is enough information to help users figure out
+            // what to investigate with their local toolchains, or if a nightly
+            // is not installed at all.
+            let rustc_version = rustc_version::version_meta().expect("can get rustc version meta");
+            panic!(
+                "\"generate\" xtask requires a nightly rustfmt more recent \
+                than {} to be installed, as it uses the following features: {}",
+                rustc_version
+                    .commit_date
+                    .expect("version has a commit date"),
+                msg
+            );
+        }
+        Err(other) => {
+            panic!("unexpected issue formatting generated code: {}", other);
+        }
+    };
     let contents = dos2unix(&contents);
 
     // Add newlines after end-braces at <= two levels of indentation. Rustfmt's
