@@ -3478,6 +3478,120 @@ pub mod operations {
         }
     }
 
+    pub struct AuthSettingsViewWhen(::httpmock::When);
+    impl AuthSettingsViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/auth-settings$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct AuthSettingsViewThen(::httpmock::Then);
+    impl AuthSettingsViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloAuthSettings) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct AuthSettingsUpdateWhen(::httpmock::When);
+    impl AuthSettingsUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/auth-settings$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SiloAuthSettingsUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct AuthSettingsUpdateThen(::httpmock::Then);
+    impl AuthSettingsUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloAuthSettings) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct CertificateListWhen(::httpmock::When);
     impl CertificateListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -8970,6 +9084,165 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CurrentUserAccessTokenListWhen(::httpmock::When);
+    impl CurrentUserAccessTokenListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/me/access-tokens$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct CurrentUserAccessTokenListThen(::httpmock::Then);
+    impl CurrentUserAccessTokenListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::DeviceAccessTokenResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CurrentUserAccessTokenDeleteWhen(::httpmock::When);
+    impl CurrentUserAccessTokenDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/me/access-tokens/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn token_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/me/access-tokens/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CurrentUserAccessTokenDeleteThen(::httpmock::Then);
+    impl CurrentUserAccessTokenDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -21114,6 +21387,12 @@ pub trait MockServerExt {
             operations::AntiAffinityGroupMemberInstanceDeleteWhen,
             operations::AntiAffinityGroupMemberInstanceDeleteThen,
         );
+    fn auth_settings_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsViewWhen, operations::AuthSettingsViewThen);
+    fn auth_settings_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsUpdateWhen, operations::AuthSettingsUpdateThen);
     fn certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
@@ -21339,6 +21618,18 @@ pub trait MockServerExt {
     fn current_user_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CurrentUserViewWhen, operations::CurrentUserViewThen);
+    fn current_user_access_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::CurrentUserAccessTokenListWhen,
+            operations::CurrentUserAccessTokenListThen,
+        );
+    fn current_user_access_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::CurrentUserAccessTokenDeleteWhen,
+            operations::CurrentUserAccessTokenDeleteThen,
+        );
     fn current_user_groups<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CurrentUserGroupsWhen, operations::CurrentUserGroupsThen);
@@ -22467,6 +22758,30 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn auth_settings_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsViewWhen, operations::AuthSettingsViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AuthSettingsViewWhen::new(when),
+                operations::AuthSettingsViewThen::new(then),
+            )
+        })
+    }
+
+    fn auth_settings_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::AuthSettingsUpdateWhen, operations::AuthSettingsUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::AuthSettingsUpdateWhen::new(when),
+                operations::AuthSettingsUpdateThen::new(then),
+            )
+        })
+    }
+
     fn certificate_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
@@ -23246,6 +23561,36 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::CurrentUserViewWhen::new(when),
                 operations::CurrentUserViewThen::new(then),
+            )
+        })
+    }
+
+    fn current_user_access_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::CurrentUserAccessTokenListWhen,
+            operations::CurrentUserAccessTokenListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CurrentUserAccessTokenListWhen::new(when),
+                operations::CurrentUserAccessTokenListThen::new(then),
+            )
+        })
+    }
+
+    fn current_user_access_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::CurrentUserAccessTokenDeleteWhen,
+            operations::CurrentUserAccessTokenDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CurrentUserAccessTokenDeleteWhen::new(when),
+                operations::CurrentUserAccessTokenDeleteThen::new(then),
             )
         })
     }

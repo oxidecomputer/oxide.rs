@@ -71,6 +71,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::AntiAffinityGroupMemberInstanceDelete => {
                 Self::cli_anti_affinity_group_member_instance_delete()
             }
+            CliCommand::AuthSettingsView => Self::cli_auth_settings_view(),
+            CliCommand::AuthSettingsUpdate => Self::cli_auth_settings_update(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
             CliCommand::CertificateView => Self::cli_certificate_view(),
@@ -141,6 +143,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::LoginLocal => Self::cli_login_local(),
             CliCommand::Logout => Self::cli_logout(),
             CliCommand::CurrentUserView => Self::cli_current_user_view(),
+            CliCommand::CurrentUserAccessTokenList => Self::cli_current_user_access_token_list(),
+            CliCommand::CurrentUserAccessTokenDelete => {
+                Self::cli_current_user_access_token_delete()
+            }
             CliCommand::CurrentUserGroups => Self::cli_current_user_groups(),
             CliCommand::CurrentUserSshKeyList => Self::cli_current_user_ssh_key_list(),
             CliCommand::CurrentUserSshKeyCreate => Self::cli_current_user_ssh_key_create(),
@@ -346,6 +352,16 @@ impl<T: CliConfig> Cli<T> {
                     .long("client-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("ttl-seconds")
+                    .long("ttl-seconds")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help(
+                        "Optional lifetime for the access token in seconds. If not specified, the \
+                         silo's max TTL will be used (if set).",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("json-body")
@@ -1485,6 +1501,39 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Remove member from anti-affinity group")
+    }
+
+    pub fn cli_auth_settings_view() -> ::clap::Command {
+        ::clap::Command::new("").about("Fetch current silo's auth settings")
+    }
+
+    pub fn cli_auth_settings_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("device-token-max-ttl-seconds")
+                    .long("device-token-max-ttl-seconds")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Maximum lifetime of a device token in seconds. If set to null, users \
+                         will be able to create tokens that do not expire.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update current silo's auth settings")
     }
 
     pub fn cli_certificate_list() -> ::clap::Command {
@@ -3641,6 +3690,43 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_current_user_view() -> ::clap::Command {
         ::clap::Command::new("").about("Fetch user for current session")
+    }
+
+    pub fn cli_current_user_access_token_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List access tokens")
+            .long_about("List device access tokens for the currently authenticated user.")
+    }
+
+    pub fn cli_current_user_access_token_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("token-id")
+                    .long("token-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the token"),
+            )
+            .about("Delete access token")
+            .long_about("Delete a device access token for the currently authenticated user.")
     }
 
     pub fn cli_current_user_groups() -> ::clap::Command {
@@ -8143,6 +8229,8 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_anti_affinity_group_member_instance_delete(matches)
                     .await
             }
+            CliCommand::AuthSettingsView => self.execute_auth_settings_view(matches).await,
+            CliCommand::AuthSettingsUpdate => self.execute_auth_settings_update(matches).await,
             CliCommand::CertificateList => self.execute_certificate_list(matches).await,
             CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
             CliCommand::CertificateView => self.execute_certificate_view(matches).await,
@@ -8244,6 +8332,12 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::LoginLocal => self.execute_login_local(matches).await,
             CliCommand::Logout => self.execute_logout(matches).await,
             CliCommand::CurrentUserView => self.execute_current_user_view(matches).await,
+            CliCommand::CurrentUserAccessTokenList => {
+                self.execute_current_user_access_token_list(matches).await
+            }
+            CliCommand::CurrentUserAccessTokenDelete => {
+                self.execute_current_user_access_token_delete(matches).await
+            }
             CliCommand::CurrentUserGroups => self.execute_current_user_groups(matches).await,
             CliCommand::CurrentUserSshKeyList => {
                 self.execute_current_user_ssh_key_list(matches).await
@@ -8534,6 +8628,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.device_auth_request();
         if let Some(value) = matches.get_one::<::uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("ttl-seconds") {
+            request = request.body_map(|body| body.ttl_seconds(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -9985,6 +10083,59 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_auth_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.auth_settings_view();
+        self.config
+            .execute_auth_settings_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_auth_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.auth_settings_update();
+        if let Some(value) =
+            matches.get_one::<::std::num::NonZeroU32>("device-token-max-ttl-seconds")
+        {
+            request = request.body_map(|body| body.device_token_max_ttl_seconds(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_auth_settings_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -12228,6 +12379,71 @@ impl<T: CliConfig> Cli<T> {
         match result {
             Ok(r) => {
                 self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_current_user_access_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.current_user_access_token_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_current_user_access_token_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::DeviceAccessTokenResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::DeviceAccessTokenResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_current_user_access_token_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.current_user_access_token_delete();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("token-id") {
+            request = request.token_id(value.clone());
+        }
+
+        self.config
+            .execute_current_user_access_token_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -17729,6 +17945,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_auth_settings_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AuthSettingsView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_auth_settings_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AuthSettingsUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_certificate_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -18221,6 +18453,22 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::CurrentUserView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_current_user_access_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::CurrentUserAccessTokenList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_current_user_access_token_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::CurrentUserAccessTokenDelete,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -19480,6 +19728,8 @@ pub enum CliCommand {
     AntiAffinityGroupMemberInstanceView,
     AntiAffinityGroupMemberInstanceAdd,
     AntiAffinityGroupMemberInstanceDelete,
+    AuthSettingsView,
+    AuthSettingsUpdate,
     CertificateList,
     CertificateCreate,
     CertificateView,
@@ -19542,6 +19792,8 @@ pub enum CliCommand {
     LoginLocal,
     Logout,
     CurrentUserView,
+    CurrentUserAccessTokenList,
+    CurrentUserAccessTokenDelete,
     CurrentUserGroups,
     CurrentUserSshKeyList,
     CurrentUserSshKeyCreate,
@@ -19742,6 +19994,8 @@ impl CliCommand {
             CliCommand::AntiAffinityGroupMemberInstanceView,
             CliCommand::AntiAffinityGroupMemberInstanceAdd,
             CliCommand::AntiAffinityGroupMemberInstanceDelete,
+            CliCommand::AuthSettingsView,
+            CliCommand::AuthSettingsUpdate,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
             CliCommand::CertificateView,
@@ -19804,6 +20058,8 @@ impl CliCommand {
             CliCommand::LoginLocal,
             CliCommand::Logout,
             CliCommand::CurrentUserView,
+            CliCommand::CurrentUserAccessTokenList,
+            CliCommand::CurrentUserAccessTokenDelete,
             CliCommand::CurrentUserGroups,
             CliCommand::CurrentUserSshKeyList,
             CliCommand::CurrentUserSshKeyCreate,
