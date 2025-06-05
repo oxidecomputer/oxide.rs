@@ -14204,13 +14204,13 @@ pub mod types {
     /// from.\n\nThis disk can either be attached if it already exists or
     /// created along with the instance.\n\nSpecifying a boot disk is optional
     /// but recommended to ensure predictable boot behavior. The boot disk can
-    /// be set during instance creation or later if the instance is
-    /// stopped.\n\nAn instance that does not have a boot disk set will use the
-    /// boot options specified in its UEFI settings, which are controlled by
-    /// both the instance's UEFI firmware and the guest operating system. Boot
-    /// options can change as disks are attached and detached, which may result
-    /// in an instance that only boots to the EFI shell until a boot disk is
-    /// set.",
+    /// be set during instance creation or later if the instance is stopped. The
+    /// boot disk counts against the disk attachment limit.\n\nAn instance that
+    /// does not have a boot disk set will use the boot options specified in its
+    /// UEFI settings, which are controlled by both the instance's UEFI firmware
+    /// and the guest operating system. Boot options can change as disks are
+    /// attached and detached, which may result in an instance that only boots
+    /// to the EFI shell until a boot disk is set.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -14232,7 +14232,8 @@ pub mod types {
     /// instance.\n\nDisk attachments of type \"create\" will be created, while
     /// those of type \"attach\" must already exist.\n\nThe order of this list
     /// does not guarantee a boot order for the instance. Use the boot_disk
-    /// attribute to specify a boot disk.",
+    /// attribute to specify a boot disk. When boot_disk is specified it will
+    /// count against the disk attachment limit.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -14356,7 +14357,8 @@ pub mod types {
         ///
         /// Specifying a boot disk is optional but recommended to ensure
         /// predictable boot behavior. The boot disk can be set during instance
-        /// creation or later if the instance is stopped.
+        /// creation or later if the instance is stopped. The boot disk counts
+        /// against the disk attachment limit.
         ///
         /// An instance that does not have a boot disk set will use the boot
         /// options specified in its UEFI settings, which are controlled by both
@@ -14373,7 +14375,9 @@ pub mod types {
         /// type "attach" must already exist.
         ///
         /// The order of this list does not guarantee a boot order for the
-        /// instance. Use the boot_disk attribute to specify a boot disk.
+        /// instance. Use the boot_disk attribute to specify a boot disk. When
+        /// boot_disk is specified it will count against the disk attachment
+        /// limit.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub disks: ::std::vec::Vec<InstanceDiskAttachment>,
         /// The external IP addresses provided to this instance.
