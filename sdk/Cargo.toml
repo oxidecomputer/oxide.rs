@@ -10,9 +10,7 @@ readme = "README.md"
 [dependencies]
 base64 = { workspace = true }
 chrono = { workspace = true }
-clap = { workspace = true, optional = true }
 dirs = { workspace = true }
-flume = { workspace = true }
 futures = { workspace = true }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
@@ -22,11 +20,17 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 schemars = { workspace = true }
 thiserror =  { workspace = true }
-tokio = { workspace = true }
 toml = { workspace = true }
 toml_edit = { workspace = true }
 tracing = { workspace = true }
 uuid = { workspace = true }
+
+# Optional deps for the clap feature
+clap = { workspace = true, optional = true }
+
+# Optional deps for the extras feature
+flume = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }
@@ -36,4 +40,4 @@ tokio = { workspace = true }
 [features]
 default = []
 clap = ["dep:clap"]
-extras = []
+extras = ["dep:tokio", "dep:flume"]
