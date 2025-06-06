@@ -1117,7 +1117,7 @@ impl AuthenticatedCmd for CmdBgpPeerSet {
             enforce_first_as: self.enforce_first_as,
             hold_time: self.hold_time,
             idle_hold_time: self.idle_hold_time,
-            interface_name: PHY0.to_owned(),
+            interface_name: PHY0.try_into().unwrap(),
             keepalive: self.keepalive,
             local_pref: self.local_pref,
             md5_auth_key: self.authstring.clone(),
@@ -1584,7 +1584,7 @@ impl CmdPortStatus {
             writeln!(
                 &mut ltw,
                 "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
-                p.port_name,
+                *p.port_name,
                 p.port_settings_id.is_some(),
                 link.as_ref()
                     .map(|x| x.enabled.to_string())
@@ -1881,7 +1881,7 @@ async fn get_port(
         .find(|x| {
             x.rack_id == *rack_id
                 && x.switch_location == switch.to_string()
-                && x.port_name == port.to_string()
+                && x.port_name.to_string() == port.to_string()
         })
         .ok_or(anyhow::anyhow!(
             "port {} not found for rack {} switch {}",

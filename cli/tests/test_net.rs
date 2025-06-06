@@ -31,14 +31,14 @@ fn test_port_config() {
         items: vec![
             SwitchPort {
                 id: Uuid::new_v4(),
-                port_name: String::from("qsfp0"),
+                port_name: "qsfp0".try_into().unwrap(),
                 port_settings_id: Some(switch0_qsfp0_settings_id),
                 rack_id,
                 switch_location: String::from("switch0"),
             },
             SwitchPort {
                 id: Uuid::new_v4(),
-                port_name: String::from("qsfp0"),
+                port_name: "qsfp0".try_into().unwrap(),
                 port_settings_id: Some(switch1_qsfp0_settings_id),
                 rack_id,
                 switch_location: String::from("switch1"),
@@ -113,7 +113,7 @@ fn test_port_config() {
                 address_lot_block_id: lot_block_id,
                 address_lot_id: lot_id,
                 address_lot_name: lot_name.clone(),
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: None,
             },
@@ -122,14 +122,14 @@ fn test_port_config() {
                 address_lot_block_id: lot_block_id,
                 address_lot_id: lot_id,
                 address_lot_name: lot_name.clone(),
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: Some(300),
             },
         ],
         bgp_peers: vec![
             BgpPeer {
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 addr: "169.254.10.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
@@ -149,7 +149,7 @@ fn test_port_config() {
                 vlan_id: None,
             },
             BgpPeer {
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 addr: "169.254.30.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
@@ -174,7 +174,7 @@ fn test_port_config() {
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: None,
-            link_name: String::from("phy0"),
+            link_name: "phy0".try_into().unwrap(),
             lldp_link_config: None,
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
@@ -188,7 +188,7 @@ fn test_port_config() {
         routes: vec![SwitchPortRouteConfig {
             dst: "1.2.3.0/24".parse().unwrap(),
             gw: "1.2.3.4".parse().unwrap(),
-            interface_name: "qsfp0".to_owned(),
+            interface_name: "qsfp0".try_into().unwrap(),
             rib_priority: Some(10),
             port_settings_id: Uuid::new_v4(),
             vlan_id: Some(1701),
@@ -207,7 +207,7 @@ fn test_port_config() {
                 address_lot_block_id: lot_block_id,
                 address_lot_id: lot_id,
                 address_lot_name: lot_name.clone(),
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: None,
             },
@@ -216,14 +216,14 @@ fn test_port_config() {
                 address_lot_block_id: lot_block_id,
                 address_lot_id: lot_id,
                 address_lot_name: lot_name.clone(),
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 port_settings_id: switch0_qsfp0_settings_id,
                 vlan_id: Some(400),
             },
         ],
         bgp_peers: vec![
             BgpPeer {
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 addr: "169.254.20.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["198.51.100.0/24".parse().unwrap()]),
@@ -243,7 +243,7 @@ fn test_port_config() {
                 vlan_id: None,
             },
             BgpPeer {
-                interface_name: String::from("phy0"),
+                interface_name: "phy0".try_into().unwrap(),
                 addr: "169.254.40.1".parse().unwrap(),
                 bgp_config: NameOrId::Id(bgp_configs.items[0].id),
                 allowed_export: ImportExportPolicy::Allow(vec!["203.0.113.0/24".parse().unwrap()]),
@@ -268,7 +268,7 @@ fn test_port_config() {
         links: vec![SwitchPortLinkConfig {
             autoneg: false,
             fec: Some(LinkFec::None),
-            link_name: String::from("phy0"),
+            link_name: "phy0".try_into().unwrap(),
             lldp_link_config: None,
             mtu: 1500,
             port_settings_id: switch1_qsfp0_settings_id,
