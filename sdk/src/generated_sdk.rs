@@ -127,7 +127,9 @@ pub mod types {
     ///      }
     ///    },
     ///    "link_name": {
-    ///      "description": "Link to assign the address to",
+    ///      "description": "Link to assign the addresses to. On ports that are
+    /// not broken out, this is always phy0. On a 2x breakout the options are
+    /// phy0 and phy1, on 4x phy0-phy3, etc.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -144,7 +146,9 @@ pub mod types {
     pub struct AddressConfig {
         /// The set of addresses assigned to the port configuration.
         pub addresses: ::std::vec::Vec<Address>,
-        /// Link to assign the address to
+        /// Link to assign the addresses to. On ports that are not broken out,
+        /// this is always phy0. On a 2x breakout the options are phy0 and phy1,
+        /// on 4x phy0-phy3, etc.
         pub link_name: Name,
     }
 
@@ -4280,7 +4284,11 @@ pub mod types {
     /// to the port configuration this BGP peer configuration is a part of. For
     /// example this value could be phy0 to refer to a primary physical
     /// interface. Or it could be vlan47 to refer to a VLAN interface.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "keepalive": {
     ///      "description": "How often to send keepalive requests (seconds).",
@@ -4380,7 +4388,7 @@ pub mod types {
         /// configuration this BGP peer configuration is a part of. For example
         /// this value could be phy0 to refer to a primary physical interface.
         /// Or it could be vlan47 to refer to a VLAN interface.
-        pub interface_name: ::std::string::String,
+        pub interface_name: Name,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
         /// Apply a local preference to routes received from this peer.
@@ -4429,7 +4437,9 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "link_name": {
-    ///      "description": "Link that the peer is reachable on",
+    ///      "description": "Link that the peer is reachable on. On ports that
+    /// are not broken out, this is always phy0. On a 2x breakout the options
+    /// are phy0 and phy1, on 4x phy0-phy3, etc.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -4450,7 +4460,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct BgpPeerConfig {
-        /// Link that the peer is reachable on
+        /// Link that the peer is reachable on. On ports that are not broken
+        /// out, this is always phy0. On a 2x breakout the options are phy0 and
+        /// phy1, on 4x phy0-phy3, etc.
         pub link_name: Name,
         pub peers: ::std::vec::Vec<BgpPeer>,
     }
@@ -17488,7 +17500,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "autoneg": {
-    ///      "description": "Whether or not to set autonegotiation",
+    ///      "description": "Whether or not to set autonegotiation.",
     ///      "type": "boolean"
     ///    },
     ///    "fec": {
@@ -17509,7 +17521,9 @@ pub mod types {
     ///      ]
     ///    },
     ///    "link_name": {
-    ///      "description": "Link name",
+    ///      "description": "Link name. On ports that are not broken out, this
+    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
+    /// phy0-phy3, etc.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -17540,7 +17554,7 @@ pub mod types {
     ///      ]
     ///    },
     ///    "tx_eq": {
-    ///      "description": "Optional tx_eq settings",
+    ///      "description": "Optional tx_eq settings.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -17562,14 +17576,15 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct LinkConfigCreate {
-        /// Whether or not to set autonegotiation
+        /// Whether or not to set autonegotiation.
         pub autoneg: bool,
         /// The requested forward-error correction method.  If this is not
         /// specified, the standard FEC for the underlying media will be applied
         /// if it can be determined.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub fec: ::std::option::Option<LinkFec>,
-        /// Link name
+        /// Link name. On ports that are not broken out, this is always phy0. On
+        /// a 2x breakout the options are phy0 and phy1, on 4x phy0-phy3, etc.
         pub link_name: Name,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
         pub lldp: LldpLinkConfigCreate,
@@ -17577,7 +17592,7 @@ pub mod types {
         pub mtu: u16,
         /// The speed of the link.
         pub speed: LinkSpeed,
-        /// Optional tx_eq settings
+        /// Optional tx_eq settings.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub tx_eq: ::std::option::Option<TxEqConfig>,
     }
@@ -21848,7 +21863,9 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "link_name": {
-    ///      "description": "Link the route should be active on",
+    ///      "description": "Link name. On ports that are not broken out, this
+    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
+    /// phy0-phy3, etc.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -21870,7 +21887,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct RouteConfig {
-        /// Link the route should be active on
+        /// Link name. On ports that are not broken out, this is always phy0. On
+        /// a 2x breakout the options are phy0 and phy1, on 4x phy0-phy3, etc.
         pub link_name: Name,
         /// The set of routes assigned to a switch port.
         pub routes: ::std::vec::Vec<Route>,
@@ -26107,7 +26125,11 @@ pub mod types {
     ///    },
     ///    "interface_name": {
     ///      "description": "The name of this switch interface.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "kind": {
     ///      "description": "The switch interface kind.",
@@ -26138,7 +26160,7 @@ pub mod types {
         /// A unique identifier for this switch interface.
         pub id: ::uuid::Uuid,
         /// The name of this switch interface.
-        pub interface_name: ::std::string::String,
+        pub interface_name: Name,
         /// The switch interface kind.
         pub kind: SwitchInterfaceKind2,
         /// The port settings object this switch interface configuration belongs
@@ -26186,7 +26208,9 @@ pub mod types {
     ///      ]
     ///    },
     ///    "link_name": {
-    ///      "description": "Link the interface will be assigned to",
+    ///      "description": "Link name. On ports that are not broken out, this
+    /// is always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
+    /// phy0-phy3, etc.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
@@ -26207,7 +26231,8 @@ pub mod types {
     pub struct SwitchInterfaceConfigCreate {
         /// What kind of switch interface this configuration represents.
         pub kind: SwitchInterfaceKind,
-        /// Link the interface will be assigned to
+        /// Link name. On ports that are not broken out, this is always phy0. On
+        /// a 2x breakout the options are phy0 and phy1, on 4x phy0-phy3, etc.
         pub link_name: Name,
         /// Whether or not IPv6 is enabled.
         pub v6_enabled: bool,
@@ -26603,7 +26628,11 @@ pub mod types {
     ///    },
     ///    "port_name": {
     ///      "description": "The name of this switch port.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The primary settings group of this switch port.
@@ -26634,7 +26663,7 @@ pub mod types {
         /// The id of the switch port.
         pub id: ::uuid::Uuid,
         /// The name of this switch port.
-        pub port_name: ::std::string::String,
+        pub port_name: Name,
         /// The primary settings group of this switch port. Will be `None` until
         /// this switch port is configured.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -26706,7 +26735,11 @@ pub mod types {
     ///    },
     ///    "interface_name": {
     ///      "description": "The interface name this address belongs to.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this address configuration
@@ -26740,7 +26773,7 @@ pub mod types {
         /// The name of the address lot this address is drawn from.
         pub address_lot_name: Name,
         /// The interface name this address belongs to.
-        pub interface_name: ::std::string::String,
+        pub interface_name: Name,
         /// The port settings object this address configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
         /// An optional VLAN ID
@@ -27171,7 +27204,11 @@ pub mod types {
     ///    },
     ///    "link_name": {
     ///      "description": "The name of this link.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "lldp_link_config": {
     ///      "description": "The link-layer discovery protocol service
@@ -27240,7 +27277,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub fec: ::std::option::Option<LinkFec>,
         /// The name of this link.
-        pub link_name: ::std::string::String,
+        pub link_name: Name,
         /// The link-layer discovery protocol service configuration for this
         /// link.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -27353,7 +27390,11 @@ pub mod types {
     ///    "interface_name": {
     ///      "description": "The interface name this route configuration is
     /// assigned to.",
-    ///      "type": "string"
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this route configuration
@@ -27394,7 +27435,7 @@ pub mod types {
         /// The route's gateway address.
         pub gw: ::std::net::IpAddr,
         /// The interface name this route configuration is assigned to.
-        pub interface_name: ::std::string::String,
+        pub interface_name: Name,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
         /// RIB Priority indicating priority within and across protocols.
@@ -27605,14 +27646,14 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "addresses": {
-    ///      "description": "Addresses indexed by interface name.",
+    ///      "description": "Address configurations.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/AddressConfig"
     ///      }
     ///    },
     ///    "bgp_peers": {
-    ///      "description": "BGP peers indexed by interface name.",
+    ///      "description": "BGP peer configurations.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -27630,7 +27671,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "interfaces": {
-    ///      "description": "Interfaces indexed by link name.",
+    ///      "description": "Interface configurations.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -27638,9 +27679,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "links": {
-    ///      "description": "Links indexed by phy name. On ports that are not
-    /// broken out, this is always phy0. On a 2x breakout the options are phy0
-    /// and phy1, on 4x phy0-phy3, etc.",
+    ///      "description": "Link configurations.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/LinkConfigCreate"
@@ -27653,7 +27692,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/SwitchPortConfigCreate"
     ///    },
     ///    "routes": {
-    ///      "description": "Routes indexed by interface name.",
+    ///      "description": "Route configurations.",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -27668,24 +27707,22 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SwitchPortSettingsCreate {
-        /// Addresses indexed by interface name.
+        /// Address configurations.
         pub addresses: ::std::vec::Vec<AddressConfig>,
-        /// BGP peers indexed by interface name.
+        /// BGP peer configurations.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub bgp_peers: ::std::vec::Vec<BgpPeerConfig>,
         pub description: ::std::string::String,
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub groups: ::std::vec::Vec<NameOrId>,
-        /// Interfaces indexed by link name.
+        /// Interface configurations.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub interfaces: ::std::vec::Vec<SwitchInterfaceConfigCreate>,
-        /// Links indexed by phy name. On ports that are not broken out, this is
-        /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
-        /// phy0-phy3, etc.
+        /// Link configurations.
         pub links: ::std::vec::Vec<LinkConfigCreate>,
         pub name: Name,
         pub port_config: SwitchPortConfigCreate,
-        /// Routes indexed by interface name.
+        /// Route configurations.
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub routes: ::std::vec::Vec<RouteConfig>,
     }
@@ -37134,7 +37171,7 @@ pub mod types {
             enforce_first_as: ::std::result::Result<bool, ::std::string::String>,
             hold_time: ::std::result::Result<u32, ::std::string::String>,
             idle_hold_time: ::std::result::Result<u32, ::std::string::String>,
-            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            interface_name: ::std::result::Result<super::Name, ::std::string::String>,
             keepalive: ::std::result::Result<u32, ::std::string::String>,
             local_pref: ::std::result::Result<::std::option::Option<u32>, ::std::string::String>,
             md5_auth_key: ::std::result::Result<
@@ -37279,7 +37316,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -53225,7 +53262,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfig {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            interface_name: ::std::result::Result<super::Name, ::std::string::String>,
             kind: ::std::result::Result<super::SwitchInterfaceKind2, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             v6_enabled: ::std::result::Result<bool, ::std::string::String>,
@@ -53256,7 +53293,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -53402,7 +53439,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPort {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            port_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            port_name: ::std::result::Result<super::Name, ::std::string::String>,
             port_settings_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             rack_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -53434,7 +53471,7 @@ pub mod types {
             }
             pub fn port_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.port_name = value
@@ -53510,7 +53547,7 @@ pub mod types {
             address_lot_block_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             address_lot_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             address_lot_name: ::std::result::Result<super::Name, ::std::string::String>,
-            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            interface_name: ::std::result::Result<super::Name, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
         }
@@ -53580,7 +53617,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
@@ -53801,7 +53838,7 @@ pub mod types {
             autoneg: ::std::result::Result<bool, ::std::string::String>,
             fec:
                 ::std::result::Result<::std::option::Option<super::LinkFec>, ::std::string::String>,
-            link_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            link_name: ::std::result::Result<super::Name, ::std::string::String>,
             lldp_link_config: ::std::result::Result<
                 ::std::option::Option<super::LldpLinkConfig>,
                 ::std::string::String,
@@ -53853,7 +53890,7 @@ pub mod types {
             }
             pub fn link_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.link_name = value
@@ -54018,7 +54055,7 @@ pub mod types {
         pub struct SwitchPortRouteConfig {
             dst: ::std::result::Result<super::IpNet, ::std::string::String>,
             gw: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
-            interface_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            interface_name: ::std::result::Result<super::Name, ::std::string::String>,
             port_settings_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             rib_priority: ::std::result::Result<::std::option::Option<u8>, ::std::string::String>,
             vlan_id: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
@@ -54060,7 +54097,7 @@ pub mod types {
             }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::string::String>,
+                T: ::std::convert::TryInto<super::Name>,
                 T::Error: ::std::fmt::Display,
             {
                 self.interface_name = value.try_into().map_err(|e| {
