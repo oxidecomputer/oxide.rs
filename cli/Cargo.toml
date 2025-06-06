@@ -38,7 +38,7 @@ log = { workspace = true }
 md5 = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
-oxide = { workspace = true, features = ["clap"] }
+oxide = { workspace = true, features = ["clap", "extras"] }
 oxnet = { workspace = true }
 predicates = { workspace = true }
 ratatui = { workspace = true }

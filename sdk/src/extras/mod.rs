@@ -2,19 +2,24 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 //! The `extra` feature adds additional, non-generated, compound interfaces to
-//! the [`Client`](super::generated_sdk::Client). It is intended for methods
-//! that are functional rather than for those that offer enhanced output or a
-//! simplified interface. (This is why the the CLI uses a disk import interface
-//! from here, but has a number of custom network subcommands that pretty-print
-//! or provide a simpler user interface for common use cases.)
+//! the [`Client`](crate::Client).
+//!
+//! It is intended for methods that are functional rather than for those that
+//! offer enhanced output or a simplified interface.
 //!
 //! These interfaces operate very similarly to the generated interfaces.
 
+// Note: This is why the the CLI uses a disk import interface from here, but
+// has a number of custom network subcommands that pretty-print or provide a
+// simpler user interface for common use cases.
+
 pub mod disk;
 
+/// Higher level operations beyond the generated operations from
+/// [`ClientDisksExt`](crate::ClientDisksExt)
 pub trait ClientExtraDiskExt {
     /// A convenience wrapper around the SDK to simplify disk creation.
     /// Create a disk, optionally with a snapshot and image. The standard
