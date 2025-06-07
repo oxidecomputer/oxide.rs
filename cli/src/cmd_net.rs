@@ -1781,14 +1781,11 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         routes: current
             .routes
             .iter()
-            .map(|x| {
-                let gw: oxnet::IpNet = x.gw.to_string().parse().unwrap();
-                Route {
-                    dst: x.dst.clone(),
-                    gw: gw.addr(),
-                    vid: x.vlan_id,
-                    rib_priority: x.rib_priority,
-                }
+            .map(|x| Route {
+                dst: x.dst.clone(),
+                gw: x.gw,
+                vid: x.vlan_id,
+                rib_priority: x.rib_priority,
             })
             .collect(),
     };
