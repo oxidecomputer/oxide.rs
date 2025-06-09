@@ -19,7 +19,7 @@ bytes = "1.10.1"
 camino = { version = "1.1", features = ["serde1"] }
 chrono = { version = "0.4.41", features = ["serde"] }
 clap = { version = "4.5.40", features = ["derive", "string", "env", "wrap_help"] }
-clap_complete = "4.5.52"
+clap_complete = "4.5.54"
 colored = "2.2.0"
 crossterm = { version = "0.28.1", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
