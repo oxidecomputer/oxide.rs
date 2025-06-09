@@ -18,7 +18,7 @@ built = { version = "0.7.7", features = ["git2"] }
 bytes = "1.10.1"
 camino = { version = "1.1", features = ["serde1"] }
 chrono = { version = "0.4.41", features = ["serde"] }
-clap = { version = "4.5.39", features = ["derive", "string", "env", "wrap_help"] }
+clap = { version = "4.5.40", features = ["derive", "string", "env", "wrap_help"] }
 clap_complete = "4.5.52"
 colored = "2.2.0"
 crossterm = { version = "0.28.1", features = [ "event-stream" ] }
@@ -64,7 +64,7 @@ tempfile = "3.20.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.45.1", features = ["full"] }
-toml = "0.8.22"
+toml = "0.8.23"
 toml_edit = "0.22.24"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
