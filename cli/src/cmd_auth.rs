@@ -16,7 +16,7 @@ use indicatif::{ProgressBar, ProgressStyle};
 use oauth2::{basic::BasicClient, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenUrl};
 use oauth2::{StandardDeviceAuthorizationResponse, TokenResponse};
 use oxide::types::CurrentUser;
-use oxide::{Client, ClientConfig, ClientSessionExt};
+use oxide::{Client, ClientConfig, ClientCurrentUserExt};
 use std::time::Duration;
 use toml_edit::{Item, Table};
 use uuid::Uuid;

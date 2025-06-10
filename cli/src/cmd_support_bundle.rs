@@ -19,7 +19,7 @@ use futures::TryStreamExt;
 use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
 use oxide::Client;
-use oxide::ClientHiddenExt;
+use oxide::ClientExperimentalExt;
 use std::io;
 use std::num::NonZeroU64;
 use std::pin::Pin;
