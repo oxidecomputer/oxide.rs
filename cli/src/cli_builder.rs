@@ -90,6 +90,7 @@ impl std::str::FromStr for ResolveValue {
 trait RunIt: Send + Sync {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()>;
     fn is_subtree(&self) -> bool;
+    fn maybe_long(&self) -> bool;
 }
 
 #[derive(Default)]
@@ -224,6 +225,10 @@ where
     fn is_subtree(&self) -> bool {
         <C as RunnableCmd>::is_subtree()
     }
+
+    fn maybe_long(&self) -> bool {
+        false
+    }
 }
 
 impl<'a> NewCli<'a> {
@@ -295,24 +300,6 @@ impl<'a> NewCli<'a> {
             client_config = client_config.with_timeout(timeout);
         }
 
-        // Set longer timeouts for potentially slow support-bundle subcommands.
-        if matches.subcommand_matches("bundle").is_some_and(|bundle| {
-            matches!(bundle.subcommand_name(), Some("download") | Some("inspect"))
-        }) {
-            // Keep a reasonable timeout for initial connection.
-            client_config = client_config.with_connect_timeout(15);
-
-            // Bundles may be tens of gigabytes, set a one hour timeout by default.
-            if timeout.is_none() {
-                client_config = client_config.with_timeout(60 * 60);
-            }
-
-            // Kill the connection if we stop receiving data before the connection timeout.
-            client_config = client_config.with_read_timeout(30);
-        }
-
-        let ctx = Context::new(client_config)?;
-
         let mut node = &runner;
         let mut sm = &matches;
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
@@ -325,11 +312,23 @@ impl<'a> NewCli<'a> {
                 break;
             }
         }
-        node.cmd
-            .as_ref()
-            .expect("no cmd for node")
-            .run_cmd(sm, &ctx)
-            .await
+        let cmd = node.cmd.as_ref().expect("no cmd for node");
+
+        if cmd.maybe_long() {
+            // Keep a reasonable timeout for initial connection.
+            client_config = client_config.with_connect_timeout(15);
+
+            // Set a long time-out for "maybe long" commands
+            if timeout.is_none() {
+                client_config = client_config.with_timeout(60 * 60);
+            }
+
+            // Kill the connection if we stop receiving data before the connection timeout.
+            client_config = client_config.with_read_timeout(30);
+        }
+
+        let ctx = Context::new(client_config)?;
+        cmd.run_cmd(sm, &ctx).await
     }
 
     pub fn command(&self) -> &Command {
@@ -362,6 +361,10 @@ impl RunIt for GeneratedCmd {
     }
 
     fn is_subtree(&self) -> bool {
+        false
+    }
+
+    fn maybe_long(&self) -> bool {
         false
     }
 }
@@ -630,6 +633,14 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::AuthSettingsView => Some("auth-settings view"),
         CliCommand::AuthSettingsUpdate => Some("auth-settings update"),
 
+        // Update subcommands
+        CliCommand::TargetReleaseView => Some("system update target-release view"),
+        CliCommand::TargetReleaseUpdate => Some("system update target-release update"),
+        // Manually implemented
+        CliCommand::SystemUpdatePutRepository => None,
+        // Not implemented
+        CliCommand::SystemUpdateGetRepository => None,
+
         CliCommand::SwitchList => Some("system hardware switch list"),
         CliCommand::SwitchView => Some("system hardware switch view"),
         CliCommand::RackList => Some("system hardware rack list"),
@@ -713,10 +724,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SupportBundleDownloadFile
         | CliCommand::SupportBundleHeadFile
         | CliCommand::SupportBundleIndex => None,
-
-        // Update is not fully implemented.
-        CliCommand::TargetReleaseView | CliCommand::TargetReleaseUpdate => None,
-        CliCommand::SystemUpdatePutRepository | CliCommand::SystemUpdateGetRepository => None,
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
