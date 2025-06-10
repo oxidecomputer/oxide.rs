@@ -19,7 +19,7 @@ use oxide::{
         LinkSpeed, LldpLinkConfigCreate, Name, NameOrId, Route, RouteConfig,
         SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
         SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
-        SwitchPortSettingsCreate,
+        SwitchPortRouteConfig, SwitchPortSettingsCreate,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -1780,16 +1780,21 @@ async fn create_current(settings_id: Uuid, client: &Client) -> Result<SwitchPort
         link_name: PHY0.parse().unwrap(),
         routes: current
             .routes
-            .iter()
-            .map(|x| {
-                let gw: oxnet::IpNet = x.gw.to_string().parse().unwrap();
-                Route {
-                    dst: x.dst.clone(),
-                    gw: gw.addr(),
-                    vid: x.vlan_id,
-                    rib_priority: x.rib_priority,
-                }
-            })
+            .into_iter()
+            .map(
+                |SwitchPortRouteConfig {
+                     dst,
+                     gw,
+                     rib_priority,
+                     vlan_id,
+                     ..
+                 }| Route {
+                    dst,
+                    gw,
+                    vid: vlan_id,
+                    rib_priority,
+                },
+            )
             .collect(),
     };
 
