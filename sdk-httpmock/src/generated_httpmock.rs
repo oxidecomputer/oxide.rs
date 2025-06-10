@@ -17795,6 +17795,133 @@ pub mod operations {
         }
     }
 
+    pub struct SystemUpdatePutRepositoryWhen(::httpmock::When);
+    impl SystemUpdatePutRepositoryWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/update/repository$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn file_name(self, value: &str) -> Self {
+            Self(self.0.query_param("file_name", value.to_string()))
+        }
+
+        pub fn body(self, value: ::serde_json::Value) -> Self {
+            Self(self.0.json_body(value))
+        }
+    }
+
+    pub struct SystemUpdatePutRepositoryThen(::httpmock::Then);
+    impl SystemUpdatePutRepositoryThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::TufRepoInsertResponse) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SystemUpdateGetRepositoryWhen(::httpmock::When);
+    impl SystemUpdateGetRepositoryWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/update/repository/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn system_version(self, value: &types::SystemUpdateGetRepositorySystemVersion) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/repository/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemUpdateGetRepositoryThen(::httpmock::Then);
+    impl SystemUpdateGetRepositoryThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::TufRepoGetResponse) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct TargetReleaseViewWhen(::httpmock::When);
     impl TargetReleaseViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -22077,6 +22204,18 @@ pub trait MockServerExt {
             operations::SystemTimeseriesSchemaListWhen,
             operations::SystemTimeseriesSchemaListThen,
         );
+    fn system_update_put_repository<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdatePutRepositoryWhen,
+            operations::SystemUpdatePutRepositoryThen,
+        );
+    fn system_update_get_repository<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateGetRepositoryWhen,
+            operations::SystemUpdateGetRepositoryThen,
+        );
     fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen);
@@ -25046,6 +25185,36 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemTimeseriesSchemaListWhen::new(when),
                 operations::SystemTimeseriesSchemaListThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_put_repository<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdatePutRepositoryWhen,
+            operations::SystemUpdatePutRepositoryThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdatePutRepositoryWhen::new(when),
+                operations::SystemUpdatePutRepositoryThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_get_repository<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateGetRepositoryWhen,
+            operations::SystemUpdateGetRepositoryThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdateGetRepositoryWhen::new(when),
+                operations::SystemUpdateGetRepositoryThen::new(then),
             )
         })
     }

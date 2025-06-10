@@ -2897,6 +2897,60 @@ pub mod types {
         }
     }
 
+    /// An identifier for an artifact.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An identifier for an artifact.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "kind",
+    ///    "name",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "kind": {
+    ///      "description": "The kind of artifact this is.",
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The artifact's name.",
+    ///      "type": "string"
+    ///    },
+    ///    "version": {
+    ///      "description": "The artifact's version.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ArtifactId {
+        /// The kind of artifact this is.
+        pub kind: ::std::string::String,
+        /// The artifact's name.
+        pub name: ::std::string::String,
+        /// The artifact's version.
+        pub version: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ArtifactId> for ArtifactId {
+        fn from(value: &ArtifactId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ArtifactId {
+        pub fn builder() -> builder::ArtifactId {
+            Default::default()
+        }
+    }
+
     /// Authorization scope for a timeseries.
     ///
     /// This describes the level at which a user must be authorized to read data
@@ -24495,8 +24549,7 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "state": {
-    ///      "description": "The current state Nexus believes the sled to be
-    /// in.",
+    ///      "description": "The current state of the sled.",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/SledState"
@@ -24543,7 +24596,7 @@ pub mod types {
         pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
         pub rack_id: ::uuid::Uuid,
-        /// The current state Nexus believes the sled to be in.
+        /// The current state of the sled.
         pub state: SledState,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -25108,14 +25161,13 @@ pub mod types {
         }
     }
 
-    /// The current state of the sled, as determined by Nexus.
+    /// The current state of the sled.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "The current state of the sled, as determined by
-    /// Nexus.",
+    ///  "description": "The current state of the sled.",
     ///  "oneOf": [
     ///    {
     ///      "description": "The sled is currently active, and has resources
@@ -28133,6 +28185,116 @@ pub mod types {
         }
     }
 
+    /// `SystemUpdateGetRepositorySystemVersion`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct SystemUpdateGetRepositorySystemVersion(::std::string::String);
+    impl ::std::ops::Deref for SystemUpdateGetRepositorySystemVersion {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<SystemUpdateGetRepositorySystemVersion> for ::std::string::String {
+        fn from(value: SystemUpdateGetRepositorySystemVersion) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&SystemUpdateGetRepositorySystemVersion>
+        for SystemUpdateGetRepositorySystemVersion
+    {
+        fn from(value: &SystemUpdateGetRepositorySystemVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for SystemUpdateGetRepositorySystemVersion {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+                ::std::sync::LazyLock::new(|| {
+                    ::regress::Regex::new(
+                        "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                         [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*\
+                         ))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    )
+                    .unwrap()
+                });
+            if (&*PATTERN).find(value).is_none() {
+                return Err("doesn't match pattern \
+                            \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*\
+                            |\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*\
+                            [a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.\
+                            [0-9a-zA-Z-]+)*))?$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SystemUpdateGetRepositorySystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SystemUpdateGetRepositorySystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SystemUpdateGetRepositorySystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for SystemUpdateGetRepositorySystemVersion {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// A table represents one or more timeseries with the same schema.
     ///
     /// A table is the result of an OxQL query. It contains a name, usually the
@@ -28911,6 +29073,529 @@ pub mod types {
     impl TimeseriesSchemaResultsPage {
         pub fn builder() -> builder::TimeseriesSchemaResultsPage {
             Default::default()
+        }
+    }
+
+    /// Metadata about an individual TUF artifact.
+    ///
+    /// Found within a `TufRepoDescription`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Metadata about an individual TUF artifact.\n\nFound
+    /// within a `TufRepoDescription`.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "hash",
+    ///    "id",
+    ///    "size"
+    ///  ],
+    ///  "properties": {
+    ///    "hash": {
+    ///      "description": "The hash of the artifact.",
+    ///      "type": "string",
+    ///      "format": "hex string (32 bytes)"
+    ///    },
+    ///    "id": {
+    ///      "description": "The artifact ID.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ArtifactId"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "size": {
+    ///      "description": "The size of the artifact in bytes.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufArtifactMeta {
+        /// The hash of the artifact.
+        pub hash: ::std::string::String,
+        /// The artifact ID.
+        pub id: ArtifactId,
+        /// The size of the artifact in bytes.
+        pub size: u64,
+    }
+
+    impl ::std::convert::From<&TufArtifactMeta> for TufArtifactMeta {
+        fn from(value: &TufArtifactMeta) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufArtifactMeta {
+        pub fn builder() -> builder::TufArtifactMeta {
+            Default::default()
+        }
+    }
+
+    /// A description of an uploaded TUF repository.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A description of an uploaded TUF repository.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "artifacts",
+    ///    "repo"
+    ///  ],
+    ///  "properties": {
+    ///    "artifacts": {
+    ///      "description": "Information about the artifacts present in the
+    /// repository.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/TufArtifactMeta"
+    ///      }
+    ///    },
+    ///    "repo": {
+    ///      "description": "Information about the repository.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TufRepoMeta"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoDescription {
+        /// Information about the artifacts present in the repository.
+        pub artifacts: ::std::vec::Vec<TufArtifactMeta>,
+        /// Information about the repository.
+        pub repo: TufRepoMeta,
+    }
+
+    impl ::std::convert::From<&TufRepoDescription> for TufRepoDescription {
+        fn from(value: &TufRepoDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoDescription {
+        pub fn builder() -> builder::TufRepoDescription {
+            Default::default()
+        }
+    }
+
+    /// Data about a successful TUF repo get from Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Data about a successful TUF repo get from Nexus.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "The description of the repository.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TufRepoDescription"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoGetResponse {
+        /// The description of the repository.
+        pub description: TufRepoDescription,
+    }
+
+    impl ::std::convert::From<&TufRepoGetResponse> for TufRepoGetResponse {
+        fn from(value: &TufRepoGetResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoGetResponse {
+        pub fn builder() -> builder::TufRepoGetResponse {
+            Default::default()
+        }
+    }
+
+    /// Data about a successful TUF repo import into Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Data about a successful TUF repo import into Nexus.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "recorded",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "recorded": {
+    ///      "description": "The repository as present in the database.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TufRepoDescription"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "status": {
+    ///      "description": "Whether this repository already existed or is
+    /// new.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/TufRepoInsertStatus"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoInsertResponse {
+        /// The repository as present in the database.
+        pub recorded: TufRepoDescription,
+        /// Whether this repository already existed or is new.
+        pub status: TufRepoInsertStatus,
+    }
+
+    impl ::std::convert::From<&TufRepoInsertResponse> for TufRepoInsertResponse {
+        fn from(value: &TufRepoInsertResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoInsertResponse {
+        pub fn builder() -> builder::TufRepoInsertResponse {
+            Default::default()
+        }
+    }
+
+    /// Status of a TUF repo import.
+    ///
+    /// Part of `TufRepoInsertResponse`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Status of a TUF repo import.\n\nPart of
+    /// `TufRepoInsertResponse`.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The repository already existed in the database.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "already_exists"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The repository did not exist, and was inserted into
+    /// the database.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "inserted"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum TufRepoInsertStatus {
+        /// The repository already existed in the database.
+        #[serde(rename = "already_exists")]
+        AlreadyExists,
+        /// The repository did not exist, and was inserted into the database.
+        #[serde(rename = "inserted")]
+        Inserted,
+    }
+
+    impl ::std::convert::From<&Self> for TufRepoInsertStatus {
+        fn from(value: &TufRepoInsertStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for TufRepoInsertStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AlreadyExists => write!(f, "already_exists"),
+                Self::Inserted => write!(f, "inserted"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for TufRepoInsertStatus {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "already_exists" => Ok(Self::AlreadyExists),
+                "inserted" => Ok(Self::Inserted),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoInsertStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoInsertStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoInsertStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// Metadata about a TUF repository.
+    ///
+    /// Found within a `TufRepoDescription`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Metadata about a TUF repository.\n\nFound within a
+    /// `TufRepoDescription`.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "file_name",
+    ///    "hash",
+    ///    "system_version",
+    ///    "targets_role_version",
+    ///    "valid_until"
+    ///  ],
+    ///  "properties": {
+    ///    "file_name": {
+    ///      "description": "The file name of the repository.\n\nThis is purely
+    /// used for debugging and may not always be correct (e.g. with wicket, we
+    /// read the file contents from stdin so we don't know the correct file
+    /// name).",
+    ///      "type": "string"
+    ///    },
+    ///    "hash": {
+    ///      "description": "The hash of the repository.\n\nThis is a slight
+    /// abuse of `ArtifactHash`, since that's the hash of individual artifacts
+    /// within the repository. However, we use it here for convenience.",
+    ///      "type": "string",
+    ///      "format": "hex string (32 bytes)"
+    ///    },
+    ///    "system_version": {
+    ///      "description": "The system version in artifacts.json.",
+    ///      "type": "string",
+    ///      "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    ///    },
+    ///    "targets_role_version": {
+    ///      "description": "The version of the targets role.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "valid_until": {
+    ///      "description": "The time until which the repo is valid.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoMeta {
+        /// The file name of the repository.
+        ///
+        /// This is purely used for debugging and may not always be correct
+        /// (e.g. with wicket, we read the file contents from stdin so we don't
+        /// know the correct file name).
+        pub file_name: ::std::string::String,
+        /// The hash of the repository.
+        ///
+        /// This is a slight abuse of `ArtifactHash`, since that's the hash of
+        /// individual artifacts within the repository. However, we use it here
+        /// for convenience.
+        pub hash: ::std::string::String,
+        /// The system version in artifacts.json.
+        pub system_version: TufRepoMetaSystemVersion,
+        /// The version of the targets role.
+        pub targets_role_version: u64,
+        /// The time until which the repo is valid.
+        pub valid_until: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&TufRepoMeta> for TufRepoMeta {
+        fn from(value: &TufRepoMeta) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoMeta {
+        pub fn builder() -> builder::TufRepoMeta {
+            Default::default()
+        }
+    }
+
+    /// The system version in artifacts.json.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The system version in artifacts.json.",
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct TufRepoMetaSystemVersion(::std::string::String);
+    impl ::std::ops::Deref for TufRepoMetaSystemVersion {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<TufRepoMetaSystemVersion> for ::std::string::String {
+        fn from(value: TufRepoMetaSystemVersion) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&TufRepoMetaSystemVersion> for TufRepoMetaSystemVersion {
+        fn from(value: &TufRepoMetaSystemVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for TufRepoMetaSystemVersion {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+                ::std::sync::LazyLock::new(|| {
+                    ::regress::Regex::new(
+                        "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
+                         [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*\
+                         ))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    )
+                    .unwrap()
+                });
+            if (&*PATTERN).find(value).is_none() {
+                return Err("doesn't match pattern \
+                            \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*\
+                            |\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*\
+                            [a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.\
+                            [0-9a-zA-Z-]+)*))?$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoMetaSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoMetaSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoMetaSystemVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for TufRepoMetaSystemVersion {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
         }
     }
 
@@ -35994,6 +36679,79 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ArtifactId {
+            kind: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for ArtifactId {
+            fn default() -> Self {
+                Self {
+                    kind: Err("no value supplied for kind".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+
+        impl ArtifactId {
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ArtifactId> for super::ArtifactId {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ArtifactId,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    kind: value.kind?,
+                    name: value.name?,
+                    version: value.version?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ArtifactId> for ArtifactId {
+            fn from(value: super::ArtifactId) -> Self {
+                Self {
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    version: Ok(value.version),
                 }
             }
         }
@@ -55464,6 +56222,355 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct TufArtifactMeta {
+            hash: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
+            size: ::std::result::Result<u64, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TufArtifactMeta {
+            fn default() -> Self {
+                Self {
+                    hash: Err("no value supplied for hash".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    size: Err("no value supplied for size".to_string()),
+                }
+            }
+        }
+
+        impl TufArtifactMeta {
+            pub fn hash<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.hash = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for hash: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::ArtifactId>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn size<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.size = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for size: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufArtifactMeta> for super::TufArtifactMeta {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufArtifactMeta,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    hash: value.hash?,
+                    id: value.id?,
+                    size: value.size?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufArtifactMeta> for TufArtifactMeta {
+            fn from(value: super::TufArtifactMeta) -> Self {
+                Self {
+                    hash: Ok(value.hash),
+                    id: Ok(value.id),
+                    size: Ok(value.size),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoDescription {
+            artifacts: ::std::result::Result<
+                ::std::vec::Vec<super::TufArtifactMeta>,
+                ::std::string::String,
+            >,
+            repo: ::std::result::Result<super::TufRepoMeta, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TufRepoDescription {
+            fn default() -> Self {
+                Self {
+                    artifacts: Err("no value supplied for artifacts".to_string()),
+                    repo: Err("no value supplied for repo".to_string()),
+                }
+            }
+        }
+
+        impl TufRepoDescription {
+            pub fn artifacts<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::TufArtifactMeta>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.artifacts = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for artifacts: {}", e));
+                self
+            }
+            pub fn repo<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.repo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for repo: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoDescription> for super::TufRepoDescription {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoDescription,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    artifacts: value.artifacts?,
+                    repo: value.repo?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoDescription> for TufRepoDescription {
+            fn from(value: super::TufRepoDescription) -> Self {
+                Self {
+                    artifacts: Ok(value.artifacts),
+                    repo: Ok(value.repo),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoGetResponse {
+            description: ::std::result::Result<super::TufRepoDescription, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TufRepoGetResponse {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                }
+            }
+        }
+
+        impl TufRepoGetResponse {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoDescription>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoGetResponse> for super::TufRepoGetResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoGetResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoGetResponse> for TufRepoGetResponse {
+            fn from(value: super::TufRepoGetResponse) -> Self {
+                Self {
+                    description: Ok(value.description),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoInsertResponse {
+            recorded: ::std::result::Result<super::TufRepoDescription, ::std::string::String>,
+            status: ::std::result::Result<super::TufRepoInsertStatus, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TufRepoInsertResponse {
+            fn default() -> Self {
+                Self {
+                    recorded: Err("no value supplied for recorded".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+
+        impl TufRepoInsertResponse {
+            pub fn recorded<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoDescription>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.recorded = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for recorded: {}", e));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoInsertStatus>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoInsertResponse> for super::TufRepoInsertResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoInsertResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    recorded: value.recorded?,
+                    status: value.status?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoInsertResponse> for TufRepoInsertResponse {
+            fn from(value: super::TufRepoInsertResponse) -> Self {
+                Self {
+                    recorded: Ok(value.recorded),
+                    status: Ok(value.status),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoMeta {
+            file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            hash: ::std::result::Result<::std::string::String, ::std::string::String>,
+            system_version:
+                ::std::result::Result<super::TufRepoMetaSystemVersion, ::std::string::String>,
+            targets_role_version: ::std::result::Result<u64, ::std::string::String>,
+            valid_until: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for TufRepoMeta {
+            fn default() -> Self {
+                Self {
+                    file_name: Err("no value supplied for file_name".to_string()),
+                    hash: Err("no value supplied for hash".to_string()),
+                    system_version: Err("no value supplied for system_version".to_string()),
+                    targets_role_version: Err(
+                        "no value supplied for targets_role_version".to_string()
+                    ),
+                    valid_until: Err("no value supplied for valid_until".to_string()),
+                }
+            }
+        }
+
+        impl TufRepoMeta {
+            pub fn file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_name: {}", e));
+                self
+            }
+            pub fn hash<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.hash = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for hash: {}", e));
+                self
+            }
+            pub fn system_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoMetaSystemVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for system_version: {}", e)
+                });
+                self
+            }
+            pub fn targets_role_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.targets_role_version = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for targets_role_version: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn valid_until<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.valid_until = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for valid_until: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoMeta> for super::TufRepoMeta {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoMeta,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    file_name: value.file_name?,
+                    hash: value.hash?,
+                    system_version: value.system_version?,
+                    targets_role_version: value.targets_role_version?,
+                    valid_until: value.valid_until?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoMeta> for TufRepoMeta {
+            fn from(value: super::TufRepoMeta) -> Self {
+                Self {
+                    file_name: Ok(value.file_name),
+                    hash: Ok(value.hash),
+                    system_version: Ok(value.system_version),
+                    targets_role_version: Ok(value.targets_role_version),
+                    valid_until: Ok(value.valid_until),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct TxEqConfig {
             main: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
             post1: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
@@ -59077,6 +60184,205 @@ impl ClientAffinityExt for Client {
     }
 }
 
+/// API for console authentication
+pub trait ClientConsoleAuthExt {
+    /// Start an OAuth 2.0 Device Authorization Grant
+    ///
+    /// This endpoint is designed to be accessed from an *unauthenticated* API
+    /// client. It generates and records a `device_code` and `user_code` which
+    /// must be verified and confirmed prior to a token being granted.
+    ///
+    /// Sends a `POST` request to `/device/auth`
+    ///
+    /// ```ignore
+    /// let response = client.device_auth_request()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn device_auth_request(&self) -> builder::DeviceAuthRequest;
+    /// Confirm an OAuth 2.0 Device Authorization Grant
+    ///
+    /// This endpoint is designed to be accessed by the user agent (browser),
+    /// not the client requesting the token. So we do not actually return the
+    /// token here; it will be returned in response to the poll on
+    /// `/device/token`.
+    ///
+    /// Sends a `POST` request to `/device/confirm`
+    ///
+    /// ```ignore
+    /// let response = client.device_auth_confirm()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm;
+    /// Request a device access token
+    ///
+    /// This endpoint should be polled by the client until the user code is
+    /// verified and the grant is confirmed.
+    ///
+    /// Sends a `POST` request to `/device/token`
+    ///
+    /// ```ignore
+    /// let response = client.device_access_token()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn device_access_token(&self) -> builder::DeviceAccessToken;
+    /// Log user out of web console by deleting session on client and server
+    ///
+    /// Sends a `POST` request to `/v1/logout`
+    ///
+    /// ```ignore
+    /// let response = client.logout()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn logout(&self) -> builder::Logout;
+}
+
+impl ClientConsoleAuthExt for Client {
+    fn device_auth_request(&self) -> builder::DeviceAuthRequest {
+        builder::DeviceAuthRequest::new(self)
+    }
+
+    fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm {
+        builder::DeviceAuthConfirm::new(self)
+    }
+
+    fn device_access_token(&self) -> builder::DeviceAccessToken {
+        builder::DeviceAccessToken::new(self)
+    }
+
+    fn logout(&self) -> builder::Logout {
+        builder::Logout::new(self)
+    }
+}
+
+/// Information pertaining to the current user.
+pub trait ClientCurrentUserExt {
+    /// Fetch user for current session
+    ///
+    /// Sends a `GET` request to `/v1/me`
+    ///
+    /// ```ignore
+    /// let response = client.current_user_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_view(&self) -> builder::CurrentUserView;
+    /// Fetch current user's groups
+    ///
+    /// Sends a `GET` request to `/v1/me/groups`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.current_user_groups()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_groups(&self) -> builder::CurrentUserGroups;
+    /// List SSH public keys
+    ///
+    /// Lists SSH public keys for the currently authenticated user.
+    ///
+    /// Sends a `GET` request to `/v1/me/ssh-keys`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.current_user_ssh_key_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
+    /// Create SSH public key
+    ///
+    /// Create an SSH public key for the currently authenticated user.
+    ///
+    /// Sends a `POST` request to `/v1/me/ssh-keys`
+    ///
+    /// ```ignore
+    /// let response = client.current_user_ssh_key_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
+    /// Fetch SSH public key
+    ///
+    /// Fetch SSH public key associated with the currently authenticated user.
+    ///
+    /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
+    ///
+    /// Arguments:
+    /// - `ssh_key`: Name or ID of the SSH key
+    /// ```ignore
+    /// let response = client.current_user_ssh_key_view()
+    ///    .ssh_key(ssh_key)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
+    /// Delete SSH public key
+    ///
+    /// Delete an SSH public key associated with the currently authenticated
+    /// user.
+    ///
+    /// Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
+    ///
+    /// Arguments:
+    /// - `ssh_key`: Name or ID of the SSH key
+    /// ```ignore
+    /// let response = client.current_user_ssh_key_delete()
+    ///    .ssh_key(ssh_key)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete;
+}
+
+impl ClientCurrentUserExt for Client {
+    fn current_user_view(&self) -> builder::CurrentUserView {
+        builder::CurrentUserView::new(self)
+    }
+
+    fn current_user_groups(&self) -> builder::CurrentUserGroups {
+        builder::CurrentUserGroups::new(self)
+    }
+
+    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList {
+        builder::CurrentUserSshKeyList::new(self)
+    }
+
+    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate {
+        builder::CurrentUserSshKeyCreate::new(self)
+    }
+
+    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView {
+        builder::CurrentUserSshKeyView::new(self)
+    }
+
+    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete {
+        builder::CurrentUserSshKeyDelete::new(self)
+    }
+}
+
 /// Virtual disks are used to store instance-local data which includes the
 /// operating system.
 pub trait ClientDisksExt {
@@ -59281,203 +60587,8 @@ impl ClientDisksExt for Client {
     }
 }
 
-/// Floating IPs allow a project to allocate well-known IPs to instances.
-pub trait ClientFloatingIpsExt {
-    /// List floating IPs
-    ///
-    /// Sends a `GET` request to `/v1/floating-ips`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `project`: Name or ID of the project
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.floating_ip_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .project(project)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_list(&self) -> builder::FloatingIpList;
-    /// Create floating IP
-    ///
-    /// Sends a `POST` request to `/v1/floating-ips`
-    ///
-    /// Arguments:
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.floating_ip_create()
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_create(&self) -> builder::FloatingIpCreate;
-    /// Fetch floating IP
-    ///
-    /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
-    ///
-    /// Arguments:
-    /// - `floating_ip`: Name or ID of the floating IP
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.floating_ip_view()
-    ///    .floating_ip(floating_ip)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_view(&self) -> builder::FloatingIpView;
-    /// Update floating IP
-    ///
-    /// Sends a `PUT` request to `/v1/floating-ips/{floating_ip}`
-    ///
-    /// Arguments:
-    /// - `floating_ip`: Name or ID of the floating IP
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.floating_ip_update()
-    ///    .floating_ip(floating_ip)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_update(&self) -> builder::FloatingIpUpdate;
-    /// Delete floating IP
-    ///
-    /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
-    ///
-    /// Arguments:
-    /// - `floating_ip`: Name or ID of the floating IP
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.floating_ip_delete()
-    ///    .floating_ip(floating_ip)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
-    /// Attach floating IP
-    ///
-    /// Attach floating IP to an instance or other resource.
-    ///
-    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
-    ///
-    /// Arguments:
-    /// - `floating_ip`: Name or ID of the floating IP
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.floating_ip_attach()
-    ///    .floating_ip(floating_ip)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_attach(&self) -> builder::FloatingIpAttach;
-    /// Detach floating IP
-    ///
-    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
-    ///
-    /// Arguments:
-    /// - `floating_ip`: Name or ID of the floating IP
-    /// - `project`: Name or ID of the project
-    /// ```ignore
-    /// let response = client.floating_ip_detach()
-    ///    .floating_ip(floating_ip)
-    ///    .project(project)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn floating_ip_detach(&self) -> builder::FloatingIpDetach;
-}
-
-impl ClientFloatingIpsExt for Client {
-    fn floating_ip_list(&self) -> builder::FloatingIpList {
-        builder::FloatingIpList::new(self)
-    }
-
-    fn floating_ip_create(&self) -> builder::FloatingIpCreate {
-        builder::FloatingIpCreate::new(self)
-    }
-
-    fn floating_ip_view(&self) -> builder::FloatingIpView {
-        builder::FloatingIpView::new(self)
-    }
-
-    fn floating_ip_update(&self) -> builder::FloatingIpUpdate {
-        builder::FloatingIpUpdate::new(self)
-    }
-
-    fn floating_ip_delete(&self) -> builder::FloatingIpDelete {
-        builder::FloatingIpDelete::new(self)
-    }
-
-    fn floating_ip_attach(&self) -> builder::FloatingIpAttach {
-        builder::FloatingIpAttach::new(self)
-    }
-
-    fn floating_ip_detach(&self) -> builder::FloatingIpDetach {
-        builder::FloatingIpDetach::new(self)
-    }
-}
-
-/// TODO operations that will not ship to customers
-pub trait ClientHiddenExt {
-    /// Start an OAuth 2.0 Device Authorization Grant
-    ///
-    /// This endpoint is designed to be accessed from an *unauthenticated* API
-    /// client. It generates and records a `device_code` and `user_code` which
-    /// must be verified and confirmed prior to a token being granted.
-    ///
-    /// Sends a `POST` request to `/device/auth`
-    ///
-    /// ```ignore
-    /// let response = client.device_auth_request()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn device_auth_request(&self) -> builder::DeviceAuthRequest;
-    /// Confirm an OAuth 2.0 Device Authorization Grant
-    ///
-    /// This endpoint is designed to be accessed by the user agent (browser),
-    /// not the client requesting the token. So we do not actually return the
-    /// token here; it will be returned in response to the poll on
-    /// `/device/token`.
-    ///
-    /// Sends a `POST` request to `/device/confirm`
-    ///
-    /// ```ignore
-    /// let response = client.device_auth_confirm()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm;
-    /// Request a device access token
-    ///
-    /// This endpoint should be polled by the client until the user code is
-    /// verified and the grant is confirmed.
-    ///
-    /// Sends a `POST` request to `/device/token`
-    ///
-    /// ```ignore
-    /// let response = client.device_access_token()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn device_access_token(&self) -> builder::DeviceAccessToken;
+/// Experimental, unstable interfaces, primarily for use by Oxide personnel
+pub trait ClientExperimentalExt {
     /// List instrumentation probes
     ///
     /// Sends a `GET` request to `/experimental/v1/probes`
@@ -59881,16 +60992,36 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList;
-    /// Log user out of web console by deleting session on client and server
+    /// Upload TUF repository
     ///
-    /// Sends a `POST` request to `/v1/logout`
+    /// Sends a `PUT` request to `/v1/system/update/repository`
     ///
+    /// Arguments:
+    /// - `file_name`: The name of the uploaded file.
+    /// - `body`
     /// ```ignore
-    /// let response = client.logout()
+    /// let response = client.system_update_put_repository()
+    ///    .file_name(file_name)
+    ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn logout(&self) -> builder::Logout;
+    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository;
+    /// Fetch TUF repository description
+    ///
+    /// Fetch description of TUF repository by system version.
+    ///
+    /// Sends a `GET` request to `/v1/system/update/repository/{system_version}`
+    ///
+    /// Arguments:
+    /// - `system_version`: The version to get.
+    /// ```ignore
+    /// let response = client.system_update_get_repository()
+    ///    .system_version(system_version)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository;
     /// Get the current target release of the rack's system software
     ///
     /// This may not correspond to the actual software running on the rack at
@@ -59943,19 +61074,7 @@ pub trait ClientHiddenExt {
     fn timeseries_query(&self) -> builder::TimeseriesQuery;
 }
 
-impl ClientHiddenExt for Client {
-    fn device_auth_request(&self) -> builder::DeviceAuthRequest {
-        builder::DeviceAuthRequest::new(self)
-    }
-
-    fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm {
-        builder::DeviceAuthConfirm::new(self)
-    }
-
-    fn device_access_token(&self) -> builder::DeviceAccessToken {
-        builder::DeviceAccessToken::new(self)
-    }
-
+impl ClientExperimentalExt for Client {
     fn probe_list(&self) -> builder::ProbeList {
         builder::ProbeList::new(self)
     }
@@ -60048,8 +61167,12 @@ impl ClientHiddenExt for Client {
         builder::InstanceAffinityGroupList::new(self)
     }
 
-    fn logout(&self) -> builder::Logout {
-        builder::Logout::new(self)
+    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository {
+        builder::SystemUpdatePutRepository::new(self)
+    }
+
+    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository {
+        builder::SystemUpdateGetRepository::new(self)
     }
 
     fn target_release_view(&self) -> builder::TargetReleaseView {
@@ -60062,6 +61185,156 @@ impl ClientHiddenExt for Client {
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery {
         builder::TimeseriesQuery::new(self)
+    }
+}
+
+/// Floating IPs allow a project to allocate well-known IPs to instances.
+pub trait ClientFloatingIpsExt {
+    /// List floating IPs
+    ///
+    /// Sends a `GET` request to `/v1/floating-ips`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.floating_ip_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_list(&self) -> builder::FloatingIpList;
+    /// Create floating IP
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_create(&self) -> builder::FloatingIpCreate;
+    /// Fetch floating IP
+    ///
+    /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_view()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_view(&self) -> builder::FloatingIpView;
+    /// Update floating IP
+    ///
+    /// Sends a `PUT` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_update()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_update(&self) -> builder::FloatingIpUpdate;
+    /// Delete floating IP
+    ///
+    /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_delete()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
+    /// Attach floating IP
+    ///
+    /// Attach floating IP to an instance or other resource.
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_attach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach;
+    /// Detach floating IP
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_detach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach;
+}
+
+impl ClientFloatingIpsExt for Client {
+    fn floating_ip_list(&self) -> builder::FloatingIpList {
+        builder::FloatingIpList::new(self)
+    }
+
+    fn floating_ip_create(&self) -> builder::FloatingIpCreate {
+        builder::FloatingIpCreate::new(self)
+    }
+
+    fn floating_ip_view(&self) -> builder::FloatingIpView {
+        builder::FloatingIpView::new(self)
+    }
+
+    fn floating_ip_update(&self) -> builder::FloatingIpUpdate {
+        builder::FloatingIpUpdate::new(self)
+    }
+
+    fn floating_ip_delete(&self) -> builder::FloatingIpDelete {
+        builder::FloatingIpDelete::new(self)
+    }
+
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach {
+        builder::FloatingIpAttach::new(self)
+    }
+
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach {
+        builder::FloatingIpDetach::new(self)
     }
 }
 
@@ -61065,128 +62338,6 @@ impl ClientRolesExt for Client {
 
     fn role_view(&self) -> builder::RoleView {
         builder::RoleView::new(self)
-    }
-}
-
-/// Information pertaining to the current session.
-pub trait ClientSessionExt {
-    /// Fetch user for current session
-    ///
-    /// Sends a `GET` request to `/v1/me`
-    ///
-    /// ```ignore
-    /// let response = client.current_user_view()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch current user's groups
-    ///
-    /// Sends a `GET` request to `/v1/me/groups`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.current_user_groups()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_groups(&self) -> builder::CurrentUserGroups;
-    /// List SSH public keys
-    ///
-    /// Lists SSH public keys for the currently authenticated user.
-    ///
-    /// Sends a `GET` request to `/v1/me/ssh-keys`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.current_user_ssh_key_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
-    /// Create SSH public key
-    ///
-    /// Create an SSH public key for the currently authenticated user.
-    ///
-    /// Sends a `POST` request to `/v1/me/ssh-keys`
-    ///
-    /// ```ignore
-    /// let response = client.current_user_ssh_key_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
-    /// Fetch SSH public key
-    ///
-    /// Fetch SSH public key associated with the currently authenticated user.
-    ///
-    /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
-    ///
-    /// Arguments:
-    /// - `ssh_key`: Name or ID of the SSH key
-    /// ```ignore
-    /// let response = client.current_user_ssh_key_view()
-    ///    .ssh_key(ssh_key)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
-    /// Delete SSH public key
-    ///
-    /// Delete an SSH public key associated with the currently authenticated
-    /// user.
-    ///
-    /// Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
-    ///
-    /// Arguments:
-    /// - `ssh_key`: Name or ID of the SSH key
-    /// ```ignore
-    /// let response = client.current_user_ssh_key_delete()
-    ///    .ssh_key(ssh_key)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete;
-}
-
-impl ClientSessionExt for Client {
-    fn current_user_view(&self) -> builder::CurrentUserView {
-        builder::CurrentUserView::new(self)
-    }
-
-    fn current_user_groups(&self) -> builder::CurrentUserGroups {
-        builder::CurrentUserGroups::new(self)
-    }
-
-    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList {
-        builder::CurrentUserSshKeyList::new(self)
-    }
-
-    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate {
-        builder::CurrentUserSshKeyCreate::new(self)
-    }
-
-    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView {
-        builder::CurrentUserSshKeyView::new(self)
-    }
-
-    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete {
-        builder::CurrentUserSshKeyDelete::new(self)
     }
 }
 
@@ -64559,9 +65710,9 @@ pub mod builder {
         encode_path, ByteStream, ClientHooks, ClientInfo, Error, OperationInfo, RequestBuilderExt,
         ResponseValue,
     };
-    /// Builder for [`ClientHiddenExt::device_auth_request`]
+    /// Builder for [`ClientConsoleAuthExt::device_auth_request`]
     ///
-    /// [`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
+    /// [`ClientConsoleAuthExt::device_auth_request`]: super::ClientConsoleAuthExt::device_auth_request
     #[derive(Debug, Clone)]
     pub struct DeviceAuthRequest<'a> {
         client: &'a super::Client,
@@ -64631,9 +65782,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::device_auth_confirm`]
+    /// Builder for [`ClientConsoleAuthExt::device_auth_confirm`]
     ///
-    /// [`ClientHiddenExt::device_auth_confirm`]: super::ClientHiddenExt::device_auth_confirm
+    /// [`ClientConsoleAuthExt::device_auth_confirm`]: super::ClientConsoleAuthExt::device_auth_confirm
     #[derive(Debug, Clone)]
     pub struct DeviceAuthConfirm<'a> {
         client: &'a super::Client,
@@ -64713,9 +65864,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::device_access_token`]
+    /// Builder for [`ClientConsoleAuthExt::device_access_token`]
     ///
-    /// [`ClientHiddenExt::device_access_token`]: super::ClientHiddenExt::device_access_token
+    /// [`ClientConsoleAuthExt::device_access_token`]: super::ClientConsoleAuthExt::device_access_token
     #[derive(Debug, Clone)]
     pub struct DeviceAccessToken<'a> {
         client: &'a super::Client,
@@ -64789,9 +65940,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::probe_list`]
+    /// Builder for [`ClientExperimentalExt::probe_list`]
     ///
-    /// [`ClientHiddenExt::probe_list`]: super::ClientHiddenExt::probe_list
+    /// [`ClientExperimentalExt::probe_list`]: super::ClientExperimentalExt::probe_list
     #[derive(Debug, Clone)]
     pub struct ProbeList<'a> {
         client: &'a super::Client,
@@ -64959,9 +66110,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::probe_create`]
+    /// Builder for [`ClientExperimentalExt::probe_create`]
     ///
-    /// [`ClientHiddenExt::probe_create`]: super::ClientHiddenExt::probe_create
+    /// [`ClientExperimentalExt::probe_create`]: super::ClientExperimentalExt::probe_create
     #[derive(Debug, Clone)]
     pub struct ProbeCreate<'a> {
         client: &'a super::Client,
@@ -65057,9 +66208,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::probe_view`]
+    /// Builder for [`ClientExperimentalExt::probe_view`]
     ///
-    /// [`ClientHiddenExt::probe_view`]: super::ClientHiddenExt::probe_view
+    /// [`ClientExperimentalExt::probe_view`]: super::ClientExperimentalExt::probe_view
     #[derive(Debug, Clone)]
     pub struct ProbeView<'a> {
         client: &'a super::Client,
@@ -65146,9 +66297,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::probe_delete`]
+    /// Builder for [`ClientExperimentalExt::probe_delete`]
     ///
-    /// [`ClientHiddenExt::probe_delete`]: super::ClientHiddenExt::probe_delete
+    /// [`ClientExperimentalExt::probe_delete`]: super::ClientExperimentalExt::probe_delete
     #[derive(Debug, Clone)]
     pub struct ProbeDelete<'a> {
         client: &'a super::Client,
@@ -65235,9 +66386,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_list`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_list`]
     ///
-    /// [`ClientHiddenExt::support_bundle_list`]: super::ClientHiddenExt::support_bundle_list
+    /// [`ClientExperimentalExt::support_bundle_list`]: super::ClientExperimentalExt::support_bundle_list
     #[derive(Debug, Clone)]
     pub struct SupportBundleList<'a> {
         client: &'a super::Client,
@@ -65390,9 +66541,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_create`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_create`]
     ///
-    /// [`ClientHiddenExt::support_bundle_create`]: super::ClientHiddenExt::support_bundle_create
+    /// [`ClientExperimentalExt::support_bundle_create`]: super::ClientExperimentalExt::support_bundle_create
     #[derive(Debug, Clone)]
     pub struct SupportBundleCreate<'a> {
         client: &'a super::Client,
@@ -65444,9 +66595,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_view`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_view`]
     ///
-    /// [`ClientHiddenExt::support_bundle_view`]: super::ClientHiddenExt::support_bundle_view
+    /// [`ClientExperimentalExt::support_bundle_view`]: super::ClientExperimentalExt::support_bundle_view
     #[derive(Debug, Clone)]
     pub struct SupportBundleView<'a> {
         client: &'a super::Client,
@@ -65518,9 +66669,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_delete`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_delete`]
     ///
-    /// [`ClientHiddenExt::support_bundle_delete`]: super::ClientHiddenExt::support_bundle_delete
+    /// [`ClientExperimentalExt::support_bundle_delete`]: super::ClientExperimentalExt::support_bundle_delete
     #[derive(Debug, Clone)]
     pub struct SupportBundleDelete<'a> {
         client: &'a super::Client,
@@ -65590,9 +66741,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_download`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_download`]
     ///
-    /// [`ClientHiddenExt::support_bundle_download`]: super::ClientHiddenExt::support_bundle_download
+    /// [`ClientExperimentalExt::support_bundle_download`]: super::ClientExperimentalExt::support_bundle_download
     #[derive(Debug, Clone)]
     pub struct SupportBundleDownload<'a> {
         client: &'a super::Client,
@@ -65668,9 +66819,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_head`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_head`]
     ///
-    /// [`ClientHiddenExt::support_bundle_head`]: super::ClientHiddenExt::support_bundle_head
+    /// [`ClientExperimentalExt::support_bundle_head`]: super::ClientExperimentalExt::support_bundle_head
     #[derive(Debug, Clone)]
     pub struct SupportBundleHead<'a> {
         client: &'a super::Client,
@@ -65746,9 +66897,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_download_file`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_download_file`]
     ///
-    /// [`ClientHiddenExt::support_bundle_download_file`]: super::ClientHiddenExt::support_bundle_download_file
+    /// [`ClientExperimentalExt::support_bundle_download_file`]: super::ClientExperimentalExt::support_bundle_download_file
     #[derive(Debug, Clone)]
     pub struct SupportBundleDownloadFile<'a> {
         client: &'a super::Client,
@@ -65840,9 +66991,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_head_file`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_head_file`]
     ///
-    /// [`ClientHiddenExt::support_bundle_head_file`]: super::ClientHiddenExt::support_bundle_head_file
+    /// [`ClientExperimentalExt::support_bundle_head_file`]: super::ClientExperimentalExt::support_bundle_head_file
     #[derive(Debug, Clone)]
     pub struct SupportBundleHeadFile<'a> {
         client: &'a super::Client,
@@ -65934,9 +67085,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::support_bundle_index`]
+    /// Builder for [`ClientExperimentalExt::support_bundle_index`]
     ///
-    /// [`ClientHiddenExt::support_bundle_index`]: super::ClientHiddenExt::support_bundle_index
+    /// [`ClientExperimentalExt::support_bundle_index`]: super::ClientExperimentalExt::support_bundle_index
     #[derive(Debug, Clone)]
     pub struct SupportBundleIndex<'a> {
         client: &'a super::Client,
@@ -66116,9 +67267,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_list`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_list`]
     ///
-    /// [`ClientHiddenExt::affinity_group_list`]: super::ClientHiddenExt::affinity_group_list
+    /// [`ClientExperimentalExt::affinity_group_list`]: super::ClientExperimentalExt::affinity_group_list
     #[derive(Debug, Clone)]
     pub struct AffinityGroupList<'a> {
         client: &'a super::Client,
@@ -66286,9 +67437,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_create`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_create`]
     ///
-    /// [`ClientHiddenExt::affinity_group_create`]: super::ClientHiddenExt::affinity_group_create
+    /// [`ClientExperimentalExt::affinity_group_create`]: super::ClientExperimentalExt::affinity_group_create
     #[derive(Debug, Clone)]
     pub struct AffinityGroupCreate<'a> {
         client: &'a super::Client,
@@ -66388,9 +67539,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_view`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_view`]
     ///
-    /// [`ClientHiddenExt::affinity_group_view`]: super::ClientHiddenExt::affinity_group_view
+    /// [`ClientExperimentalExt::affinity_group_view`]: super::ClientExperimentalExt::affinity_group_view
     #[derive(Debug, Clone)]
     pub struct AffinityGroupView<'a> {
         client: &'a super::Client,
@@ -66480,9 +67631,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_update`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_update`]
     ///
-    /// [`ClientHiddenExt::affinity_group_update`]: super::ClientHiddenExt::affinity_group_update
+    /// [`ClientExperimentalExt::affinity_group_update`]: super::ClientExperimentalExt::affinity_group_update
     #[derive(Debug, Clone)]
     pub struct AffinityGroupUpdate<'a> {
         client: &'a super::Client,
@@ -66601,9 +67752,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_delete`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_delete`]
     ///
-    /// [`ClientHiddenExt::affinity_group_delete`]: super::ClientHiddenExt::affinity_group_delete
+    /// [`ClientExperimentalExt::affinity_group_delete`]: super::ClientExperimentalExt::affinity_group_delete
     #[derive(Debug, Clone)]
     pub struct AffinityGroupDelete<'a> {
         client: &'a super::Client,
@@ -66691,9 +67842,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_member_list`]
+    /// Builder for [`ClientExperimentalExt::affinity_group_member_list`]
     ///
-    /// [`ClientHiddenExt::affinity_group_member_list`]: super::ClientHiddenExt::affinity_group_member_list
+    /// [`ClientExperimentalExt::affinity_group_member_list`]: super::ClientExperimentalExt::affinity_group_member_list
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberList<'a> {
         client: &'a super::Client,
@@ -66883,9 +68034,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_view`]
+    /// Builder for
+    /// [`ClientExperimentalExt::affinity_group_member_instance_view`]
     ///
-    /// [`ClientHiddenExt::affinity_group_member_instance_view`]: super::ClientHiddenExt::affinity_group_member_instance_view
+    /// [`ClientExperimentalExt::affinity_group_member_instance_view`]: super::ClientExperimentalExt::affinity_group_member_instance_view
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceView<'a> {
         client: &'a super::Client,
@@ -66991,9 +68143,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_add`]
+    /// Builder for
+    /// [`ClientExperimentalExt::affinity_group_member_instance_add`]
     ///
-    /// [`ClientHiddenExt::affinity_group_member_instance_add`]: super::ClientHiddenExt::affinity_group_member_instance_add
+    /// [`ClientExperimentalExt::affinity_group_member_instance_add`]: super::ClientExperimentalExt::affinity_group_member_instance_add
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceAdd<'a> {
         client: &'a super::Client,
@@ -67099,9 +68252,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::affinity_group_member_instance_delete`]
+    /// Builder for
+    /// [`ClientExperimentalExt::affinity_group_member_instance_delete`]
     ///
-    /// [`ClientHiddenExt::affinity_group_member_instance_delete`]: super::ClientHiddenExt::affinity_group_member_instance_delete
+    /// [`ClientExperimentalExt::affinity_group_member_instance_delete`]: super::ClientExperimentalExt::affinity_group_member_instance_delete
     #[derive(Debug, Clone)]
     pub struct AffinityGroupMemberInstanceDelete<'a> {
         client: &'a super::Client,
@@ -73196,9 +74350,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::instance_affinity_group_list`]
+    /// Builder for [`ClientExperimentalExt::instance_affinity_group_list`]
     ///
-    /// [`ClientHiddenExt::instance_affinity_group_list`]: super::ClientHiddenExt::instance_affinity_group_list
+    /// [`ClientExperimentalExt::instance_affinity_group_list`]: super::ClientExperimentalExt::instance_affinity_group_list
     #[derive(Debug, Clone)]
     pub struct InstanceAffinityGroupList<'a> {
         client: &'a super::Client,
@@ -76854,9 +78008,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::logout`]
+    /// Builder for [`ClientConsoleAuthExt::logout`]
     ///
-    /// [`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
+    /// [`ClientConsoleAuthExt::logout`]: super::ClientConsoleAuthExt::logout
     #[derive(Debug, Clone)]
     pub struct Logout<'a> {
         client: &'a super::Client,
@@ -76906,9 +78060,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_view`]
+    /// Builder for [`ClientCurrentUserExt::current_user_view`]
     ///
-    /// [`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view
+    /// [`ClientCurrentUserExt::current_user_view`]: super::ClientCurrentUserExt::current_user_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserView<'a> {
         client: &'a super::Client,
@@ -77184,9 +78338,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_groups`]
+    /// Builder for [`ClientCurrentUserExt::current_user_groups`]
     ///
-    /// [`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups
+    /// [`ClientCurrentUserExt::current_user_groups`]: super::ClientCurrentUserExt::current_user_groups
     #[derive(Debug, Clone)]
     pub struct CurrentUserGroups<'a> {
         client: &'a super::Client,
@@ -77337,9 +78491,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_ssh_key_list`]
+    /// Builder for [`ClientCurrentUserExt::current_user_ssh_key_list`]
     ///
-    /// [`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list
+    /// [`ClientCurrentUserExt::current_user_ssh_key_list`]: super::ClientCurrentUserExt::current_user_ssh_key_list
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyList<'a> {
         client: &'a super::Client,
@@ -77490,9 +78644,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_ssh_key_create`]
+    /// Builder for [`ClientCurrentUserExt::current_user_ssh_key_create`]
     ///
-    /// [`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create
+    /// [`ClientCurrentUserExt::current_user_ssh_key_create`]: super::ClientCurrentUserExt::current_user_ssh_key_create
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyCreate<'a> {
         client: &'a super::Client,
@@ -77570,9 +78724,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_ssh_key_view`]
+    /// Builder for [`ClientCurrentUserExt::current_user_ssh_key_view`]
     ///
-    /// [`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view
+    /// [`ClientCurrentUserExt::current_user_ssh_key_view`]: super::ClientCurrentUserExt::current_user_ssh_key_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyView<'a> {
         client: &'a super::Client,
@@ -77641,9 +78795,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSessionExt::current_user_ssh_key_delete`]
+    /// Builder for [`ClientCurrentUserExt::current_user_ssh_key_delete`]
     ///
-    /// [`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete
+    /// [`ClientCurrentUserExt::current_user_ssh_key_delete`]: super::ClientCurrentUserExt::current_user_ssh_key_delete
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyDelete<'a> {
         client: &'a super::Client,
@@ -89156,9 +90310,179 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::target_release_view`]
+    /// Builder for [`ClientExperimentalExt::system_update_put_repository`]
     ///
-    /// [`ClientHiddenExt::target_release_view`]: super::ClientHiddenExt::target_release_view
+    /// [`ClientExperimentalExt::system_update_put_repository`]: super::ClientExperimentalExt::system_update_put_repository
+    #[derive(Debug)]
+    pub struct SystemUpdatePutRepository<'a> {
+        client: &'a super::Client,
+        file_name: Result<::std::string::String, String>,
+        body: Result<reqwest::Body, String>,
+    }
+
+    impl<'a> SystemUpdatePutRepository<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                file_name: Err("file_name was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn file_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file_name = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file_name failed".to_string()
+            });
+            self
+        }
+
+        pub fn body<B>(mut self, value: B) -> Self
+        where
+            B: std::convert::TryInto<reqwest::Body>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `reqwest::Body` for body failed".to_string());
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/update/repository`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TufRepoInsertResponse>, Error<types::Error>> {
+            let Self {
+                client,
+                file_name,
+                body,
+            } = self;
+            let file_name = file_name.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/repository", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .header(
+                    ::reqwest::header::CONTENT_TYPE,
+                    ::reqwest::header::HeaderValue::from_static("application/octet-stream"),
+                )
+                .body(body)
+                .query(&progenitor_client::QueryParam::new("file_name", &file_name))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_put_repository",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::system_update_get_repository`]
+    ///
+    /// [`ClientExperimentalExt::system_update_get_repository`]: super::ClientExperimentalExt::system_update_get_repository
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateGetRepository<'a> {
+        client: &'a super::Client,
+        system_version: Result<types::SystemUpdateGetRepositorySystemVersion, String>,
+    }
+
+    impl<'a> SystemUpdateGetRepository<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                system_version: Err("system_version was not initialized".to_string()),
+            }
+        }
+
+        pub fn system_version<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SystemUpdateGetRepositorySystemVersion>,
+        {
+            self.system_version = value.try_into().map_err(|_| {
+                "conversion to `SystemUpdateGetRepositorySystemVersion` for system_version failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/update/repository/{system_version}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TufRepoGetResponse>, Error<types::Error>> {
+            let Self {
+                client,
+                system_version,
+            } = self;
+            let system_version = system_version.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/update/repository/{}",
+                client.baseurl,
+                encode_path(&system_version.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_get_repository",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::target_release_view`]
+    ///
+    /// [`ClientExperimentalExt::target_release_view`]: super::ClientExperimentalExt::target_release_view
     #[derive(Debug, Clone)]
     pub struct TargetReleaseView<'a> {
         client: &'a super::Client,
@@ -89210,9 +90534,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::target_release_update`]
+    /// Builder for [`ClientExperimentalExt::target_release_update`]
     ///
-    /// [`ClientHiddenExt::target_release_update`]: super::ClientHiddenExt::target_release_update
+    /// [`ClientExperimentalExt::target_release_update`]: super::ClientExperimentalExt::target_release_update
     #[derive(Debug, Clone)]
     pub struct TargetReleaseUpdate<'a> {
         client: &'a super::Client,
@@ -90005,9 +91329,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::timeseries_query`]
+    /// Builder for [`ClientExperimentalExt::timeseries_query`]
     ///
-    /// [`ClientHiddenExt::timeseries_query`]: super::ClientHiddenExt::timeseries_query
+    /// [`ClientExperimentalExt::timeseries_query`]: super::ClientExperimentalExt::timeseries_query
     #[derive(Debug, Clone)]
     pub struct TimeseriesQuery<'a> {
         client: &'a super::Client,
@@ -93773,9 +95097,11 @@ pub mod prelude {
     #[allow(unused_imports)]
     pub use super::Client;
     pub use super::ClientAffinityExt;
+    pub use super::ClientConsoleAuthExt;
+    pub use super::ClientCurrentUserExt;
     pub use super::ClientDisksExt;
+    pub use super::ClientExperimentalExt;
     pub use super::ClientFloatingIpsExt;
-    pub use super::ClientHiddenExt;
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
     pub use super::ClientLoginExt;
@@ -93783,7 +95109,6 @@ pub mod prelude {
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
     pub use super::ClientRolesExt;
-    pub use super::ClientSessionExt;
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
     pub use super::ClientSystemAlertsExt;
