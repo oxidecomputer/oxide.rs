@@ -704,6 +704,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SupportBundleCreate => Some("bundle create"),
         CliCommand::SupportBundleView => Some("bundle view"),
         CliCommand::SupportBundleDelete => Some("bundle delete"),
+
         // Implemented as custom command to specify output file
         CliCommand::SupportBundleDownload => None,
 
@@ -715,6 +716,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         // Update is not fully implemented.
         CliCommand::TargetReleaseView | CliCommand::TargetReleaseUpdate => None,
+        CliCommand::SystemUpdatePutRepository | CliCommand::SystemUpdateGetRepository => None,
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
