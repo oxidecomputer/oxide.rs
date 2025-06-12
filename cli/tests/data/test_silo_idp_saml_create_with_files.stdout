@@ -1,13 +1,14 @@
 {
   "acs_url": "http://nope.nope",
   "description": "for all the security I guess",
-  "id": "6270889a-e74d-fa7c-849b-22449cd6138e",
+  "group_attribute_name": "qintars",
+  "id": "fb603800-ff07-da32-9800-70bbd45865ea",
   "idp_entity_id": "17",
   "name": "samlrific",
   "public_cert": "bXkgY29vbCBwdWJsaWMga2V5",
   "slo_url": "http://nope.nope",
   "sp_client_id": "17",
   "technical_contact_email": "anyone@but.adam",
-  "time_created": "1977-12-10T14:17:08Z",
-  "time_modified": "2022-11-13T08:30:19Z"
+  "time_created": "1988-01-28T19:34:48Z",
+  "time_modified": "1956-08-20T10:13:38Z"
 }

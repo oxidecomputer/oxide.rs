@@ -1,15 +1,17 @@
 {
-  "auto_restart_cooldown_expiration": "1975-02-01T10:41:45Z",
-  "auto_restart_enabled": true,
+  "auto_restart_cooldown_expiration": "1992-06-10T18:09:26Z",
+  "auto_restart_enabled": false,
+  "boot_disk_id": "8083692d-37f4-1d8a-b55a-50890c4c60a8",
   "description": "description is required for some reason",
   "hostname": "hostname",
-  "id": "70889ae7-4dfa-7c84-9b22-449cd6138e2d",
+  "id": "603800ff-07da-3298-0070-bbd45865eabb",
   "memory": 4294967296,
   "name": "name",
   "ncpus": 4,
-  "project_id": "d4484c62-34da-b6ae-7f7f-1572d3814fac",
+  "project_id": "b181e272-d3bf-c637-7d5d-3a7dab448196",
   "run_state": "creating",
-  "time_created": "2000-11-09T10:15:15Z",
-  "time_modified": "1992-10-06T17:13:29Z",
-  "time_run_state_updated": "1996-03-23T03:00:45Z"
+  "time_created": "2014-12-31T04:03:55Z",
+  "time_last_auto_restarted": "1966-03-17T00:26:50Z",
+  "time_modified": "1983-04-19T14:12:03Z",
+  "time_run_state_updated": "1948-10-31T09:57:00Z"
 }
