@@ -286,7 +286,7 @@ fn test_disk_import_disk_exists_already() {
         .failure()
         .stdout("");
 
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert();
 }
 
 // A disk import where the snapshot exists already
@@ -347,7 +347,7 @@ fn test_disk_import_snapshot_exists_already() {
         .assert()
         .failure();
 
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert();
     snapshot_view_mock.assert();
 }
 
@@ -419,7 +419,7 @@ fn test_disk_import_image_exists_already() {
         .assert()
         .failure();
 
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert();
     snapshot_view_mock.assert();
     image_view_mock.assert();
 }
