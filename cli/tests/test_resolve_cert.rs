@@ -47,17 +47,17 @@ impl TestServer {
         .unwrap();
 
         let cert_path = tempdir.path().join("cert.pem");
-        std::fs::write(cert_path.clone(), cert.serialize_pem().unwrap()).unwrap();
+        std::fs::write(cert_path.clone(), cert.cert.pem()).unwrap();
 
         let key_path = tempdir.path().join("key.pem");
-        std::fs::write(key_path.clone(), cert.serialize_private_key_pem()).unwrap();
+        std::fs::write(key_path.clone(), cert.key_pair.serialize_pem()).unwrap();
 
         let server = HttpServerStarter::new_with_tls(
             &ConfigDropshot {
                 bind_address: "127.0.0.1:0".parse().unwrap(),
-                request_body_max_bytes: 1024,
                 default_handler_task_mode: dropshot::HandlerTaskMode::CancelOnDisconnect,
                 log_headers: Default::default(),
+                default_request_body_max_bytes: 1024,
             },
             api,
             (),
