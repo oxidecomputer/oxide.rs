@@ -106,7 +106,7 @@ fn mock_schema_object(
         SchemaObject {
             enum_values: Some(values),
             ..
-        } => Ok(values[src.gen_range(0..values.len())].clone()),
+        } => Ok(values[src.random_range(0..values.len())].clone()),
 
         // A constant value
         SchemaObject {
@@ -269,7 +269,7 @@ fn mock_subschemas(
             // permutations with more than one schema--which is a fancy way of
             // saying that we'll just use one schema at a time as with `one_of`
             // below.
-            mock_schema(&any_of[src.gen_range(0..any_of.len())], definitions, src)
+            mock_schema(&any_of[src.random_range(0..any_of.len())], definitions, src)
         }
 
         // oneOf
@@ -281,7 +281,7 @@ fn mock_subschemas(
             if_schema: None,
             then_schema: None,
             else_schema: None,
-        } => mock_schema(&one_of[src.gen_range(0..one_of.len())], definitions, src),
+        } => mock_schema(&one_of[src.random_range(0..one_of.len())], definitions, src),
 
         // if-then-else
         SubschemaValidation {
@@ -294,7 +294,7 @@ fn mock_subschemas(
             else_schema: Some(else_schema),
         } => {
             // This is fun! We can just roll the dice and pick between them!
-            if src.gen() {
+            if src.random() {
                 mock_schema(then_schema, definitions, src)
             } else {
                 mock_schema(else_schema, definitions, src)
@@ -339,10 +339,10 @@ fn mock_number(
     };
 
     let value = match (min, max) {
-        (None, None) => src.gen::<f64>() * mult,
-        (None, Some(max)) => src.gen_range(f64::MIN..max / mult) * mult,
-        (Some(min), None) => src.gen_range(min / mult..f64::MAX) * mult,
-        (Some(min), Some(max)) => src.gen_range(min / mult..max / mult) * mult,
+        (None, None) => src.random::<f64>() * mult,
+        (None, Some(max)) => src.random_range(f64::MIN..max / mult) * mult,
+        (Some(min), None) => src.random_range(min / mult..f64::MAX) * mult,
+        (Some(min), Some(max)) => src.random_range(min / mult..max / mult) * mult,
     };
 
     let Some(value) = Number::from_f64(value) else {
@@ -400,11 +400,11 @@ macro_rules! mock_int_type {
                 let min = (min + mult - 1) / mult;
                 let max = max / mult;
 
-                let value = $src.gen_range(min..=max) + mult;
+                let value = $src.random_range(min..=max) + mult;
                 Ok(Value::Number(Number::from(value)))
             }
             None => {
-                let value = $src.gen_range(min..=max);
+                let value = $src.random_range(min..=max);
                 Ok(Value::Number(Number::from(value)))
             }
         }
@@ -412,7 +412,7 @@ macro_rules! mock_int_type {
 }
 
 fn mock_bool(src: &mut impl Source) -> Result<Value, Error> {
-    let b = src.gen_bool(0.5);
+    let b = src.random_bool(0.5);
     Ok(json! { b })
 }
 
@@ -449,16 +449,16 @@ fn mock_string(
 
     match format.as_deref() {
         Some("uuid") => {
-            let data: [u8; 16] = src.gen();
+            let data: [u8; 16] = src.random();
             let uuid = uuid::Uuid::from_slice(&data).unwrap();
             return Ok(serde_json::to_value(uuid).unwrap());
         }
         Some("date-time") => {
-            let dt = NaiveDate::from_num_days_from_ce_opt(src.gen_range(710_000..740_000))
+            let dt = NaiveDate::from_num_days_from_ce_opt(src.random_range(710_000..740_000))
                 .unwrap()
                 .and_time(
                     NaiveTime::from_num_seconds_from_midnight_opt(
-                        src.gen_range(0..24 * 60 * 60),
+                        src.random_range(0..24 * 60 * 60),
                         0,
                     )
                     .unwrap(),
@@ -519,7 +519,7 @@ fn mock_string(
     ];
 
     Ok(Value::String(
-        TWL_Q_QU[src.gen_range(0..TWL_Q_QU.len())].to_string(),
+        TWL_Q_QU[src.random_range(0..TWL_Q_QU.len())].to_string(),
     ))
 }
 
@@ -565,7 +565,7 @@ fn mock_array(
         _ => 5,
     };
 
-    let len = src.gen_range(min..max) as usize;
+    let len = src.random_range(min..max) as usize;
 
     (0..len)
         .map(|ii| {
@@ -618,7 +618,7 @@ fn mock_object(
     }
 
     for (prop_name, prop_schema) in optional_properties {
-        if src.gen() {
+        if src.random() {
             value.insert(
                 prop_name.clone(),
                 mock_schema(prop_schema, definitions, src)?,
