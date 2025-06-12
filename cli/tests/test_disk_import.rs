@@ -13,7 +13,7 @@ use oxide::types::Snapshot;
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::*;
 use rand::SeedableRng;
-use rand::{thread_rng, Rng};
+use rand::{rng, Rng};
 use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
@@ -46,7 +46,7 @@ impl Testfile {
         let mut file = File::create(&file_path)?;
 
         if populate_with_random {
-            let mut rng = thread_rng();
+            let mut rng = rng();
 
             let mut data: Vec<u8> = vec![0u8; sz];
             rng.fill(&mut data[..]);
@@ -75,7 +75,7 @@ impl Testfile {
         file.seek(SeekFrom::Start((i * CHUNK_SIZE) as u64))?;
 
         let mut data: Vec<u8> = vec![0u8; CHUNK_SIZE];
-        let mut rng = thread_rng();
+        let mut rng = rng();
         rng.fill(&mut data[..]);
         file.write_all(&data)?;
 
@@ -283,7 +283,8 @@ fn test_disk_import_disk_exists_already() {
         .arg("--image-version")
         .arg("6.1")
         .assert()
-        .failure();
+        .failure()
+        .stdout("");
 
     disk_view_mock.assert_hits(2);
 }

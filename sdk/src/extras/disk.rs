@@ -557,6 +557,7 @@ pub mod types {
         }
 
         async fn check_for_existing_disk(&self) -> Result<(), DiskImportError> {
+            println!("here {}", &*self.disk);
             err_if_object_exists(
                 format!("disk \"{}\" exists already", &*self.disk),
                 self.client
@@ -593,6 +594,8 @@ pub mod types {
         }
 
         async fn get_disk_state(&self) -> Result<DiskState, Error<types::Error>> {
+            println!("get disk state {}", &*self.disk);
+            panic!();
             let response = self
                 .client
                 .disk_view()
