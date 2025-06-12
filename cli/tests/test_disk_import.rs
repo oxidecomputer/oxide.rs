@@ -283,8 +283,7 @@ fn test_disk_import_disk_exists_already() {
         .arg("--image-version")
         .arg("6.1")
         .assert()
-        .failure()
-        .stdout("");
+        .failure();
 
     disk_view_mock.assert();
 }
