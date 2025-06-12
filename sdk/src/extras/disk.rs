@@ -279,15 +279,16 @@ pub mod types {
 
             if let Err(e) = result {
                 if let Err(cleanup_err) = self.cleanup().await {
-                    return Err(DiskImportError::Wrapped {
+                    Err(DiskImportError::Wrapped {
                         err: cleanup_err.into(),
                         source: e.into(),
-                    });
+                    })
+                } else {
+                    Err(e)
                 }
-                return Err(e);
+            } else {
+                Ok(())
             }
-
-            Ok(())
         }
 
         pub async fn run(self) -> Result<(), DiskImportError> {
