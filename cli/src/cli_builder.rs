@@ -227,7 +227,7 @@ where
     }
 
     fn maybe_long(&self) -> bool {
-        false
+        <C as RunnableCmd>::maybe_long()
     }
 }
 
