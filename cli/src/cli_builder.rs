@@ -318,12 +318,13 @@ impl<'a> NewCli<'a> {
             // Keep a reasonable timeout for initial connection.
             client_config = client_config.with_connect_timeout(15);
 
-            // Set a long time-out for "maybe long" commands
+            // Set a long timeout for "maybe long" commands.
             if timeout.is_none() {
                 client_config = client_config.with_timeout(60 * 60);
             }
 
-            // Kill the connection if we stop receiving data before the connection timeout.
+            // Kill the connection if we stop receiving data before the
+            // connection timeout.
             client_config = client_config.with_read_timeout(30);
         }
 
