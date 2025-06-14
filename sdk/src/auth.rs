@@ -17,9 +17,16 @@ use serde::Deserialize;
 /// Credentials for a particular profile.
 #[derive(Deserialize, Debug)]
 pub struct ProfileCredentials {
+    /// Secret API token (DO NOT SHARE)
     pub token: String,
+    /// Token ID for accessing token properties in the API
+    pub token_id: Option<String>,
+    /// API host
     pub host: String,
+    /// User id
     pub user: String,
+    /// Expiration time of the token if any
+    pub time_expires: Option<String>,
 }
 
 // TODO: do we want a way to easily change the port number? It would need to be
