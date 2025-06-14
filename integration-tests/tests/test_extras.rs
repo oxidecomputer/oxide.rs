@@ -10,7 +10,7 @@ use oxide::extras::ClientExtraDiskExt;
 use oxide::types::Disk;
 use oxide::{Client, ClientConfig};
 use oxide_httpmock::MockServerExt;
-use rand::{thread_rng, Rng, SeedableRng};
+use rand::{rng, Rng, SeedableRng};
 use std::fs;
 use tempfile::TempDir;
 use test_common::JsonMock;
@@ -65,7 +65,7 @@ async fn test_disk_import() {
     let dir = TempDir::new().unwrap();
     let image_path = dir.path().join("image.raw");
 
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let mut contents = vec![0u8; 8192];
     rng.fill(&mut contents[..]);
     fs::write(&image_path, contents).unwrap();
