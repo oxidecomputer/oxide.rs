@@ -13,10 +13,13 @@ use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
-use oauth2::{basic::BasicClient, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenUrl};
-use oauth2::{StandardDeviceAuthorizationResponse, TokenResponse};
+use oauth2::{
+    AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, ExtraTokenFields,
+    StandardDeviceAuthorizationResponse, StandardTokenResponse, TokenResponse, TokenUrl,
+};
 use oxide::types::CurrentUser;
 use oxide::{Client, ClientConfig, ClientCurrentUserExt};
+use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use toml_edit::{Item, Table};
 use uuid::Uuid;
@@ -146,6 +149,14 @@ pub struct CmdAuthLogin {
     no_browser: bool,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+struct AuthTokenExtraFields {
+    // Optional for backward compatibility only
+    token_id: Option<String>,
+    time_expires: Option<String>,
+}
+impl ExtraTokenFields for AuthTokenExtraFields {}
+
 impl CmdAuthLogin {
     pub async fn login(&self, ctx: &Context) -> Result<()> {
         let profile = ctx.client_config().profile();
@@ -192,11 +203,20 @@ impl CmdAuthLogin {
         // since we're not doing that and this ID would be public if it were
         // static, we just generate a random one each time we authenticate.
         let client_id = Uuid::new_v4();
-        let auth_client = BasicClient::new(ClientId::new(client_id.to_string()))
-            .set_auth_uri(AuthUrl::new(format!("{}authorize", &self.host))?)
-            .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
-            .set_auth_type(AuthType::RequestBody)
-            .set_device_authorization_url(device_auth_url);
+
+        // We expand the oauth2::BasicClient type alias to inject our custom
+        // response field for the token response (TR) type parameter.
+        let auth_client = oauth2::Client::<
+            oauth2::basic::BasicErrorResponse,
+            StandardTokenResponse<AuthTokenExtraFields, oauth2::basic::BasicTokenType>,
+            oauth2::basic::BasicTokenIntrospectionResponse,
+            oauth2::StandardRevocableToken,
+            oauth2::basic::BasicRevocationErrorResponse,
+        >::new(ClientId::new(client_id.to_string()))
+        .set_auth_uri(AuthUrl::new(format!("{}authorize", &self.host))?)
+        .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
+        .set_auth_type(AuthType::RequestBody)
+        .set_device_authorization_url(device_auth_url);
 
         let details: StandardDeviceAuthorizationResponse = auth_client
             .exchange_device_code()
@@ -224,15 +244,18 @@ impl CmdAuthLogin {
             details.user_code().secret()
         )?;
 
-        let token = auth_client
+        let response = auth_client
             .exchange_device_access_token(&details)
             .request_async(client, tokio::time::sleep, None)
-            .await?
-            .access_token()
-            .secret()
-            .to_string();
+            .await?;
 
+        let token = response.access_token().secret().to_string();
         let host = self.host.as_host();
+
+        let AuthTokenExtraFields {
+            token_id,
+            time_expires,
+        } = response.extra_fields();
 
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
@@ -307,7 +330,13 @@ impl CmdAuthLogin {
 
         profile.insert("host", toml_edit::value(self.host.as_host().to_string()));
         profile.insert("token", toml_edit::value(token));
+        if let Some(token_id) = token_id {
+            profile.insert("token_id", toml_edit::value(token_id));
+        }
         profile.insert("user", toml_edit::value(uid.to_string()));
+        if let Some(time_expires) = time_expires {
+            profile.insert("time_expires", toml_edit::value(time_expires));
+        }
 
         std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
             panic!(

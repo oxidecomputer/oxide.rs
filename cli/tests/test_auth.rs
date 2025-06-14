@@ -10,6 +10,7 @@ use std::{
 };
 
 use assert_cmd::Command;
+use chrono::{DateTime, Utc};
 use expectorate::assert_contents;
 use httpmock::{Method::POST, Mock, MockServer};
 use oxide::types::CurrentUser;
@@ -47,6 +48,8 @@ impl<'a> MockOAuth<'a> {
             let body = json!({
                 "access_token": "123-456-789",
                 "token_type": "Bearer",
+                "token_id": "xyz",
+                "time_expires": DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap().to_string(),
             });
             when.method(POST).path("/device/token");
             then.delay(std::time::Duration::from_secs(1))
