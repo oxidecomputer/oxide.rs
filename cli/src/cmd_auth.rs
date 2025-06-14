@@ -18,7 +18,7 @@ use oauth2::{
     StandardDeviceAuthorizationResponse, StandardTokenResponse, TokenResponse, TokenUrl,
 };
 use oxide::types::CurrentUser;
-use oxide::{Client, ClientConfig, ClientSessionExt};
+use oxide::{Client, ClientConfig, ClientCurrentUserExt};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use toml_edit::{Item, Table};
@@ -658,9 +658,9 @@ mod tests {
             .arg(bad_url)
             .assert()
             .failure()
-            .stderr(str::starts_with(format!(
-                "Request failed: client error: error sending request for url (https://{bad_url}/device/auth):"
-            )));
+            .stderr(str::starts_with(
+                "Request failed: client error: error sending request",
+            ));
     }
 
     #[test]

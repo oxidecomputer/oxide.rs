@@ -178,6 +178,7 @@ pub mod types {
     };
 
     use base64::Engine;
+    use reqwest::StatusCode;
     use std::collections::HashSet;
     use std::num::NonZeroUsize;
     use std::path::{Path, PathBuf};
@@ -192,6 +193,8 @@ pub mod types {
 
     #[derive(thiserror::Error, Debug)]
     pub enum DiskImportError {
+        #[error("{0}")]
+        Validation(String),
         #[error("{err}")]
         Wrapped {
             err: Box<dyn std::error::Error + Send + Sync>,
@@ -264,6 +267,8 @@ pub mod types {
             self,
             cancel_rx: oneshot::Receiver<()>,
         ) -> Result<(), DiskImportError> {
+            self.check_for_existing_disk().await?;
+
             let result = tokio::select! {
                 biased; // Prioritize cancellation.
                 _ = cancel_rx => {
@@ -274,34 +279,36 @@ pub mod types {
 
             if let Err(e) = result {
                 if let Err(cleanup_err) = self.cleanup().await {
-                    return Err(DiskImportError::Wrapped {
+                    Err(DiskImportError::Wrapped {
                         err: cleanup_err.into(),
                         source: e.into(),
-                    });
+                    })
+                } else {
+                    Err(e)
                 }
-                return Err(e);
+            } else {
+                Ok(())
             }
-
-            Ok(())
         }
 
         pub async fn run(self) -> Result<(), DiskImportError> {
+            self.check_for_existing_disk().await?;
+
             if let Err(e) = self.do_disk_import().await {
                 if let Err(cleanup_err) = self.cleanup().await {
-                    return Err(DiskImportError::Wrapped {
+                    Err(DiskImportError::Wrapped {
                         err: cleanup_err.into(),
                         source: e.into(),
-                    });
+                    })
+                } else {
+                    Err(e)
                 }
-                return Err(e);
+            } else {
+                Ok(())
             }
-
-            Ok(())
         }
 
         async fn do_disk_import(&self) -> Result<(), DiskImportError> {
-            self.check_for_existing_disk().await?;
-
             // Create the disk in state "importing blocks"
             self.client
                 .disk_create()
@@ -760,29 +767,20 @@ pub mod types {
     fn err_if_object_exists<T>(
         error_msg: String,
         send_response: Result<ResponseValue<T>, Error<types::Error>>,
-    ) -> Result<(), crate::Error<crate::types::Error>> {
+    ) -> Result<(), DiskImportError> {
         match send_response {
-            Ok(_) => {
-                return Err(Error::InvalidRequest(error_msg));
+            // The object exists so respond with a validation error.
+            Ok(_) => Err(DiskImportError::Validation(error_msg)),
+            // We got a 404 NOT FOUND meaning the object doesn't exist so we
+            // respond with success.
+            Err(crate::Error::ErrorResponse(response_value))
+                if response_value.status() == StatusCode::NOT_FOUND =>
+            {
+                Ok(())
             }
-
-            Err(e) => {
-                match &e {
-                    // Match against 404
-                    crate::Error::ErrorResponse(response_value) => {
-                        if response_value.status() == 404 {
-                            // ok
-                        } else {
-                            Err(e)?
-                        }
-                    }
-
-                    // Bail on any other error
-                    _ => Err(e)?,
-                }
-            }
+            // Pass through any (other) API errors.
+            Err(e) => Err(DiskImportError::Api(e)),
         }
-        Ok(())
     }
 
     /// The information required to create an `Image`.

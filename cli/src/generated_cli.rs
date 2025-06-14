@@ -301,6 +301,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
+            CliCommand::SystemUpdatePutRepository => Self::cli_system_update_put_repository(),
+            CliCommand::SystemUpdateGetRepository => Self::cli_system_update_get_repository(),
             CliCommand::TargetReleaseView => Self::cli_target_release_view(),
             CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
@@ -6779,6 +6781,33 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
+    pub fn cli_system_update_put_repository() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("file-name")
+                    .long("file-name")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(true)
+                    .help("The name of the uploaded file."),
+            )
+            .about("Upload TUF repository")
+    }
+
+    pub fn cli_system_update_get_repository() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("system-version")
+                    .long("system-version")
+                    .value_parser(::clap::value_parser!(
+                        types::SystemUpdateGetRepositorySystemVersion
+                    ))
+                    .required(true)
+                    .help("The version to get."),
+            )
+            .about("Fetch TUF repository description")
+            .long_about("Fetch description of TUF repository by system version.")
+    }
+
     pub fn cli_target_release_view() -> ::clap::Command {
         ::clap::Command::new("")
             .about("Get the current target release of the rack's system software")
@@ -8569,6 +8598,12 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
+            }
+            CliCommand::SystemUpdatePutRepository => {
+                self.execute_system_update_put_repository(matches).await
+            }
+            CliCommand::SystemUpdateGetRepository => {
+                self.execute_system_update_get_repository(matches).await
             }
             CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
             CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
@@ -16152,6 +16187,56 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_update_put_repository(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_put_repository();
+        if let Some(value) = matches.get_one::<::std::string::String>("file-name") {
+            request = request.file_name(value.clone());
+        }
+
+        self.config
+            .execute_system_update_put_repository(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_update_get_repository(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_get_repository();
+        if let Some(value) =
+            matches.get_one::<types::SystemUpdateGetRepositorySystemVersion>("system-version")
+        {
+            request = request.system_version(value.clone());
+        }
+
+        self.config
+            .execute_system_update_get_repository(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_target_release_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -19369,6 +19454,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_update_put_repository(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdatePutRepository,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_update_get_repository(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateGetRepository,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_target_release_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -19906,6 +20007,8 @@ pub enum CliCommand {
     SiloQuotasUpdate,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
+    SystemUpdatePutRepository,
+    SystemUpdateGetRepository,
     TargetReleaseView,
     TargetReleaseUpdate,
     SiloUserList,
@@ -20172,6 +20275,8 @@ impl CliCommand {
             CliCommand::SiloQuotasUpdate,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
+            CliCommand::SystemUpdatePutRepository,
+            CliCommand::SystemUpdateGetRepository,
             CliCommand::TargetReleaseView,
             CliCommand::TargetReleaseUpdate,
             CliCommand::SiloUserList,
