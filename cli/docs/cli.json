@@ -513,6 +513,10 @@
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
+            },
+            {
+              "long": "time-to-live",
+              "help": "Lifetime of login. If not specified, the silo's policy is used. Specify units e.g. 7d, 2w, 6M, 1y"
             }
           ]
         },
