@@ -43,6 +43,7 @@ enum SubCommand {
     Login(CmdAuthLogin),
     Logout(CmdAuthLogout),
     Status(CmdAuthStatus),
+    Env(CmdAuthEnv),
 }
 
 #[async_trait]
@@ -52,6 +53,7 @@ impl RunnableCmd for CmdAuth {
             SubCommand::Login(cmd) => cmd.login(ctx).await,
             SubCommand::Logout(cmd) => cmd.logout(ctx).await,
             SubCommand::Status(cmd) => cmd.status(ctx).await,
+            SubCommand::Env(cmd) => cmd.env(ctx).await,
         }
     }
 }
@@ -468,6 +470,66 @@ impl CmdAuthLogout {
         }
 
         Ok(())
+    }
+}
+
+/// The shell values accepted.
+#[derive(clap::ValueEnum, Debug, Clone)]
+enum ShellOpt {
+    Fish,
+    Bash,
+}
+
+/// Print shell syntax to export Oxide authentication environment variables.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+pub struct CmdAuthEnv {
+    /// The shell syntax to use.
+    #[clap(long)]
+    shell: Option<ShellOpt>,
+}
+
+impl CmdAuthEnv {
+    // TODO: Respect global --profile option.
+    pub async fn env(&self, ctx: &Context) -> Result<()> {
+        let credentials = &ctx.cred_file().profile;
+
+        let profiles: Vec<String> = credentials.keys().cloned().collect();
+
+        let selected = dialoguer::Select::new()
+            .with_prompt("Which profile?")
+            .items(&profiles)
+            .interact()?;
+
+        let profile_credentials = credentials
+            .get(&profiles[selected])
+            .ok_or(anyhow!("Profile does not exist!"))?;
+
+        match &self.shell {
+            Some(shell) => match shell {
+                ShellOpt::Fish => {
+                    println!(
+                        "set --global --export OXIDE_HOST {};",
+                        profile_credentials.host
+                    );
+                    println!(
+                        "set --global --export OXIDE_TOKEN {};",
+                        profile_credentials.token
+                    );
+                    return Ok(());
+                }
+                ShellOpt::Bash => {
+                    println!("export OXIDE_HOST={};", profile_credentials.host);
+                    println!("export OXIDE_TOKEN={};", profile_credentials.token);
+                    return Ok(());
+                }
+            },
+            None => {
+                println!("export OXIDE_HOST={};", profile_credentials.host);
+                println!("export OXIDE_TOKEN={};", profile_credentials.token);
+                return Ok(());
+            }
+        }
     }
 }
 
