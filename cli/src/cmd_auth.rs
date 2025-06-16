@@ -147,6 +147,16 @@ pub struct CmdAuthLogin {
     /// Print the authentication URL rather than opening a browser window.
     #[clap(long)]
     no_browser: bool,
+
+    /// Lifetime of login. If not specified, the silo's policy is used.
+    /// Specify units e.g. 7d, 2w, 6M, 1y
+    #[clap(
+        long,
+        alias = "ttl",
+        value_parser = humantime::parse_duration,
+        value_name = "DURATION"
+    )]
+    time_to_live: Option<Duration>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -217,11 +227,13 @@ impl CmdAuthLogin {
         .set_token_uri(TokenUrl::new(format!("{}device/token", &self.host))?)
         .set_auth_type(AuthType::RequestBody)
         .set_device_authorization_url(device_auth_url);
+        let mut request = auth_client.exchange_device_code();
 
-        let details: StandardDeviceAuthorizationResponse = auth_client
-            .exchange_device_code()
-            .request_async(client)
-            .await?;
+        if let Some(ttl) = self.time_to_live.as_ref() {
+            request = request.add_extra_param("ttl_seconds", ttl.as_secs().to_string());
+        }
+
+        let details: StandardDeviceAuthorizationResponse = request.request_async(client).await?;
 
         let uri = details.verification_uri().to_string();
 
