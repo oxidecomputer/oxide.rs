@@ -1,0 +1,23 @@
+{
+  "recorded": {
+    "artifacts": [
+      {
+        "hash": "ish",
+        "id": {
+          "kind": "buds",
+          "name": "trees",
+          "version": "4.2.0"
+        },
+        "size": 440401920
+      }
+    ],
+    "repo": {
+      "file_name": "repo",
+      "hash": "browns",
+      "system_version": "0.0.0",
+      "targets_role_version": 42,
+      "valid_until": "2038-01-19T03:14:08Z"
+    }
+  },
+  "status": "inserted"
+}
