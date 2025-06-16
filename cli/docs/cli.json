@@ -7660,10 +7660,6 @@
                   "name": "upload",
                   "args": [
                     {
-                      "long": "filename",
-                      "help": "Name for the repository (defaults to final path component of --path)"
-                    },
-                    {
                       "long": "path",
                       "short": "p",
                       "help": "Path to the TUF repository"

@@ -23,19 +23,12 @@ pub struct CmdUpload {
     /// Path to the TUF repository
     #[clap(short, long)]
     path: PathBuf,
-
-    /// Name for the repository (defaults to final path component of --path)
-    #[clap(long)]
-    filename: Option<String>,
 }
 
 #[async_trait]
 impl AuthenticatedCmd for CmdUpload {
     async fn run(&self, client: &Client) -> Result<()> {
-        let filename = match &self.filename {
-            Some(filename) => filename.clone(),
-            None => self.path.file_name().unwrap().to_str().unwrap().to_string(),
-        };
+        let file_name = self.path.file_name().unwrap().to_str().unwrap();
 
         let file = File::open(&self.path).await?;
 
@@ -45,7 +38,7 @@ impl AuthenticatedCmd for CmdUpload {
 
         let response = client
             .system_update_put_repository()
-            .file_name(filename)
+            .file_name(file_name)
             .body(body)
             .send()
             .await;
