@@ -36,6 +36,7 @@ mod cmd_instance;
 mod cmd_net;
 mod cmd_support_bundle;
 mod cmd_timeseries;
+mod cmd_update;
 mod context;
 
 mod cmd_version;
@@ -53,13 +54,22 @@ pub trait RunnableCmd: Send + Sync {
     fn is_subtree() -> bool {
         true
     }
+
+    fn maybe_long() -> bool {
+        false
+    }
 }
 
 #[async_trait]
 pub trait AuthenticatedCmd: Send + Sync {
     async fn run(&self, client: &Client) -> Result<()>;
+
     fn is_subtree() -> bool {
         true
+    }
+
+    fn maybe_long() -> bool {
+        false
     }
 }
 
@@ -71,6 +81,9 @@ impl<T: AuthenticatedCmd> RunnableCmd for T {
     }
     fn is_subtree() -> bool {
         <T as AuthenticatedCmd>::is_subtree()
+    }
+    fn maybe_long() -> bool {
+        <T as AuthenticatedCmd>::maybe_long()
     }
 }
 
@@ -101,6 +114,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_net::CmdStaticRoute>("system networking route")
         .add_custom::<cmd_support_bundle::CmdDownload>("bundle download")
         .add_custom::<cmd_support_bundle::CmdInspect>("bundle inspect")
+        .add_custom::<cmd_update::CmdUpload>("system update repo upload")
 }
 
 #[tokio::main(flavor = "current_thread")]

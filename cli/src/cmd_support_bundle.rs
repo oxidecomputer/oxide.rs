@@ -38,7 +38,6 @@ use uuid::Uuid;
 /// Downloads a support bundle
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
-#[command(args_conflicts_with_subcommands(true))]
 pub struct CmdDownload {
     /// ID of the bundle
     #[clap(long)]
@@ -147,6 +146,10 @@ impl crate::AuthenticatedCmd for CmdDownload {
         }
         Ok(())
     }
+
+    fn maybe_long() -> bool {
+        true
+    }
 }
 
 fn start_progress_bar(
@@ -215,6 +218,10 @@ impl crate::AuthenticatedCmd for CmdInspect {
         };
 
         support_bundle_viewer::run_dashboard(accessor).await
+    }
+
+    fn maybe_long() -> bool {
+        true
     }
 }
 
