@@ -93,7 +93,5 @@ async fn main() {
         ..Default::default()
     });
 
-    println!("Hello, world!");
-
     let _ = server.start().unwrap().await;
 }
