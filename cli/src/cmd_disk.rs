@@ -121,7 +121,7 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         let pb = start_progress_bar(
             handle.progress(),
             disk_info.file_size,
-            &format!("Creating disk \"{}\"", self.disk.to_string()),
+            &format!("Creating disk \"{}\"", *self.disk),
         )?;
         watch_for_ctrl_c(handle, pb);
 
