@@ -223,7 +223,8 @@ impl ClientConfig {
         let dur = std::time::Duration::from_secs(timeout.unwrap_or(DEFAULT_TIMEOUT));
         let mut client_builder = ClientBuilder::new().timeout(dur);
 
-        // Use an explicit connect_timeout if provided, else fallack to timeout or default.
+        // Use an explicit connect_timeout if provided, otherwise fallback to
+        // timeout or default.
         let connect_timeout = match (connect_timeout, timeout) {
             (Some(ct), _) => std::time::Duration::from_secs(*ct),
             (None, Some(t)) => std::time::Duration::from_secs(*t),

@@ -26,7 +26,6 @@ use oxide::{
 };
 use url::Url;
 
-mod cli_builder;
 mod cmd_api;
 mod cmd_auth;
 mod cmd_completion;
@@ -37,16 +36,19 @@ mod cmd_net;
 mod cmd_support_bundle;
 mod cmd_timeseries;
 mod cmd_update;
-mod context;
-
 mod cmd_version;
+
+mod cli_builder;
+mod context;
+#[macro_use]
+mod print;
+mod util;
+
 #[allow(unused_mut)]
 #[allow(unused)] // TODO
 #[allow(unused_must_use)] // TODO
 #[allow(clippy::clone_on_copy)]
 mod generated_cli;
-#[macro_use]
-mod print;
 
 #[async_trait]
 pub trait RunnableCmd: Send + Sync {

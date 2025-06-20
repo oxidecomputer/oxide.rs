@@ -2228,6 +2228,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "mock-server"
+version = "0.0.0"
+dependencies = [
+ "chrono",
+ "dropshot",
+ "futures",
+ "oxide",
+ "schemars",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "multer"
 version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

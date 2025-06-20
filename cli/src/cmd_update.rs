@@ -8,14 +8,13 @@ use std::path::PathBuf;
 
 use anyhow::Result;
 use async_trait::async_trait;
-use bytes::Bytes;
 use clap::Parser;
-use futures::StreamExt;
+use futures::TryStreamExt;
 use oxide::{Client, ClientExperimentalExt};
-use tokio::fs::File;
+use tokio::{fs::File, sync::watch};
 use tokio_util::io::ReaderStream;
 
-use crate::{generated_cli::CliConfig, AuthenticatedCmd, OxideOverride};
+use crate::{generated_cli::CliConfig, util::start_progress_bar, AuthenticatedCmd, OxideOverride};
 
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -32,7 +31,22 @@ impl AuthenticatedCmd for CmdUpload {
 
         let file = File::open(&self.path).await?;
 
-        let file_stream = ReaderStream::new(file).map(|res| res.map(Bytes::from));
+        let len = file.metadata().await?.len();
+
+        let (progress_tx, progress_rx) = watch::channel(0);
+
+        let mut position = 0;
+
+        let file_stream = ReaderStream::new(file).inspect_ok(move |buf| {
+            position += buf.len();
+            let _ = progress_tx.send(position as u64);
+        });
+
+        let _pb = start_progress_bar(
+            progress_rx,
+            len,
+            &format!("Uploading {}...", &self.path.to_string_lossy()),
+        );
 
         let body = reqwest::Body::wrap_stream(file_stream);
 
