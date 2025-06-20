@@ -5,4 +5,6 @@
 // Copyright 2024 Oxide Computer Company
 
 //! This crate exists only for stand-alone integration tests that act as SDK
-//! consumers.
+//! consumers. This is particularly necessary for tests involving the
+//! `oxide-httpmock` crate: it depends on `oxide` so cannot be used by the
+//! tests directly in the `oxide` crate.
