@@ -322,10 +322,6 @@ impl<'a> NewCli<'a> {
             if timeout.is_none() {
                 client_config = client_config.with_timeout(60 * 60);
             }
-
-            // Kill the connection if we stop receiving data before the
-            // connection timeout.
-            client_config = client_config.with_read_timeout(30);
         }
 
         let ctx = Context::new(client_config)?;

@@ -1,0 +1,14 @@
+[package]
+name = "mock-server"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+bytes = { workspace = true }
+chrono = { workspace = true }
+dropshot = { workspace = true }
+futures = { workspace = true }
+oxide = { workspace = true }
+schemars = { workspace = true }
+serde = { workspace = true }
+tokio = { workspace = true }

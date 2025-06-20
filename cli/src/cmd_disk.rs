@@ -4,12 +4,13 @@
 
 // Copyright 2024 Oxide Computer Company
 
+use crate::util::start_progress_bar;
 use crate::{eprintln_nopipe, println_nopipe};
 
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use indicatif::{ProgressBar, ProgressStyle};
+use indicatif::ProgressBar;
 use oxide::extras::disk::types::{DiskImportHandle, DiskInfo, ImageInfo};
 use oxide::extras::ClientExtraDiskExt;
 use oxide::types::{BlockSize, ByteCount, Name, NameOrId};
@@ -17,7 +18,6 @@ use oxide::Client;
 use std::path::PathBuf;
 use std::process;
 use tokio::signal;
-use tokio::sync::watch;
 
 /// Create a disk from a file upload
 ///
@@ -118,7 +118,11 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
 
         let (import_future, handle) = builder.execute_with_control()?;
 
-        let pb = start_progress_bar(handle.progress(), disk_info.file_size, &self.disk)?;
+        let pb = start_progress_bar(
+            handle.progress(),
+            disk_info.file_size,
+            &format!("Creating disk \"{}\"", self.disk.to_string()),
+        )?;
         watch_for_ctrl_c(handle, pb);
 
         import_future.await?;
@@ -126,39 +130,6 @@ impl crate::AuthenticatedCmd for CmdDiskImport {
         println_nopipe!("Done!");
         Ok(())
     }
-}
-
-fn start_progress_bar(
-    mut progress_rx: watch::Receiver<u64>,
-    file_size: u64,
-    disk_name: &str,
-) -> Result<ProgressBar> {
-    let pb = ProgressBar::new(file_size);
-    pb.set_style(ProgressStyle::default_bar().template(
-        "[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta}",
-    )?);
-    pb.set_position(0);
-    pb.println(format!("Creating disk \"{disk_name}\""));
-    let pb_updater = pb.clone();
-
-    tokio::spawn(async move {
-        loop {
-            match progress_rx.changed().await {
-                Ok(_) => {
-                    let p = *progress_rx.borrow();
-                    pb_updater.set_position(p);
-
-                    if p >= file_size {
-                        pb_updater.finish();
-                        return;
-                    }
-                }
-                Err(_) => return, // Sender has dropped.
-            }
-        }
-    });
-
-    Ok(pb)
 }
 
 fn watch_for_ctrl_c(handle: DiskImportHandle, pb: ProgressBar) {

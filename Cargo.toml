@@ -2,6 +2,7 @@
 members = [
 	"cli",
 	"integration-tests",
+	"mock-server",
 	"sdk",
 	"sdk-httpmock",
 	"test-common",
