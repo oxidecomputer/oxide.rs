@@ -2231,7 +2231,6 @@ dependencies = [
 name = "mock-server"
 version = "0.0.0"
 dependencies = [
- "bytes",
  "chrono",
  "dropshot",
  "futures",
