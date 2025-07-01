@@ -264,6 +264,8 @@ impl<T: CliConfig> Cli<T> {
                 Self::cli_networking_bgp_imported_routes_ipv4()
             }
             CliCommand::NetworkingBgpStatus => Self::cli_networking_bgp_status(),
+            CliCommand::NetworkingInboundIcmpView => Self::cli_networking_inbound_icmp_view(),
+            CliCommand::NetworkingInboundIcmpUpdate => Self::cli_networking_inbound_icmp_update(),
             CliCommand::NetworkingLoopbackAddressList => {
                 Self::cli_networking_loopback_address_list()
             }
@@ -6201,6 +6203,43 @@ impl<T: CliConfig> Cli<T> {
         ::clap::Command::new("").about("Get BGP peer status")
     }
 
+    pub fn cli_networking_inbound_icmp_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .about("Return whether API services can receive limited ICMP traffic")
+    }
+
+    pub fn cli_networking_inbound_icmp_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("enabled")
+                    .long("enabled")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "When enabled, Nexus is able to receive ICMP Destination Unreachable type \
+                         3 (port unreachable) and type 4 (fragmentation needed), Redirect, and \
+                         Time Exceeded messages. These enable Nexus to perform Path MTU discovery \
+                         and better cope with fragmentation issues. Otherwise all inbound ICMP \
+                         traffic will be dropped.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set whether API services can receive limited ICMP traffic")
+    }
+
     pub fn cli_networking_loopback_address_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8552,6 +8591,12 @@ impl<T: CliConfig> Cli<T> {
                     .await
             }
             CliCommand::NetworkingBgpStatus => self.execute_networking_bgp_status(matches).await,
+            CliCommand::NetworkingInboundIcmpView => {
+                self.execute_networking_inbound_icmp_view(matches).await
+            }
+            CliCommand::NetworkingInboundIcmpUpdate => {
+                self.execute_networking_inbound_icmp_update(matches).await
+            }
             CliCommand::NetworkingLoopbackAddressList => {
                 self.execute_networking_loopback_address_list(matches).await
             }
@@ -15446,6 +15491,56 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_inbound_icmp_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_inbound_icmp_view();
+        self.config
+            .execute_networking_inbound_icmp_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_inbound_icmp_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_inbound_icmp_update();
+        if let Some(value) = matches.get_one::<bool>("enabled") {
+            request = request.body_map(|body| body.enabled(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ServiceIcmpConfig>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_inbound_icmp_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_loopback_address_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -19270,6 +19365,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_inbound_icmp_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingInboundIcmpView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_inbound_icmp_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingInboundIcmpUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_loopback_address_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -19984,6 +20095,8 @@ pub enum CliCommand {
     NetworkingBgpMessageHistory,
     NetworkingBgpImportedRoutesIpv4,
     NetworkingBgpStatus,
+    NetworkingInboundIcmpView,
+    NetworkingInboundIcmpUpdate,
     NetworkingLoopbackAddressList,
     NetworkingLoopbackAddressCreate,
     NetworkingLoopbackAddressDelete,
@@ -20252,6 +20365,8 @@ impl CliCommand {
             CliCommand::NetworkingBgpMessageHistory,
             CliCommand::NetworkingBgpImportedRoutesIpv4,
             CliCommand::NetworkingBgpStatus,
+            CliCommand::NetworkingInboundIcmpView,
+            CliCommand::NetworkingInboundIcmpUpdate,
             CliCommand::NetworkingLoopbackAddressList,
             CliCommand::NetworkingLoopbackAddressCreate,
             CliCommand::NetworkingLoopbackAddressDelete,

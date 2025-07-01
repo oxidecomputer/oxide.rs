@@ -12892,6 +12892,117 @@ pub mod types {
         }
     }
 
+    /// An inclusive-inclusive range of ICMP(v6) types or codes. The second
+    /// value may be omitted to represent a single parameter.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "A range of ICMP(v6) types or codes",
+    ///  "description": "An inclusive-inclusive range of ICMP(v6) types or
+    /// codes. The second value may be omitted to represent a single
+    /// parameter.",
+    ///  "examples": [
+    ///    "3"
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 7,
+    ///  "minLength": 1,
+    ///  "pattern": "^[0-9]{1,3}(-[0-9]{1,3})?$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Serialize,
+        Clone,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    #[serde(transparent)]
+    pub struct IcmpParamRange(::std::string::String);
+    impl ::std::ops::Deref for IcmpParamRange {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<IcmpParamRange> for ::std::string::String {
+        fn from(value: IcmpParamRange) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&IcmpParamRange> for IcmpParamRange {
+        fn from(value: &IcmpParamRange) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for IcmpParamRange {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 7usize {
+                return Err("longer than 7 characters".into());
+            }
+            if value.chars().count() < 1usize {
+                return Err("shorter than 1 characters".into());
+            }
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
+                ::std::sync::LazyLock::new(|| {
+                    ::regress::Regex::new("^[0-9]{1,3}(-[0-9]{1,3})?$").unwrap()
+                });
+            if (&*PATTERN).find(value).is_none() {
+                return Err("doesn't match pattern \"^[0-9]{1,3}(-[0-9]{1,3})?$\"".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for IcmpParamRange {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for IcmpParamRange {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for IcmpParamRange {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for IcmpParamRange {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as ::serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// Supported set of sort modes for scanning by id only.
     ///
     /// Currently, we only support scanning in ascending order.
@@ -22995,6 +23106,56 @@ pub mod types {
         }
     }
 
+    /// Configuration of inbound ICMP allowed by API services.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Configuration of inbound ICMP allowed by API
+    /// services.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "enabled"
+    ///  ],
+    ///  "properties": {
+    ///    "enabled": {
+    ///      "description": "When enabled, Nexus is able to receive ICMP
+    /// Destination Unreachable type 3 (port unreachable) and type 4
+    /// (fragmentation needed), Redirect, and Time Exceeded messages. These
+    /// enable Nexus to perform Path MTU discovery and better cope with
+    /// fragmentation issues. Otherwise all inbound ICMP traffic will be
+    /// dropped.",
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ServiceIcmpConfig {
+        /// When enabled, Nexus is able to receive ICMP Destination Unreachable
+        /// type 3 (port unreachable) and type 4 (fragmentation needed),
+        /// Redirect, and Time Exceeded messages. These enable Nexus to perform
+        /// Path MTU discovery and better cope with fragmentation issues.
+        /// Otherwise all inbound ICMP traffic will be dropped.
+        pub enabled: bool,
+    }
+
+    impl ::std::convert::From<&ServiceIcmpConfig> for ServiceIcmpConfig {
+        fn from(value: &ServiceIcmpConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ServiceIcmpConfig {
+        pub fn builder() -> builder::ServiceIcmpConfig {
+            Default::default()
+        }
+    }
+
     /// The service intended to use this certificate.
     ///
     /// <details><summary>JSON schema</summary>
@@ -31620,6 +31781,61 @@ pub mod types {
         }
     }
 
+    /// `VpcFirewallIcmpFilter`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "icmp_type"
+    ///  ],
+    ///  "properties": {
+    ///    "code": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IcmpParamRange"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "icmp_type": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct VpcFirewallIcmpFilter {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub code: ::std::option::Option<IcmpParamRange>,
+        pub icmp_type: u8,
+    }
+
+    impl ::std::convert::From<&VpcFirewallIcmpFilter> for VpcFirewallIcmpFilter {
+        fn from(value: &VpcFirewallIcmpFilter) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VpcFirewallIcmpFilter {
+        pub fn builder() -> builder::VpcFirewallIcmpFilter {
+            Default::default()
+        }
+    }
+
     /// A single rule in a VPC firewall
     ///
     /// <details><summary>JSON schema</summary>
@@ -32202,35 +32418,79 @@ pub mod types {
     /// {
     ///  "description": "The protocols that may be specified in a firewall
     /// rule's filter",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "TCP",
-    ///    "UDP",
-    ///    "ICMP"
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "tcp"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "udp"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "icmp"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/VpcFirewallIcmpFilter"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
     ///  ]
     /// }
     /// ```
     /// </details>
     #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
+    #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleProtocol {
-        #[serde(rename = "TCP")]
+        #[serde(rename = "tcp")]
         Tcp,
-        #[serde(rename = "UDP")]
+        #[serde(rename = "udp")]
         Udp,
-        #[serde(rename = "ICMP")]
-        Icmp,
+        #[serde(rename = "icmp")]
+        Icmp(::std::option::Option<VpcFirewallIcmpFilter>),
     }
 
     impl ::std::convert::From<&Self> for VpcFirewallRuleProtocol {
@@ -32239,50 +32499,11 @@ pub mod types {
         }
     }
 
-    impl ::std::fmt::Display for VpcFirewallRuleProtocol {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Tcp => write!(f, "TCP"),
-                Self::Udp => write!(f, "UDP"),
-                Self::Icmp => write!(f, "ICMP"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for VpcFirewallRuleProtocol {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "TCP" => Ok(Self::Tcp),
-                "UDP" => Ok(Self::Udp),
-                "ICMP" => Ok(Self::Icmp),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for VpcFirewallRuleProtocol {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for VpcFirewallRuleProtocol {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for VpcFirewallRuleProtocol {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
+    impl ::std::convert::From<::std::option::Option<VpcFirewallIcmpFilter>>
+        for VpcFirewallRuleProtocol
+    {
+        fn from(value: ::std::option::Option<VpcFirewallIcmpFilter>) -> Self {
+            Self::Icmp(value)
         }
     }
 
@@ -51161,6 +51382,51 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct ServiceIcmpConfig {
+            enabled: ::std::result::Result<bool, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for ServiceIcmpConfig {
+            fn default() -> Self {
+                Self {
+                    enabled: Err("no value supplied for enabled".to_string()),
+                }
+            }
+        }
+
+        impl ServiceIcmpConfig {
+            pub fn enabled<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.enabled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ServiceIcmpConfig> for super::ServiceIcmpConfig {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ServiceIcmpConfig,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    enabled: value.enabled?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ServiceIcmpConfig> for ServiceIcmpConfig {
+            fn from(value: super::ServiceIcmpConfig) -> Self {
+                Self {
+                    enabled: Ok(value.enabled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SetTargetReleaseParams {
             system_version: ::std::result::Result<
                 super::SetTargetReleaseParamsSystemVersion,
@@ -57834,6 +58100,68 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct VpcFirewallIcmpFilter {
+            code: ::std::result::Result<
+                ::std::option::Option<super::IcmpParamRange>,
+                ::std::string::String,
+            >,
+            icmp_type: ::std::result::Result<u8, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for VpcFirewallIcmpFilter {
+            fn default() -> Self {
+                Self {
+                    code: Ok(Default::default()),
+                    icmp_type: Err("no value supplied for icmp_type".to_string()),
+                }
+            }
+        }
+
+        impl VpcFirewallIcmpFilter {
+            pub fn code<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::IcmpParamRange>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.code = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for code: {}", e));
+                self
+            }
+            pub fn icmp_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u8>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.icmp_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for icmp_type: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<VpcFirewallIcmpFilter> for super::VpcFirewallIcmpFilter {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: VpcFirewallIcmpFilter,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    code: value.code?,
+                    icmp_type: value.icmp_type?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::VpcFirewallIcmpFilter> for VpcFirewallIcmpFilter {
+            fn from(value: super::VpcFirewallIcmpFilter) -> Self {
+                Self {
+                    code: Ok(value.code),
+                    icmp_type: Ok(value.icmp_type),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRule {
             action: ::std::result::Result<super::VpcFirewallRuleAction, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -64103,6 +64431,27 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus;
+    /// Return whether API services can receive limited ICMP traffic
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/inbound-icmp`
+    ///
+    /// ```ignore
+    /// let response = client.networking_inbound_icmp_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_inbound_icmp_view(&self) -> builder::NetworkingInboundIcmpView;
+    /// Set whether API services can receive limited ICMP traffic
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/inbound-icmp`
+    ///
+    /// ```ignore
+    /// let response = client.networking_inbound_icmp_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_inbound_icmp_update(&self) -> builder::NetworkingInboundIcmpUpdate;
     /// List loopback addresses
     ///
     /// Sends a `GET` request to `/v1/system/networking/loopback-address`
@@ -64316,6 +64665,14 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus {
         builder::NetworkingBgpStatus::new(self)
+    }
+
+    fn networking_inbound_icmp_view(&self) -> builder::NetworkingInboundIcmpView {
+        builder::NetworkingInboundIcmpView::new(self)
+    }
+
+    fn networking_inbound_icmp_update(&self) -> builder::NetworkingInboundIcmpUpdate {
+        builder::NetworkingInboundIcmpUpdate::new(self)
     }
 
     fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList {
@@ -87903,6 +88260,143 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_inbound_icmp_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_inbound_icmp_view`]: super::ClientSystemNetworkingExt::networking_inbound_icmp_view
+    #[derive(Debug, Clone)]
+    pub struct NetworkingInboundIcmpView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingInboundIcmpView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/inbound-icmp`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ServiceIcmpConfig>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/inbound-icmp", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_inbound_icmp_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_inbound_icmp_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_inbound_icmp_update`]: super::ClientSystemNetworkingExt::networking_inbound_icmp_update
+    #[derive(Debug, Clone)]
+    pub struct NetworkingInboundIcmpUpdate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::ServiceIcmpConfig, String>,
+    }
+
+    impl<'a> NetworkingInboundIcmpUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ServiceIcmpConfig>,
+            <V as std::convert::TryInto<types::ServiceIcmpConfig>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `ServiceIcmpConfig` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ServiceIcmpConfig,
+            ) -> types::builder::ServiceIcmpConfig,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/networking/inbound-icmp`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::ServiceIcmpConfig::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/inbound-icmp", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_inbound_icmp_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
