@@ -51,7 +51,7 @@ ratatui = "0.29.0"
 rcgen = { version = "0.13.2", features = ["pem"] }
 regex = "1.11.1"
 regress = "0.10.3"
-reqwest = "0.12.21"
+reqwest = "0.12.22"
 rustc_version = "0.4.1"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
@@ -64,7 +64,7 @@ thiserror = "2.0.11"
 tempfile = "3.20.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
-tokio = { version = "1.45.1", features = ["full"] }
+tokio = { version = "1.46.1", features = ["full"] }
 tokio-util = "0.7.15"
 toml = "0.8.23"
 toml_edit = "0.22.24"
