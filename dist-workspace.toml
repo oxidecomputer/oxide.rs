@@ -4,7 +4,7 @@ members = ["cargo:."]
 # Config for 'dist'
 [dist]
 # The preferred dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "1.0.1"
+cargo-dist-version = "1.0.7"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
@@ -15,6 +15,16 @@ targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-
 pr-run-mode = "plan"
 # Install `perl-IPC-Cmd` on manylinux as required to build OpenSSL
 github-build-setup = "../manylinux.yml"
+# Whether to sign macOS executables
+macos-sign = true
+# A GitHub repo to push Homebrew formulas to
+tap = "oxidecomputer/homebrew-tap"
+# Publish jobs to run in CI
+publish-jobs = ["homebrew"]
+
+[dist.completion-cmds.oxide]
+trigger.subcommand = { name = "completion", format = "arg" }
+shells = ["bash","fish","zsh"]
 
 [dist.github-custom-runners.x86_64-unknown-linux-gnu.container]
 image = "quay.io/pypa/manylinux_2_28_x86_64"
