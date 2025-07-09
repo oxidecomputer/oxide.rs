@@ -16864,154 +16864,6 @@ pub mod operations {
         }
     }
 
-    pub struct RoleListWhen(::httpmock::When);
-    impl RoleListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/roles$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct RoleListThen(::httpmock::Then);
-    impl RoleListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::RoleResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct RoleViewWhen(::httpmock::When);
-    impl RoleViewWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/roles/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn role_name(self, value: &str) -> Self {
-            let re =
-                regex::Regex::new(&format!("^/v1/system/roles/{}$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct RoleViewThen(::httpmock::Then);
-    impl RoleViewThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::Role) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct SystemQuotasListWhen(::httpmock::When);
     impl SystemQuotasListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -22280,12 +22132,6 @@ pub trait MockServerExt {
     fn system_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
-    fn role_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleListWhen, operations::RoleListThen);
-    fn role_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen);
     fn system_quotas_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen);
@@ -25165,30 +25011,6 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemPolicyUpdateWhen::new(when),
                 operations::SystemPolicyUpdateThen::new(then),
-            )
-        })
-    }
-
-    fn role_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleListWhen, operations::RoleListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::RoleListWhen::new(when),
-                operations::RoleListThen::new(then),
-            )
-        })
-    }
-
-    fn role_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::RoleViewWhen::new(when),
-                operations::RoleViewThen::new(then),
             )
         })
     }

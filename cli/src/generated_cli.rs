@@ -289,8 +289,6 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
-            CliCommand::RoleList => Self::cli_role_list(),
-            CliCommand::RoleView => Self::cli_role_view(),
             CliCommand::SystemQuotasList => Self::cli_system_quotas_list(),
             CliCommand::SiloList => Self::cli_silo_list(),
             CliCommand::SiloCreate => Self::cli_silo_create(),
@@ -6482,30 +6480,6 @@ impl<T: CliConfig> Cli<T> {
             .about("Update top-level IAM policy")
     }
 
-    pub fn cli_role_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List built-in roles")
-    }
-
-    pub fn cli_role_view() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("role-name")
-                    .long("role-name")
-                    .value_parser(::clap::value_parser!(::std::string::String))
-                    .required(true)
-                    .help("The built-in role's unique name."),
-            )
-            .about("Fetch built-in role")
-    }
-
     pub fn cli_system_quotas_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8626,8 +8600,6 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => self.execute_system_policy_view(matches).await,
             CliCommand::SystemPolicyUpdate => self.execute_system_policy_update(matches).await,
-            CliCommand::RoleList => self.execute_role_list(matches).await,
-            CliCommand::RoleView => self.execute_role_view(matches).await,
             CliCommand::SystemQuotasList => self.execute_system_quotas_list(matches).await,
             CliCommand::SiloList => self.execute_silo_list(matches).await,
             CliCommand::SiloCreate => self.execute_silo_create(matches).await,
@@ -15843,57 +15815,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_role_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.role_list();
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config.execute_role_list(matches, &mut request)?;
-        self.config.list_start::<types::RoleResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config.list_end_success::<types::RoleResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_role_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.role_view();
-        if let Some(value) = matches.get_one::<::std::string::String>("role-name") {
-            request = request.role_name(value.clone());
-        }
-
-        self.config.execute_role_view(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_system_quotas_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -19453,22 +19374,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_role_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::RoleList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_role_view(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::RoleView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_system_quotas_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20106,8 +20011,6 @@ pub enum CliCommand {
     NetworkingSwitchPortSettingsView,
     SystemPolicyView,
     SystemPolicyUpdate,
-    RoleList,
-    RoleView,
     SystemQuotasList,
     SiloList,
     SiloCreate,
@@ -20376,8 +20279,6 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortSettingsView,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
-            CliCommand::RoleList,
-            CliCommand::RoleView,
             CliCommand::SystemQuotasList,
             CliCommand::SiloList,
             CliCommand::SiloCreate,
