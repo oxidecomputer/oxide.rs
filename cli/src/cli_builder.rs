@@ -633,6 +633,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         // Update subcommands
         CliCommand::TargetReleaseView => Some("system update target-release view"),
         CliCommand::TargetReleaseUpdate => Some("system update target-release update"),
+        CliCommand::SystemUpdateTrustRootList => Some("system update trust-root list"),
+        CliCommand::SystemUpdateTrustRootCreate => Some("system update trust-root create"),
+        CliCommand::SystemUpdateTrustRootView => Some("system update trust-root view"),
+        CliCommand::SystemUpdateTrustRootDelete => Some("system update trust-root delete"),
         // Manually implemented
         CliCommand::SystemUpdatePutRepository => None,
         // Not implemented
@@ -657,6 +661,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::NetworkingAllowListView => Some("system networking allow-list view"),
         CliCommand::NetworkingAllowListUpdate => Some("system networking allow-list update"),
+        CliCommand::NetworkingInboundIcmpView => Some("system networking inbound-icmp view"),
+        CliCommand::NetworkingInboundIcmpUpdate => Some("system networking inbound-icmp update"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
@@ -730,8 +736,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::LoginLocal
         | CliCommand::LoginSaml
         | CliCommand::Logout
-        | CliCommand::RoleList
-        | CliCommand::RoleView
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
