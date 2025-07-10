@@ -305,6 +305,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemUpdateGetRepository => Self::cli_system_update_get_repository(),
             CliCommand::TargetReleaseView => Self::cli_target_release_view(),
             CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
+            CliCommand::SystemUpdateTrustRootList => Self::cli_system_update_trust_root_list(),
+            CliCommand::SystemUpdateTrustRootCreate => Self::cli_system_update_trust_root_create(),
+            CliCommand::SystemUpdateTrustRootView => Self::cli_system_update_trust_root_view(),
+            CliCommand::SystemUpdateTrustRootDelete => Self::cli_system_update_trust_root_delete(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -6803,7 +6807,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The name of the uploaded file."),
             )
-            .about("Upload TUF repository")
+            .about("Upload system release repository")
+            .long_about("System release repositories are verified by the updates trust store.")
     }
 
     pub fn cli_system_update_get_repository() -> ::clap::Command {
@@ -6817,8 +6822,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The version to get."),
             )
-            .about("Fetch TUF repository description")
-            .long_about("Fetch description of TUF repository by system version.")
+            .about("Fetch system release repository description by version")
     }
 
     pub fn cli_target_release_view() -> ::clap::Command {
@@ -6862,6 +6866,82 @@ impl<T: CliConfig> Cli<T> {
             .long_about(
                 "The rack reconfigurator will treat the software specified here as a goal state \
                  for the rack's software, and attempt to asynchronously update to that release.",
+            )
+    }
+
+    pub fn cli_system_update_trust_root_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List root roles in the updates trust store")
+            .long_about(
+                "A root role is a JSON document describing the cryptographic keys that are \
+                 trusted to sign system release repositories, as described by The Update \
+                 Framework. Uploading a repository requires its metadata to be signed by keys \
+                 trusted by the trust store.",
+            )
+    }
+
+    pub fn cli_system_update_trust_root_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add trusted root role to updates trust store")
+    }
+
+    pub fn cli_system_update_trust_root_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("trust-root-id")
+                    .long("trust-root-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the trust root"),
+            )
+            .about("Fetch trusted root role")
+    }
+
+    pub fn cli_system_update_trust_root_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("trust-root-id")
+                    .long("trust-root-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the trust root"),
+            )
+            .about("Delete trusted root role")
+            .long_about(
+                "Note that this method does not currently check for any uploaded system release \
+                 repositories that would become untrusted after deleting the root role.",
             )
     }
 
@@ -8624,6 +8704,18 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
             CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
+            CliCommand::SystemUpdateTrustRootList => {
+                self.execute_system_update_trust_root_list(matches).await
+            }
+            CliCommand::SystemUpdateTrustRootCreate => {
+                self.execute_system_update_trust_root_create(matches).await
+            }
+            CliCommand::SystemUpdateTrustRootView => {
+                self.execute_system_update_trust_root_view(matches).await
+            }
+            CliCommand::SystemUpdateTrustRootDelete => {
+                self.execute_system_update_trust_root_delete(matches).await
+            }
             CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
             CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
             CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
@@ -16306,6 +16398,121 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_system_update_trust_root_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_trust_root_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_system_update_trust_root_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::UpdatesTrustRootResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::UpdatesTrustRootResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_system_update_trust_root_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_trust_root_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<::serde_json::Value>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_system_update_trust_root_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_update_trust_root_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_trust_root_view();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("trust-root-id") {
+            request = request.trust_root_id(value.clone());
+        }
+
+        self.config
+            .execute_system_update_trust_root_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_system_update_trust_root_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_trust_root_delete();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("trust-root-id") {
+            request = request.trust_root_id(value.clone());
+        }
+
+        self.config
+            .execute_system_update_trust_root_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_silo_user_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
@@ -19502,6 +19709,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_system_update_trust_root_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateTrustRootList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_update_trust_root_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateTrustRootCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_update_trust_root_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateTrustRootView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_update_trust_root_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateTrustRootDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_silo_user_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20027,6 +20266,10 @@ pub enum CliCommand {
     SystemUpdateGetRepository,
     TargetReleaseView,
     TargetReleaseUpdate,
+    SystemUpdateTrustRootList,
+    SystemUpdateTrustRootCreate,
+    SystemUpdateTrustRootView,
+    SystemUpdateTrustRootDelete,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -20295,6 +20538,10 @@ impl CliCommand {
             CliCommand::SystemUpdateGetRepository,
             CliCommand::TargetReleaseView,
             CliCommand::TargetReleaseUpdate,
+            CliCommand::SystemUpdateTrustRootList,
+            CliCommand::SystemUpdateTrustRootCreate,
+            CliCommand::SystemUpdateTrustRootView,
+            CliCommand::SystemUpdateTrustRootDelete,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,

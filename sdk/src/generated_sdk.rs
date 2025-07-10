@@ -30359,6 +30359,119 @@ pub mod types {
         }
     }
 
+    /// Trusted root role used by the update system to verify update
+    /// repositories.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Trusted root role used by the update system to verify
+    /// update repositories.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "root_role",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "The UUID of this trusted root role.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "root_role": {
+    ///      "description": "The trusted root role itself, a JSON document as
+    /// described by The Update Framework."
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Time the trusted root role was added.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UpdatesTrustRoot {
+        /// The UUID of this trusted root role.
+        pub id: ::uuid::Uuid,
+        /// The trusted root role itself, a JSON document as described by The
+        /// Update Framework.
+        pub root_role: ::serde_json::Value,
+        /// Time the trusted root role was added.
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&UpdatesTrustRoot> for UpdatesTrustRoot {
+        fn from(value: &UpdatesTrustRoot) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UpdatesTrustRoot {
+        pub fn builder() -> builder::UpdatesTrustRoot {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/UpdatesTrustRoot"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UpdatesTrustRootResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<UpdatesTrustRoot>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UpdatesTrustRootResultsPage> for UpdatesTrustRootResultsPage {
+        fn from(value: &UpdatesTrustRootResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UpdatesTrustRootResultsPage {
+        pub fn builder() -> builder::UpdatesTrustRootResultsPage {
+            Default::default()
+        }
+    }
+
     /// View of a User
     ///
     /// <details><summary>JSON schema</summary>
@@ -56920,6 +57033,147 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct UpdatesTrustRoot {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            root_role: ::std::result::Result<::serde_json::Value, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for UpdatesTrustRoot {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    root_role: Err("no value supplied for root_role".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                }
+            }
+        }
+
+        impl UpdatesTrustRoot {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn root_role<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::serde_json::Value>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.root_role = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for root_role: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UpdatesTrustRoot> for super::UpdatesTrustRoot {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UpdatesTrustRoot,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    root_role: value.root_role?,
+                    time_created: value.time_created?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UpdatesTrustRoot> for UpdatesTrustRoot {
+            fn from(value: super::UpdatesTrustRoot) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    root_role: Ok(value.root_role),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct UpdatesTrustRootResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::UpdatesTrustRoot>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for UpdatesTrustRootResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl UpdatesTrustRootResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::UpdatesTrustRoot>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UpdatesTrustRootResultsPage> for super::UpdatesTrustRootResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UpdatesTrustRootResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UpdatesTrustRootResultsPage> for UpdatesTrustRootResultsPage {
+            fn from(value: super::UpdatesTrustRootResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct User {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -61004,7 +61258,9 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList;
-    /// Upload TUF repository
+    /// Upload system release repository
+    ///
+    /// System release repositories are verified by the updates trust store.
     ///
     /// Sends a `PUT` request to `/v1/system/update/repository`
     ///
@@ -61019,9 +61275,7 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository;
-    /// Fetch TUF repository description
-    ///
-    /// Fetch description of TUF repository by system version.
+    /// Fetch system release repository description by version
     ///
     /// Sends a `GET` request to `/v1/system/update/repository/{system_version}`
     ///
@@ -61065,6 +61319,71 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn target_release_update(&self) -> builder::TargetReleaseUpdate;
+    /// List root roles in the updates trust store
+    ///
+    /// A root role is a JSON document describing the cryptographic keys that
+    /// are trusted to sign system release repositories, as described by The
+    /// Update Framework. Uploading a repository requires its metadata to be
+    /// signed by keys trusted by the trust store.
+    ///
+    /// Sends a `GET` request to `/v1/system/update/trust-roots`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.system_update_trust_root_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList;
+    /// Add trusted root role to updates trust store
+    ///
+    /// Sends a `POST` request to `/v1/system/update/trust-roots`
+    ///
+    /// ```ignore
+    /// let response = client.system_update_trust_root_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate;
+    /// Fetch trusted root role
+    ///
+    /// Sends a `GET` request to `/v1/system/update/trust-roots/{trust_root_id}`
+    ///
+    /// Arguments:
+    /// - `trust_root_id`: ID of the trust root
+    /// ```ignore
+    /// let response = client.system_update_trust_root_view()
+    ///    .trust_root_id(trust_root_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView;
+    /// Delete trusted root role
+    ///
+    /// Note that this method does not currently check for any uploaded system
+    /// release repositories that would become untrusted after deleting the root
+    /// role.
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/update/trust-roots/{trust_root_id}`
+    ///
+    /// Arguments:
+    /// - `trust_root_id`: ID of the trust root
+    /// ```ignore
+    /// let response = client.system_update_trust_root_delete()
+    ///    .trust_root_id(trust_root_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -61193,6 +61512,22 @@ impl ClientExperimentalExt for Client {
 
     fn target_release_update(&self) -> builder::TargetReleaseUpdate {
         builder::TargetReleaseUpdate::new(self)
+    }
+
+    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList {
+        builder::SystemUpdateTrustRootList::new(self)
+    }
+
+    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate {
+        builder::SystemUpdateTrustRootCreate::new(self)
+    }
+
+    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView {
+        builder::SystemUpdateTrustRootView::new(self)
+    }
+
+    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete {
+        builder::SystemUpdateTrustRootDelete::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery {
@@ -90536,6 +90871,382 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::system_update_trust_root_list`]
+    ///
+    /// [`ClientExperimentalExt::system_update_trust_root_list`]: super::ClientExperimentalExt::system_update_trust_root_list
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateTrustRootList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SystemUpdateTrustRootList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/update/trust-roots`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UpdatesTrustRootResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/trust-roots", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_trust_root_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/update/trust-roots`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::UpdatesTrustRoot, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::system_update_trust_root_create`]
+    ///
+    /// [`ClientExperimentalExt::system_update_trust_root_create`]: super::ClientExperimentalExt::system_update_trust_root_create
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateTrustRootCreate<'a> {
+        client: &'a super::Client,
+        body: Result<::serde_json::Value, String>,
+    }
+
+    impl<'a> SystemUpdateTrustRootCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::serde_json::Value>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `:: serde_json :: Value` for body failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/update/trust-roots`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UpdatesTrustRoot>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/trust-roots", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_trust_root_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::system_update_trust_root_view`]
+    ///
+    /// [`ClientExperimentalExt::system_update_trust_root_view`]: super::ClientExperimentalExt::system_update_trust_root_view
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateTrustRootView<'a> {
+        client: &'a super::Client,
+        trust_root_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> SystemUpdateTrustRootView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                trust_root_id: Err("trust_root_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn trust_root_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.trust_root_id = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for trust_root_id failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/update/trust-roots/{trust_root_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UpdatesTrustRoot>, Error<types::Error>> {
+            let Self {
+                client,
+                trust_root_id,
+            } = self;
+            let trust_root_id = trust_root_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/update/trust-roots/{}",
+                client.baseurl,
+                encode_path(&trust_root_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_trust_root_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::system_update_trust_root_delete`]
+    ///
+    /// [`ClientExperimentalExt::system_update_trust_root_delete`]: super::ClientExperimentalExt::system_update_trust_root_delete
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateTrustRootDelete<'a> {
+        client: &'a super::Client,
+        trust_root_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> SystemUpdateTrustRootDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                trust_root_id: Err("trust_root_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn trust_root_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.trust_root_id = value.try_into().map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for trust_root_id failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/update/trust-roots/{trust_root_id}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                trust_root_id,
+            } = self;
+            let trust_root_id = trust_root_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/update/trust-roots/{}",
+                client.baseurl,
+                encode_path(&trust_root_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_trust_root_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
