@@ -398,20 +398,20 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceAffinityGroupList => Some("instance property affinity"),
         CliCommand::InstanceAntiAffinityGroupList => Some("instance property anti-affinity"),
 
-        CliCommand::AffinityGroupList => Some("experimental affinity list"),
-        CliCommand::AffinityGroupCreate => Some("experimental affinity create"),
-        CliCommand::AffinityGroupView => Some("experimental affinity view"),
-        CliCommand::AffinityGroupUpdate => Some("experimental affinity update"),
-        CliCommand::AffinityGroupDelete => Some("experimental affinity delete"),
-        CliCommand::AffinityGroupMemberList => Some("experimental affinity member list"),
+        CliCommand::AffinityGroupList => Some("experimental instance affinity list"),
+        CliCommand::AffinityGroupCreate => Some("experimental instance affinity create"),
+        CliCommand::AffinityGroupView => Some("experimental instance affinity view"),
+        CliCommand::AffinityGroupUpdate => Some("experimental instance affinity update"),
+        CliCommand::AffinityGroupDelete => Some("experimental instance affinity delete"),
+        CliCommand::AffinityGroupMemberList => Some("experimental instance affinity member list"),
         CliCommand::AffinityGroupMemberInstanceView => {
-            Some("experimental affinity member view-instance")
+            Some("experimental instance affinity member view-instance")
         }
         CliCommand::AffinityGroupMemberInstanceAdd => {
-            Some("experimental affinity member add-instance")
+            Some("experimental instance affinity member add-instance")
         }
         CliCommand::AffinityGroupMemberInstanceDelete => {
-            Some("experimental affinity member remove-instance")
+            Some("experimental instance affinity member remove-instance")
         }
         CliCommand::AntiAffinityGroupList => Some("instance anti-affinity list"),
         CliCommand::AntiAffinityGroupCreate => Some("instance anti-affinity create"),
@@ -631,8 +631,16 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::AuthSettingsUpdate => Some("auth-settings update"),
 
         // Update subcommands
-        CliCommand::TargetReleaseView => Some("system update target-release view"),
-        CliCommand::TargetReleaseUpdate => Some("system update target-release update"),
+        CliCommand::TargetReleaseView => Some("experimental system update target-release view"),
+        CliCommand::TargetReleaseUpdate => Some("experimental system update target-release update"),
+        CliCommand::SystemUpdateTrustRootList => Some("experimental system update trust-root list"),
+        CliCommand::SystemUpdateTrustRootCreate => {
+            Some("experimental system update trust-root create")
+        }
+        CliCommand::SystemUpdateTrustRootView => Some("experimental system update trust-root view"),
+        CliCommand::SystemUpdateTrustRootDelete => {
+            Some("experimental system update trust-root delete")
+        }
         // Manually implemented
         CliCommand::SystemUpdatePutRepository => None,
         // Not implemented
@@ -657,6 +665,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::NetworkingAllowListView => Some("system networking allow-list view"),
         CliCommand::NetworkingAllowListUpdate => Some("system networking allow-list update"),
+        CliCommand::NetworkingInboundIcmpView => Some("system networking inbound-icmp view"),
+        CliCommand::NetworkingInboundIcmpUpdate => Some("system networking inbound-icmp update"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
@@ -695,10 +705,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::Ping => Some("ping"),
 
-        CliCommand::ProbeCreate => Some("experimental probe create"),
-        CliCommand::ProbeDelete => Some("experimental probe delete"),
-        CliCommand::ProbeList => Some("experimental probe list"),
-        CliCommand::ProbeView => Some("experimental probe view"),
+        CliCommand::ProbeCreate => Some("experimental system probe create"),
+        CliCommand::ProbeDelete => Some("experimental system probe delete"),
+        CliCommand::ProbeList => Some("experimental system probe list"),
+        CliCommand::ProbeView => Some("experimental system probe view"),
 
         // Metrics-related subcommands
         CliCommand::TimeseriesQuery => Some("experimental timeseries query"),
@@ -730,8 +740,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::LoginLocal
         | CliCommand::LoginSaml
         | CliCommand::Logout
-        | CliCommand::RoleList
-        | CliCommand::RoleView
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList

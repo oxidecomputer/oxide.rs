@@ -1407,7 +1407,7 @@
       ],
       "subcommands": [
         {
-          "name": "affinity",
+          "name": "instance",
           "args": [
             {
               "long": "profile",
@@ -1417,95 +1417,7 @@
           ],
           "subcommands": [
             {
-              "name": "create",
-              "about": "Create affinity group",
-              "args": [
-                {
-                  "long": "description"
-                },
-                {
-                  "long": "failure-domain",
-                  "values": [
-                    "sled"
-                  ]
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "name"
-                },
-                {
-                  "long": "policy",
-                  "values": [
-                    "allow",
-                    "fail"
-                  ]
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                }
-              ]
-            },
-            {
-              "name": "delete",
-              "about": "Delete affinity group",
-              "args": [
-                {
-                  "long": "affinity-group",
-                  "help": "Name or ID of the affinity group"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List affinity groups",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "name_ascending",
-                    "name_descending",
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "member",
+              "name": "affinity",
               "args": [
                 {
                   "long": "profile",
@@ -1515,14 +1427,54 @@
               ],
               "subcommands": [
                 {
-                  "name": "add-instance",
-                  "about": "Add member to affinity group",
+                  "name": "create",
+                  "about": "Create affinity group",
                   "args": [
                     {
-                      "long": "affinity-group"
+                      "long": "description"
                     },
                     {
-                      "long": "instance"
+                      "long": "failure-domain",
+                      "values": [
+                        "sled"
+                      ]
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "policy",
+                      "values": [
+                        "allow",
+                        "fail"
+                      ]
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete affinity group",
+                  "args": [
+                    {
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
                     },
                     {
                       "long": "profile",
@@ -1537,12 +1489,8 @@
                 },
                 {
                   "name": "list",
-                  "about": "List affinity group members",
+                  "about": "List affinity groups",
                   "args": [
-                    {
-                      "long": "affinity-group",
-                      "help": "Name or ID of the affinity group"
-                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -1567,14 +1515,132 @@
                   ]
                 },
                 {
-                  "name": "remove-instance",
-                  "about": "Remove member from affinity group",
+                  "name": "member",
                   "args": [
                     {
-                      "long": "affinity-group"
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "add-instance",
+                      "about": "Add member to affinity group",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
                     },
                     {
-                      "long": "instance"
+                      "name": "list",
+                      "about": "List affinity group members",
+                      "args": [
+                        {
+                          "long": "affinity-group",
+                          "help": "Name or ID of the affinity group"
+                        },
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "name_ascending",
+                            "name_descending",
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "remove-instance",
+                      "about": "Remove member from affinity group",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view-instance",
+                      "about": "Fetch affinity group member",
+                      "args": [
+                        {
+                          "long": "affinity-group"
+                        },
+                        {
+                          "long": "instance"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "project",
+                          "help": "Name or ID of the project"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "update",
+                  "about": "Update affinity group",
+                  "args": [
+                    {
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
                     },
                     {
                       "long": "profile",
@@ -1588,14 +1654,12 @@
                   ]
                 },
                 {
-                  "name": "view-instance",
-                  "about": "Fetch affinity group member",
+                  "name": "view",
+                  "about": "Fetch affinity group",
                   "args": [
                     {
-                      "long": "affinity-group"
-                    },
-                    {
-                      "long": "instance"
+                      "long": "affinity-group",
+                      "help": "Name or ID of the affinity group"
                     },
                     {
                       "long": "profile",
@@ -1607,170 +1671,6 @@
                       "help": "Name or ID of the project"
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "name": "update",
-              "about": "Update affinity group",
-              "args": [
-                {
-                  "long": "affinity-group",
-                  "help": "Name or ID of the affinity group"
-                },
-                {
-                  "long": "description"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "name"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch affinity group",
-              "args": [
-                {
-                  "long": "affinity-group",
-                  "help": "Name or ID of the affinity group"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "probe",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "create",
-              "about": "Create instrumentation probe",
-              "args": [
-                {
-                  "long": "description"
-                },
-                {
-                  "long": "ip-pool"
-                },
-                {
-                  "long": "json-body",
-                  "help": "Path to a file that contains the full json body."
-                },
-                {
-                  "long": "json-body-template",
-                  "help": "XXX"
-                },
-                {
-                  "long": "name"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                },
-                {
-                  "long": "sled"
-                }
-              ]
-            },
-            {
-              "name": "delete",
-              "about": "Delete instrumentation probe",
-              "args": [
-                {
-                  "long": "probe",
-                  "help": "Name or ID of the probe"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List instrumentation probes",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "name_ascending",
-                    "name_descending",
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "View instrumentation probe",
-              "args": [
-                {
-                  "long": "probe",
-                  "help": "Name or ID of the probe"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
                 }
               ]
             }
@@ -1786,6 +1686,118 @@
             }
           ],
           "subcommands": [
+            {
+              "name": "probe",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create instrumentation probe",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "ip-pool"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    },
+                    {
+                      "long": "sled"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete instrumentation probe",
+                  "args": [
+                    {
+                      "long": "probe",
+                      "help": "Name or ID of the probe"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List instrumentation probes",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "View instrumentation probe",
+                  "args": [
+                    {
+                      "long": "probe",
+                      "help": "Name or ID of the probe"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "project",
+                      "help": "Name or ID of the project"
+                    }
+                  ]
+                }
+              ]
+            },
             {
               "name": "timeseries",
               "args": [
@@ -1842,6 +1854,150 @@
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "update",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "target-release",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "update",
+                      "about": "Set the current target release of the rack's system software",
+                      "long_about": "The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release.",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "system-version",
+                          "help": "Version of the system software to make the target release."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view",
+                      "about": "Get the current target release of the rack's system software",
+                      "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "trust-root",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ],
+                  "subcommands": [
+                    {
+                      "name": "create",
+                      "about": "Add trusted root role to updates trust store",
+                      "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        }
+                      ]
+                    },
+                    {
+                      "name": "delete",
+                      "about": "Delete trusted root role",
+                      "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "trust-root-id",
+                          "help": "ID of the trust root"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List root roles in the updates trust store",
+                      "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "view",
+                      "about": "Fetch trusted root role",
+                      "args": [
+                        {
+                          "long": "profile",
+                          "help": "Configuration profile to use for commands",
+                          "global": true
+                        },
+                        {
+                          "long": "trust-root-id",
+                          "help": "ID of the trust root"
                         }
                       ]
                     }
@@ -6919,6 +7075,56 @@
               ]
             },
             {
+              "name": "inbound-icmp",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "update",
+                  "about": "Set whether API services can receive limited ICMP traffic",
+                  "args": [
+                    {
+                      "long": "enabled",
+                      "values": [
+                        "true",
+                        "false"
+                      ],
+                      "help": "When enabled, Nexus is able to receive ICMP Destination Unreachable type 3 (port unreachable) and type 4 (fragmentation needed), Redirect, and Time Exceeded messages. These enable Nexus to perform Path MTU discovery and better cope with fragmentation issues. Otherwise all inbound ICMP traffic will be dropped."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Return whether API services can receive limited ICMP traffic",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "link",
               "about": "Manage switch port links.",
               "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
@@ -7668,54 +7874,6 @@
                       "short": "p",
                       "help": "Path to the TUF repository"
                     },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "target-release",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ],
-              "subcommands": [
-                {
-                  "name": "update",
-                  "about": "Set the current target release of the rack's system software",
-                  "long_about": "The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release.",
-                  "args": [
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    },
-                    {
-                      "long": "system-version",
-                      "help": "Version of the system software to make the target release."
-                    }
-                  ]
-                },
-                {
-                  "name": "view",
-                  "about": "Get the current target release of the rack's system software",
-                  "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
-                  "args": [
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",

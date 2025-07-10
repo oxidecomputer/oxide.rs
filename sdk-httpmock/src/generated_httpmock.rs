@@ -16094,6 +16094,115 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingInboundIcmpViewWhen(::httpmock::When);
+    impl NetworkingInboundIcmpViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/networking/inbound-icmp$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct NetworkingInboundIcmpViewThen(::httpmock::Then);
+    impl NetworkingInboundIcmpViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ServiceIcmpConfig) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingInboundIcmpUpdateWhen(::httpmock::When);
+    impl NetworkingInboundIcmpUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::PUT).path_matches(
+                    regex::Regex::new("^/v1/system/networking/inbound-icmp$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::ServiceIcmpConfig) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingInboundIcmpUpdateThen(::httpmock::Then);
+    impl NetworkingInboundIcmpUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingLoopbackAddressListWhen(::httpmock::When);
     impl NetworkingLoopbackAddressListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -16726,154 +16835,6 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct RoleListWhen(::httpmock::When);
-    impl RoleListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/roles$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct RoleListThen(::httpmock::Then);
-    impl RoleListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::RoleResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct RoleViewWhen(::httpmock::When);
-    impl RoleViewWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/roles/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn role_name(self, value: &str) -> Self {
-            let re =
-                regex::Regex::new(&format!("^/v1/system/roles/{}$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct RoleViewThen(::httpmock::Then);
-    impl RoleViewThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::Role) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -18013,6 +17974,291 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SystemUpdateTrustRootListWhen(::httpmock::When);
+    impl SystemUpdateTrustRootListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/trust-roots$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SystemUpdateTrustRootListThen(::httpmock::Then);
+    impl SystemUpdateTrustRootListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UpdatesTrustRootResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SystemUpdateTrustRootCreateWhen(::httpmock::When);
+    impl SystemUpdateTrustRootCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/update/trust-roots$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &::serde_json::Value) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateTrustRootCreateThen(::httpmock::Then);
+    impl SystemUpdateTrustRootCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::UpdatesTrustRoot) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SystemUpdateTrustRootViewWhen(::httpmock::When);
+    impl SystemUpdateTrustRootViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/update/trust-roots/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn trust_root_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/trust-roots/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemUpdateTrustRootViewThen(::httpmock::Then);
+    impl SystemUpdateTrustRootViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UpdatesTrustRoot) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SystemUpdateTrustRootDeleteWhen(::httpmock::When);
+    impl SystemUpdateTrustRootDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::DELETE).path_matches(
+                    regex::Regex::new("^/v1/system/update/trust-roots/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn trust_root_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/trust-roots/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemUpdateTrustRootDeleteThen(::httpmock::Then);
+    impl SystemUpdateTrustRootDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -22111,6 +22357,18 @@ pub trait MockServerExt {
     fn networking_bgp_status<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::NetworkingBgpStatusWhen, operations::NetworkingBgpStatusThen);
+    fn networking_inbound_icmp_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingInboundIcmpViewWhen,
+            operations::NetworkingInboundIcmpViewThen,
+        );
+    fn networking_inbound_icmp_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingInboundIcmpUpdateWhen,
+            operations::NetworkingInboundIcmpUpdateThen,
+        );
     fn networking_loopback_address_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(
@@ -22159,12 +22417,6 @@ pub trait MockServerExt {
     fn system_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
-    fn role_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleListWhen, operations::RoleListThen);
-    fn role_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen);
     fn system_quotas_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen);
@@ -22222,6 +22474,30 @@ pub trait MockServerExt {
     fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen);
+    fn system_update_trust_root_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootListWhen,
+            operations::SystemUpdateTrustRootListThen,
+        );
+    fn system_update_trust_root_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootCreateWhen,
+            operations::SystemUpdateTrustRootCreateThen,
+        );
+    fn system_update_trust_root_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootViewWhen,
+            operations::SystemUpdateTrustRootViewThen,
+        );
+    fn system_update_trust_root_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootDeleteWhen,
+            operations::SystemUpdateTrustRootDeleteThen,
+        );
     fn silo_user_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
@@ -24889,6 +25165,36 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn networking_inbound_icmp_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingInboundIcmpViewWhen,
+            operations::NetworkingInboundIcmpViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingInboundIcmpViewWhen::new(when),
+                operations::NetworkingInboundIcmpViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_inbound_icmp_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingInboundIcmpUpdateWhen,
+            operations::NetworkingInboundIcmpUpdateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingInboundIcmpUpdateWhen::new(when),
+                operations::NetworkingInboundIcmpUpdateThen::new(then),
+            )
+        })
+    }
+
     fn networking_loopback_address_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(
@@ -25014,30 +25320,6 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemPolicyUpdateWhen::new(when),
                 operations::SystemPolicyUpdateThen::new(then),
-            )
-        })
-    }
-
-    fn role_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleListWhen, operations::RoleListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::RoleListWhen::new(when),
-                operations::RoleListThen::new(then),
-            )
-        })
-    }
-
-    fn role_view<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::RoleViewWhen::new(when),
-                operations::RoleViewThen::new(then),
             )
         })
     }
@@ -25239,6 +25521,66 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::TargetReleaseUpdateWhen::new(when),
                 operations::TargetReleaseUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_trust_root_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootListWhen,
+            operations::SystemUpdateTrustRootListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdateTrustRootListWhen::new(when),
+                operations::SystemUpdateTrustRootListThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_trust_root_create<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootCreateWhen,
+            operations::SystemUpdateTrustRootCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdateTrustRootCreateWhen::new(when),
+                operations::SystemUpdateTrustRootCreateThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_trust_root_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootViewWhen,
+            operations::SystemUpdateTrustRootViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdateTrustRootViewWhen::new(when),
+                operations::SystemUpdateTrustRootViewThen::new(then),
+            )
+        })
+    }
+
+    fn system_update_trust_root_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateTrustRootDeleteWhen,
+            operations::SystemUpdateTrustRootDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemUpdateTrustRootDeleteWhen::new(when),
+                operations::SystemUpdateTrustRootDeleteThen::new(then),
             )
         })
     }
