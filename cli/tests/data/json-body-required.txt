@@ -9,8 +9,8 @@ oxide vpc router route create
 oxide vpc router route update
 oxide alert receiver webhook create
 oxide disk create
+oxide experimental system update trust-root create
 oxide system policy update
 oxide system networking address-lot create
 oxide system networking switch-port-settings create
 oxide system networking bgp announce-set update
-oxide system update trust-root create
