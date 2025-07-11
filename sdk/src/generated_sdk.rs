@@ -9536,12 +9536,17 @@ pub mod types {
     ///      "type": "object",
     ///      "required": [
     ///        "ip",
+    ///        "ip_pool_id",
     ///        "kind"
     ///      ],
     ///      "properties": {
     ///        "ip": {
     ///          "type": "string",
     ///          "format": "ip"
+    ///        },
+    ///        "ip_pool_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
     ///        },
     ///        "kind": {
     ///          "type": "string",
@@ -9641,7 +9646,10 @@ pub mod types {
     #[serde(tag = "kind")]
     pub enum ExternalIp {
         #[serde(rename = "ephemeral")]
-        Ephemeral { ip: ::std::net::IpAddr },
+        Ephemeral {
+            ip: ::std::net::IpAddr,
+            ip_pool_id: ::uuid::Uuid,
+        },
         /// A Floating IP is a well-known IP address which can be attached and
         /// detached from instances.
         #[serde(rename = "floating")]
@@ -60173,7 +60181,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20250604.0.0
+/// Version: 20250730.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -60214,7 +60222,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20250604.0.0"
+        "20250730.0.0"
     }
 
     fn baseurl(&self) -> &str {
