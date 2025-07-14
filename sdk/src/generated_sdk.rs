@@ -66734,7 +66734,7 @@ pub mod builder {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
     }
 
     impl<'a> SupportBundleList<'a> {
@@ -66769,12 +66769,12 @@ pub mod builder {
 
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::IdSortMode>,
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
         {
             self.sort_by = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
             self
         }
 
