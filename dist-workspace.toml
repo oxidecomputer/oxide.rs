@@ -17,6 +17,8 @@ pr-run-mode = "plan"
 github-build-setup = "../manylinux.yml"
 # Whether to sign macOS executables
 macos-sign = true
+# Whether to sign Windows executables
+ssldotcom-windows-sign = "prod"
 # A GitHub repo to push Homebrew formulas to
 tap = "oxidecomputer/homebrew-tap"
 # Publish jobs to run in CI
