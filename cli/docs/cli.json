@@ -701,7 +701,8 @@
             {
               "long": "sort-by",
               "values": [
-                "id_ascending"
+                "ascending",
+                "descending"
               ]
             }
           ]

@@ -9536,12 +9536,17 @@ pub mod types {
     ///      "type": "object",
     ///      "required": [
     ///        "ip",
+    ///        "ip_pool_id",
     ///        "kind"
     ///      ],
     ///      "properties": {
     ///        "ip": {
     ///          "type": "string",
     ///          "format": "ip"
+    ///        },
+    ///        "ip_pool_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
     ///        },
     ///        "kind": {
     ///          "type": "string",
@@ -9641,7 +9646,10 @@ pub mod types {
     #[serde(tag = "kind")]
     pub enum ExternalIp {
         #[serde(rename = "ephemeral")]
-        Ephemeral { ip: ::std::net::IpAddr },
+        Ephemeral {
+            ip: ::std::net::IpAddr,
+            ip_pool_id: ::uuid::Uuid,
+        },
         /// A Floating IP is a well-known IP address which can be attached and
         /// detached from instances.
         #[serde(rename = "floating")]
@@ -60173,7 +60181,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20250604.0.0
+/// Version: 20250730.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -60214,7 +60222,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20250604.0.0"
+        "20250730.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66726,7 +66734,7 @@ pub mod builder {
         client: &'a super::Client,
         limit: Result<Option<::std::num::NonZeroU32>, String>,
         page_token: Result<Option<::std::string::String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
     }
 
     impl<'a> SupportBundleList<'a> {
@@ -66761,12 +66769,12 @@ pub mod builder {
 
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::IdSortMode>,
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
         {
             self.sort_by = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
             self
         }
 

@@ -596,9 +596,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string(),
+                            types::TimeAndIdSortMode::Ascending.to_string(),
+                            types::TimeAndIdSortMode::Descending.to_string(),
                         ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
                     ))
                     .required(false),
             )
@@ -9003,7 +9004,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
