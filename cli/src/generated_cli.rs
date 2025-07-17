@@ -596,8 +596,8 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::TimeAndIdSortMode::Ascending.to_string(),
-                            types::TimeAndIdSortMode::Descending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
                         ]),
                         |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
                     ))
@@ -1097,8 +1097,8 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::TimeAndIdSortMode::Ascending.to_string(),
-                            types::TimeAndIdSortMode::Descending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
                         ]),
                         |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
                     ))

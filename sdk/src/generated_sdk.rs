@@ -28574,7 +28574,7 @@ pub mod types {
     /// earliest first",
     ///      "type": "string",
     ///      "enum": [
-    ///        "ascending"
+    ///        "time_and_id_ascending"
     ///      ]
     ///    },
     ///    {
@@ -28582,7 +28582,7 @@ pub mod types {
     /// most recent first",
     ///      "type": "string",
     ///      "enum": [
-    ///        "descending"
+    ///        "time_and_id_descending"
     ///      ]
     ///    }
     ///  ]
@@ -28604,12 +28604,12 @@ pub mod types {
     )]
     pub enum TimeAndIdSortMode {
         /// sort in increasing order of timestamp and ID, i.e., earliest first
-        #[serde(rename = "ascending")]
-        Ascending,
+        #[serde(rename = "time_and_id_ascending")]
+        TimeAndIdAscending,
         /// sort in increasing order of timestamp and ID, i.e., most recent
         /// first
-        #[serde(rename = "descending")]
-        Descending,
+        #[serde(rename = "time_and_id_descending")]
+        TimeAndIdDescending,
     }
 
     impl ::std::convert::From<&Self> for TimeAndIdSortMode {
@@ -28621,8 +28621,8 @@ pub mod types {
     impl ::std::fmt::Display for TimeAndIdSortMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ascending => write!(f, "ascending"),
-                Self::Descending => write!(f, "descending"),
+                Self::TimeAndIdAscending => write!(f, "time_and_id_ascending"),
+                Self::TimeAndIdDescending => write!(f, "time_and_id_descending"),
             }
         }
     }
@@ -28631,8 +28631,8 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
-                "ascending" => Ok(Self::Ascending),
-                "descending" => Ok(Self::Descending),
+                "time_and_id_ascending" => Ok(Self::TimeAndIdAscending),
+                "time_and_id_descending" => Ok(Self::TimeAndIdDescending),
                 _ => Err("invalid value".into()),
             }
         }
