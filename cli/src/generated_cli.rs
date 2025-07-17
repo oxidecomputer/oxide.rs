@@ -317,6 +317,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
             CliCommand::TimeseriesQuery => Self::cli_timeseries_query(),
             CliCommand::UserList => Self::cli_user_list(),
+            CliCommand::UserView => Self::cli_user_view(),
+            CliCommand::UserTokenList => Self::cli_user_token_list(),
+            CliCommand::UserLogout => Self::cli_user_logout(),
+            CliCommand::UserSessionList => Self::cli_user_session_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
@@ -7133,6 +7137,94 @@ impl<T: CliConfig> Cli<T> {
             .about("List users")
     }
 
+    pub fn cli_user_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("Fetch user")
+    }
+
+    pub fn cli_user_token_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("List user's access tokens")
+    }
+
+    pub fn cli_user_logout() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("Log user out")
+            .long_about(
+                "Silo admins can use this endpoint to log the specified user out by deleting all \
+                 of their tokens AND sessions. This cannot be undone.",
+            )
+    }
+
+    pub fn cli_user_session_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("List user's console sessions")
+    }
+
     pub fn cli_utilization_view() -> ::clap::Command {
         ::clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
@@ -8725,6 +8817,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloUtilizationView => self.execute_silo_utilization_view(matches).await,
             CliCommand::TimeseriesQuery => self.execute_timeseries_query(matches).await,
             CliCommand::UserList => self.execute_user_list(matches).await,
+            CliCommand::UserView => self.execute_user_view(matches).await,
+            CliCommand::UserTokenList => self.execute_user_token_list(matches).await,
+            CliCommand::UserLogout => self.execute_user_logout(matches).await,
+            CliCommand::UserSessionList => self.execute_user_session_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
             CliCommand::VpcFirewallRulesUpdate => {
@@ -16779,6 +16875,134 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_user_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.user_view();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_user_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.user_token_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_token_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::DeviceAccessTokenResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::DeviceAccessTokenResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_user_logout(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.user_logout();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_logout(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_user_session_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.user_session_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config
+            .execute_user_session_list(matches, &mut request)?;
+        self.config.list_start::<types::ConsoleSessionResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ConsoleSessionResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -19806,6 +20030,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_user_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserTokenList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_logout(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserLogout,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_session_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserSessionList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -20279,6 +20535,10 @@ pub enum CliCommand {
     SiloUtilizationView,
     TimeseriesQuery,
     UserList,
+    UserView,
+    UserTokenList,
+    UserLogout,
+    UserSessionList,
     UtilizationView,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
@@ -20551,6 +20811,10 @@ impl CliCommand {
             CliCommand::SiloUtilizationView,
             CliCommand::TimeseriesQuery,
             CliCommand::UserList,
+            CliCommand::UserView,
+            CliCommand::UserTokenList,
+            CliCommand::UserLogout,
+            CliCommand::UserSessionList,
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
