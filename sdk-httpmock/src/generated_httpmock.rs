@@ -557,6 +557,10 @@ pub mod operations {
         pub fn into_inner(self) -> ::httpmock::When {
             self.0
         }
+
+        pub fn body(self, value: &types::SupportBundleCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
     }
 
     pub struct SupportBundleCreateThen(::httpmock::Then);
@@ -623,6 +627,72 @@ pub mod operations {
 
     pub struct SupportBundleViewThen(::httpmock::Then);
     impl SupportBundleViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SupportBundleInfo) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleUpdateWhen(::httpmock::When);
+    impl SupportBundleUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SupportBundleUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SupportBundleUpdateThen(::httpmock::Then);
+    impl SupportBundleUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -21962,6 +22032,9 @@ pub trait MockServerExt {
     fn support_bundle_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SupportBundleViewWhen, operations::SupportBundleViewThen);
+    fn support_bundle_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleUpdateWhen, operations::SupportBundleUpdateThen);
     fn support_bundle_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SupportBundleDeleteWhen, operations::SupportBundleDeleteThen);
@@ -23077,6 +23150,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SupportBundleViewWhen::new(when),
                 operations::SupportBundleViewThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleUpdateWhen, operations::SupportBundleUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleUpdateWhen::new(when),
+                operations::SupportBundleUpdateThen::new(then),
             )
         })
     }

@@ -25848,6 +25848,54 @@ pub mod types {
         }
     }
 
+    /// `SupportBundleCreate`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "user_comment": {
+    ///      "description": "User comment for the support bundle",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleCreate {
+        /// User comment for the support bundle
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleCreate> for SupportBundleCreate {
+        fn from(value: &SupportBundleCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for SupportBundleCreate {
+        fn default() -> Self {
+            Self {
+                user_comment: Default::default(),
+            }
+        }
+    }
+
+    impl SupportBundleCreate {
+        pub fn builder() -> builder::SupportBundleCreate {
+            Default::default()
+        }
+    }
+
     /// `SupportBundleInfo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25880,6 +25928,12 @@ pub mod types {
     ///    "time_created": {
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "user_comment": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -25895,6 +25949,8 @@ pub mod types {
         pub reason_for_failure: ::std::option::Option<::std::string::String>,
         pub state: SupportBundleState,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
     }
 
     impl ::std::convert::From<&SupportBundleInfo> for SupportBundleInfo {
@@ -26104,6 +26160,54 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// `SupportBundleUpdate`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "user_comment": {
+    ///      "description": "User comment for the support bundle",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleUpdate {
+        /// User comment for the support bundle
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleUpdate> for SupportBundleUpdate {
+        fn from(value: &SupportBundleUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for SupportBundleUpdate {
+        fn default() -> Self {
+            Self {
+                user_comment: Default::default(),
+            }
+        }
+    }
+
+    impl SupportBundleUpdate {
+        pub fn builder() -> builder::SupportBundleUpdate {
+            Default::default()
         }
     }
 
@@ -53990,6 +54094,54 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SupportBundleCreate {
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SupportBundleCreate {
+            fn default() -> Self {
+                Self {
+                    user_comment: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SupportBundleCreate {
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleCreate> for super::SupportBundleCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    user_comment: value.user_comment?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleCreate> for SupportBundleCreate {
+            fn from(value: super::SupportBundleCreate) -> Self {
+                Self {
+                    user_comment: Ok(value.user_comment),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SupportBundleInfo {
             id: ::std::result::Result<super::TypedUuidForSupportBundleKind, ::std::string::String>,
             reason_for_creation:
@@ -54001,6 +54153,10 @@ pub mod types {
             state: ::std::result::Result<super::SupportBundleState, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
                 ::std::string::String,
             >,
         }
@@ -54015,6 +54171,7 @@ pub mod types {
                     reason_for_failure: Ok(Default::default()),
                     state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
+                    user_comment: Ok(Default::default()),
                 }
             }
         }
@@ -54076,6 +54233,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<SupportBundleInfo> for super::SupportBundleInfo {
@@ -54089,6 +54256,7 @@ pub mod types {
                     reason_for_failure: value.reason_for_failure?,
                     state: value.state?,
                     time_created: value.time_created?,
+                    user_comment: value.user_comment?,
                 })
             }
         }
@@ -54101,6 +54269,7 @@ pub mod types {
                     reason_for_failure: Ok(value.reason_for_failure),
                     state: Ok(value.state),
                     time_created: Ok(value.time_created),
+                    user_comment: Ok(value.user_comment),
                 }
             }
         }
@@ -54166,6 +54335,54 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SupportBundleUpdate {
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SupportBundleUpdate {
+            fn default() -> Self {
+                Self {
+                    user_comment: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SupportBundleUpdate {
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleUpdate> for super::SupportBundleUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    user_comment: value.user_comment?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleUpdate> for SupportBundleUpdate {
+            fn from(value: super::SupportBundleUpdate) -> Self {
+                Self {
+                    user_comment: Ok(value.user_comment),
                 }
             }
         }
@@ -61205,6 +61422,7 @@ pub trait ClientExperimentalExt {
     ///
     /// ```ignore
     /// let response = client.support_bundle_create()
+    ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
@@ -61223,6 +61441,22 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_view(&self) -> builder::SupportBundleView;
+    /// Update a support bundle
+    ///
+    /// Sends a `PUT` request to
+    /// `/experimental/v1/system/support-bundles/{bundle_id}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `body`
+    /// ```ignore
+    /// let response = client.support_bundle_update()
+    ///    .bundle_id(bundle_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate;
     /// Delete an existing support bundle
     ///
     /// May also be used to cancel a support bundle which is currently being
@@ -61693,6 +61927,10 @@ impl ClientExperimentalExt for Client {
 
     fn support_bundle_view(&self) -> builder::SupportBundleView {
         builder::SupportBundleView::new(self)
+    }
+
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate {
+        builder::SupportBundleUpdate::new(self)
     }
 
     fn support_bundle_delete(&self) -> builder::SupportBundleDelete {
@@ -67225,18 +67463,47 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleCreate<'a> {
         client: &'a super::Client,
+        body: Result<types::builder::SupportBundleCreate, String>,
     }
 
     impl<'a> SupportBundleCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleCreate>,
+            <V as std::convert::TryInto<types::SupportBundleCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleCreate,
+            ) -> types::builder::SupportBundleCreate,
+        {
+            self.body = self.body.map(f);
+            self
         }
 
         /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
-            let Self { client } = self;
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SupportBundleCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
@@ -67251,6 +67518,7 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .json(&body)
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
@@ -67329,6 +67597,112 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "support_bundle_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::support_bundle_update`]
+    ///
+    /// [`ClientExperimentalExt::support_bundle_update`]: super::ClientExperimentalExt::support_bundle_update
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleUpdate<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        body: Result<types::builder::SupportBundleUpdate, String>,
+    }
+
+    impl<'a> SupportBundleUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleUpdate>,
+            <V as std::convert::TryInto<types::SupportBundleUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleUpdate,
+            ) -> types::builder::SupportBundleUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/experimental/v1/system/support-bundles/{bundle_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                bundle_id,
+                body,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SupportBundleUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;

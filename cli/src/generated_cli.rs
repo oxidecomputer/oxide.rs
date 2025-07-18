@@ -23,6 +23,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SupportBundleList => Self::cli_support_bundle_list(),
             CliCommand::SupportBundleCreate => Self::cli_support_bundle_create(),
             CliCommand::SupportBundleView => Self::cli_support_bundle_view(),
+            CliCommand::SupportBundleUpdate => Self::cli_support_bundle_update(),
             CliCommand::SupportBundleDelete => Self::cli_support_bundle_delete(),
             CliCommand::SupportBundleDownload => Self::cli_support_bundle_download(),
             CliCommand::SupportBundleHead => Self::cli_support_bundle_head(),
@@ -611,7 +612,29 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_create() -> ::clap::Command {
-        ::clap::Command::new("").about("Create a new support bundle")
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-comment")
+                    .long("user-comment")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("User comment for the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new support bundle")
     }
 
     pub fn cli_support_bundle_view() -> ::clap::Command {
@@ -624,6 +647,39 @@ impl<T: CliConfig> Cli<T> {
                     .help("ID of the support bundle"),
             )
             .about("View a support bundle")
+    }
+
+    pub fn cli_support_bundle_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("user-comment")
+                    .long("user-comment")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("User comment for the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update a support bundle")
     }
 
     pub fn cli_support_bundle_delete() -> ::clap::Command {
@@ -8367,6 +8423,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SupportBundleList => self.execute_support_bundle_list(matches).await,
             CliCommand::SupportBundleCreate => self.execute_support_bundle_create(matches).await,
             CliCommand::SupportBundleView => self.execute_support_bundle_view(matches).await,
+            CliCommand::SupportBundleUpdate => self.execute_support_bundle_update(matches).await,
             CliCommand::SupportBundleDelete => self.execute_support_bundle_delete(matches).await,
             CliCommand::SupportBundleDownload => {
                 self.execute_support_bundle_download(matches).await
@@ -9137,6 +9194,16 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("user-comment") {
+            request = request.body_map(|body| body.user_comment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.config
             .execute_support_bundle_create(matches, &mut request)?;
         let result = request.send().await;
@@ -9163,6 +9230,40 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_support_bundle_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_update();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("user-comment") {
+            request = request.body_map(|body| body.user_comment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_support_bundle_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -18206,6 +18307,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_support_bundle_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_support_bundle_delete(
         &self,
         matches: &::clap::ArgMatches,
@@ -20307,6 +20416,7 @@ pub enum CliCommand {
     SupportBundleList,
     SupportBundleCreate,
     SupportBundleView,
+    SupportBundleUpdate,
     SupportBundleDelete,
     SupportBundleDownload,
     SupportBundleHead,
@@ -20583,6 +20693,7 @@ impl CliCommand {
             CliCommand::SupportBundleList,
             CliCommand::SupportBundleCreate,
             CliCommand::SupportBundleView,
+            CliCommand::SupportBundleUpdate,
             CliCommand::SupportBundleDelete,
             CliCommand::SupportBundleDownload,
             CliCommand::SupportBundleHead,
