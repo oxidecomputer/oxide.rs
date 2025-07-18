@@ -168,8 +168,8 @@
                 {
                   "long": "sort-by",
                   "values": [
-                    "ascending",
-                    "descending"
+                    "time_and_id_ascending",
+                    "time_and_id_descending"
                   ]
                 }
               ]
@@ -701,8 +701,8 @@
             {
               "long": "sort-by",
               "values": [
-                "ascending",
-                "descending"
+                "time_and_id_ascending",
+                "time_and_id_descending"
               ]
             }
           ]

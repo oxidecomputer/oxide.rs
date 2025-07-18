@@ -6799,6 +6799,114 @@ pub mod types {
         }
     }
 
+    /// View of a console session
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a console session",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "time_created",
+    ///    "time_last_used"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "A unique, immutable, system-controlled identifier
+    /// for the session",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_last_used": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ConsoleSession {
+        /// A unique, immutable, system-controlled identifier for the session
+        pub id: ::uuid::Uuid,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub time_last_used: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&ConsoleSession> for ConsoleSession {
+        fn from(value: &ConsoleSession) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ConsoleSession {
+        pub fn builder() -> builder::ConsoleSession {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ConsoleSession"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ConsoleSessionResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<ConsoleSession>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ConsoleSessionResultsPage> for ConsoleSessionResultsPage {
+        fn from(value: &ConsoleSessionResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ConsoleSessionResultsPage {
+        pub fn builder() -> builder::ConsoleSessionResultsPage {
+            Default::default()
+        }
+    }
+
     /// A cumulative or counter data type.
     ///
     /// <details><summary>JSON schema</summary>
@@ -21773,8 +21881,8 @@ pub mod types {
     ///      "format": "ip"
     ///    },
     ///    "rib_priority": {
-    ///      "description": "Local preference for route. Higher preference
-    /// indictes precedence within and across protocols.",
+    ///      "description": "Route RIB priority. Higher priority indicates
+    /// precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -21803,8 +21911,8 @@ pub mod types {
         pub dst: IpNet,
         /// The route gateway.
         pub gw: ::std::net::IpAddr,
-        /// Local preference for route. Higher preference indictes precedence
-        /// within and across protocols.
+        /// Route RIB priority. Higher priority indicates precedence within and
+        /// across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// VLAN id the gateway is reachable over.
@@ -25740,6 +25848,54 @@ pub mod types {
         }
     }
 
+    /// `SupportBundleCreate`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "user_comment": {
+    ///      "description": "User comment for the support bundle",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleCreate {
+        /// User comment for the support bundle
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleCreate> for SupportBundleCreate {
+        fn from(value: &SupportBundleCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for SupportBundleCreate {
+        fn default() -> Self {
+            Self {
+                user_comment: Default::default(),
+            }
+        }
+    }
+
+    impl SupportBundleCreate {
+        pub fn builder() -> builder::SupportBundleCreate {
+            Default::default()
+        }
+    }
+
     /// `SupportBundleInfo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25772,6 +25928,12 @@ pub mod types {
     ///    "time_created": {
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "user_comment": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -25787,6 +25949,8 @@ pub mod types {
         pub reason_for_failure: ::std::option::Option<::std::string::String>,
         pub state: SupportBundleState,
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
     }
 
     impl ::std::convert::From<&SupportBundleInfo> for SupportBundleInfo {
@@ -25996,6 +26160,54 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// `SupportBundleUpdate`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "user_comment": {
+    ///      "description": "User comment for the support bundle",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct SupportBundleUpdate {
+        /// User comment for the support bundle
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_comment: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&SupportBundleUpdate> for SupportBundleUpdate {
+        fn from(value: &SupportBundleUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for SupportBundleUpdate {
+        fn default() -> Self {
+            Self {
+                user_comment: Default::default(),
+            }
+        }
+    }
+
+    impl SupportBundleUpdate {
+        pub fn builder() -> builder::SupportBundleUpdate {
+            Default::default()
         }
     }
 
@@ -27427,8 +27639,8 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "rib_priority": {
-    ///      "description": "RIB Priority indicating priority within and across
-    /// protocols.",
+    ///      "description": "Route RIB priority. Higher priority indicates
+    /// precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -27462,7 +27674,8 @@ pub mod types {
         pub interface_name: Name,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
-        /// RIB Priority indicating priority within and across protocols.
+        /// Route RIB priority. Higher priority indicates precedence within and
+        /// across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
@@ -28574,7 +28787,7 @@ pub mod types {
     /// earliest first",
     ///      "type": "string",
     ///      "enum": [
-    ///        "ascending"
+    ///        "time_and_id_ascending"
     ///      ]
     ///    },
     ///    {
@@ -28582,7 +28795,7 @@ pub mod types {
     /// most recent first",
     ///      "type": "string",
     ///      "enum": [
-    ///        "descending"
+    ///        "time_and_id_descending"
     ///      ]
     ///    }
     ///  ]
@@ -28604,12 +28817,12 @@ pub mod types {
     )]
     pub enum TimeAndIdSortMode {
         /// sort in increasing order of timestamp and ID, i.e., earliest first
-        #[serde(rename = "ascending")]
-        Ascending,
+        #[serde(rename = "time_and_id_ascending")]
+        TimeAndIdAscending,
         /// sort in increasing order of timestamp and ID, i.e., most recent
         /// first
-        #[serde(rename = "descending")]
-        Descending,
+        #[serde(rename = "time_and_id_descending")]
+        TimeAndIdDescending,
     }
 
     impl ::std::convert::From<&Self> for TimeAndIdSortMode {
@@ -28621,8 +28834,8 @@ pub mod types {
     impl ::std::fmt::Display for TimeAndIdSortMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ascending => write!(f, "ascending"),
-                Self::Descending => write!(f, "descending"),
+                Self::TimeAndIdAscending => write!(f, "time_and_id_ascending"),
+                Self::TimeAndIdDescending => write!(f, "time_and_id_descending"),
             }
         }
     }
@@ -28631,8 +28844,8 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
-                "ascending" => Ok(Self::Ascending),
-                "descending" => Ok(Self::Descending),
+                "time_and_id_ascending" => Ok(Self::TimeAndIdAscending),
+                "time_and_id_descending" => Ok(Self::TimeAndIdDescending),
                 _ => Err("invalid value".into()),
             }
         }
@@ -39416,6 +39629,150 @@ pub mod types {
 
         impl ::std::convert::From<super::CertificateResultsPage> for CertificateResultsPage {
             fn from(value: super::CertificateResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ConsoleSession {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_last_used: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ConsoleSession {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_last_used: Err("no value supplied for time_last_used".to_string()),
+                }
+            }
+        }
+
+        impl ConsoleSession {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_last_used<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_last_used = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_last_used: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ConsoleSession> for super::ConsoleSession {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ConsoleSession,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    time_created: value.time_created?,
+                    time_last_used: value.time_last_used?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ConsoleSession> for ConsoleSession {
+            fn from(value: super::ConsoleSession) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_last_used: Ok(value.time_last_used),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ConsoleSessionResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::ConsoleSession>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ConsoleSessionResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ConsoleSessionResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::ConsoleSession>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ConsoleSessionResultsPage> for super::ConsoleSessionResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ConsoleSessionResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ConsoleSessionResultsPage> for ConsoleSessionResultsPage {
+            fn from(value: super::ConsoleSessionResultsPage) -> Self {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
@@ -53737,6 +54094,54 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SupportBundleCreate {
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SupportBundleCreate {
+            fn default() -> Self {
+                Self {
+                    user_comment: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SupportBundleCreate {
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleCreate> for super::SupportBundleCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    user_comment: value.user_comment?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleCreate> for SupportBundleCreate {
+            fn from(value: super::SupportBundleCreate) -> Self {
+                Self {
+                    user_comment: Ok(value.user_comment),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SupportBundleInfo {
             id: ::std::result::Result<super::TypedUuidForSupportBundleKind, ::std::string::String>,
             reason_for_creation:
@@ -53748,6 +54153,10 @@ pub mod types {
             state: ::std::result::Result<super::SupportBundleState, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
                 ::std::string::String,
             >,
         }
@@ -53762,6 +54171,7 @@ pub mod types {
                     reason_for_failure: Ok(Default::default()),
                     state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
+                    user_comment: Ok(Default::default()),
                 }
             }
         }
@@ -53823,6 +54233,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<SupportBundleInfo> for super::SupportBundleInfo {
@@ -53836,6 +54256,7 @@ pub mod types {
                     reason_for_failure: value.reason_for_failure?,
                     state: value.state?,
                     time_created: value.time_created?,
+                    user_comment: value.user_comment?,
                 })
             }
         }
@@ -53848,6 +54269,7 @@ pub mod types {
                     reason_for_failure: Ok(value.reason_for_failure),
                     state: Ok(value.state),
                     time_created: Ok(value.time_created),
+                    user_comment: Ok(value.user_comment),
                 }
             }
         }
@@ -53913,6 +54335,54 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SupportBundleUpdate {
+            user_comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for SupportBundleUpdate {
+            fn default() -> Self {
+                Self {
+                    user_comment: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SupportBundleUpdate {
+            pub fn user_comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_comment = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for user_comment: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<SupportBundleUpdate> for super::SupportBundleUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SupportBundleUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    user_comment: value.user_comment?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::SupportBundleUpdate> for SupportBundleUpdate {
+            fn from(value: super::SupportBundleUpdate) -> Self {
+                Self {
+                    user_comment: Ok(value.user_comment),
                 }
             }
         }
@@ -60952,6 +61422,7 @@ pub trait ClientExperimentalExt {
     ///
     /// ```ignore
     /// let response = client.support_bundle_create()
+    ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
@@ -60970,6 +61441,22 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn support_bundle_view(&self) -> builder::SupportBundleView;
+    /// Update a support bundle
+    ///
+    /// Sends a `PUT` request to
+    /// `/experimental/v1/system/support-bundles/{bundle_id}`
+    ///
+    /// Arguments:
+    /// - `bundle_id`: ID of the support bundle
+    /// - `body`
+    /// ```ignore
+    /// let response = client.support_bundle_update()
+    ///    .bundle_id(bundle_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate;
     /// Delete an existing support bundle
     ///
     /// May also be used to cancel a support bundle which is currently being
@@ -61440,6 +61927,10 @@ impl ClientExperimentalExt for Client {
 
     fn support_bundle_view(&self) -> builder::SupportBundleView {
         builder::SupportBundleView::new(self)
+    }
+
+    fn support_bundle_update(&self) -> builder::SupportBundleUpdate {
+        builder::SupportBundleUpdate::new(self)
     }
 
     fn support_bundle_delete(&self) -> builder::SupportBundleDelete {
@@ -62813,6 +63304,75 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn user_list(&self) -> builder::UserList;
+    /// Fetch user
+    ///
+    /// Sends a `GET` request to `/v1/users/{user_id}`
+    ///
+    /// Arguments:
+    /// - `user_id`: ID of the user
+    /// ```ignore
+    /// let response = client.user_view()
+    ///    .user_id(user_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_view(&self) -> builder::UserView;
+    /// List user's access tokens
+    ///
+    /// Sends a `GET` request to `/v1/users/{user_id}/access-tokens`
+    ///
+    /// Arguments:
+    /// - `user_id`: ID of the user
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.user_token_list()
+    ///    .user_id(user_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_token_list(&self) -> builder::UserTokenList;
+    /// Log user out
+    ///
+    /// Silo admins can use this endpoint to log the specified user out by
+    /// deleting all of their tokens AND sessions. This cannot be undone.
+    ///
+    /// Sends a `POST` request to `/v1/users/{user_id}/logout`
+    ///
+    /// Arguments:
+    /// - `user_id`: ID of the user
+    /// ```ignore
+    /// let response = client.user_logout()
+    ///    .user_id(user_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_logout(&self) -> builder::UserLogout;
+    /// List user's console sessions
+    ///
+    /// Sends a `GET` request to `/v1/users/{user_id}/sessions`
+    ///
+    /// Arguments:
+    /// - `user_id`: ID of the user
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.user_session_list()
+    ///    .user_id(user_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_session_list(&self) -> builder::UserSessionList;
     /// Fetch resource utilization for user's current silo
     ///
     /// Sends a `GET` request to `/v1/utilization`
@@ -62868,6 +63428,22 @@ impl ClientSilosExt for Client {
 
     fn user_list(&self) -> builder::UserList {
         builder::UserList::new(self)
+    }
+
+    fn user_view(&self) -> builder::UserView {
+        builder::UserView::new(self)
+    }
+
+    fn user_token_list(&self) -> builder::UserTokenList {
+        builder::UserTokenList::new(self)
+    }
+
+    fn user_logout(&self) -> builder::UserLogout {
+        builder::UserLogout::new(self)
+    }
+
+    fn user_session_list(&self) -> builder::UserSessionList {
+        builder::UserSessionList::new(self)
     }
 
     fn utilization_view(&self) -> builder::UtilizationView {
@@ -66887,18 +67463,47 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SupportBundleCreate<'a> {
         client: &'a super::Client,
+        body: Result<types::builder::SupportBundleCreate, String>,
     }
 
     impl<'a> SupportBundleCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleCreate>,
+            <V as std::convert::TryInto<types::SupportBundleCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleCreate,
+            ) -> types::builder::SupportBundleCreate,
+        {
+            self.body = self.body.map(f);
+            self
         }
 
         /// Sends a `POST` request to `/experimental/v1/system/support-bundles`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
-            let Self { client } = self;
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::SupportBundleCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/experimental/v1/system/support-bundles", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
@@ -66913,6 +67518,7 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .json(&body)
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
@@ -66991,6 +67597,112 @@ pub mod builder {
                 .build()?;
             let info = OperationInfo {
                 operation_id: "support_bundle_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::support_bundle_update`]
+    ///
+    /// [`ClientExperimentalExt::support_bundle_update`]: super::ClientExperimentalExt::support_bundle_update
+    #[derive(Debug, Clone)]
+    pub struct SupportBundleUpdate<'a> {
+        client: &'a super::Client,
+        bundle_id: Result<::uuid::Uuid, String>,
+        body: Result<types::builder::SupportBundleUpdate, String>,
+    }
+
+    impl<'a> SupportBundleUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                bundle_id: Err("bundle_id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn bundle_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.bundle_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for bundle_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SupportBundleUpdate>,
+            <V as std::convert::TryInto<types::SupportBundleUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SupportBundleUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SupportBundleUpdate,
+            ) -> types::builder::SupportBundleUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/experimental/v1/system/support-bundles/{bundle_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SupportBundleInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                bundle_id,
+                body,
+            } = self;
+            let bundle_id = bundle_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::SupportBundleUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/system/support-bundles/{}",
+                client.baseurl,
+                encode_path(&bundle_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "support_bundle_update",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92207,6 +92919,492 @@ pub mod builder {
             use ::futures::TryStreamExt;
             let next = Self {
                 group: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::user_view`]
+    ///
+    /// [`ClientSilosExt::user_view`]: super::ClientSilosExt::user_view
+    #[derive(Debug, Clone)]
+    pub struct UserView<'a> {
+        client: &'a super::Client,
+        user_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> UserView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                user_id: Err("user_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/users/{user_id}`
+        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+            let Self { client, user_id } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/users/{}",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "user_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::user_token_list`]
+    ///
+    /// [`ClientSilosExt::user_token_list`]: super::ClientSilosExt::user_token_list
+    #[derive(Debug, Clone)]
+    pub struct UserTokenList<'a> {
+        client: &'a super::Client,
+        user_id: Result<::uuid::Uuid, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> UserTokenList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                user_id: Err("user_id was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/users/{user_id}/access-tokens`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::DeviceAccessTokenResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                user_id,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/users/{}/access-tokens",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "user_token_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/users/{user_id}/access-tokens`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::DeviceAccessToken, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::user_logout`]
+    ///
+    /// [`ClientSilosExt::user_logout`]: super::ClientSilosExt::user_logout
+    #[derive(Debug, Clone)]
+    pub struct UserLogout<'a> {
+        client: &'a super::Client,
+        user_id: Result<::uuid::Uuid, String>,
+    }
+
+    impl<'a> UserLogout<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                user_id: Err("user_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/users/{user_id}/logout`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, user_id } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/users/{}/logout",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "user_logout",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::user_session_list`]
+    ///
+    /// [`ClientSilosExt::user_session_list`]: super::ClientSilosExt::user_session_list
+    #[derive(Debug, Clone)]
+    pub struct UserSessionList<'a> {
+        client: &'a super::Client,
+        user_id: Result<::uuid::Uuid, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> UserSessionList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                user_id: Err("user_id was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/users/{user_id}/sessions`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ConsoleSessionResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                user_id,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/users/{}/sessions",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "user_session_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/users/{user_id}/sessions`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::ConsoleSession, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
                 page_token: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
