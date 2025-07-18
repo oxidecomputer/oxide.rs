@@ -21881,8 +21881,8 @@ pub mod types {
     ///      "format": "ip"
     ///    },
     ///    "rib_priority": {
-    ///      "description": "Local preference for route. Higher preference
-    /// indictes precedence within and across protocols.",
+    ///      "description": "Route RIB priority. Higher priority indicates
+    /// precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -21911,8 +21911,8 @@ pub mod types {
         pub dst: IpNet,
         /// The route gateway.
         pub gw: ::std::net::IpAddr,
-        /// Local preference for route. Higher preference indictes precedence
-        /// within and across protocols.
+        /// Route RIB priority. Higher priority indicates precedence within and
+        /// across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// VLAN id the gateway is reachable over.
@@ -27535,8 +27535,8 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "rib_priority": {
-    ///      "description": "RIB Priority indicating priority within and across
-    /// protocols.",
+    ///      "description": "Route RIB priority. Higher priority indicates
+    /// precedence within and across protocols.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -27570,7 +27570,8 @@ pub mod types {
         pub interface_name: Name,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: ::uuid::Uuid,
-        /// RIB Priority indicating priority within and across protocols.
+        /// Route RIB priority. Higher priority indicates precedence within and
+        /// across protocols.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub rib_priority: ::std::option::Option<u8>,
         /// The VLAN identifier for the route. Use this if the gateway is
