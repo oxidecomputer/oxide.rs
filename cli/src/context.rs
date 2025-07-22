@@ -2,13 +2,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use oxide::{BasicConfigFile, ClientConfig, CredentialsFile};
 use serde::{de::DeserializeOwned, Deserialize};
+
+use crate::cli_builder::Format;
 
 /// The Context is what we use to carry globally relevant information around
 /// to subcommands. This includes configuration information and top-level
@@ -18,6 +20,7 @@ pub struct Context {
     client_config: ClientConfig,
     cred_file: CredentialsFile,
     config_file: ConfigFile,
+    format: Format,
 }
 
 #[derive(Deserialize, Debug, Default)]
@@ -36,7 +39,7 @@ fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> Result<T> {
 }
 
 impl Context {
-    pub fn new(client_config: ClientConfig) -> Result<Self> {
+    pub fn new(client_config: ClientConfig, format: Format) -> Result<Self> {
         let config_dir = client_config.config_dir();
         let cred_file = read_or_default(config_dir.join("credentials.toml"))?;
         let config_file = read_or_default(config_dir.join("config.toml"))?;
@@ -47,6 +50,7 @@ impl Context {
             client_config,
             cred_file,
             config_file,
+            format,
         })
     }
 
@@ -60,6 +64,10 @@ impl Context {
 
     pub fn config_file(&self) -> &ConfigFile {
         &self.config_file
+    }
+
+    pub fn format(&self) -> &Format {
+        &self.format
     }
 }
 

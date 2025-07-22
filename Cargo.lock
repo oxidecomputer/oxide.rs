@@ -641,6 +641,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "comfy-table"
+version = "7.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a65ebfec4fb190b6f90e944a817d60499ee0744e582530e2c9900a22e591d9a"
+dependencies = [
+ "crossterm 0.28.1",
+ "unicode-segmentation",
+ "unicode-width 0.2.0",
+]
+
+[[package]]
 name = "compact_str"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2533,6 +2544,7 @@ dependencies = [
  "clap",
  "clap_complete",
  "colored",
+ "comfy-table",
  "crossterm 0.29.0",
  "dialoguer",
  "dirs",
@@ -2542,6 +2554,7 @@ dependencies = [
  "futures",
  "httpmock",
  "humantime",
+ "indexmap",
  "indicatif",
  "libc",
  "log",
@@ -4925,6 +4938,7 @@ version = "0.0.0"
 dependencies = [
  "clap",
  "newline-converter",
+ "openapiv3",
  "progenitor",
  "regex",
  "rustc_version",

@@ -7,6 +7,7 @@ publish = false
 [dependencies]
 clap = { workspace = true }
 newline-converter = { workspace = true }
+openapiv3 = { workspace = true }
 progenitor = { workspace = true, default-features = false }
 regex = { workspace = true }
 rustc_version = { workspace = true }

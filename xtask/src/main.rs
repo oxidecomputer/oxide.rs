@@ -2,14 +2,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 
-use std::{fs::File, io::Write, path::PathBuf, time::Instant};
+use std::{collections::BTreeSet, fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
 use newline_converter::dos2unix;
+use openapiv3::{ReferenceOr, SchemaKind, StatusCode, Type};
 use progenitor::{GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
 
@@ -30,6 +31,8 @@ enum Xtask {
         cli: bool,
         #[clap(long)]
         httpmock: bool,
+        #[clap(long)]
+        return_types: bool,
     },
 }
 
@@ -43,7 +46,8 @@ fn main() -> Result<(), String> {
             sdk,
             cli,
             httpmock,
-        } => generate(check, verbose, sdk, cli, httpmock),
+            return_types,
+        } => generate(check, verbose, sdk, cli, httpmock, return_types),
     }
 }
 
@@ -55,9 +59,10 @@ fn generate(
     mut sdk: bool,
     mut cli: bool,
     mut httpmock: bool,
+    mut return_types: bool,
 ) -> Result<(), String> {
-    if !(sdk || cli || httpmock) {
-        (sdk, cli, httpmock) = (true, true, true);
+    if !(sdk || cli || httpmock || return_types) {
+        (sdk, cli, httpmock, return_types) = (true, true, true, true);
     }
 
     let start = Instant::now();
@@ -122,10 +127,93 @@ fn generate(
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
-        let mut out_path = root_path;
+        let mut out_path = root_path.clone();
         out_path.push("cli");
         out_path.push("src");
         out_path.push("generated_cli.rs");
+
+        error |= output_contents(check, out_path, contents, verbose).is_err();
+    }
+
+    if return_types {
+        print!("generating return types ... ");
+        std::io::stdout().flush().unwrap();
+        let mut ret_types = BTreeSet::new();
+
+        for path in spec.paths.paths.values().cloned() {
+            let Some(path) = path.into_item() else {
+                unimplemented!("path was a reference");
+            };
+
+            for operation in [
+                &path.get,
+                &path.put,
+                &path.options,
+                &path.post,
+                &path.delete,
+                &path.head,
+                &path.patch,
+                &path.trace,
+            ] {
+                let Some(operation) = operation else {
+                    continue;
+                };
+
+                for response in operation
+                    .responses
+                    .responses
+                    .iter()
+                    .filter(|(k, _v)| matches!(k, StatusCode::Code(_)))
+                    .map(|(_k, v)| v)
+                    .cloned()
+                {
+                    let Some(response) = response.into_item() else {
+                        unimplemented!("response was not an item");
+                    };
+
+                    // Skip items that don't have a JSON response.
+                    let Some(schema) = response
+                        .content
+                        .get("application/json")
+                        .and_then(|j| j.schema.as_ref())
+                    else {
+                        continue;
+                    };
+                    let reference = match schema {
+                        ReferenceOr::Reference { reference } => reference,
+                        ReferenceOr::Item(item) => match &item.schema_kind {
+                            SchemaKind::Type(Type::Array(a)) => {
+                                let Some(ReferenceOr::Reference { reference }) = &a.items else {
+                                    unimplemented!("returned array type was not a reference");
+                                };
+                                reference
+                            }
+                            _ => unimplemented!("direct return type was not an array"),
+                        },
+                    };
+                    let Some(type_name) = reference.strip_prefix("#/components/schemas/") else {
+                        unimplemented!("reference was not to a schema");
+                    };
+
+                    ret_types.insert(type_name.to_owned());
+                }
+            }
+        }
+
+        let mut contents =
+            "// The contents of this file are generated; do not modify them.\n\n".to_string();
+        contents.push_str("generate_returned_schemas!(\n");
+        for ty in ret_types {
+            contents.push_str(&format!("  oxide::types::{ty},\n"));
+        }
+        contents.push_str(")\n");
+        loc += contents.matches('\n').count();
+
+        let mut out_path = root_path;
+        out_path.push("cli");
+        out_path.push("tests");
+        out_path.push("data");
+        out_path.push("api_return_types.rs");
 
         error |= output_contents(check, out_path, contents, verbose).is_err();
     }

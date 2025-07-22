@@ -27,12 +27,14 @@ chrono = { workspace = true }
 clap = { workspace = true }
 clap_complete = { workspace = true }
 colored = { workspace = true }
+comfy-table = { workspace = true }
 crossterm = { workspace = true }
 dialoguer = { workspace = true }
 dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 humantime = { workspace = true }
+indexmap = { workspace = true }
 indicatif = { workspace = true }
 log = { workspace = true }
 md5 = { workspace = true }

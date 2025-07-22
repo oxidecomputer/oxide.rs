@@ -14,7 +14,10 @@ use oxide::{Client, ClientExperimentalExt};
 use tokio::{fs::File, sync::watch};
 use tokio_util::io::ReaderStream;
 
-use crate::{generated_cli::CliConfig, util::start_progress_bar, AuthenticatedCmd, OxideOverride};
+use crate::{
+    generated_cli::CliConfig, oxide_override::OxideOverride, util::start_progress_bar,
+    AuthenticatedCmd,
+};
 
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
