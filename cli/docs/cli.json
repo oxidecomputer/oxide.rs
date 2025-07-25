@@ -16,6 +16,11 @@
       "help": "Enable debug output"
     },
     {
+      "long": "format",
+      "help": "Format in which to print output",
+      "global": true
+    },
+    {
       "long": "insecure",
       "help": "Disable certificate validation and hostname verification"
     },
@@ -38,6 +43,11 @@
       "name": "alert",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -47,6 +57,11 @@
         {
           "name": "class",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -61,6 +76,11 @@
                 {
                   "long": "filter",
                   "help": "An optional glob pattern for filtering alert class names.\n\nIf provided, only alert classes which match this glob pattern will be included in the response."
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "limit",
@@ -79,6 +99,11 @@
           "name": "receiver",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -89,6 +114,11 @@
               "name": "delete",
               "about": "Delete alert receiver",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -104,6 +134,11 @@
               "name": "list",
               "about": "List alert receivers",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -145,6 +180,11 @@
                   "help": "If true, include deliveries which have failed permanently.\n\nIf any of the \"pending\", \"failed\", or \"delivered\" query parameters are set to true, only deliveries matching those state(s) will be included in the response. If NO state filter parameters are set, then all deliveries are included.\n\nA delivery fails permanently when the retry limit of three total attempts is reached without a successful delivery."
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -180,6 +220,11 @@
               "long_about": "This endpoint synchronously sends a liveness probe to the selected alert receiver. The response message describes the outcome of the probe: either the successful response (as appropriate), or indication of why the probe failed.\n\nThe result of the probe is represented as an `AlertDelivery` model. Details relating to the status of the probe depend on the alert delivery mechanism, and are included in the `AlertDeliveryAttempts` model. For example, webhook receiver liveness probes include the HTTP status code returned by the receiver endpoint.\n\nNote that the response status is `200 OK` as long as a probe request was able to be sent to the receiver endpoint. If an HTTP-based receiver, such as a webhook, responds to the another status code, including an error, this will be indicated by the response body, *not* the status of the response.\n\nThe `resend` query parameter can be used to request re-delivery of failed events if the liveness probe succeeds. If it is set to true and the liveness probe succeeds, any alerts for which delivery to this receiver has failed will be queued for re-delivery.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -207,6 +252,11 @@
                   "help": "UUID of the alert"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -221,6 +271,11 @@
               "name": "subscribe",
               "about": "Add alert receiver subscription",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -249,6 +304,11 @@
               "about": "Remove alert receiver subscription",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -268,6 +328,11 @@
               "about": "Fetch alert receiver",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -281,6 +346,11 @@
             {
               "name": "webhook",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -298,6 +368,11 @@
                     {
                       "long": "endpoint",
                       "help": "The URL that webhook notification requests should be sent to"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -321,6 +396,11 @@
                   "name": "secret",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -331,6 +411,11 @@
                       "name": "add",
                       "about": "Add secret to webhook receiver",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "json-body",
                           "help": "Path to a file that contains the full json body."
@@ -359,6 +444,11 @@
                       "about": "Remove secret from webhook receiver",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -373,6 +463,11 @@
                       "name": "list",
                       "about": "List webhook receiver secret IDs",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
@@ -397,6 +492,11 @@
                     {
                       "long": "endpoint",
                       "help": "The URL that webhook notification requests should be sent to"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -435,6 +535,11 @@
           "long": "field",
           "short": "F",
           "help": "Add a typed parameter in key=value format"
+        },
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
         },
         {
           "long": "header",
@@ -485,6 +590,11 @@
       "long_about": "Login, logout, and get the status of your authentication.\n\nManage `oxide`'s authentication state.",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -499,6 +609,11 @@
             {
               "long": "browser",
               "help": "Override the default browser when opening the authentication URL"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "host",
@@ -536,6 +651,11 @@
               "help": "Skip confirmation prompt"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -548,6 +668,11 @@
           "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each profile in the\ncurrent configuration.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -559,6 +684,11 @@
     {
       "name": "auth-settings",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -573,6 +703,11 @@
             {
               "long": "device-token-max-ttl-seconds",
               "help": "Maximum lifetime of a device token in seconds. If set to null, users will be able to create tokens that do not expire."
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -594,6 +729,11 @@
           "about": "Fetch current silo's auth settings",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -606,6 +746,11 @@
       "name": "bundle",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -616,6 +761,11 @@
           "name": "create",
           "about": "Create a new support bundle",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -633,6 +783,11 @@
               "help": "ID of the support bundle"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -647,6 +802,11 @@
               "long": "chunk-size",
               "short": "c",
               "help": "The size, in bytes, of each range request to use when downloading bundles"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "id",
@@ -670,6 +830,11 @@
           "long_about": "Inspects a support bundle\n\nSupport bundles may be inspected before they are downloaded (via\nsmaller HTTP requests), or after the entire zip file has been\ndownloaded.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "id",
               "help": "ID of the bundle to be inspected, if accessing via API"
             },
@@ -689,6 +854,11 @@
           "name": "list",
           "about": "List all support bundles",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -716,6 +886,11 @@
               "help": "ID of the support bundle"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -727,6 +902,11 @@
     {
       "name": "certificate",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -745,6 +925,11 @@
             },
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -785,6 +970,11 @@
               "help": "Name or ID of the certificate"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -796,6 +986,11 @@
           "about": "List certificates for external endpoints",
           "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -825,6 +1020,11 @@
               "help": "Name or ID of the certificate"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -838,6 +1038,11 @@
       "about": "Generate shell completion scripts for Oxide CLI commands.",
       "long_about": "Generate shell completion scripts for Oxide CLI commands.\n\nThis command generates scripts for various shells that can be used to\nenable completion.\n\n## Installation\n\n### Bash\n\nAdd this to your `~/.bash_profile`:\n\n```sh\neval \"$(oxide completion -s bash)\"\n```\n\n### Zsh\n\nAdd this to your `~/.zshrc`:\n\n```sh\nautoload -U compinit\ncompinit -i\neval \"$(oxide completion -s zsh)\"\n```\n\n### Fish\n\nAdd the following to the `is-interactive` block in your `~/.config/fish/config.fish`:\n\n```sh\noxide completion -s fish | source\n```\n\n### PowerShell\n\nOpen your profile script with:\n\n```sh\nmkdir -Path (Split-Path -Parent $profile)\nnotepad $profile\n```\n\nAdd the following line and save the file:\n\n```powershell\nInvoke-Expression -Command $(oxide completion -s powershell | Out-String)\n```\n\n### Elvish\n\nAdd this to your `~/.config/elvish/rc.elv`\n\n```sh\neval (oxide completion -s elvish | slurp)\n```",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -861,6 +1066,11 @@
       "name": "current-user",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -870,6 +1080,11 @@
         {
           "name": "access-token",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -882,6 +1097,11 @@
               "about": "Delete access token",
               "long_about": "Delete a device access token for the currently authenticated user.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -898,6 +1118,11 @@
               "about": "List access tokens",
               "long_about": "List device access tokens for the currently authenticated user.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -922,6 +1147,11 @@
           "about": "Fetch current user's groups",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -942,6 +1172,11 @@
           "name": "ssh-key",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -955,6 +1190,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -984,6 +1224,11 @@
               "long_about": "Delete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -999,6 +1244,11 @@
               "about": "List SSH public keys",
               "long_about": "Lists SSH public keys for the currently authenticated user.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -1024,6 +1274,11 @@
               "long_about": "Fetch SSH public key associated with the currently authenticated user.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -1041,6 +1296,11 @@
           "about": "Fetch user for current session",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1052,6 +1312,11 @@
     {
       "name": "disk",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -1065,6 +1330,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -1101,6 +1371,11 @@
               "help": "Name or ID of the disk"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1135,6 +1410,11 @@
             {
               "long": "disk-size",
               "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB; unit suffixes are in powers of two (1k = 1024 bytes) for example: 6GiB, 512k, 2048mib"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "image",
@@ -1180,6 +1460,11 @@
                   "help": "Name or ID of the disk"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
@@ -1212,6 +1497,11 @@
                   "help": "Name or ID of the disk"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -1230,6 +1520,11 @@
                 {
                   "long": "disk",
                   "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "profile",
@@ -1252,6 +1547,11 @@
                 {
                   "long": "disk",
                   "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -1282,6 +1582,11 @@
           "about": "List disks",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -1308,6 +1613,11 @@
           "name": "metrics",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1324,6 +1634,11 @@
                 {
                   "long": "end-time",
                   "help": "An exclusive end time of metrics."
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "limit",
@@ -1374,6 +1689,11 @@
               "help": "Name or ID of the disk"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1391,6 +1711,11 @@
       "about": "Generate CLI docs in JSON format",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -1400,6 +1725,11 @@
     {
       "name": "experimental",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -1411,6 +1741,11 @@
           "name": "instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1420,6 +1755,11 @@
             {
               "name": "affinity",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -1439,6 +1779,11 @@
                       "values": [
                         "sled"
                       ]
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -1478,6 +1823,11 @@
                       "help": "Name or ID of the affinity group"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -1492,6 +1842,11 @@
                   "name": "list",
                   "about": "List affinity groups",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -1519,6 +1874,11 @@
                   "name": "member",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -1531,6 +1891,11 @@
                       "args": [
                         {
                           "long": "affinity-group"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "instance"
@@ -1553,6 +1918,11 @@
                         {
                           "long": "affinity-group",
                           "help": "Name or ID of the affinity group"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "limit",
@@ -1585,6 +1955,11 @@
                           "long": "affinity-group"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "instance"
                         },
                         {
@@ -1604,6 +1979,11 @@
                       "args": [
                         {
                           "long": "affinity-group"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "instance"
@@ -1631,6 +2011,11 @@
                     },
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -1663,6 +2048,11 @@
                       "help": "Name or ID of the affinity group"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -1681,6 +2071,11 @@
           "name": "system",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -1690,6 +2085,11 @@
             {
               "name": "probe",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -1703,6 +2103,11 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "ip-pool"
@@ -1737,6 +2142,11 @@
                   "about": "Delete instrumentation probe",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "probe",
                       "help": "Name or ID of the probe"
                     },
@@ -1755,6 +2165,11 @@
                   "name": "list",
                   "about": "List instrumentation probes",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -1783,6 +2198,11 @@
                   "about": "View instrumentation probe",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "probe",
                       "help": "Name or ID of the probe"
                     },
@@ -1803,6 +2223,11 @@
               "name": "timeseries",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -1814,6 +2239,11 @@
                   "about": "Run timeseries query",
                   "long_about": "Queries are written in OxQL.",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -1837,6 +2267,11 @@
                   "name": "schema",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -1847,6 +2282,11 @@
                       "name": "list",
                       "about": "List timeseries schemas",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
@@ -1866,6 +2306,11 @@
               "name": "update",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -1875,6 +2320,11 @@
                 {
                   "name": "target-release",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -1887,6 +2337,11 @@
                       "about": "Set the current target release of the rack's system software",
                       "long_about": "The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release.",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "json-body",
                           "help": "Path to a file that contains the full json body."
@@ -1912,6 +2367,11 @@
                       "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -1924,6 +2384,11 @@
                   "name": "trust-root",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -1934,6 +2399,11 @@
                       "name": "create",
                       "about": "Add trusted root role to updates trust store",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "json-body",
                           "help": "Path to a file that contains the full json body."
@@ -1955,6 +2425,11 @@
                       "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -1970,6 +2445,11 @@
                       "about": "List root roles in the updates trust store",
                       "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
@@ -1992,6 +2472,11 @@
                       "about": "Fetch trusted root role",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -2012,6 +2497,11 @@
           "name": "timeseries",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2022,6 +2512,11 @@
               "name": "dashboard",
               "about": "Graph the results of an OxQL timeseries query.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "interval",
                   "short": "i",
@@ -2043,6 +2538,11 @@
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -2074,6 +2574,11 @@
       "name": "floating-ip",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -2088,6 +2593,11 @@
             {
               "long": "floating-ip",
               "help": "Name or ID of the floating IP"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -2125,6 +2635,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "ip",
@@ -2165,6 +2680,11 @@
               "help": "Name or ID of the floating IP"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2184,6 +2704,11 @@
               "help": "Name or ID of the floating IP"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2198,6 +2723,11 @@
           "name": "list",
           "about": "List floating IPs",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -2233,6 +2763,11 @@
               "help": "Name or ID of the floating IP"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -2263,6 +2798,11 @@
               "help": "Name or ID of the floating IP"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2279,6 +2819,11 @@
       "name": "group",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -2289,6 +2834,11 @@
           "name": "list",
           "about": "List groups",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -2312,6 +2862,11 @@
       "name": "image",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -2325,6 +2880,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -2362,6 +2922,11 @@
           "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "image",
               "help": "Name or ID of the image"
             },
@@ -2382,6 +2947,11 @@
           "long_about": "Demote silo image to be visible only to a specified project",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "image",
               "help": "Name or ID of the image"
             },
@@ -2401,6 +2971,11 @@
           "about": "List images",
           "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -2430,6 +3005,11 @@
           "long_about": "Promote project image to be visible to all projects in the silo",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "image",
               "help": "Name or ID of the image"
             },
@@ -2449,6 +3029,11 @@
           "about": "Fetch image",
           "long_about": "Fetch the details for a specific image in a project.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "image",
               "help": "Name or ID of the image"
@@ -2470,6 +3055,11 @@
       "name": "instance",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -2479,6 +3069,11 @@
         {
           "name": "anti-affinity",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -2498,6 +3093,11 @@
                   "values": [
                     "sled"
                   ]
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -2537,6 +3137,11 @@
                   "help": "Name or ID of the anti affinity group"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -2551,6 +3156,11 @@
               "name": "list",
               "about": "List anti-affinity groups",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -2578,6 +3188,11 @@
               "name": "member",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -2590,6 +3205,11 @@
                   "args": [
                     {
                       "long": "anti-affinity-group"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "instance"
@@ -2612,6 +3232,11 @@
                     {
                       "long": "anti-affinity-group",
                       "help": "Name or ID of the anti affinity group"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "limit",
@@ -2644,6 +3269,11 @@
                       "long": "anti-affinity-group"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "instance"
                     },
                     {
@@ -2663,6 +3293,11 @@
                   "args": [
                     {
                       "long": "anti-affinity-group"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "instance"
@@ -2690,6 +3325,11 @@
                 },
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -2722,6 +3362,11 @@
                   "help": "Name or ID of the anti affinity group"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -2748,6 +3393,11 @@
             },
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "hostname",
@@ -2800,6 +3450,11 @@
           "about": "Delete instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -2818,6 +3473,11 @@
           "name": "disk",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2831,6 +3491,11 @@
                 {
                   "long": "disk",
                   "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "instance",
@@ -2864,6 +3529,11 @@
                   "help": "Name or ID of the disk"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -2890,6 +3560,11 @@
               "name": "list",
               "about": "List disks for instance",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -2923,6 +3598,11 @@
           "name": "external-ip",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2933,6 +3613,11 @@
               "name": "attach-ephemeral",
               "about": "Allocate and attach ephemeral IP to instance",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -2965,6 +3650,11 @@
               "about": "Detach and deallocate ephemeral IP from instance",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -2983,6 +3673,11 @@
               "name": "list",
               "about": "List external IP addresses",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3007,6 +3702,11 @@
             {
               "long": "description",
               "help": "Description of the instance"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "hostname",
@@ -3052,6 +3752,11 @@
           "about": "List instances",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -3078,6 +3783,11 @@
           "name": "nic",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -3090,6 +3800,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "instance",
@@ -3135,6 +3850,11 @@
               "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3157,6 +3877,11 @@
               "name": "list",
               "about": "List network interfaces",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3190,6 +3915,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "instance",
@@ -3234,6 +3964,11 @@
               "about": "Fetch network interface",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3258,6 +3993,11 @@
           "name": "property",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -3268,6 +4008,11 @@
               "name": "affinity",
               "about": "List affinity groups containing instance",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3300,6 +4045,11 @@
               "about": "List anti-affinity groups containing instance",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3331,6 +4081,11 @@
               "about": "List SSH public keys for instance",
               "long_about": "List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3365,6 +4120,11 @@
           "about": "Reboot an instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3383,6 +4143,11 @@
           "name": "serial",
           "about": "Connect to or retrieve data from the instance's serial console.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -3403,6 +4168,11 @@
                   "long": "escape-string",
                   "short": "e",
                   "help": "If this sequence of bytes is typed, the client will exit. Note that the string passed for this argument must be valid UTF-8, and is used verbatim without any parsing; in most shells, if you wish to include a special character (such as Enter or a Ctrl+letter combo), you can insert the character by preceding it with Ctrl+V at the command line. To disable the escape string altogether, provide an empty string to this flag (and to exit in such a case, use pkill or similar).\n\n[default: { Ctrl+], Ctrl+C }]\n-- which would appear in your shell as ^]^C if you provided it manually by typing { Ctrl+V, Ctrl+], Ctrl+V, Ctrl+C } at the command line."
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "instance",
@@ -3442,6 +4212,11 @@
                   "help": "The offset since boot (or if negative, the current end of the buffered data) from which to retrieve output history. Defaults to the instance's first output from boot"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "instance",
                   "short": "i",
                   "help": "Name or ID of the instance"
@@ -3475,6 +4250,11 @@
           "about": "Boot instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3493,6 +4273,11 @@
           "name": "stop",
           "about": "Stop instance",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "instance",
               "help": "Name or ID of the instance"
@@ -3523,6 +4308,11 @@
             {
               "long": "boot-disk",
               "help": "Name or ID of the disk the instance should be instructed to boot from.\n\nIf not provided, unset the instance's boot disk."
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "instance",
@@ -3560,6 +4350,11 @@
           "about": "Fetch instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3580,6 +4375,11 @@
       "name": "internet-gateway",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -3589,6 +4389,11 @@
         {
           "name": "address",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -3605,6 +4410,11 @@
                 },
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "gateway",
@@ -3653,6 +4463,11 @@
                   "help": "Also delete routes targeting this gateway element."
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
                 },
@@ -3675,6 +4490,11 @@
               "name": "list",
               "about": "List IP addresses attached to internet gateway",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
@@ -3716,6 +4536,11 @@
               "long": "description"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -3754,6 +4579,11 @@
               "help": "Also delete routes targeting this gateway."
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "gateway",
               "help": "Name or ID of the gateway"
             },
@@ -3776,6 +4606,11 @@
           "name": "ip-pool",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -3788,6 +4623,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "gateway",
@@ -3835,6 +4675,11 @@
                   "help": "Also delete routes targeting this gateway element."
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
                 },
@@ -3861,6 +4706,11 @@
               "name": "list",
               "about": "List IP pools attached to internet gateway",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
@@ -3899,6 +4749,11 @@
           "about": "List internet gateways",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -3930,6 +4785,11 @@
           "about": "Fetch internet gateway",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "gateway",
               "help": "Name or ID of the gateway"
             },
@@ -3954,6 +4814,11 @@
       "name": "ip-pool",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -3966,6 +4831,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -3990,6 +4860,11 @@
           "about": "Delete IP pool",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "pool",
               "help": "Name or ID of the IP pool"
             },
@@ -4004,6 +4879,11 @@
           "name": "list",
           "about": "List IP pools",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -4027,6 +4907,11 @@
           "name": "range",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4040,6 +4925,11 @@
               "args": [
                 {
                   "long": "first"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -4069,6 +4959,11 @@
               "long_about": "Ranges are ordered by their first address.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -4089,6 +4984,11 @@
               "args": [
                 {
                   "long": "first"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -4118,6 +5018,11 @@
           "name": "service",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4127,6 +5032,11 @@
             {
               "name": "range",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -4141,6 +5051,11 @@
                   "args": [
                     {
                       "long": "first"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -4166,6 +5081,11 @@
                   "long_about": "Ranges are ordered by their first address.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -4184,6 +5104,11 @@
               "args": [
                 {
                   "long": "first"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -4208,6 +5133,11 @@
               "about": "Fetch Oxide service IP pool",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4220,6 +5150,11 @@
           "name": "silo",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4231,6 +5166,11 @@
               "about": "Link IP pool to silo",
               "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "is-default",
                   "values": [
@@ -4266,6 +5206,11 @@
               "about": "List IP pool's linked silos",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -4292,6 +5237,11 @@
               "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "pool"
                 },
                 {
@@ -4309,6 +5259,11 @@
               "about": "Make IP pool default for silo",
               "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "is-default",
                   "values": [
@@ -4348,6 +5303,11 @@
               "long": "description"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -4374,6 +5334,11 @@
           "about": "Fetch IP pool utilization",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "pool",
               "help": "Name or ID of the IP pool"
             },
@@ -4388,6 +5353,11 @@
           "name": "view",
           "about": "Fetch IP pool",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
@@ -4407,6 +5377,11 @@
       "long_about": "Always responds with Ok if it responds at all.",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -4416,6 +5391,11 @@
     {
       "name": "policy",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -4427,6 +5407,11 @@
           "name": "update",
           "about": "Update current silo's IAM policy",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
@@ -4447,6 +5432,11 @@
           "about": "Fetch current silo's IAM policy",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4458,6 +5448,11 @@
     {
       "name": "project",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -4471,6 +5466,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -4495,6 +5495,11 @@
           "about": "Delete project",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4509,6 +5514,11 @@
           "name": "ip-pool",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4519,6 +5529,11 @@
               "name": "list",
               "about": "List IP pools",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -4543,6 +5558,11 @@
               "about": "Fetch IP pool",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
                 },
@@ -4559,6 +5579,11 @@
           "name": "list",
           "about": "List projects",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -4582,6 +5607,11 @@
           "name": "policy",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4592,6 +5622,11 @@
               "name": "update",
               "about": "Update project's IAM policy",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -4616,6 +5651,11 @@
               "about": "Fetch project's IAM policy",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4634,6 +5674,11 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -4662,6 +5707,11 @@
           "about": "Fetch project",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4677,6 +5727,11 @@
     {
       "name": "silo",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -4701,6 +5756,11 @@
                 "true",
                 "false"
               ]
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "identity-mode",
@@ -4733,6 +5793,11 @@
           "long_about": "Delete a silo by name or ID.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4747,6 +5812,11 @@
           "name": "idp",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4758,6 +5828,11 @@
               "about": "List identity providers for silo",
               "long_about": "List identity providers for silo by silo name or ID.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -4785,6 +5860,11 @@
               "name": "local",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4794,6 +5874,11 @@
                 {
                   "name": "user",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -4809,6 +5894,11 @@
                         {
                           "long": "external-id",
                           "help": "username used to log in"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "json-body",
@@ -4834,6 +5924,11 @@
                       "about": "Delete user",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -4853,6 +5948,11 @@
                       "about": "Set or invalidate user's password",
                       "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "json-body",
                           "help": "Path to a file that contains the full json body."
@@ -4884,6 +5984,11 @@
               "name": "saml",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4900,6 +6005,11 @@
                     },
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "group-attribute-name",
@@ -4964,6 +6074,11 @@
                   "about": "Fetch SAML identity provider",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -4986,6 +6101,11 @@
           "name": "ip-pool",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -4997,6 +6117,11 @@
               "about": "List IP pools linked to silo",
               "long_about": "Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5028,6 +6153,11 @@
           "long_about": "Lists silos that are discoverable based on the current permissions.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -5050,6 +6180,11 @@
           "name": "policy",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5060,6 +6195,11 @@
               "name": "update",
               "about": "Update silo IAM policy",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -5084,6 +6224,11 @@
               "about": "Fetch silo IAM policy",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5100,6 +6245,11 @@
           "name": "quotas",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5110,6 +6260,11 @@
               "name": "list",
               "about": "Lists resource quotas for all silos",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5135,6 +6290,11 @@
                 {
                   "long": "cpus",
                   "help": "The amount of virtual CPUs available for running instances in the Silo"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -5168,6 +6328,11 @@
               "about": "Fetch resource quotas for silo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5184,6 +6349,11 @@
           "name": "user",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5194,6 +6364,11 @@
               "name": "list",
               "about": "List built-in (system) users in silo",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5220,6 +6395,11 @@
               "about": "Fetch built-in (system) user",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5240,6 +6420,11 @@
           "name": "utilization",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5250,6 +6435,11 @@
               "name": "list",
               "about": "List current utilization state for all silos",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5274,6 +6464,11 @@
               "about": "Fetch current utilization for given silo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5292,6 +6487,11 @@
           "long_about": "Fetch silo by name or ID.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5307,6 +6507,11 @@
     {
       "name": "snapshot",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -5325,6 +6530,11 @@
             {
               "long": "disk",
               "help": "The disk to be snapshotted"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "json-body",
@@ -5353,6 +6563,11 @@
           "about": "Delete snapshot",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5371,6 +6586,11 @@
           "name": "list",
           "about": "List snapshots",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -5399,6 +6619,11 @@
           "about": "Fetch snapshot",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5419,6 +6644,11 @@
       "name": "system",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -5428,6 +6658,11 @@
         {
           "name": "hardware",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -5439,6 +6674,11 @@
               "name": "disk",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5449,6 +6689,11 @@
                   "name": "list",
                   "about": "List physical disks",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5475,6 +6720,11 @@
                       "help": "ID of the physical disk"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5487,6 +6737,11 @@
               "name": "rack",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5497,6 +6752,11 @@
                   "name": "list",
                   "about": "List racks",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5519,6 +6779,11 @@
                   "about": "Fetch rack",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5535,6 +6800,11 @@
               "name": "sled",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5545,6 +6815,11 @@
                   "name": "add",
                   "about": "Add sled to initialized rack",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -5571,6 +6846,11 @@
                   "about": "List physical disks attached to sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5595,6 +6875,11 @@
                   "name": "instance-list",
                   "about": "List instances running on given sled",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5621,6 +6906,11 @@
                   "about": "List sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5642,6 +6932,11 @@
                   "about": "List uninitialized sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5656,6 +6951,11 @@
                   "name": "set-provision-policy",
                   "about": "Set sled provision policy",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -5688,6 +6988,11 @@
                   "about": "Fetch sled",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5704,6 +7009,11 @@
               "name": "switch",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5714,6 +7024,11 @@
                   "name": "list",
                   "about": "List switches",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5736,6 +7051,11 @@
                   "about": "Fetch switch",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5752,6 +7072,11 @@
               "name": "switch-port",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5762,6 +7087,11 @@
                   "name": "apply-settings",
                   "about": "Apply switch port settings",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -5798,6 +7128,11 @@
                   "about": "Clear switch port settings",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
                     },
@@ -5820,6 +7155,11 @@
                   "name": "list",
                   "about": "List switch ports",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5846,6 +7186,11 @@
                   "about": "Get the status of switch ports.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5856,6 +7201,11 @@
                   "name": "status",
                   "about": "Get switch port status",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
@@ -5883,6 +7233,11 @@
           "name": "networking",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -5893,6 +7248,11 @@
               "name": "addr",
               "about": "Manage switch port addresses.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -5907,6 +7267,11 @@
                     {
                       "long": "addr",
                       "help": "Address to add"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "lot",
@@ -5982,6 +7347,11 @@
                       "help": "Address to remove"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "port",
                       "values": [
                         "qsfp0",
@@ -6044,6 +7414,11 @@
               "name": "address-lot",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -6053,6 +7428,11 @@
                 {
                   "name": "block",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -6067,6 +7447,11 @@
                         {
                           "long": "address-lot",
                           "help": "Name or ID of the address lot"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "limit",
@@ -6093,6 +7478,11 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -6129,6 +7519,11 @@
                       "help": "Name or ID of the address lot"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6139,6 +7534,11 @@
                   "name": "list",
                   "about": "List address lots",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -6164,6 +7564,11 @@
               "name": "allow-list",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -6176,6 +7581,11 @@
                   "args": [
                     {
                       "long": "any"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "ip"
@@ -6200,6 +7610,11 @@
                   "about": "Get user-facing services IP allowlist",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6212,6 +7627,11 @@
               "name": "bfd",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -6222,6 +7642,11 @@
                   "name": "disable",
                   "about": "Disable a BFD session",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -6252,6 +7677,11 @@
                     {
                       "long": "detection-threshold",
                       "help": "The negotiated Control packet transmission interval, multiplied by this variable, will be the Detection Time for this session (as seen by the remote system)"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -6297,6 +7727,11 @@
                   "about": "Get BFD status",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6308,6 +7743,11 @@
             {
               "name": "bgp",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -6332,6 +7772,11 @@
                       "long": "description"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "prefix",
                       "help": "The prefix to announce"
                     },
@@ -6345,6 +7790,11 @@
                 {
                   "name": "announce-set",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -6361,6 +7811,11 @@
                           "help": "Name or ID of the announce set"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -6371,6 +7826,11 @@
                       "name": "list",
                       "about": "List BGP announce sets",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
@@ -6403,6 +7863,11 @@
                           "long": "description"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "json-body",
                           "help": "Path to a file that contains the full json body."
                         },
@@ -6426,6 +7891,11 @@
                   "name": "announcement",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6439,6 +7909,11 @@
                         {
                           "long": "announce-set",
                           "help": "Name or ID of the announce set"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "profile",
@@ -6457,6 +7932,11 @@
                     {
                       "long": "authstring",
                       "help": "Use the given authorization string for TCP-MD5 authentication with the peer"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "peer",
@@ -6523,6 +8003,11 @@
                   "name": "config",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6542,6 +8027,11 @@
                         },
                         {
                           "long": "description"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "json-body",
@@ -6570,6 +8060,11 @@
                       "about": "Delete BGP configuration",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "name-or-id",
                           "help": "A name or id to use when selecting BGP config."
                         },
@@ -6584,6 +8079,11 @@
                       "name": "list",
                       "about": "List BGP configurations",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
@@ -6609,6 +8109,11 @@
                   "name": "exported",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6619,6 +8124,11 @@
                       "name": "ipv4",
                       "about": "Get BGP exported routes",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
@@ -6644,6 +8154,11 @@
                         "export"
                       ],
                       "help": "Whether to apply the filter to imported or exported prefixes"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "no-filtering",
@@ -6719,6 +8234,11 @@
                       "help": "The ASN to filter on. Required."
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6728,6 +8248,11 @@
                 {
                   "name": "imported",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -6744,6 +8269,11 @@
                           "help": "The ASN to filter on. Required."
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -6758,6 +8288,11 @@
                   "long_about": "Manage BGP peers.\n\nThis command provides set and delete subcommands for managing BGP peers.\nBGP peer configuration is a part of a switch port settings configuration.\nThe peer set and delete subcommands perform read-modify-write operations\non switch port settings objects to manage BGP peer configurations.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6771,6 +8306,11 @@
                         {
                           "long": "addr",
                           "help": "Address of the peer to remove"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
                         },
                         {
                           "long": "port",
@@ -6870,6 +8410,11 @@
                           "help": "Enforce that the first AS in paths received from this peer is the peer's AS"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output",
+                          "global": true
+                        },
+                        {
                           "long": "hold-time",
                           "help": "How long to hold peer connections between keepalives (seconds)"
                         },
@@ -6966,6 +8511,11 @@
                   "long_about": "Set a local preference for a peer.\n\nThis command associates a local preference for the specified peer. When\nroutes are imported by this peer, they will be installed into the routing\ninformation base (RIB) with the specified preference. This command works\nby performing a read-modify-write on the switch port settings configuration\nidentified by the specified rack/switch/port.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "local-pref",
                       "help": "Apply this local preference to routes received from the peer"
                     },
@@ -7036,6 +8586,11 @@
                   "long_about": "Get the status of BGP on the rack.\n\nThis will show the peering status for all peers on all switches.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -7046,6 +8601,11 @@
                   "name": "status",
                   "about": "Get BGP peer status",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -7061,6 +8621,11 @@
                     {
                       "long": "announce-set",
                       "help": "The announce set to withdraw from"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "prefix",
@@ -7079,6 +8644,11 @@
               "name": "inbound-icmp",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7096,6 +8666,11 @@
                         "false"
                       ],
                       "help": "When enabled, Nexus is able to receive ICMP Destination Unreachable type 3 (port unreachable) and type 4 (fragmentation needed), Redirect, and Time Exceeded messages. These enable Nexus to perform Path MTU discovery and better cope with fragmentation issues. Otherwise all inbound ICMP traffic will be dropped."
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -7117,6 +8692,11 @@
                   "about": "Return whether API services can receive limited ICMP traffic",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -7130,6 +8710,11 @@
               "about": "Manage switch port links.",
               "long_about": "Manage switch port links.\n\nLinks carry layer-2 Ethernet properties for a lane or set of lanes on a\nswitch port. Lane geometry is defined in physical port settings. At the\npresent time only single lane configurations are supported, and thus only\na single link per physical port is supported.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -7153,6 +8738,11 @@
                         "rs"
                       ],
                       "help": "The forward error correction mode of the link"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "mtu",
@@ -7235,6 +8825,11 @@
                   "about": "Remove a link from a port",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "port",
                       "values": [
                         "qsfp0",
@@ -7297,6 +8892,11 @@
               "name": "lldp",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7307,6 +8907,11 @@
                   "name": "neighbors",
                   "about": "Fetch the LLDP neighbors seen on a switch port",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -7351,6 +8956,11 @@
                         "false"
                       ],
                       "help": "Whether or not the LLDP service is enabled."
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "id",
@@ -7408,6 +9018,11 @@
                   "about": "Fetch the LLDP configuration for a switch port",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
                     },
@@ -7431,6 +9046,11 @@
             {
               "name": "loopback-address",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -7457,6 +9077,11 @@
                         "false"
                       ],
                       "help": "Address is an anycast address. This allows the address to be assigned to multiple locations simultaneously."
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -7494,6 +9119,11 @@
                       "help": "The IP address and subnet mask to use when selecting the loopback address."
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -7516,6 +9146,11 @@
                   "name": "list",
                   "about": "List loopback addresses",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -7540,6 +9175,11 @@
               "about": "Manage static switch routes.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7553,6 +9193,11 @@
                     {
                       "long": "destination",
                       "help": "The route destination"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "nexthop",
@@ -7626,6 +9271,11 @@
                     {
                       "long": "destination",
                       "help": "The route destination"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "nexthop",
@@ -7702,6 +9352,11 @@
               "name": "switch-port-settings",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7714,6 +9369,11 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -7738,6 +9398,11 @@
                   "about": "Delete switch port settings",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "port-settings",
                       "help": "An optional name or id to use when selecting port settings."
                     },
@@ -7752,6 +9417,11 @@
                   "name": "list",
                   "about": "List switch port settings",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -7780,6 +9450,11 @@
                   "about": "Get the configuration of switch ports.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -7790,6 +9465,11 @@
                   "name": "view",
                   "about": "Get information about switch port",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "port",
                       "help": "A name or id to use when selecting switch port settings info objects."
@@ -7809,6 +9489,11 @@
           "name": "policy",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -7819,6 +9504,11 @@
               "name": "update",
               "about": "Update top-level IAM policy",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -7839,6 +9529,11 @@
               "about": "Fetch top-level IAM policy",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7851,6 +9546,11 @@
           "name": "update",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -7861,6 +9561,11 @@
               "name": "repo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -7870,6 +9575,11 @@
                 {
                   "name": "upload",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "path",
                       "short": "p",
@@ -7892,6 +9602,11 @@
       "name": "user",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -7902,6 +9617,11 @@
           "name": "list",
           "about": "List users",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "group"
             },
@@ -7929,6 +9649,11 @@
       "about": "Fetch resource utilization for user's current silo",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -7940,6 +9665,11 @@
       "about": "Prints version information about the CLI.",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -7949,6 +9679,11 @@
     {
       "name": "vpc",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -7965,6 +9700,11 @@
             },
             {
               "long": "dns-name"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "ipv6-prefix",
@@ -7997,6 +9737,11 @@
           "about": "Delete VPC",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -8015,6 +9760,11 @@
           "name": "firewall-rules",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -8026,6 +9776,11 @@
               "about": "Replace firewall rules",
               "long_about": "The maximum number of rules per VPC is 1024.\n\nTargets are used to specify the set of instances to which a firewall rule applies. You can target instances directly by name, or specify a VPC, VPC subnet, IP, or IP subnet, which will apply the rule to traffic going to all matching instances. Targets are additive: the rule applies to instances matching ANY target. The maximum number of targets is 256.\n\nFilters reduce the scope of a firewall rule. Without filters, the rule applies to all packets to the targets (or from the targets, if it's an outbound rule). With multiple filters, the rule applies only to packets matching ALL filters. The maximum number of each type of filter is 256.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -8054,6 +9809,11 @@
               "about": "List firewall rules",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8074,6 +9834,11 @@
           "name": "list",
           "about": "List VPCs",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -8101,6 +9866,11 @@
           "name": "router",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -8113,6 +9883,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -8145,6 +9920,11 @@
               "about": "Delete router",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8167,6 +9947,11 @@
               "name": "list",
               "about": "List routers",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -8198,6 +9983,11 @@
               "name": "route",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8210,6 +10000,11 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -8246,6 +10041,11 @@
                   "about": "Delete route",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -8273,6 +10073,11 @@
                   "about": "List routes",
                   "long_about": "List the routes associated with a router in a particular VPC.",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -8310,6 +10115,11 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "json-body",
@@ -8350,6 +10160,11 @@
                   "about": "Fetch route",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -8380,6 +10195,11 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "json-body",
@@ -8416,6 +10236,11 @@
               "about": "Fetch router",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8440,6 +10265,11 @@
           "name": "subnet",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -8456,6 +10286,11 @@
                 },
                 {
                   "long": "description"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
                 },
                 {
                   "long": "ipv4-block",
@@ -8496,6 +10331,11 @@
               "about": "Delete subnet",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8518,6 +10358,11 @@
               "name": "list",
               "about": "List subnets",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -8549,6 +10394,11 @@
               "name": "nic",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8559,6 +10409,11 @@
                   "name": "list",
                   "about": "List network interfaces",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -8604,6 +10459,11 @@
                   "long": "description"
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
@@ -8638,6 +10498,11 @@
               "about": "Fetch subnet",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output",
+                  "global": true
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8669,6 +10534,11 @@
               "long": "dns-name"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
+            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -8698,6 +10568,11 @@
           "name": "view",
           "about": "Fetch VPC",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
