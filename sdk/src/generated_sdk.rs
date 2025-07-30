@@ -9641,6 +9641,49 @@ pub mod types {
     /// {
     ///  "oneOf": [
     ///    {
+    ///      "description": "A source NAT IP address.\n\nSNAT addresses are
+    /// ephemeral addresses used only for outbound connectivity.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "first_port",
+    ///        "ip",
+    ///        "ip_pool_id",
+    ///        "kind",
+    ///        "last_port"
+    ///      ],
+    ///      "properties": {
+    ///        "first_port": {
+    ///          "description": "The first usable port within the IP address.",
+    ///          "type": "integer",
+    ///          "format": "uint16",
+    ///          "minimum": 0.0
+    ///        },
+    ///        "ip": {
+    ///          "description": "The IP address.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "ip_pool_id": {
+    ///          "description": "ID of the IP Pool from which the address is
+    /// taken.",
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "snat"
+    ///          ]
+    ///        },
+    ///        "last_port": {
+    ///          "description": "The last usable port within the IP address.",
+    ///          "type": "integer",
+    ///          "format": "uint16",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    },
+    ///    {
     ///      "type": "object",
     ///      "required": [
     ///        "ip",
@@ -9753,6 +9796,21 @@ pub mod types {
     )]
     #[serde(tag = "kind")]
     pub enum ExternalIp {
+        /// A source NAT IP address.
+        ///
+        /// SNAT addresses are ephemeral addresses used only for outbound
+        /// connectivity.
+        #[serde(rename = "snat")]
+        Snat {
+            /// The first usable port within the IP address.
+            first_port: u16,
+            /// The IP address.
+            ip: ::std::net::IpAddr,
+            /// ID of the IP Pool from which the address is taken.
+            ip_pool_id: ::uuid::Uuid,
+            /// The last usable port within the IP address.
+            last_port: u16,
+        },
         #[serde(rename = "ephemeral")]
         Ephemeral {
             ip: ::std::net::IpAddr,
