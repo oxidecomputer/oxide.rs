@@ -86,7 +86,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::DiskBulkWriteImportStart => Self::cli_disk_bulk_write_import_start(),
             CliCommand::DiskBulkWriteImportStop => Self::cli_disk_bulk_write_import_stop(),
             CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
-            CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
@@ -1963,78 +1962,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Confirm disk block import completion")
-    }
-
-    pub fn cli_disk_metrics_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("disk")
-                    .long("disk")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true),
-            )
-            .arg(
-                ::clap::Arg::new("end-time")
-                    .long("end-time")
-                    .value_parser(::clap::value_parser!(
-                        ::chrono::DateTime<::chrono::offset::Utc>
-                    ))
-                    .required(true)
-                    .help("An exclusive end time of metrics."),
-            )
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                ::clap::Arg::new("metric")
-                    .long("metric")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::DiskMetricName::Activated.to_string(),
-                            types::DiskMetricName::Flush.to_string(),
-                            types::DiskMetricName::Read.to_string(),
-                            types::DiskMetricName::ReadBytes.to_string(),
-                            types::DiskMetricName::Write.to_string(),
-                            types::DiskMetricName::WriteBytes.to_string(),
-                        ]),
-                        |s| types::DiskMetricName::try_from(s).unwrap(),
-                    ))
-                    .required(true),
-            )
-            .arg(
-                ::clap::Arg::new("order")
-                    .long("order")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::PaginationOrder::Ascending.to_string(),
-                            types::PaginationOrder::Descending.to_string(),
-                        ]),
-                        |s| types::PaginationOrder::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help("Query result order"),
-            )
-            .arg(
-                ::clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
-                ::clap::Arg::new("start-time")
-                    .long("start-time")
-                    .value_parser(::clap::value_parser!(
-                        ::chrono::DateTime<::chrono::offset::Utc>
-                    ))
-                    .required(true)
-                    .help("An inclusive start time of metrics."),
-            )
-            .about("Fetch disk metrics")
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -8519,7 +8446,6 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_disk_bulk_write_import_stop(matches).await
             }
             CliCommand::DiskFinalizeImport => self.execute_disk_finalize_import(matches).await,
-            CliCommand::DiskMetricsList => self.execute_disk_metrics_list(matches).await,
             CliCommand::FloatingIpList => self.execute_floating_ip_list(matches).await,
             CliCommand::FloatingIpCreate => self.execute_floating_ip_create(matches).await,
             CliCommand::FloatingIpView => self.execute_floating_ip_view(matches).await,
@@ -10879,70 +10805,6 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_disk_metrics_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.disk_metrics_list();
-        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
-            request = request.disk(value.clone());
-        }
-
-        if let Some(value) =
-            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
-        {
-            request = request.end_time(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::DiskMetricName>("metric") {
-            request = request.metric(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
-            request = request.order(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        if let Some(value) =
-            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
-        {
-            request = request.start_time(value.clone());
-        }
-
-        self.config
-            .execute_disk_metrics_list(matches, &mut request)?;
-        self.config.list_start::<types::MeasurementResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::MeasurementResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
             }
         }
     }
@@ -18699,14 +18561,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_disk_metrics_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::DiskMetricsList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_floating_ip_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20465,7 +20319,6 @@ pub enum CliCommand {
     DiskBulkWriteImportStart,
     DiskBulkWriteImportStop,
     DiskFinalizeImport,
-    DiskMetricsList,
     FloatingIpList,
     FloatingIpCreate,
     FloatingIpView,
@@ -20742,7 +20595,6 @@ impl CliCommand {
             CliCommand::DiskBulkWriteImportStart,
             CliCommand::DiskBulkWriteImportStop,
             CliCommand::DiskFinalizeImport,
-            CliCommand::DiskMetricsList,
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
