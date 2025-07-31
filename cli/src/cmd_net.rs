@@ -1479,7 +1479,7 @@ fn port_key(name: &Name) -> u16 {
     let Some(suf) = name.as_str().strip_prefix("qsfp") else {
         return 0;
     };
-    u16::from_str_radix(suf, 10).unwrap_or_default()
+    suf.parse::<u16>().unwrap_or_default()
 }
 
 #[async_trait]
