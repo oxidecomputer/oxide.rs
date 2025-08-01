@@ -168,8 +168,8 @@
                 {
                   "long": "sort-by",
                   "values": [
-                    "ascending",
-                    "descending"
+                    "time_and_id_ascending",
+                    "time_and_id_descending"
                   ]
                 }
               ]
@@ -617,9 +617,21 @@
           "about": "Create a new support bundle",
           "args": [
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
+            },
+            {
+              "long": "user-comment",
+              "help": "User comment for the support bundle"
             }
           ]
         },
@@ -701,9 +713,36 @@
             {
               "long": "sort-by",
               "values": [
-                "ascending",
-                "descending"
+                "time_and_id_ascending",
+                "time_and_id_descending"
               ]
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "about": "Update a support bundle",
+          "args": [
+            {
+              "long": "bundle-id",
+              "help": "ID of the support bundle"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "user-comment",
+              "help": "User comment for the support bundle"
             }
           ]
         },
@@ -1300,67 +1339,6 @@
                 "name_ascending",
                 "name_descending",
                 "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "metrics",
-          "args": [
-            {
-              "long": "profile",
-              "help": "Configuration profile to use for commands",
-              "global": true
-            }
-          ],
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "Fetch disk metrics",
-              "args": [
-                {
-                  "long": "disk"
-                },
-                {
-                  "long": "end-time",
-                  "help": "An exclusive end time of metrics."
-                },
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "metric",
-                  "values": [
-                    "activated",
-                    "flush",
-                    "read",
-                    "read_bytes",
-                    "write",
-                    "write_bytes"
-                  ]
-                },
-                {
-                  "long": "order",
-                  "values": [
-                    "ascending",
-                    "descending"
-                  ],
-                  "help": "Query result order"
-                },
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                },
-                {
-                  "long": "start-time",
-                  "help": "An inclusive start time of metrics."
-                }
               ]
             }
           ]
@@ -7919,6 +7897,87 @@
               "values": [
                 "id_ascending"
               ]
+            }
+          ]
+        },
+        {
+          "name": "list-sessions",
+          "about": "List user's console sessions",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "user-id",
+              "help": "ID of the user"
+            }
+          ]
+        },
+        {
+          "name": "list-tokens",
+          "about": "List user's access tokens",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
+            },
+            {
+              "long": "user-id",
+              "help": "ID of the user"
+            }
+          ]
+        },
+        {
+          "name": "logout",
+          "about": "Log user out",
+          "long_about": "Silo admins can use this endpoint to log the specified user out by deleting all of their tokens AND sessions. This cannot be undone.",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "user-id",
+              "help": "ID of the user"
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch user",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "user-id",
+              "help": "ID of the user"
             }
           ]
         }

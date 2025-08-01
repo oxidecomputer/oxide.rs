@@ -489,7 +489,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloIpPoolList => Some("silo ip-pool list"),
 
         CliCommand::UtilizationView => Some("utilization"),
-        CliCommand::UserList => Some("user list"),
 
         // VPCs
         CliCommand::VpcList => Some("vpc list"),
@@ -597,7 +596,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskCreate => Some("disk create"),
         CliCommand::DiskView => Some("disk view"),
         CliCommand::DiskDelete => Some("disk delete"),
-        CliCommand::DiskMetricsList => Some("disk metrics list"),
 
         CliCommand::DiskBulkWriteImportStart => Some("disk import start"),
         CliCommand::DiskBulkWriteImport => Some("disk import write"),
@@ -677,6 +675,12 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserAccessTokenList => Some("current-user access-token list"),
         CliCommand::CurrentUserAccessTokenDelete => Some("current-user access-token delete"),
 
+        CliCommand::UserList => Some("user list"),
+        CliCommand::UserView => Some("user view"),
+        CliCommand::UserTokenList => Some("user list-tokens"),
+        CliCommand::UserLogout => Some("user logout"),
+        CliCommand::UserSessionList => Some("user list-sessions"),
+
         CliCommand::FloatingIpAttach => Some("floating-ip attach"),
         CliCommand::FloatingIpCreate => Some("floating-ip create"),
         CliCommand::FloatingIpDelete => Some("floating-ip delete"),
@@ -722,6 +726,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SupportBundleCreate => Some("bundle create"),
         CliCommand::SupportBundleView => Some("bundle view"),
         CliCommand::SupportBundleDelete => Some("bundle delete"),
+        CliCommand::SupportBundleUpdate => Some("bundle update"),
 
         // Implemented as custom command to specify output file
         CliCommand::SupportBundleDownload => None,
