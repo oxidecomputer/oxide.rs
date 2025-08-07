@@ -29244,6 +29244,21 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "sign": {
+    ///      "description": "Contents of the `SIGN` field of a Hubris archive
+    /// caboose, i.e., an identifier for the set of valid signing keys.
+    /// Currently only applicable to RoT image and bootloader artifacts, where
+    /// it will be an LPC55 Root Key Table Hash (RKTH).",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint8",
+    ///        "minimum": 0.0
+    ///      }
+    ///    },
     ///    "size": {
     ///      "description": "The size of the artifact in bytes.",
     ///      "type": "integer",
@@ -29262,6 +29277,12 @@ pub mod types {
         pub hash: ::std::string::String,
         /// The artifact ID.
         pub id: ArtifactId,
+        /// Contents of the `SIGN` field of a Hubris archive caboose, i.e., an
+        /// identifier for the set of valid signing keys. Currently only
+        /// applicable to RoT image and bootloader artifacts, where it will be
+        /// an LPC55 Root Key Table Hash (RKTH).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sign: ::std::option::Option<::std::vec::Vec<u8>>,
         /// The size of the artifact in bytes.
         pub size: u64,
     }
@@ -56719,6 +56740,10 @@ pub mod types {
         pub struct TufArtifactMeta {
             hash: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
+            sign: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<u8>>,
+                ::std::string::String,
+            >,
             size: ::std::result::Result<u64, ::std::string::String>,
         }
 
@@ -56727,6 +56752,7 @@ pub mod types {
                 Self {
                     hash: Err("no value supplied for hash".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    sign: Ok(Default::default()),
                     size: Err("no value supplied for size".to_string()),
                 }
             }
@@ -56753,6 +56779,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
+            pub fn sign<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<u8>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sign = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sign: {}", e));
+                self
+            }
             pub fn size<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<u64>,
@@ -56773,6 +56809,7 @@ pub mod types {
                 Ok(Self {
                     hash: value.hash?,
                     id: value.id?,
+                    sign: value.sign?,
                     size: value.size?,
                 })
             }
@@ -56783,6 +56820,7 @@ pub mod types {
                 Self {
                     hash: Ok(value.hash),
                     id: Ok(value.id),
+                    sign: Ok(value.sign),
                     size: Ok(value.size),
                 }
             }
