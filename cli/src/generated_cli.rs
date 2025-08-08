@@ -178,6 +178,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => Self::cli_snapshot_create(),
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
+            CliCommand::AuditLogList => Self::cli_audit_log_list(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
@@ -4454,6 +4455,61 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete snapshot")
     }
 
+    pub fn cli_audit_log_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("end-time")
+                    .long("end-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(false)
+                    .help("Exclusive"),
+            )
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
+                        ]),
+                        |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("start-time")
+                    .long("start-time")
+                    .value_parser(::clap::value_parser!(
+                        ::chrono::DateTime<::chrono::offset::Utc>
+                    ))
+                    .required(true)
+                    .help("Required, inclusive"),
+            )
+            .about("View audit log")
+            .long_about(
+                "A single item in the audit log represents both the beginning and end of the \
+                 logged operation (represented by `time_started` and `time_completed`) so that \
+                 clients do not have to find multiple entries and match them up by request ID to \
+                 get the full picture of an operation. Because timestamps may not be unique, \
+                 entries have also have a unique `id` that can be used to deduplicate items \
+                 fetched from overlapping time intervals.\n\nAudit log entries are designed to be \
+                 immutable: once you see an entry, fetching it again will never get you a \
+                 different result. The list is ordered by `time_completed`, not `time_started`. \
+                 If you fetch the audit log for a time range that is fully in the past, the \
+                 resulting list is guaranteed to be complete, i.e., fetching the same timespan \
+                 again later will always produce the same set of entries.",
+            )
+    }
+
     pub fn cli_physical_disk_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8582,6 +8638,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotCreate => self.execute_snapshot_create(matches).await,
             CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
+            CliCommand::AuditLogList => self.execute_audit_log_list(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
             CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
             CliCommand::NetworkingSwitchPortLldpNeighbors => {
@@ -13470,6 +13527,54 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_audit_log_list(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.audit_log_list();
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
+        {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::TimeAndIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) =
+            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        self.config.execute_audit_log_list(matches, &mut request)?;
+        self.config.list_start::<types::AuditLogEntryResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AuditLogEntryResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
             }
         }
     }
@@ -19169,6 +19274,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_audit_log_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::AuditLogList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_physical_disk_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20395,6 +20508,7 @@ pub enum CliCommand {
     SnapshotCreate,
     SnapshotView,
     SnapshotDelete,
+    AuditLogList,
     PhysicalDiskList,
     PhysicalDiskView,
     NetworkingSwitchPortLldpNeighbors,
@@ -20671,6 +20785,7 @@ impl CliCommand {
             CliCommand::SnapshotCreate,
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
+            CliCommand::AuditLogList,
             CliCommand::PhysicalDiskList,
             CliCommand::PhysicalDiskView,
             CliCommand::NetworkingSwitchPortLldpNeighbors,
