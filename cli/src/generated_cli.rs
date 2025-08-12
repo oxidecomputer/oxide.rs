@@ -235,6 +235,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemMetric => Self::cli_system_metric(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
+            CliCommand::NetworkingAddressLotView => Self::cli_networking_address_lot_view(),
             CliCommand::NetworkingAddressLotDelete => Self::cli_networking_address_lot_delete(),
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
@@ -5856,6 +5857,18 @@ impl<T: CliConfig> Cli<T> {
             .about("Create address lot")
     }
 
+    pub fn cli_networking_address_lot_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the address lot"),
+            )
+            .about("Fetch address lot")
+    }
+
     pub fn cli_networking_address_lot_delete() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8727,6 +8740,9 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::NetworkingAddressLotCreate => {
                 self.execute_networking_address_lot_create(matches).await
+            }
+            CliCommand::NetworkingAddressLotView => {
+                self.execute_networking_address_lot_view(matches).await
             }
             CliCommand::NetworkingAddressLotDelete => {
                 self.execute_networking_address_lot_delete(matches).await
@@ -15188,6 +15204,30 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_address_lot_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_address_lot_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.address_lot(value.clone());
+        }
+
+        self.config
+            .execute_networking_address_lot_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_address_lot_delete(
         &self,
         matches: &::clap::ArgMatches,
@@ -19650,6 +19690,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_address_lot_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_address_lot_delete(
         &self,
         matches: &::clap::ArgMatches,
@@ -20555,6 +20603,7 @@ pub enum CliCommand {
     SystemMetric,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
+    NetworkingAddressLotView,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
     NetworkingAllowListView,
@@ -20832,6 +20881,7 @@ impl CliCommand {
             CliCommand::SystemMetric,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
+            CliCommand::NetworkingAddressLotView,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
             CliCommand::NetworkingAllowListView,
