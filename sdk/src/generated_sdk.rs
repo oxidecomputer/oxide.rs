@@ -693,62 +693,6 @@ pub mod types {
         }
     }
 
-    /// An address lot and associated blocks resulting from viewing an address
-    /// lot.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An address lot and associated blocks resulting from
-    /// viewing an address lot.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "blocks",
-    ///    "lot"
-    ///  ],
-    ///  "properties": {
-    ///    "blocks": {
-    ///      "description": "The address lot blocks.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/AddressLotBlock"
-    ///      }
-    ///    },
-    ///    "lot": {
-    ///      "description": "The address lot.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AddressLot"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct AddressLotViewResponse {
-        /// The address lot blocks.
-        pub blocks: ::std::vec::Vec<AddressLotBlock>,
-        /// The address lot.
-        pub lot: AddressLot,
-    }
-
-    impl ::std::convert::From<&AddressLotViewResponse> for AddressLotViewResponse {
-        fn from(value: &AddressLotViewResponse) -> Self {
-            value.clone()
-        }
-    }
-
-    impl AddressLotViewResponse {
-        pub fn builder() -> builder::AddressLotViewResponse {
-            Default::default()
-        }
-    }
-
     /// View of an Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
@@ -35697,68 +35641,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct AddressLotViewResponse {
-            blocks: ::std::result::Result<
-                ::std::vec::Vec<super::AddressLotBlock>,
-                ::std::string::String,
-            >,
-            lot: ::std::result::Result<super::AddressLot, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for AddressLotViewResponse {
-            fn default() -> Self {
-                Self {
-                    blocks: Err("no value supplied for blocks".to_string()),
-                    lot: Err("no value supplied for lot".to_string()),
-                }
-            }
-        }
-
-        impl AddressLotViewResponse {
-            pub fn blocks<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::AddressLotBlock>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.blocks = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
-                self
-            }
-            pub fn lot<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::AddressLot>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.lot = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for lot: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<AddressLotViewResponse> for super::AddressLotViewResponse {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: AddressLotViewResponse,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    blocks: value.blocks?,
-                    lot: value.lot?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::AddressLotViewResponse> for AddressLotViewResponse {
-            fn from(value: super::AddressLotViewResponse) -> Self {
-                Self {
-                    blocks: Ok(value.blocks),
-                    lot: Ok(value.lot),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct AffinityGroup {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
@@ -65527,20 +65409,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate;
-    /// Fetch address lot
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/system/networking/address-lot/{address_lot}`
-    ///
-    /// Arguments:
-    /// - `address_lot`: Name or ID of the address lot
-    /// ```ignore
-    /// let response = client.networking_address_lot_view()
-    ///    .address_lot(address_lot)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_address_lot_view(&self) -> builder::NetworkingAddressLotView;
     /// Delete address lot
     ///
     /// Sends a `DELETE` request to
@@ -65939,10 +65807,6 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate {
         builder::NetworkingAddressLotCreate::new(self)
-    }
-
-    fn networking_address_lot_view(&self) -> builder::NetworkingAddressLotView {
-        builder::NetworkingAddressLotView::new(self)
     }
 
     fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete {
@@ -88189,83 +88053,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::networking_address_lot_view`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_address_lot_view`]: super::ClientSystemNetworkingExt::networking_address_lot_view
-    #[derive(Debug, Clone)]
-    pub struct NetworkingAddressLotView<'a> {
-        client: &'a super::Client,
-        address_lot: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> NetworkingAddressLotView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                address_lot: Err("address_lot was not initialized".to_string()),
-            }
-        }
-
-        pub fn address_lot<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.address_lot = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for address_lot failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/networking/address-lot/{address_lot}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::AddressLotViewResponse>, Error<types::Error>> {
-            let Self {
-                client,
-                address_lot,
-            } = self;
-            let address_lot = address_lot.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/networking/address-lot/{}",
-                client.baseurl,
-                encode_path(&address_lot.to_string()),
-            );
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "networking_address_lot_view",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

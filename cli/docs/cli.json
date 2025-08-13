@@ -6178,21 +6178,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "name": "view",
-                  "about": "Fetch address lot",
-                  "args": [
-                    {
-                      "long": "address-lot",
-                      "help": "Name or ID of the address lot"
-                    },
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ]
                 }
               ]
             },
