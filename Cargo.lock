@@ -4938,13 +4938,15 @@ version = "0.0.0"
 dependencies = [
  "clap",
  "newline-converter",
- "openapiv3",
+ "proc-macro2",
  "progenitor",
+ "quote",
  "regex",
  "rustc_version",
  "rustfmt-wrapper",
  "serde_json",
  "similar",
+ "syn 2.0.104",
 ]
 
 [[package]]

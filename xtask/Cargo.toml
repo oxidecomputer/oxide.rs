@@ -7,10 +7,12 @@ publish = false
 [dependencies]
 clap = { workspace = true }
 newline-converter = { workspace = true }
-openapiv3 = { workspace = true }
+proc-macro2 = { workspace = true }
 progenitor = { workspace = true, default-features = false }
+quote = { workspace = true }
 regex = { workspace = true }
 rustc_version = { workspace = true }
 rustfmt-wrapper = { workspace = true }
 serde_json = { workspace = true }
 similar = { workspace = true }
+syn = { workspace = true }

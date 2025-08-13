@@ -549,19 +549,6 @@ fn create_row(fields: &[String], obj: &serde_json::Map<String, serde_json::Value
 mod tests {
     use super::*;
 
-    /// Return the type name and RootSchema for the given types.
-    macro_rules! generate_returned_schemas {
-    ($($ty:ty),* $(,)?) => {
-        {
-            vec![
-                    $(
-                        (stringify!($ty), schemars::schema_for!($ty)),
-                    )*
-                ]
-            }
-        };
-    }
-
     #[test]
     fn test_table_schema_parsing() {
         // The return types that we don't attempt to print in tabular form.
@@ -575,10 +562,12 @@ mod tests {
 
         // We want to confirm that all API return types can be succesfully parsed, but to do this
         // we need their schemas, which requires knowing the type names at compile time. The `xtask
-        // --return-types` task will write the file below, which uses the `generate_returned_schemas!`
-        // macro above to generate the schemas.
-        let schemas: Vec<_> = include!("../tests/data/api_return_types.rs");
-        for (type_name, schema) in schemas {
+        // --sdk` task will write the file below, which contains the type names and their
+        // associated schema.
+        mod schemas {
+            include!("../tests/data/api_return_types.rs");
+        }
+        for (type_name, schema) in schemas::schemas() {
             let fields = if type_name.ends_with("Page") {
                 super::list_start_fields(&schema)
             } else {
