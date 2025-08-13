@@ -28,6 +28,29 @@ pub enum OxideOverride {
     Table { table: Box<Mutex<TableFormatter>> },
 }
 
+/// Format response values into a table.
+///
+/// This works as follows:
+///
+/// 1. Get the `schemars` schema of the endpoint's return type. For the endpoints we support
+///    tabular output for, this will always be a JSON object.
+///
+/// 2. Parse the schema and determine the parameters of the object being returned. The column
+///    names displayed will be the parameters of the return object.
+///
+/// 3. Handle different return types:
+///     - **Non-paginated scalar objects**: Use directly.
+///     - **Non-paginated array object**: Extract the inner type of the array.
+///     - **Paginated output**: Extract the inner type of the collection.
+///     - **Enums**: Take the union of parameter names across all variants. Fields not present
+///       for a given variant will be blank.
+///
+/// 4. Apply field filtering if requested by the user. Take the intersection of their list
+///    and the available fields.
+///
+/// 5. Format values for display:
+///     - Non-scalar objects are printed as compact JSON.
+///     - Strings without any spaces have their quotes stripped.
 pub struct TableFormatter {
     requested_fields: Vec<String>,
     fields_to_print: Vec<String>,
