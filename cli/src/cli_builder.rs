@@ -530,6 +530,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InternetGatewayDelete => Some("internet-gateway delete"),
 
         CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
+        CliCommand::NetworkingAddressLotView => Some("system networking address-lot view"),
         CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
         CliCommand::NetworkingAddressLotDelete => Some("system networking address-lot delete"),
         CliCommand::NetworkingAddressLotBlockList => {
@@ -688,6 +689,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpList => Some("floating-ip list"),
         CliCommand::FloatingIpUpdate => Some("floating-ip update"),
         CliCommand::FloatingIpView => Some("floating-ip view"),
+
+        CliCommand::AuditLogList => Some("audit-log list"),
 
         // Alert subcommands
         CliCommand::AlertClassList => Some("alert class list"),

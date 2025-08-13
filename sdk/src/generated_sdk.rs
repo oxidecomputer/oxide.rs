@@ -693,6 +693,62 @@ pub mod types {
         }
     }
 
+    /// An address lot and associated blocks resulting from viewing an address
+    /// lot.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An address lot and associated blocks resulting from
+    /// viewing an address lot.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "blocks",
+    ///    "lot"
+    ///  ],
+    ///  "properties": {
+    ///    "blocks": {
+    ///      "description": "The address lot blocks.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AddressLotBlock"
+    ///      }
+    ///    },
+    ///    "lot": {
+    ///      "description": "The address lot.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AddressLot"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AddressLotViewResponse {
+        /// The address lot blocks.
+        pub blocks: ::std::vec::Vec<AddressLotBlock>,
+        /// The address lot.
+        pub lot: AddressLot,
+    }
+
+    impl ::std::convert::From<&AddressLotViewResponse> for AddressLotViewResponse {
+        fn from(value: &AddressLotViewResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotViewResponse {
+        pub fn builder() -> builder::AddressLotViewResponse {
+            Default::default()
+        }
+    }
+
     /// View of an Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
@@ -2947,6 +3003,395 @@ pub mod types {
 
     impl ArtifactId {
         pub fn builder() -> builder::ArtifactId {
+            Default::default()
+        }
+    }
+
+    /// Audit log entry
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Audit log entry",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "actor",
+    ///    "id",
+    ///    "operation_id",
+    ///    "request_id",
+    ///    "request_uri",
+    ///    "result",
+    ///    "source_ip",
+    ///    "time_completed",
+    ///    "time_started"
+    ///  ],
+    ///  "properties": {
+    ///    "actor": {
+    ///      "$ref": "#/components/schemas/AuditLogEntryActor"
+    ///    },
+    ///    "auth_method": {
+    ///      "description": "How the user authenticated the request. Possible values are \"session_cookie\" and \"access_token\". Optional because it will not be defined on unauthenticated requests like login attempts.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "Unique identifier for the audit log entry",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "operation_id": {
+    ///      "description": "API endpoint ID, e.g., `project_create`",
+    ///      "type": "string"
+    ///    },
+    ///    "request_id": {
+    ///      "description": "Request ID for tracing requests through the
+    /// system",
+    ///      "type": "string"
+    ///    },
+    ///    "request_uri": {
+    ///      "description": "URI of the request, truncated to 512 characters.
+    /// Will only include host and scheme for HTTP/2 requests. For HTTP/1.1, the
+    /// URI will consist of only the path and query.",
+    ///      "type": "string"
+    ///    },
+    ///    "result": {
+    ///      "description": "Result of the operation",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AuditLogEntryResult"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "source_ip": {
+    ///      "description": "IP address that made the request",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "time_completed": {
+    ///      "description": "Time operation completed",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_started": {
+    ///      "description": "When the request was received",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "user_agent": {
+    ///      "description": "User agent string from the request, truncated to
+    /// 256 characters.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AuditLogEntry {
+        pub actor: AuditLogEntryActor,
+        /// How the user authenticated the request. Possible values are
+        /// "session_cookie" and "access_token". Optional because it will not be
+        /// defined on unauthenticated requests like login attempts.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub auth_method: ::std::option::Option<::std::string::String>,
+        /// Unique identifier for the audit log entry
+        pub id: ::uuid::Uuid,
+        /// API endpoint ID, e.g., `project_create`
+        pub operation_id: ::std::string::String,
+        /// Request ID for tracing requests through the system
+        pub request_id: ::std::string::String,
+        /// URI of the request, truncated to 512 characters. Will only include
+        /// host and scheme for HTTP/2 requests. For HTTP/1.1, the URI will
+        /// consist of only the path and query.
+        pub request_uri: ::std::string::String,
+        /// Result of the operation
+        pub result: AuditLogEntryResult,
+        /// IP address that made the request
+        pub source_ip: ::std::net::IpAddr,
+        /// Time operation completed
+        pub time_completed: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// When the request was received
+        pub time_started: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// User agent string from the request, truncated to 256 characters.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub user_agent: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AuditLogEntry> for AuditLogEntry {
+        fn from(value: &AuditLogEntry) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AuditLogEntry {
+        pub fn builder() -> builder::AuditLogEntry {
+            Default::default()
+        }
+    }
+
+    /// `AuditLogEntryActor`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind",
+    ///        "user_builtin_id"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "user_builtin"
+    ///          ]
+    ///        },
+    ///        "user_builtin_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind",
+    ///        "silo_id",
+    ///        "silo_user_id"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "silo_user"
+    ///          ]
+    ///        },
+    ///        "silo_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "silo_user_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "unauthenticated"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "kind")]
+    pub enum AuditLogEntryActor {
+        #[serde(rename = "user_builtin")]
+        UserBuiltin { user_builtin_id: ::uuid::Uuid },
+        #[serde(rename = "silo_user")]
+        SiloUser {
+            silo_id: ::uuid::Uuid,
+            silo_user_id: ::uuid::Uuid,
+        },
+        #[serde(rename = "unauthenticated")]
+        Unauthenticated,
+    }
+
+    impl ::std::convert::From<&Self> for AuditLogEntryActor {
+        fn from(value: &AuditLogEntryActor) -> Self {
+            value.clone()
+        }
+    }
+
+    /// Result of an audit log entry
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Result of an audit log entry",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The operation completed successfully",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "http_status_code",
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "http_status_code": {
+    ///          "description": "HTTP status code",
+    ///          "type": "integer",
+    ///          "format": "uint16",
+    ///          "minimum": 0.0
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "success"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The operation failed",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "error_message",
+    ///        "http_status_code",
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "error_code": {
+    ///          "type": [
+    ///            "string",
+    ///            "null"
+    ///          ]
+    ///        },
+    ///        "error_message": {
+    ///          "type": "string"
+    ///        },
+    ///        "http_status_code": {
+    ///          "description": "HTTP status code",
+    ///          "type": "integer",
+    ///          "format": "uint16",
+    ///          "minimum": 0.0
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "error"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "After the logged operation completed, our attempt
+    /// to write the result to the audit log failed, so it was automatically
+    /// marked completed later by a background job. This does not imply that the
+    /// operation itself timed out or failed, only our attempts to log its
+    /// result.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "unknown"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "kind")]
+    pub enum AuditLogEntryResult {
+        /// The operation completed successfully
+        #[serde(rename = "success")]
+        Success {
+            /// HTTP status code
+            http_status_code: u16,
+        },
+        /// The operation failed
+        #[serde(rename = "error")]
+        Error {
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            error_code: ::std::option::Option<::std::string::String>,
+            error_message: ::std::string::String,
+            /// HTTP status code
+            http_status_code: u16,
+        },
+        #[serde(rename = "unknown")]
+        Unknown,
+    }
+
+    impl ::std::convert::From<&Self> for AuditLogEntryResult {
+        fn from(value: &AuditLogEntryResult) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/AuditLogEntry"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct AuditLogEntryResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<AuditLogEntry>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&AuditLogEntryResultsPage> for AuditLogEntryResultsPage {
+        fn from(value: &AuditLogEntryResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AuditLogEntryResultsPage {
+        pub fn builder() -> builder::AuditLogEntryResultsPage {
             Default::default()
         }
     }
@@ -29244,6 +29689,21 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "sign": {
+    ///      "description": "Contents of the `SIGN` field of a Hubris archive
+    /// caboose, i.e., an identifier for the set of valid signing keys.
+    /// Currently only applicable to RoT image and bootloader artifacts, where
+    /// it will be an LPC55 Root Key Table Hash (RKTH).",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint8",
+    ///        "minimum": 0.0
+    ///      }
+    ///    },
     ///    "size": {
     ///      "description": "The size of the artifact in bytes.",
     ///      "type": "integer",
@@ -29262,6 +29722,12 @@ pub mod types {
         pub hash: ::std::string::String,
         /// The artifact ID.
         pub id: ArtifactId,
+        /// Contents of the `SIGN` field of a Hubris archive caboose, i.e., an
+        /// identifier for the set of valid signing keys. Currently only
+        /// applicable to RoT image and bootloader artifacts, where it will be
+        /// an LPC55 Root Key Table Hash (RKTH).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sign: ::std::option::Option<::std::vec::Vec<u8>>,
         /// The size of the artifact in bytes.
         pub size: u64,
     }
@@ -35231,6 +35697,68 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct AddressLotViewResponse {
+            blocks: ::std::result::Result<
+                ::std::vec::Vec<super::AddressLotBlock>,
+                ::std::string::String,
+            >,
+            lot: ::std::result::Result<super::AddressLot, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for AddressLotViewResponse {
+            fn default() -> Self {
+                Self {
+                    blocks: Err("no value supplied for blocks".to_string()),
+                    lot: Err("no value supplied for lot".to_string()),
+                }
+            }
+        }
+
+        impl AddressLotViewResponse {
+            pub fn blocks<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AddressLotBlock>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.blocks = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
+                self
+            }
+            pub fn lot<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AddressLot>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.lot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for lot: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AddressLotViewResponse> for super::AddressLotViewResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AddressLotViewResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    blocks: value.blocks?,
+                    lot: value.lot?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AddressLotViewResponse> for AddressLotViewResponse {
+            fn from(value: super::AddressLotViewResponse) -> Self {
+                Self {
+                    blocks: Ok(value.blocks),
+                    lot: Ok(value.lot),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct AffinityGroup {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             failure_domain: ::std::result::Result<super::FailureDomain, ::std::string::String>,
@@ -37063,6 +37591,266 @@ pub mod types {
                     kind: Ok(value.kind),
                     name: Ok(value.name),
                     version: Ok(value.version),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AuditLogEntry {
+            actor: ::std::result::Result<super::AuditLogEntryActor, ::std::string::String>,
+            auth_method: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            operation_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            request_id: ::std::result::Result<::std::string::String, ::std::string::String>,
+            request_uri: ::std::result::Result<::std::string::String, ::std::string::String>,
+            result: ::std::result::Result<super::AuditLogEntryResult, ::std::string::String>,
+            source_ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            time_completed: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_started: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            user_agent: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AuditLogEntry {
+            fn default() -> Self {
+                Self {
+                    actor: Err("no value supplied for actor".to_string()),
+                    auth_method: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    operation_id: Err("no value supplied for operation_id".to_string()),
+                    request_id: Err("no value supplied for request_id".to_string()),
+                    request_uri: Err("no value supplied for request_uri".to_string()),
+                    result: Err("no value supplied for result".to_string()),
+                    source_ip: Err("no value supplied for source_ip".to_string()),
+                    time_completed: Err("no value supplied for time_completed".to_string()),
+                    time_started: Err("no value supplied for time_started".to_string()),
+                    user_agent: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AuditLogEntry {
+            pub fn actor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AuditLogEntryActor>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.actor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for actor: {}", e));
+                self
+            }
+            pub fn auth_method<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.auth_method = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for auth_method: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn operation_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.operation_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for operation_id: {}", e)
+                });
+                self
+            }
+            pub fn request_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.request_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for request_id: {}", e));
+                self
+            }
+            pub fn request_uri<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.request_uri = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for request_uri: {}", e));
+                self
+            }
+            pub fn result<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AuditLogEntryResult>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.result = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for result: {}", e));
+                self
+            }
+            pub fn source_ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ip: {}", e));
+                self
+            }
+            pub fn time_completed<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_completed = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_completed: {}", e)
+                });
+                self
+            }
+            pub fn time_started<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_started = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_started: {}", e)
+                });
+                self
+            }
+            pub fn user_agent<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.user_agent = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for user_agent: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AuditLogEntry> for super::AuditLogEntry {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AuditLogEntry,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    actor: value.actor?,
+                    auth_method: value.auth_method?,
+                    id: value.id?,
+                    operation_id: value.operation_id?,
+                    request_id: value.request_id?,
+                    request_uri: value.request_uri?,
+                    result: value.result?,
+                    source_ip: value.source_ip?,
+                    time_completed: value.time_completed?,
+                    time_started: value.time_started?,
+                    user_agent: value.user_agent?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AuditLogEntry> for AuditLogEntry {
+            fn from(value: super::AuditLogEntry) -> Self {
+                Self {
+                    actor: Ok(value.actor),
+                    auth_method: Ok(value.auth_method),
+                    id: Ok(value.id),
+                    operation_id: Ok(value.operation_id),
+                    request_id: Ok(value.request_id),
+                    request_uri: Ok(value.request_uri),
+                    result: Ok(value.result),
+                    source_ip: Ok(value.source_ip),
+                    time_completed: Ok(value.time_completed),
+                    time_started: Ok(value.time_started),
+                    user_agent: Ok(value.user_agent),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AuditLogEntryResultsPage {
+            items:
+                ::std::result::Result<::std::vec::Vec<super::AuditLogEntry>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for AuditLogEntryResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AuditLogEntryResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::AuditLogEntry>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<AuditLogEntryResultsPage> for super::AuditLogEntryResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AuditLogEntryResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::AuditLogEntryResultsPage> for AuditLogEntryResultsPage {
+            fn from(value: super::AuditLogEntryResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -56719,6 +57507,10 @@ pub mod types {
         pub struct TufArtifactMeta {
             hash: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
+            sign: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<u8>>,
+                ::std::string::String,
+            >,
             size: ::std::result::Result<u64, ::std::string::String>,
         }
 
@@ -56727,6 +57519,7 @@ pub mod types {
                 Self {
                     hash: Err("no value supplied for hash".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    sign: Ok(Default::default()),
                     size: Err("no value supplied for size".to_string()),
                 }
             }
@@ -56753,6 +57546,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
+            pub fn sign<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<u8>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sign = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sign: {}", e));
+                self
+            }
             pub fn size<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<u64>,
@@ -56773,6 +57576,7 @@ pub mod types {
                 Ok(Self {
                     hash: value.hash?,
                     id: value.id?,
+                    sign: value.sign?,
                     size: value.size?,
                 })
             }
@@ -56783,6 +57587,7 @@ pub mod types {
                 Self {
                     hash: Ok(value.hash),
                     id: Ok(value.id),
+                    sign: Ok(value.sign),
                     size: Ok(value.size),
                 }
             }
@@ -63798,6 +64603,53 @@ impl ClientSystemAlertsExt for Client {
     }
 }
 
+/// These endpoints relate to audit logs.
+pub trait ClientSystemAuditLogExt {
+    /// View audit log
+    ///
+    /// A single item in the audit log represents both the beginning and end of
+    /// the logged operation (represented by `time_started` and
+    /// `time_completed`) so that clients do not have to find multiple entries
+    /// and match them up by request ID to get the full picture of an operation.
+    /// Because timestamps may not be unique, entries have also have a unique
+    /// `id` that can be used to deduplicate items fetched from overlapping time
+    /// intervals.
+    ///
+    /// Audit log entries are designed to be immutable: once you see an entry,
+    /// fetching it again will never get you a different result. The list is
+    /// ordered by `time_completed`, not `time_started`. If you fetch the audit
+    /// log for a time range that is fully in the past, the resulting list is
+    /// guaranteed to be complete, i.e., fetching the same timespan again later
+    /// will always produce the same set of entries.
+    ///
+    /// Sends a `GET` request to `/v1/system/audit-log`
+    ///
+    /// Arguments:
+    /// - `end_time`: Exclusive
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `start_time`: Required, inclusive
+    /// ```ignore
+    /// let response = client.audit_log_list()
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn audit_log_list(&self) -> builder::AuditLogList;
+}
+
+impl ClientSystemAuditLogExt for Client {
+    fn audit_log_list(&self) -> builder::AuditLogList {
+        builder::AuditLogList::new(self)
+    }
+}
+
 /// These operations pertain to hardware inventory and management. Racks are the
 /// unit of expansion of an Oxide deployment. Racks are in turn composed of
 /// sleds, switches, power supplies, and a cabled backplane.
@@ -64675,6 +65527,20 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate;
+    /// Fetch address lot
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/address-lot/{address_lot}`
+    ///
+    /// Arguments:
+    /// - `address_lot`: Name or ID of the address lot
+    /// ```ignore
+    /// let response = client.networking_address_lot_view()
+    ///    .address_lot(address_lot)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_address_lot_view(&self) -> builder::NetworkingAddressLotView;
     /// Delete address lot
     ///
     /// Sends a `DELETE` request to
@@ -65073,6 +65939,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate {
         builder::NetworkingAddressLotCreate::new(self)
+    }
+
+    fn networking_address_lot_view(&self) -> builder::NetworkingAddressLotView {
+        builder::NetworkingAddressLotView::new(self)
     }
 
     fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete {
@@ -81782,6 +82652,198 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemAuditLogExt::audit_log_list`]
+    ///
+    /// [`ClientSystemAuditLogExt::audit_log_list`]: super::ClientSystemAuditLogExt::audit_log_list
+    #[derive(Debug, Clone)]
+    pub struct AuditLogList<'a> {
+        client: &'a super::Client,
+        end_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::TimeAndIdSortMode>, String>,
+        start_time: Result<Option<::chrono::DateTime<::chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> AuditLogList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                end_time: Ok(None),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        {
+            self.end_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for end_time \
+                 failed"
+                    .to_string()
+            });
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeAndIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `TimeAndIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+        {
+            self.start_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: chrono :: DateTime < :: chrono :: offset :: Utc >` for \
+                 start_time failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/audit-log`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AuditLogEntryResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                end_time,
+                limit,
+                page_token,
+                sort_by,
+                start_time,
+            } = self;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/audit-log", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("end_time", &end_time))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .query(&progenitor_client::QueryParam::new(
+                    "start_time",
+                    &start_time,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "audit_log_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/audit-log`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AuditLogEntry, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                end_time: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::physical_disk_list`]
     ///
     /// [`ClientSystemHardwareExt::physical_disk_list`]: super::ClientSystemHardwareExt::physical_disk_list
@@ -87127,6 +88189,83 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_address_lot_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_address_lot_view`]: super::ClientSystemNetworkingExt::networking_address_lot_view
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAddressLotView<'a> {
+        client: &'a super::Client,
+        address_lot: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingAddressLotView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                address_lot: Err("address_lot was not initialized".to_string()),
+            }
+        }
+
+        pub fn address_lot<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.address_lot = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for address_lot failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/address-lot/{address_lot}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AddressLotViewResponse>, Error<types::Error>> {
+            let Self {
+                client,
+                address_lot,
+            } = self;
+            let address_lot = address_lot.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/address-lot/{}",
+                client.baseurl,
+                encode_path(&address_lot.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "networking_address_lot_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -96634,6 +97773,7 @@ pub mod prelude {
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
     pub use super::ClientSystemAlertsExt;
+    pub use super::ClientSystemAuditLogExt;
     pub use super::ClientSystemHardwareExt;
     pub use super::ClientSystemIpPoolsExt;
     pub use super::ClientSystemMetricsExt;
