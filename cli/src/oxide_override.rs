@@ -24,13 +24,70 @@ use schemars::schema::{RootSchema, Schema, SingleOrVec};
 const TABLE_NOT_SUPPORTED: &str = "table formatting is not supported for this command";
 
 pub enum OxideOverride {
-    Json {
-        needs_comma: AtomicBool,
-    },
-    Table {
-        fields: Box<Mutex<Vec<String>>>,
-        table: Box<Mutex<Table>>,
-    },
+    Json { needs_comma: AtomicBool },
+    Table { table: Box<Mutex<TableFormatter>> },
+}
+
+pub struct TableFormatter {
+    requested_fields: Vec<String>,
+    fields_to_print: Vec<String>,
+    table: Table,
+}
+
+impl TableFormatter {
+    fn new(requested_fields: &[String]) -> Self {
+        let mut table = Table::new();
+
+        table
+            .load_preset(comfy_table::presets::NOTHING)
+            .set_content_arrangement(ContentArrangement::Disabled);
+
+        Self {
+            // Downcase user-requested fields to better match the schema.
+            requested_fields: requested_fields.iter().map(|f| f.to_lowercase()).collect(),
+            fields_to_print: Vec::new(),
+            table,
+        }
+    }
+
+    fn set_header_fields(&mut self, schema_fields: Vec<String>) {
+        let fields_to_print = if !self.requested_fields.is_empty() {
+            let requested: HashSet<_> = self.requested_fields.iter().collect();
+            let available: HashSet<_> = schema_fields.iter().collect();
+            let invalid = requested.difference(&available);
+
+            for field in invalid {
+                eprintln_nopipe!("WARNING: '{field}' is not a valid field");
+            }
+
+            let mut fields = self.requested_fields.to_vec();
+            fields.retain(|f| available.contains(f));
+            fields
+        } else {
+            schema_fields
+        };
+
+        let upcased: Vec<_> = fields_to_print.iter().map(|f| f.to_uppercase()).collect();
+
+        self.table.set_header(upcased);
+        self.fields_to_print = fields_to_print;
+    }
+
+    fn add_row(&mut self, obj: &serde_json::Map<String, serde_json::Value>) {
+        let mut row = Vec::with_capacity(self.fields_to_print.len());
+
+        for field in &self.fields_to_print {
+            let s = obj.get(field).map(|f| f.to_string()).unwrap_or_default();
+
+            // `to_string` encloses values in double quotes.
+            if s.contains(' ') {
+                row.push(s);
+            } else {
+                row.push(s.trim_matches('"').to_string());
+            }
+        }
+        self.table.add_row(row);
+    }
 }
 
 impl Default for OxideOverride {
@@ -50,8 +107,8 @@ impl CliConfig for OxideOverride {
                     .expect("failed to serialize return to json");
                 println_nopipe!("{}", s);
             }
-            OxideOverride::Table { fields, table } => {
-                let fields = fields.lock().unwrap();
+            OxideOverride::Table { table: t } => {
+                let mut t = t.lock().unwrap();
 
                 let root_schema = schemars::schema_for!(T);
                 let (available_fields, obj_type) = success_item_fields(&root_schema);
@@ -61,8 +118,7 @@ impl CliConfig for OxideOverride {
                     return;
                 }
 
-                let mut table = table.lock().unwrap();
-                let printable_fields = set_header_fields(&fields, available_fields, &mut table);
+                t.set_header_fields(available_fields);
 
                 let serde_json::Value::Object(obj) =
                     serde_json::to_value(std::ops::Deref::deref(value))
@@ -80,22 +136,20 @@ impl CliConfig for OxideOverride {
                         for entry in arr {
                             let serde_json::Value::Object(obj) = entry else {
                                 let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
-                                    .expect("failed to serialize return to json");
+                                    .expect("failed to serialize result array member to json");
                                 println_nopipe!("{}", s);
                                 return;
                             };
 
-                            let row = create_row(&printable_fields, obj);
-                            table.add_row(row);
+                            t.add_row(obj);
                         }
                     }
                     ReturnType::Object => {
-                        let row = create_row(&printable_fields, &obj);
-                        table.add_row(row);
+                        t.add_row(&obj);
                     }
                 }
 
-                println_nopipe!("{table}");
+                println_nopipe!("{}", t.table);
             }
         }
     }
@@ -118,21 +172,17 @@ impl CliConfig for OxideOverride {
                 needs_comma.store(false, std::sync::atomic::Ordering::Relaxed);
                 print_nopipe!("[");
             }
-            OxideOverride::Table { fields, table } => {
-                let mut fields = fields.lock().unwrap();
+            OxideOverride::Table { table: t } => {
+                let mut t = t.lock().unwrap();
 
                 let root_schema = schemars::schema_for!(T);
                 let available_fields = list_start_fields(&root_schema);
 
-                let mut table = table.lock().unwrap();
-                let mut printable_fields = set_header_fields(&fields, available_fields, &mut table);
+                t.set_header_fields(available_fields);
 
-                if printable_fields.is_empty() {
+                if t.fields_to_print.is_empty() {
                     println_nopipe!("{TABLE_NOT_SUPPORTED}");
                 }
-
-                // Store our list of fields to print.
-                std::mem::swap(&mut printable_fields, &mut fields);
             }
         }
     }
@@ -152,14 +202,12 @@ impl CliConfig for OxideOverride {
                 };
                 needs_comma.store(true, std::sync::atomic::Ordering::Relaxed);
             }
-            OxideOverride::Table { fields, table } => {
+            OxideOverride::Table { table: t } => {
                 let s = serde_json::to_value(value).expect("failed to serialize result to json");
                 if let serde_json::Value::Object(obj) = s {
-                    let fields = fields.lock().unwrap();
-                    let mut table = table.lock().unwrap();
+                    let mut t = t.lock().unwrap();
 
-                    let row = create_row(&fields, &obj);
-                    table.add_row(row);
+                    t.add_row(&obj);
                 }
             }
         }
@@ -177,9 +225,9 @@ impl CliConfig for OxideOverride {
                     println_nopipe!("]");
                 }
             }
-            OxideOverride::Table { fields: _, table } => {
-                let table = table.lock().unwrap();
-                println_nopipe!("{table}");
+            OxideOverride::Table { table: t } => {
+                let t = t.lock().unwrap();
+                println_nopipe!("{}", t.table);
             }
         }
     }
@@ -321,17 +369,8 @@ impl OxideOverride {
 
     /// Construct a new OxideOverride for tabular output.
     pub fn new_table(fields: &[String]) -> Self {
-        let mut table = Table::new();
-
-        // Downcase user-requested fields to better match the schema.
-        let lowercase_fields = fields.iter().map(|f| f.to_lowercase()).collect();
-        table
-            .load_preset(comfy_table::presets::NOTHING)
-            .set_content_arrangement(ContentArrangement::Disabled);
-
         OxideOverride::Table {
-            fields: Box::new(Mutex::new(lowercase_fields)),
-            table: Box::new(Mutex::new(table)),
+            table: Box::new(Mutex::new(TableFormatter::new(fields))),
         }
     }
 
@@ -498,51 +537,6 @@ fn collect_variant_fields(variants: &[Schema]) -> Vec<String> {
         );
     }
     fields.into_iter().collect()
-}
-
-/// Set a table's header to the fields available to be printed.
-fn set_header_fields(
-    requested_fields: &[String],
-    schema_fields: Vec<String>,
-    table: &mut Table,
-) -> Vec<String> {
-    let printable_fields = if !requested_fields.is_empty() {
-        let requested: HashSet<_> = requested_fields.iter().collect();
-        let available: HashSet<_> = schema_fields.iter().collect();
-        let invalid = requested.difference(&available);
-
-        for field in invalid {
-            eprintln_nopipe!("WARNING: '{field}' is not a valid field");
-        }
-
-        let mut fields = requested_fields.to_vec();
-        fields.retain(|f| available.contains(f));
-        fields
-    } else {
-        schema_fields
-    };
-
-    let upcased: Vec<_> = printable_fields.iter().map(|f| f.to_uppercase()).collect();
-
-    table.set_header(upcased);
-    printable_fields
-}
-
-/// Format an object's fields for printing in a table.
-fn create_row(fields: &[String], obj: &serde_json::Map<String, serde_json::Value>) -> Vec<String> {
-    let mut row = Vec::with_capacity(fields.len());
-
-    for field in fields {
-        let s = obj.get(field).map(|f| f.to_string()).unwrap_or_default();
-
-        // `to_string` encloses values in double quotes.
-        if s.contains(' ') {
-            row.push(s);
-        } else {
-            row.push(s.trim_matches('"').to_string());
-        }
-    }
-    row
 }
 
 #[cfg(test)]
