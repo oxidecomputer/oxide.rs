@@ -557,6 +557,10 @@ pub mod operations {
         pub fn into_inner(self) -> ::httpmock::When {
             self.0
         }
+
+        pub fn body(self, value: &types::SupportBundleCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
     }
 
     pub struct SupportBundleCreateThen(::httpmock::Then);
@@ -623,6 +627,72 @@ pub mod operations {
 
     pub struct SupportBundleViewThen(::httpmock::Then);
     impl SupportBundleViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SupportBundleInfo) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SupportBundleUpdateWhen(::httpmock::When);
+    impl SupportBundleUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/experimental/v1/system/support-bundles/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn bundle_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/experimental/v1/system/support-bundles/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SupportBundleUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SupportBundleUpdateThen(::httpmock::Then);
+    impl SupportBundleUpdateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -4479,169 +4549,6 @@ pub mod operations {
 
         pub fn no_content(self) -> Self {
             Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct DiskMetricsListWhen(::httpmock::When);
-    impl DiskMetricsListWhen {
-        pub fn new(inner: ::httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/metrics/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> ::httpmock::When {
-            self.0
-        }
-
-        pub fn disk(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/disks/{}/metrics/.*$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn metric(self, value: types::DiskMetricName) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/disks/.*/metrics/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn end_time<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("end_time", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<::std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn order<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::PaginationOrder>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("order", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "order"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn project<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a types::NameOrId>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("project", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn start_time<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("start_time", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct DiskMetricsListThen(::httpmock::Then);
-    impl DiskMetricsListThen {
-        pub fn new(inner: ::httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> ::httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -18980,6 +18887,340 @@ pub mod operations {
         }
     }
 
+    pub struct UserViewWhen(::httpmock::When);
+    impl UserViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/users/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/users/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct UserViewThen(::httpmock::Then);
+    impl UserViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::User) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct UserTokenListWhen(::httpmock::When);
+    impl UserTokenListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/users/[^/]*/access-tokens$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/users/{}/access-tokens$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct UserTokenListThen(::httpmock::Then);
+    impl UserTokenListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::DeviceAccessTokenResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct UserLogoutWhen(::httpmock::When);
+    impl UserLogoutWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/users/[^/]*/logout$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/users/{}/logout$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct UserLogoutThen(::httpmock::Then);
+    impl UserLogoutThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct UserSessionListWhen(::httpmock::When);
+    impl UserSessionListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/users/[^/]*/sessions$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &::uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/users/{}/sessions$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct UserSessionListThen(::httpmock::Then);
+    impl UserSessionListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ConsoleSessionResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct UtilizationViewWhen(::httpmock::When);
     impl UtilizationViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -21628,6 +21869,9 @@ pub trait MockServerExt {
     fn support_bundle_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SupportBundleViewWhen, operations::SupportBundleViewThen);
+    fn support_bundle_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleUpdateWhen, operations::SupportBundleUpdateThen);
     fn support_bundle_delete<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::SupportBundleDeleteWhen, operations::SupportBundleDeleteThen);
@@ -21805,9 +22049,6 @@ pub trait MockServerExt {
     fn disk_finalize_import<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::DiskFinalizeImportWhen, operations::DiskFinalizeImportThen);
-    fn disk_metrics_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::DiskMetricsListWhen, operations::DiskMetricsListThen);
     fn floating_ip_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::FloatingIpListWhen, operations::FloatingIpListThen);
@@ -22522,6 +22763,18 @@ pub trait MockServerExt {
     fn user_list<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::UserListWhen, operations::UserListThen);
+    fn user_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserViewWhen, operations::UserViewThen);
+    fn user_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserTokenListWhen, operations::UserTokenListThen);
+    fn user_logout<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserLogoutWhen, operations::UserLogoutThen);
+    fn user_session_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserSessionListWhen, operations::UserSessionListThen);
     fn utilization_view<F>(&self, config_fn: F) -> ::httpmock::Mock
     where
         F: FnOnce(operations::UtilizationViewWhen, operations::UtilizationViewThen);
@@ -22731,6 +22984,18 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SupportBundleViewWhen::new(when),
                 operations::SupportBundleViewThen::new(then),
+            )
+        })
+    }
+
+    fn support_bundle_update<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::SupportBundleUpdateWhen, operations::SupportBundleUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SupportBundleUpdateWhen::new(when),
+                operations::SupportBundleUpdateThen::new(then),
             )
         })
     }
@@ -23340,18 +23605,6 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::DiskFinalizeImportWhen::new(when),
                 operations::DiskFinalizeImportThen::new(then),
-            )
-        })
-    }
-
-    fn disk_metrics_list<F>(&self, config_fn: F) -> ::httpmock::Mock
-    where
-        F: FnOnce(operations::DiskMetricsListWhen, operations::DiskMetricsListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::DiskMetricsListWhen::new(when),
-                operations::DiskMetricsListThen::new(then),
             )
         })
     }
@@ -25677,6 +25930,54 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::UserListWhen::new(when),
                 operations::UserListThen::new(then),
+            )
+        })
+    }
+
+    fn user_view<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserViewWhen, operations::UserViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::UserViewWhen::new(when),
+                operations::UserViewThen::new(then),
+            )
+        })
+    }
+
+    fn user_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserTokenListWhen, operations::UserTokenListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::UserTokenListWhen::new(when),
+                operations::UserTokenListThen::new(then),
+            )
+        })
+    }
+
+    fn user_logout<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserLogoutWhen, operations::UserLogoutThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::UserLogoutWhen::new(when),
+                operations::UserLogoutThen::new(then),
+            )
+        })
+    }
+
+    fn user_session_list<F>(&self, config_fn: F) -> ::httpmock::Mock
+    where
+        F: FnOnce(operations::UserSessionListWhen, operations::UserSessionListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::UserSessionListWhen::new(when),
+                operations::UserSessionListThen::new(then),
             )
         })
     }

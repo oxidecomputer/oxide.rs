@@ -103,10 +103,6 @@ pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
             schemars::schema_for!(oxide::types::Disk),
         ),
         (
-            stringify!(oxide::types::MeasurementResultsPage),
-            schemars::schema_for!(oxide::types::MeasurementResultsPage),
-        ),
-        (
             stringify!(oxide::types::FloatingIpResultsPage),
             schemars::schema_for!(oxide::types::FloatingIpResultsPage),
         ),
@@ -197,6 +193,10 @@ pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
         (
             stringify!(oxide::types::SshKey),
             schemars::schema_for!(oxide::types::SshKey),
+        ),
+        (
+            stringify!(oxide::types::MeasurementResultsPage),
+            schemars::schema_for!(oxide::types::MeasurementResultsPage),
         ),
         (
             stringify!(oxide::types::InstanceNetworkInterfaceResultsPage),
@@ -477,6 +477,10 @@ pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
         (
             stringify!(oxide::types::SiloUtilization),
             schemars::schema_for!(oxide::types::SiloUtilization),
+        ),
+        (
+            stringify!(oxide::types::ConsoleSessionResultsPage),
+            schemars::schema_for!(oxide::types::ConsoleSessionResultsPage),
         ),
         (
             stringify!(oxide::types::Utilization),

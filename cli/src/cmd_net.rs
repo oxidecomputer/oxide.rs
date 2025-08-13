@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 use std::{collections::HashMap, net::IpAddr};
 
@@ -1475,6 +1475,13 @@ fn show_status(st: &Vec<&BgpPeerStatus>) -> Result<()> {
 #[command(name = "net port status")]
 pub struct CmdPortStatus {}
 
+fn port_key(name: &Name) -> u16 {
+    let Some(suf) = name.as_str().strip_prefix("qsfp") else {
+        return 0;
+    };
+    suf.parse::<u16>().unwrap_or_default()
+}
+
 #[async_trait]
 impl AuthenticatedCmd for CmdPortStatus {
     async fn run(&self, client: &Client) -> Result<()> {
@@ -1488,8 +1495,8 @@ impl AuthenticatedCmd for CmdPortStatus {
             .iter()
             .partition(|x| x.switch_location.as_str() == "switch0");
 
-        sw0.sort_by_key(|x| x.port_name.as_str());
-        sw1.sort_by_key(|x| x.port_name.as_str());
+        sw0.sort_by_key(|p| port_key(&p.port_name));
+        sw1.sort_by_key(|p| port_key(&p.port_name));
 
         println_nopipe!("{}", "switch0".dimmed());
         println_nopipe!("{}", "=======".dimmed());

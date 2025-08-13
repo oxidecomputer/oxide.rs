@@ -23,6 +23,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SupportBundleList => Self::cli_support_bundle_list(),
             CliCommand::SupportBundleCreate => Self::cli_support_bundle_create(),
             CliCommand::SupportBundleView => Self::cli_support_bundle_view(),
+            CliCommand::SupportBundleUpdate => Self::cli_support_bundle_update(),
             CliCommand::SupportBundleDelete => Self::cli_support_bundle_delete(),
             CliCommand::SupportBundleDownload => Self::cli_support_bundle_download(),
             CliCommand::SupportBundleHead => Self::cli_support_bundle_head(),
@@ -85,7 +86,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::DiskBulkWriteImportStart => Self::cli_disk_bulk_write_import_start(),
             CliCommand::DiskBulkWriteImportStop => Self::cli_disk_bulk_write_import_stop(),
             CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
-            CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
@@ -317,6 +317,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
             CliCommand::TimeseriesQuery => Self::cli_timeseries_query(),
             CliCommand::UserList => Self::cli_user_list(),
+            CliCommand::UserView => Self::cli_user_view(),
+            CliCommand::UserTokenList => Self::cli_user_token_list(),
+            CliCommand::UserLogout => Self::cli_user_logout(),
+            CliCommand::UserSessionList => Self::cli_user_session_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
@@ -596,8 +600,8 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::TimeAndIdSortMode::Ascending.to_string(),
-                            types::TimeAndIdSortMode::Descending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
                         ]),
                         |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
                     ))
@@ -607,7 +611,29 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_support_bundle_create() -> ::clap::Command {
-        ::clap::Command::new("").about("Create a new support bundle")
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-comment")
+                    .long("user-comment")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("User comment for the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new support bundle")
     }
 
     pub fn cli_support_bundle_view() -> ::clap::Command {
@@ -620,6 +646,39 @@ impl<T: CliConfig> Cli<T> {
                     .help("ID of the support bundle"),
             )
             .about("View a support bundle")
+    }
+
+    pub fn cli_support_bundle_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("bundle-id")
+                    .long("bundle-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("user-comment")
+                    .long("user-comment")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false)
+                    .help("User comment for the support bundle"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update a support bundle")
     }
 
     pub fn cli_support_bundle_delete() -> ::clap::Command {
@@ -1097,8 +1156,8 @@ impl<T: CliConfig> Cli<T> {
                     .long("sort-by")
                     .value_parser(::clap::builder::TypedValueParser::map(
                         ::clap::builder::PossibleValuesParser::new([
-                            types::TimeAndIdSortMode::Ascending.to_string(),
-                            types::TimeAndIdSortMode::Descending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdAscending.to_string(),
+                            types::TimeAndIdSortMode::TimeAndIdDescending.to_string(),
                         ]),
                         |s| types::TimeAndIdSortMode::try_from(s).unwrap(),
                     ))
@@ -1903,78 +1962,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Confirm disk block import completion")
-    }
-
-    pub fn cli_disk_metrics_list() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("disk")
-                    .long("disk")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true),
-            )
-            .arg(
-                ::clap::Arg::new("end-time")
-                    .long("end-time")
-                    .value_parser(::clap::value_parser!(
-                        ::chrono::DateTime<::chrono::offset::Utc>
-                    ))
-                    .required(true)
-                    .help("An exclusive end time of metrics."),
-            )
-            .arg(
-                ::clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                ::clap::Arg::new("metric")
-                    .long("metric")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::DiskMetricName::Activated.to_string(),
-                            types::DiskMetricName::Flush.to_string(),
-                            types::DiskMetricName::Read.to_string(),
-                            types::DiskMetricName::ReadBytes.to_string(),
-                            types::DiskMetricName::Write.to_string(),
-                            types::DiskMetricName::WriteBytes.to_string(),
-                        ]),
-                        |s| types::DiskMetricName::try_from(s).unwrap(),
-                    ))
-                    .required(true),
-            )
-            .arg(
-                ::clap::Arg::new("order")
-                    .long("order")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::PaginationOrder::Ascending.to_string(),
-                            types::PaginationOrder::Descending.to_string(),
-                        ]),
-                        |s| types::PaginationOrder::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help("Query result order"),
-            )
-            .arg(
-                ::clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
-                ::clap::Arg::new("start-time")
-                    .long("start-time")
-                    .value_parser(::clap::value_parser!(
-                        ::chrono::DateTime<::chrono::offset::Utc>
-                    ))
-                    .required(true)
-                    .help("An inclusive start time of metrics."),
-            )
-            .about("Fetch disk metrics")
     }
 
     pub fn cli_floating_ip_list() -> ::clap::Command {
@@ -7133,6 +7120,94 @@ impl<T: CliConfig> Cli<T> {
             .about("List users")
     }
 
+    pub fn cli_user_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("Fetch user")
+    }
+
+    pub fn cli_user_token_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("List user's access tokens")
+    }
+
+    pub fn cli_user_logout() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("Log user out")
+            .long_about(
+                "Silo admins can use this endpoint to log the specified user out by deleting all \
+                 of their tokens AND sessions. This cannot be undone.",
+            )
+    }
+
+    pub fn cli_user_session_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true)
+                    .help("ID of the user"),
+            )
+            .about("List user's console sessions")
+    }
+
     pub fn cli_utilization_view() -> ::clap::Command {
         ::clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
@@ -8275,6 +8350,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SupportBundleList => self.execute_support_bundle_list(matches).await,
             CliCommand::SupportBundleCreate => self.execute_support_bundle_create(matches).await,
             CliCommand::SupportBundleView => self.execute_support_bundle_view(matches).await,
+            CliCommand::SupportBundleUpdate => self.execute_support_bundle_update(matches).await,
             CliCommand::SupportBundleDelete => self.execute_support_bundle_delete(matches).await,
             CliCommand::SupportBundleDownload => {
                 self.execute_support_bundle_download(matches).await
@@ -8370,7 +8446,6 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_disk_bulk_write_import_stop(matches).await
             }
             CliCommand::DiskFinalizeImport => self.execute_disk_finalize_import(matches).await,
-            CliCommand::DiskMetricsList => self.execute_disk_metrics_list(matches).await,
             CliCommand::FloatingIpList => self.execute_floating_ip_list(matches).await,
             CliCommand::FloatingIpCreate => self.execute_floating_ip_create(matches).await,
             CliCommand::FloatingIpView => self.execute_floating_ip_view(matches).await,
@@ -8725,6 +8800,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloUtilizationView => self.execute_silo_utilization_view(matches).await,
             CliCommand::TimeseriesQuery => self.execute_timeseries_query(matches).await,
             CliCommand::UserList => self.execute_user_list(matches).await,
+            CliCommand::UserView => self.execute_user_view(matches).await,
+            CliCommand::UserTokenList => self.execute_user_token_list(matches).await,
+            CliCommand::UserLogout => self.execute_user_logout(matches).await,
+            CliCommand::UserSessionList => self.execute_user_session_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
             CliCommand::VpcFirewallRulesUpdate => {
@@ -9041,6 +9120,16 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.support_bundle_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("user-comment") {
+            request = request.body_map(|body| body.user_comment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.config
             .execute_support_bundle_create(matches, &mut request)?;
         let result = request.send().await;
@@ -9067,6 +9156,40 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_support_bundle_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_support_bundle_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.support_bundle_update();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("bundle-id") {
+            request = request.bundle_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::std::string::String>("user-comment") {
+            request = request.body_map(|body| body.user_comment(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_support_bundle_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -10682,70 +10805,6 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.error(&r);
                 Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_disk_metrics_list(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.disk_metrics_list();
-        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
-            request = request.disk(value.clone());
-        }
-
-        if let Some(value) =
-            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("end-time")
-        {
-            request = request.end_time(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::DiskMetricName>("metric") {
-            request = request.metric(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
-            request = request.order(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        if let Some(value) =
-            matches.get_one::<::chrono::DateTime<::chrono::offset::Utc>>("start-time")
-        {
-            request = request.start_time(value.clone());
-        }
-
-        self.config
-            .execute_disk_metrics_list(matches, &mut request)?;
-        self.config.list_start::<types::MeasurementResultsPage>();
-        let mut stream = futures::StreamExt::take(
-            request.stream(),
-            matches
-                .get_one::<std::num::NonZeroU32>("limit")
-                .map_or(usize::MAX, |x| x.get() as usize),
-        );
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::MeasurementResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
             }
         }
     }
@@ -16779,6 +16838,134 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_user_view(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.user_view();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_user_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.user_token_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_token_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::DeviceAccessTokenResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::DeviceAccessTokenResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_user_logout(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.user_logout();
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config.execute_user_logout(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_user_session_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.user_session_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.config
+            .execute_user_session_list(matches, &mut request)?;
+        self.config.list_start::<types::ConsoleSessionResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ConsoleSessionResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -17982,6 +18169,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_support_bundle_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SupportBundleUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_support_bundle_delete(
         &self,
         matches: &::clap::ArgMatches,
@@ -18362,14 +18557,6 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::DiskFinalizeImport,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_disk_metrics_list(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::DiskMetricsList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -19806,6 +19993,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_user_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_token_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserTokenList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_logout(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserLogout,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_user_session_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::UserSessionList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_utilization_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -20051,6 +20270,7 @@ pub enum CliCommand {
     SupportBundleList,
     SupportBundleCreate,
     SupportBundleView,
+    SupportBundleUpdate,
     SupportBundleDelete,
     SupportBundleDownload,
     SupportBundleHead,
@@ -20099,7 +20319,6 @@ pub enum CliCommand {
     DiskBulkWriteImportStart,
     DiskBulkWriteImportStop,
     DiskFinalizeImport,
-    DiskMetricsList,
     FloatingIpList,
     FloatingIpCreate,
     FloatingIpView,
@@ -20279,6 +20498,10 @@ pub enum CliCommand {
     SiloUtilizationView,
     TimeseriesQuery,
     UserList,
+    UserView,
+    UserTokenList,
+    UserLogout,
+    UserSessionList,
     UtilizationView,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
@@ -20323,6 +20546,7 @@ impl CliCommand {
             CliCommand::SupportBundleList,
             CliCommand::SupportBundleCreate,
             CliCommand::SupportBundleView,
+            CliCommand::SupportBundleUpdate,
             CliCommand::SupportBundleDelete,
             CliCommand::SupportBundleDownload,
             CliCommand::SupportBundleHead,
@@ -20371,7 +20595,6 @@ impl CliCommand {
             CliCommand::DiskBulkWriteImportStart,
             CliCommand::DiskBulkWriteImportStop,
             CliCommand::DiskFinalizeImport,
-            CliCommand::DiskMetricsList,
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
@@ -20551,6 +20774,10 @@ impl CliCommand {
             CliCommand::SiloUtilizationView,
             CliCommand::TimeseriesQuery,
             CliCommand::UserList,
+            CliCommand::UserView,
+            CliCommand::UserTokenList,
+            CliCommand::UserLogout,
+            CliCommand::UserSessionList,
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
