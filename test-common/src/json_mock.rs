@@ -333,10 +333,7 @@ fn mock_number(
         (Some(v1), Some(v2)) => Some(v1.min(v2)),
     };
 
-    let mult = match multiple_of {
-        Some(m) => m,
-        _ => 1.0,
-    };
+    let mult = multiple_of.unwrap_or(1.0);
 
     let value = match (min, max) {
         (None, None) => src.random::<f64>() * mult,

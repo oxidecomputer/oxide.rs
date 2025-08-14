@@ -6,6 +6,8 @@
 
 //! Types in service of the [ClientExtraDiskExt] trait.
 
+#![allow(clippy::result_large_err)]
+
 use super::ClientExtraDiskExt;
 use crate::Client;
 

@@ -284,7 +284,7 @@ impl AsyncRead for StreamedFile<'_> {
                     self.buffer = bytes;
                 }
                 Some(Err(e)) => {
-                    return Poll::Ready(Err(io::Error::new(io::ErrorKind::Other, e)));
+                    return Poll::Ready(Err(io::Error::other(e)));
                 }
                 None => return Poll::Ready(Ok(())), // EOF
             }
