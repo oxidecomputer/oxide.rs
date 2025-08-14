@@ -1,6 +1,6 @@
 {
   "name": "oxide",
-  "version": "0.12.0+20250604.0.0",
+  "version": "0.13.0+20250730.0.0",
   "about": "Control an Oxide environment",
   "args": [
     {
@@ -581,6 +581,49 @@
         {
           "name": "endpoint",
           "help": "The endpoint to request"
+        }
+      ]
+    },
+    {
+      "name": "audit-log",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "list",
+          "about": "View audit log",
+          "long_about": "A single item in the audit log represents both the beginning and end of the logged operation (represented by `time_started` and `time_completed`) so that clients do not have to find multiple entries and match them up by request ID to get the full picture of an operation. Because timestamps may not be unique, entries have also have a unique `id` that can be used to deduplicate items fetched from overlapping time intervals.\n\nAudit log entries are designed to be immutable: once you see an entry, fetching it again will never get you a different result. The list is ordered by `time_completed`, not `time_started`. If you fetch the audit log for a time range that is fully in the past, the resulting list is guaranteed to be complete, i.e., fetching the same timespan again later will always produce the same set of entries.",
+          "args": [
+            {
+              "long": "end-time",
+              "help": "Exclusive"
+            },
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "time_and_id_ascending",
+                "time_and_id_descending"
+              ]
+            },
+            {
+              "long": "start-time",
+              "help": "Required, inclusive"
+            }
+          ]
         }
       ]
     },
@@ -7528,6 +7571,21 @@
                         "name_descending",
                         "id_ascending"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch address lot",
+                  "args": [
+                    {
+                      "long": "address-lot",
+                      "help": "Name or ID of the address lot"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
                     }
                   ]
                 }
