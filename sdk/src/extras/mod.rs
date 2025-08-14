@@ -79,5 +79,5 @@ pub trait ClientExtraDiskExt {
     ///
     /// import_future.await?;
     /// ```
-    fn disk_import(&self) -> disk::builder::DiskImport;
+    fn disk_import(&self) -> disk::builder::DiskImport<'_>;
 }

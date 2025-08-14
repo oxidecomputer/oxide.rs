@@ -10,7 +10,7 @@ use super::ClientExtraDiskExt;
 use crate::Client;
 
 impl ClientExtraDiskExt for Client {
-    fn disk_import(&self) -> builder::DiskImport {
+    fn disk_import(&self) -> builder::DiskImport<'_> {
         builder::DiskImport::new(self)
     }
 }

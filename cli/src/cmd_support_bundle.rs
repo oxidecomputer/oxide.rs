@@ -132,7 +132,7 @@ impl crate::AuthenticatedCmd for CmdDownload {
 
         start_progress_bar(progress_rx, total_length, self.id)?;
 
-        let mut stream =
+        let stream =
             support_bundle_download_ranges(client, self.id, self.chunk_size, 0, total_length);
         let mut stream = std::pin::pin!(stream);
         while let Some(data) = stream.next().await {
