@@ -588,6 +588,11 @@
       "name": "audit-log",
       "args": [
         {
+          "long": "format",
+          "help": "Format in which to print output",
+          "global": true
+        },
+        {
           "long": "profile",
           "help": "Configuration profile to use for commands",
           "global": true
@@ -602,6 +607,11 @@
             {
               "long": "end-time",
               "help": "Exclusive"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output",
+              "global": true
             },
             {
               "long": "limit",
@@ -7581,6 +7591,11 @@
                     {
                       "long": "address-lot",
                       "help": "Name or ID of the address lot"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output",
+                      "global": true
                     },
                     {
                       "long": "profile",

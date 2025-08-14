@@ -235,6 +235,10 @@ pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
             schemars::schema_for!(oxide::types::Snapshot),
         ),
         (
+            stringify!(oxide::types::AuditLogEntryResultsPage),
+            schemars::schema_for!(oxide::types::AuditLogEntryResultsPage),
+        ),
+        (
             stringify!(oxide::types::PhysicalDiskResultsPage),
             schemars::schema_for!(oxide::types::PhysicalDiskResultsPage),
         ),
@@ -345,6 +349,10 @@ pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
         (
             stringify!(oxide::types::AddressLotCreateResponse),
             schemars::schema_for!(oxide::types::AddressLotCreateResponse),
+        ),
+        (
+            stringify!(oxide::types::AddressLotViewResponse),
+            schemars::schema_for!(oxide::types::AddressLotViewResponse),
         ),
         (
             stringify!(oxide::types::AddressLotBlockResultsPage),
