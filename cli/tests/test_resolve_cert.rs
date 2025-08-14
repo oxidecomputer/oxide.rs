@@ -50,7 +50,7 @@ impl TestServer {
         std::fs::write(cert_path.clone(), cert.cert.pem()).unwrap();
 
         let key_path = tempdir.path().join("key.pem");
-        std::fs::write(key_path.clone(), cert.key_pair.serialize_pem()).unwrap();
+        std::fs::write(key_path.clone(), cert.signing_key.serialize_pem()).unwrap();
 
         let server = HttpServerStarter::new_with_tls(
             &ConfigDropshot {
