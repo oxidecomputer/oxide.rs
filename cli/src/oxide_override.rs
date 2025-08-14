@@ -143,9 +143,8 @@ impl CliConfig for OxideOverride {
 
                 t.set_header_fields(available_fields);
 
-                let serde_json::Value::Object(obj) =
-                    serde_json::to_value(std::ops::Deref::deref(value))
-                        .expect("failed to serialize result to json")
+                let serde_json::Value::Object(obj) = serde_json::to_value(value.as_ref())
+                    .expect("failed to serialize result to json")
                 else {
                     unreachable!("result was not a JSON object");
                 };
