@@ -4,7 +4,10 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
+use std::{
+    any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf,
+    str::FromStr,
+};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -14,9 +17,47 @@ use tracing_subscriber::EnvFilter;
 use crate::{
     context::Context,
     generated_cli::{Cli, CliCommand},
-    OxideOverride, RunnableCmd,
+    oxide_override::OxideOverride,
+    RunnableCmd,
 };
 use oxide::{types::ByteCount, ClientConfig};
+
+#[derive(Default, Clone, Debug)]
+pub enum Format {
+    /// Output as JSON
+    #[default]
+    Json,
+    /// Output as table with optional columns
+    Table {
+        /// Fields to display in the table
+        fields: Vec<String>,
+    },
+}
+
+impl FromStr for Format {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "json" {
+            return Ok(Format::Json);
+        }
+
+        if let Some(fields_str) = s.strip_prefix("table:") {
+            let fields: Vec<String> = fields_str
+                .split(',')
+                // Allow users to pass a quoted string with spaces between column names,
+                // e.g. `--format "table: name, id"`
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+                .collect();
+            Ok(Format::Table { fields })
+        } else if s == "table" {
+            Ok(Format::Table { fields: vec![] })
+        } else {
+            Err("available formats are 'json' and 'table'")
+        }
+    }
+}
 
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
@@ -29,6 +70,25 @@ struct OxideCli {
     /// Configuration profile to use for commands
     #[clap(long, global = true, help_heading = "Global Options")]
     pub profile: Option<String>,
+
+    /// Format in which to print output
+    ///
+    /// Possible values:
+    ///   - json                    Output as pretty-printed JSON
+    ///   - table                   Output as table with all columns displayed
+    ///   - table:field1,field2,... Output as table, specifying which columns to display
+    ///
+    /// Examples:
+    ///   --format json
+    ///   --format table
+    ///   --format table:name,id,description
+    #[clap(
+        long,
+        global = true,
+        help_heading = "Global Options",
+        verbatim_doc_comment
+    )]
+    pub format: Option<Format>,
 
     /// Directory to use for configuration
     #[clap(long, value_name = "DIR")]
@@ -248,6 +308,7 @@ impl<'a> NewCli<'a> {
 
         let OxideCli {
             profile,
+            format,
             debug,
             config_dir,
             resolve,
@@ -324,7 +385,7 @@ impl<'a> NewCli<'a> {
             }
         }
 
-        let ctx = Context::new(client_config)?;
+        let ctx = Context::new(client_config, format.unwrap_or_default())?;
         cmd.run_cmd(sm, &ctx).await
     }
 
@@ -353,7 +414,11 @@ struct GeneratedCmd(CliCommand);
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let client = oxide::Client::new_authenticated_config(ctx.client_config())?;
-        let cli = Cli::new(client, OxideOverride::default());
+        let config = match ctx.format() {
+            Format::Json => OxideOverride::new_json(),
+            Format::Table { fields } => OxideOverride::new_table(fields),
+        };
+        let cli = Cli::new(client, config);
         cli.execute(self.0, matches).await
     }
 
