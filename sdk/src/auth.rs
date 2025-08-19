@@ -72,7 +72,11 @@ impl Default for ClientConfig {
             timeout: None,
             connect_timeout: None,
             read_timeout: None,
-            user_agent: None,
+            user_agent: Some(format!(
+                "{} {}",
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_VERSION")
+            )),
         }
     }
 }
@@ -142,8 +146,8 @@ impl ClientConfig {
     }
 
     /// Specify the user_agent header to be sent by the client.
-    pub fn with_user_agent(mut self, user_agent: String) -> Self {
-        self.user_agent = Some(user_agent);
+    pub fn with_user_agent(mut self, user_agent: impl ToString) -> Self {
+        self.user_agent = Some(user_agent.to_string());
         self
     }
 
