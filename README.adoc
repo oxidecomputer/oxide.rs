@@ -4,6 +4,19 @@ This repo contains the CLI, Rust SDK, and SDK mocking library. The CLI is
 released as binaries for various operating systens. The SDK and mocking library
 published to crates.io. All are derived from the Oxide API OpenAPI spec.
 
+## Installing the CLI
+
+https://github.com/oxidecomputer/oxide.rs/releases/latest[Precompiled binaries for the CLI]
+are available for Windows, macOS and Linux.
+
+If you're a macOS Homebrew or a Linuxbrew user, the CLI can be installed via
+the Oxide tap with:
+
+[source,shell]
+----
+brew install oxidecomputer/tap/oxide-cli
+----
+
 ## Generation
 
 Generation of the CLI, SDK, and mocking library use
