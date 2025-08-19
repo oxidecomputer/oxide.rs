@@ -15516,6 +15516,15 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional networks that this interface
+    /// may send and receive traffic on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
+    ///    },
     ///    "vpc_name": {
     ///      "description": "The VPC in which to create the interface.",
     ///      "allOf": [
@@ -15540,6 +15549,10 @@ pub mod types {
         pub name: Name,
         /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
+        /// A set of additional networks that this interface may send and
+        /// receive traffic on.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC in which to create the interface.
         pub vpc_name: Name,
     }
@@ -46106,6 +46119,8 @@ pub mod types {
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet_name: ::std::result::Result<super::Name, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
             vpc_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -46116,6 +46131,7 @@ pub mod types {
                     ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     subnet_name: Err("no value supplied for subnet_name".to_string()),
+                    transit_ips: Ok(Default::default()),
                     vpc_name: Err("no value supplied for vpc_name".to_string()),
                 }
             }
@@ -46162,6 +46178,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
                 self
             }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
             pub fn vpc_name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -46186,6 +46212,7 @@ pub mod types {
                     ip: value.ip?,
                     name: value.name?,
                     subnet_name: value.subnet_name?,
+                    transit_ips: value.transit_ips?,
                     vpc_name: value.vpc_name?,
                 })
             }
@@ -46200,6 +46227,7 @@ pub mod types {
                     ip: Ok(value.ip),
                     name: Ok(value.name),
                     subnet_name: Ok(value.subnet_name),
+                    transit_ips: Ok(value.transit_ips),
                     vpc_name: Ok(value.vpc_name),
                 }
             }
