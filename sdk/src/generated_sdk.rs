@@ -20311,7 +20311,7 @@ pub mod types {
     /// timeseries.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/Table"
+    ///        "$ref": "#/components/schemas/OxqlTable"
     ///      }
     ///    }
     ///  }
@@ -20323,7 +20323,7 @@ pub mod types {
     )]
     pub struct OxqlQueryResult {
         /// Tables resulting from the query, each containing timeseries.
-        pub tables: ::std::vec::Vec<Table>,
+        pub tables: ::std::vec::Vec<OxqlTable>,
     }
 
     impl ::std::convert::From<&OxqlQueryResult> for OxqlQueryResult {
@@ -20334,6 +20334,61 @@ pub mod types {
 
     impl OxqlQueryResult {
         pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
+        }
+    }
+
+    /// A table represents one or more timeseries with the same schema.
+    ///
+    /// A table is the result of an OxQL query. It contains a name, usually the
+    /// name of the timeseries schema from which the data is derived, and any
+    /// number of timeseries, which contain the actual data.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "timeseries"
+    ///  ],
+    ///  "properties": {
+    ///    "name": {
+    ///      "description": "The name of the table.",
+    ///      "type": "string"
+    ///    },
+    ///    "timeseries": {
+    ///      "description": "The set of timeseries in the table, ordered by
+    /// key.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Timeseries"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlTable {
+        /// The name of the table.
+        pub name: ::std::string::String,
+        /// The set of timeseries in the table, ordered by key.
+        pub timeseries: ::std::vec::Vec<Timeseries>,
+    }
+
+    impl ::std::convert::From<&OxqlTable> for OxqlTable {
+        fn from(value: &OxqlTable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlTable {
+        pub fn builder() -> builder::OxqlTable {
             Default::default()
         }
     }
@@ -28875,56 +28930,6 @@ pub mod types {
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
-        }
-    }
-
-    /// A table represents one or more timeseries with the same schema.
-    ///
-    /// A table is the result of an OxQL query. It contains a name, usually the
-    /// name of the timeseries schema from which the data is derived, and any
-    /// number of timeseries, which contain the actual data.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "name",
-    ///    "timeseries"
-    ///  ],
-    ///  "properties": {
-    ///    "name": {
-    ///      "type": "string"
-    ///    },
-    ///    "timeseries": {
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/Timeseries"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct Table {
-        pub name: ::std::string::String,
-        pub timeseries: ::std::collections::HashMap<::std::string::String, Timeseries>,
-    }
-
-    impl ::std::convert::From<&Table> for Table {
-        fn from(value: &Table) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Table {
-        pub fn builder() -> builder::Table {
-            Default::default()
         }
     }
 
@@ -49799,7 +49804,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
-            tables: ::std::result::Result<::std::vec::Vec<super::Table>, ::std::string::String>,
+            tables: ::std::result::Result<::std::vec::Vec<super::OxqlTable>, ::std::string::String>,
         }
 
         impl ::std::default::Default for OxqlQueryResult {
@@ -49813,7 +49818,7 @@ pub mod types {
         impl OxqlQueryResult {
             pub fn tables<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::Table>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::OxqlTable>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.tables = value
@@ -49838,6 +49843,66 @@ pub mod types {
             fn from(value: super::OxqlQueryResult) -> Self {
                 Self {
                     tables: Ok(value.tables),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlTable {
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            timeseries:
+                ::std::result::Result<::std::vec::Vec<super::Timeseries>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for OxqlTable {
+            fn default() -> Self {
+                Self {
+                    name: Err("no value supplied for name".to_string()),
+                    timeseries: Err("no value supplied for timeseries".to_string()),
+                }
+            }
+        }
+
+        impl OxqlTable {
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn timeseries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Timeseries>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.timeseries = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<OxqlTable> for super::OxqlTable {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OxqlTable,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    name: value.name?,
+                    timeseries: value.timeseries?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::OxqlTable> for OxqlTable {
+            fn from(value: super::OxqlTable) -> Self {
+                Self {
+                    name: Ok(value.name),
+                    timeseries: Ok(value.timeseries),
                 }
             }
         }
@@ -56979,70 +57044,6 @@ pub mod types {
                 Self {
                     interface_config_id: Ok(value.interface_config_id),
                     vlan_id: Ok(value.vlan_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct Table {
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            timeseries: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::Timeseries>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for Table {
-            fn default() -> Self {
-                Self {
-                    name: Err("no value supplied for name".to_string()),
-                    timeseries: Err("no value supplied for timeseries".to_string()),
-                }
-            }
-        }
-
-        impl Table {
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn timeseries<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::Timeseries>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.timeseries = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<Table> for super::Table {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: Table,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    name: value.name?,
-                    timeseries: value.timeseries?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::Table> for Table {
-            fn from(value: super::Table) -> Self {
-                Self {
-                    name: Ok(value.name),
-                    timeseries: Ok(value.timeseries),
                 }
             }
         }
