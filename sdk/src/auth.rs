@@ -48,6 +48,7 @@ pub struct ClientConfig {
     timeout: Option<u64>,
     connect_timeout: Option<u64>,
     read_timeout: Option<u64>,
+    user_agent: Option<String>,
 }
 
 #[derive(Clone)]
@@ -71,6 +72,7 @@ impl Default for ClientConfig {
             timeout: None,
             connect_timeout: None,
             read_timeout: None,
+            user_agent: None,
         }
     }
 }
@@ -136,6 +138,12 @@ impl ClientConfig {
     /// Specify the desired client read_timeout in seconds.
     pub fn with_read_timeout(mut self, read_timeout: u64) -> Self {
         self.read_timeout = Some(read_timeout);
+        self
+    }
+
+    /// Specify the user_agent header to be sent by the client.
+    pub fn with_user_agent(mut self, user_agent: String) -> Self {
+        self.user_agent = Some(user_agent);
         self
     }
 
@@ -216,6 +224,7 @@ impl ClientConfig {
             timeout,
             connect_timeout,
             read_timeout,
+            user_agent,
             ..
         } = self;
         const DEFAULT_TIMEOUT: u64 = 15;
@@ -248,6 +257,10 @@ impl ClientConfig {
             client_builder = client_builder
                 .danger_accept_invalid_hostnames(true)
                 .danger_accept_invalid_certs(true);
+        }
+
+        if let Some(user_agent) = user_agent {
+            client_builder = client_builder.user_agent(user_agent);
         }
 
         client_builder
