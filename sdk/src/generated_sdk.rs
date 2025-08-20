@@ -7543,7 +7543,9 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "display_name",
+    ///    "fleet_viewer",
     ///    "id",
+    ///    "silo_admin",
     ///    "silo_id",
     ///    "silo_name"
     ///  ],
@@ -7552,9 +7554,19 @@ pub mod types {
     ///      "description": "Human-readable name that can identify the user",
     ///      "type": "string"
     ///    },
+    ///    "fleet_viewer": {
+    ///      "description": "Whether this user has the viewer role on the fleet. Used by the web console to determine whether to show system-level UI.",
+    ///      "type": "boolean"
+    ///    },
     ///    "id": {
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "silo_admin": {
+    ///      "description": "Whether this user has the admin role on their silo.
+    /// Used by the web console to determine whether to show admin-only UI
+    /// elements.",
+    ///      "type": "boolean"
     ///    },
     ///    "silo_id": {
     ///      "description": "Uuid of the silo to which this user belongs",
@@ -7579,7 +7591,13 @@ pub mod types {
     pub struct CurrentUser {
         /// Human-readable name that can identify the user
         pub display_name: ::std::string::String,
+        /// Whether this user has the viewer role on the fleet. Used by the web
+        /// console to determine whether to show system-level UI.
+        pub fleet_viewer: bool,
         pub id: ::uuid::Uuid,
+        /// Whether this user has the admin role on their silo. Used by the web
+        /// console to determine whether to show admin-only UI elements.
+        pub silo_admin: bool,
         /// Uuid of the silo to which this user belongs
         pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
@@ -40790,7 +40808,9 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct CurrentUser {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            fleet_viewer: ::std::result::Result<bool, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            silo_admin: ::std::result::Result<bool, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -40799,7 +40819,9 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     display_name: Err("no value supplied for display_name".to_string()),
+                    fleet_viewer: Err("no value supplied for fleet_viewer".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    silo_admin: Err("no value supplied for silo_admin".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
                     silo_name: Err("no value supplied for silo_name".to_string()),
                 }
@@ -40817,6 +40839,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn fleet_viewer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.fleet_viewer = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for fleet_viewer: {}", e)
+                });
+                self
+            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::uuid::Uuid>,
@@ -40825,6 +40857,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn silo_admin<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.silo_admin = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_admin: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -40856,7 +40898,9 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     display_name: value.display_name?,
+                    fleet_viewer: value.fleet_viewer?,
                     id: value.id?,
+                    silo_admin: value.silo_admin?,
                     silo_id: value.silo_id?,
                     silo_name: value.silo_name?,
                 })
@@ -40867,7 +40911,9 @@ pub mod types {
             fn from(value: super::CurrentUser) -> Self {
                 Self {
                     display_name: Ok(value.display_name),
+                    fleet_viewer: Ok(value.fleet_viewer),
                     id: Ok(value.id),
+                    silo_admin: Ok(value.silo_admin),
                     silo_id: Ok(value.silo_id),
                     silo_name: Ok(value.silo_name),
                 }
