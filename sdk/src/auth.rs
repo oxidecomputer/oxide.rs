@@ -42,6 +42,7 @@ struct ResolveValue {
 pub struct ClientConfig {
     config_dir: PathBuf,
     auth_method: AuthMethod,
+    user_agent: String,
     resolve: Option<ResolveValue>,
     cert: Option<reqwest::Certificate>,
     insecure: bool,
@@ -65,6 +66,7 @@ impl Default for ClientConfig {
         Self {
             config_dir,
             auth_method: AuthMethod::DefaultProfile,
+            user_agent: format!("{}/{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION")),
             resolve: None,
             cert: None,
             insecure: false,
@@ -136,6 +138,12 @@ impl ClientConfig {
     /// Specify the desired client read_timeout in seconds.
     pub fn with_read_timeout(mut self, read_timeout: u64) -> Self {
         self.read_timeout = Some(read_timeout);
+        self
+    }
+
+    /// Specify the user_agent header to be sent by the client.
+    pub fn with_user_agent(mut self, user_agent: impl ToString) -> Self {
+        self.user_agent = user_agent.to_string();
         self
     }
 
@@ -216,12 +224,13 @@ impl ClientConfig {
             timeout,
             connect_timeout,
             read_timeout,
+            user_agent,
             ..
         } = self;
         const DEFAULT_TIMEOUT: u64 = 15;
 
         let dur = std::time::Duration::from_secs(timeout.unwrap_or(DEFAULT_TIMEOUT));
-        let mut client_builder = ClientBuilder::new().timeout(dur);
+        let mut client_builder = ClientBuilder::new().timeout(dur).user_agent(user_agent);
 
         // Use an explicit connect_timeout if provided, otherwise fallback to
         // timeout or default.

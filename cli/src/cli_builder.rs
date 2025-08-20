@@ -271,7 +271,11 @@ impl<'a> NewCli<'a> {
             .with_span_list(false)
             .init();
 
-        let mut client_config = ClientConfig::default();
+        let mut client_config = ClientConfig::default().with_user_agent(format!(
+            "oxide-cli/{} ({})",
+            crate::cmd_version::built_info::PKG_VERSION,
+            crate::cmd_version::built_info::TARGET
+        ));
 
         if let Some(profile_name) = profile {
             client_config = client_config.with_profile(profile_name);
