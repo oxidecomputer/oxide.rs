@@ -230,7 +230,7 @@ impl ClientConfig {
         const DEFAULT_TIMEOUT: u64 = 15;
 
         let dur = std::time::Duration::from_secs(timeout.unwrap_or(DEFAULT_TIMEOUT));
-        let mut client_builder = ClientBuilder::new().timeout(dur);
+        let mut client_builder = ClientBuilder::new().timeout(dur).user_agent(user_agent);
 
         // Use an explicit connect_timeout if provided, otherwise fallback to
         // timeout or default.
@@ -257,10 +257,6 @@ impl ClientConfig {
             client_builder = client_builder
                 .danger_accept_invalid_hostnames(true)
                 .danger_accept_invalid_certs(true);
-        }
-
-        if let Some(user_agent) = user_agent {
-            client_builder = client_builder.user_agent(user_agent);
         }
 
         client_builder
