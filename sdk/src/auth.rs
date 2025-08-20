@@ -42,13 +42,13 @@ struct ResolveValue {
 pub struct ClientConfig {
     config_dir: PathBuf,
     auth_method: AuthMethod,
+    user_agent: String,
     resolve: Option<ResolveValue>,
     cert: Option<reqwest::Certificate>,
     insecure: bool,
     timeout: Option<u64>,
     connect_timeout: Option<u64>,
     read_timeout: Option<u64>,
-    user_agent: Option<String>,
 }
 
 #[derive(Clone)]
@@ -66,17 +66,13 @@ impl Default for ClientConfig {
         Self {
             config_dir,
             auth_method: AuthMethod::DefaultProfile,
+            user_agent: format!("{}/{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION")),
             resolve: None,
             cert: None,
             insecure: false,
             timeout: None,
             connect_timeout: None,
             read_timeout: None,
-            user_agent: Some(format!(
-                "{} {}",
-                env!("CARGO_PKG_NAME"),
-                env!("CARGO_PKG_VERSION")
-            )),
         }
     }
 }
@@ -147,7 +143,7 @@ impl ClientConfig {
 
     /// Specify the user_agent header to be sent by the client.
     pub fn with_user_agent(mut self, user_agent: impl ToString) -> Self {
-        self.user_agent = Some(user_agent.to_string());
+        self.user_agent = user_agent.to_string();
         self
     }
 
