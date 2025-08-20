@@ -280,8 +280,7 @@ impl GraphState {
         self.t_limits[1] = 0.0;
         self.y_limits = [f64::INFINITY, 0.0];
 
-        // Construct the plotting arrays from the received data. Be sure to
-        // operate on these in the sorted order we determined above.
+        // Construct the plotting arrays from the received data.
         for timeseries in &table.timeseries {
             if timeseries.points.timestamps.is_empty() {
                 self.data_arrays.push(vec![]);
