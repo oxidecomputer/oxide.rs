@@ -29712,6 +29712,13 @@ pub mod types {
     ///    "size"
     ///  ],
     ///  "properties": {
+    ///    "board": {
+    ///      "description": "Contents of the `BORD` field of a Hubris archive caboose. Only applicable to artifacts that are Hubris archives.\n\nThis field should always be `Some(_)` if `sign` is `Some(_)`, but the opposite is not true (SP images will have a `board` but not a `sign`).",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "hash": {
     ///      "description": "The hash of the artifact.",
     ///      "type": "string",
@@ -29754,6 +29761,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TufArtifactMeta {
+        /// Contents of the `BORD` field of a Hubris archive caboose. Only
+        /// applicable to artifacts that are Hubris archives.
+        ///
+        /// This field should always be `Some(_)` if `sign` is `Some(_)`, but
+        /// the opposite is not true (SP images will have a `board` but not a
+        /// `sign`).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub board: ::std::option::Option<::std::string::String>,
         /// The hash of the artifact.
         pub hash: ::std::string::String,
         /// The artifact ID.
@@ -57580,6 +57595,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TufArtifactMeta {
+            board: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             hash: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
             sign: ::std::result::Result<
@@ -57592,6 +57611,7 @@ pub mod types {
         impl ::std::default::Default for TufArtifactMeta {
             fn default() -> Self {
                 Self {
+                    board: Ok(Default::default()),
                     hash: Err("no value supplied for hash".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     sign: Ok(Default::default()),
@@ -57601,6 +57621,16 @@ pub mod types {
         }
 
         impl TufArtifactMeta {
+            pub fn board<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.board = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for board: {}", e));
+                self
+            }
             pub fn hash<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57649,6 +57679,7 @@ pub mod types {
                 value: TufArtifactMeta,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    board: value.board?,
                     hash: value.hash?,
                     id: value.id?,
                     sign: value.sign?,
@@ -57660,6 +57691,7 @@ pub mod types {
         impl ::std::convert::From<super::TufArtifactMeta> for TufArtifactMeta {
             fn from(value: super::TufArtifactMeta) -> Self {
                 Self {
+                    board: Ok(value.board),
                     hash: Ok(value.hash),
                     id: Ok(value.id),
                     sign: Ok(value.sign),
