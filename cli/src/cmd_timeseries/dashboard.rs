@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2024 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 //! Simple TUI dashboard app for display timeseries.
 
@@ -11,7 +11,7 @@ use anyhow::{Context as _, Result};
 use crossterm::event::{Event, EventStream, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use futures::{FutureExt, StreamExt};
 use oxide::{
-    types::{MetricType, Table as OxqlTable, Timeseries, TimeseriesQuery, ValueArray},
+    types::{MetricType, OxqlTable, TimeseriesQuery, ValueArray},
     Client, ClientSystemMetricsExt,
 };
 use ratatui::{
@@ -23,7 +23,7 @@ use ratatui::{
         TableState, Widget,
     },
 };
-use std::{collections::BTreeMap, time::Duration};
+use std::time::Duration;
 use tokio::sync::{mpsc, oneshot};
 
 #[derive(Debug)]
@@ -179,19 +179,19 @@ fn sanity_check_tables(tables: &[OxqlTable]) -> Result<()> {
     anyhow::ensure!(
         table
             .timeseries
-            .values()
+            .iter()
             .all(|ts| ts.points.values.len() == 1),
         "Graphing multidimensional timeseries is not yet supported"
     );
     anyhow::ensure!(
-        table.timeseries.values().all(|ts| matches!(
+        table.timeseries.iter().all(|ts| matches!(
             ts.points.values[0].metric_type,
             MetricType::Delta | MetricType::Gauge
         )),
         "Timeseries must produce delta or gauge data to graph",
     );
     anyhow::ensure!(
-        table.timeseries.values().all(|ts| matches!(
+        table.timeseries.iter().all(|ts| matches!(
             ts.points.values[0].values,
             ValueArray::Double(_) | ValueArray::Integer(_)
         )),
@@ -242,12 +242,10 @@ async fn client_query_loop(
 struct GraphState {
     // The table we've most recently received.
     table: Option<OxqlTable>,
-    // The timeseries keys, sorted by the fields in the relevant timeseries.
-    sorted_timeseries_keys: Vec<String>,
     // The data arrays to be plotted.
     //
     // These are computed every time we receive a table.
-    data_arrays: Vec<(String, Vec<(f64, f64)>)>,
+    data_arrays: Vec<Vec<(f64, f64)>>,
     // The axis limits for each axis.
     t_limits: [f64; 2],
     t_labels: [String; 3],
@@ -282,39 +280,10 @@ impl GraphState {
         self.t_limits[1] = 0.0;
         self.y_limits = [f64::INFINITY, 0.0];
 
-        // Progenitor uses HashMaps in many places, which leads to
-        // less-than-stable sorting because a new random state is used for each
-        // new map. We'll sort things consistently here, by the concatenation of
-        // all the field values, which was the original intent behind the
-        // timeseries key anyway.
-        let mut sorted_timeseries = table.timeseries.iter().collect::<Vec<_>>();
-        fn timeseries_to_sort_key(timeseries: &Timeseries) -> String {
-            // Need to sort the concatenated string by the field _names_, since
-            // that's also not stable.
-            let mut fields = BTreeMap::new();
-            for (key, val) in timeseries.fields.iter() {
-                fields.insert(key, format!("{val:?}"));
-            }
-            let mut key = String::new();
-            for field in fields.into_values() {
-                key.push_str(&field);
-            }
-            key
-        }
-        sorted_timeseries.sort_by(|left, right| {
-            timeseries_to_sort_key(left.1).cmp(&timeseries_to_sort_key(right.1))
-        });
-        self.sorted_timeseries_keys = sorted_timeseries
-            .into_iter()
-            .map(|(k, _v)| k.clone())
-            .collect();
-
-        // Construct the plotting arrays from the received data. Be sure to
-        // operate on these in the sorted order we determined above.
-        for key in self.sorted_timeseries_keys.iter() {
-            let timeseries = table.timeseries.get(key).unwrap();
+        // Construct the plotting arrays from the received data.
+        for timeseries in &table.timeseries {
             if timeseries.points.timestamps.is_empty() {
-                self.data_arrays.push((key.clone(), vec![]));
+                self.data_arrays.push(vec![]);
             }
 
             // For either gauge or delta timeseries, we convert the
@@ -406,7 +375,7 @@ impl GraphState {
                 }
                 _ => unreachable!(),
             };
-            self.data_arrays.push((key.clone(), data));
+            self.data_arrays.push(data);
         }
 
         // If there was not previously a timeseries selected, do so now.
@@ -422,7 +391,7 @@ impl GraphState {
     }
 
     fn update_axis_labels(&mut self) {
-        let Some(timeseries) = self.table.as_ref().unwrap().timeseries.values().next() else {
+        let Some(timeseries) = self.table.as_ref().unwrap().timeseries.first() else {
             self.t_labels.fill(String::new());
             self.y_labels.fill(String::new());
             return;
@@ -501,7 +470,7 @@ impl Widget for TimeseriesGraph<'_> {
             .data_arrays
             .iter()
             .enumerate()
-            .map(|(i, (_key, data))| {
+            .map(|(i, data)| {
                 let ds = Dataset::default()
                     .data(data)
                     .marker(Marker::Dot)
@@ -580,8 +549,7 @@ impl Widget for TimeseriesSchemaTable<'_> {
         let mut n_columns;
         let mut widths = Vec::new();
 
-        for key in self.graph_state.sorted_timeseries_keys.iter() {
-            let timeseries = table.timeseries.get(key).unwrap();
+        for timeseries in &table.timeseries {
             // We also need to sort the columns of each table, again because the
             // hash maps generated by progenitor are not stable.
             let mut items = timeseries
