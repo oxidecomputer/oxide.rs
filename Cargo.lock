@@ -1040,7 +1040,7 @@ dependencies = [
  "slog-bunyan",
  "slog-json",
  "slog-term",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "tokio",
  "tokio-rustls 0.25.0",
  "toml 0.9.5",
@@ -1846,9 +1846,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.10.0"
+version = "2.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe4cd85333e22411419a0bcae1297d25e58c9443848b11dc6a86fefe8c78a661"
+checksum = "f2481980430f9f78649238835720ddccc57e52df14ffce1c6f37391d61b563e9"
 dependencies = [
  "equivalent",
  "hashbrown",
@@ -2510,7 +2510,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "test-common",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "tokio",
  "toml 0.9.5",
  "toml_edit 0.23.4",
@@ -2822,7 +2822,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.11.0"
-source = "git+https://github.com/oxidecomputer/progenitor#b2de7e3edc7170d1c2ea76efde690048e39331fc"
+source = "git+https://github.com/oxidecomputer/progenitor#c6cefe96d9b76cfee8a6a483d7e50690977b2a63"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2845,7 +2845,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.11.0"
-source = "git+https://github.com/oxidecomputer/progenitor#b2de7e3edc7170d1c2ea76efde690048e39331fc"
+source = "git+https://github.com/oxidecomputer/progenitor#c6cefe96d9b76cfee8a6a483d7e50690977b2a63"
 dependencies = [
  "heck",
  "http 1.3.1",
@@ -2858,7 +2858,7 @@ dependencies = [
  "serde",
  "serde_json",
  "syn 2.0.106",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "typify",
  "unicode-ident",
 ]
@@ -2877,7 +2877,7 @@ dependencies = [
  "rustc-hash",
  "rustls 0.23.27",
  "socket2 0.5.10",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "tokio",
  "tracing",
  "web-time",
@@ -2898,7 +2898,7 @@ dependencies = [
  "rustls 0.23.27",
  "rustls-pki-types",
  "slab",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "tinyvec",
  "tracing",
  "web-time",
@@ -3054,7 +3054,7 @@ checksum = "dd6f9d3d47bdd2ad6945c5015a226ec6155d0bcdfd8f7cd29f86b71f8de99d2b"
 dependencies = [
  "getrandom 0.2.16",
  "libredox",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
 ]
 
 [[package]]
@@ -3914,11 +3914,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.15"
+version = "2.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80d76d3f064b981389ecb4b6b7f45a0bf9fdac1d5b9204c7bd6714fecc302850"
+checksum = "3467d614147380f2e4e374161426ff399c91084acd2363eaf549172b3d5e60c0"
 dependencies = [
- "thiserror-impl 2.0.15",
+ "thiserror-impl 2.0.16",
 ]
 
 [[package]]
@@ -3934,9 +3934,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.15"
+version = "2.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44d29feb33e986b6ea906bd9c3559a856983f92371b3eaa5e83782a351623de0"
+checksum = "6c5e1be1c48b9172ee610da68fd9cd2770e7a4056cb3fc98710ee6906f0c7960"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4382,7 +4382,7 @@ checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 [[package]]
 name = "typify"
 version = "0.4.3"
-source = "git+https://github.com/oxidecomputer/typify#22ec2e77e23a2dc740486e0a87afec31f4fd3d46"
+source = "git+https://github.com/oxidecomputer/typify#a4a9f5653d68aca69c7e1e79f7a9f740a255906a"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -4391,7 +4391,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.4.3"
-source = "git+https://github.com/oxidecomputer/typify#22ec2e77e23a2dc740486e0a87afec31f4fd3d46"
+source = "git+https://github.com/oxidecomputer/typify#a4a9f5653d68aca69c7e1e79f7a9f740a255906a"
 dependencies = [
  "heck",
  "log",
@@ -4403,14 +4403,14 @@ dependencies = [
  "serde",
  "serde_json",
  "syn 2.0.106",
- "thiserror 2.0.15",
+ "thiserror 2.0.16",
  "unicode-ident",
 ]
 
 [[package]]
 name = "typify-macro"
 version = "0.4.3"
-source = "git+https://github.com/oxidecomputer/typify#22ec2e77e23a2dc740486e0a87afec31f4fd3d46"
+source = "git+https://github.com/oxidecomputer/typify#a4a9f5653d68aca69c7e1e79f7a9f740a255906a"
 dependencies = [
  "proc-macro2",
  "quote",
