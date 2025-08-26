@@ -66,6 +66,8 @@ impl<'a> MockOAuth<'a> {
                 id: "831dedf4-0a66-4b04-a232-b610f9f8924c".parse().unwrap(),
                 silo_id: "12e8c7a4-399f-41e2-985e-7b120ecbcc1a".parse().unwrap(),
                 silo_name: "crystal-palace".try_into().unwrap(),
+                fleet_viewer: false,
+                silo_admin: false,
             });
         });
         Self {
@@ -465,6 +467,8 @@ fn test_cmd_auth_status() {
             id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
             silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
             silo_name: "funky-town".parse().unwrap(),
+            fleet_viewer: false,
+            silo_admin: false,
         });
     });
     let bad = server.current_user_view(|when, then| {
@@ -531,6 +535,8 @@ fn test_cmd_auth_status_env() {
             id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
             silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
             silo_name: "funky-town".parse().unwrap(),
+            fleet_viewer: false,
+            silo_admin: false,
         });
     });
 
@@ -592,6 +598,8 @@ fn test_cmd_auth_debug_logging() {
             id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
             silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
             silo_name: "funky-town".parse().unwrap(),
+            fleet_viewer: false,
+            silo_admin: false,
         });
     });
 

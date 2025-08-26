@@ -10,7 +10,7 @@ use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use futures::TryStreamExt;
-use oxide::{Client, ClientExperimentalExt};
+use oxide::{Client, ClientSystemUpdateExt};
 use tokio::{fs::File, sync::watch};
 use tokio_util::io::ReaderStream;
 

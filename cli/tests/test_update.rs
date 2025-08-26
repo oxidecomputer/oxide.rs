@@ -31,6 +31,7 @@ fn test_update_upload() {
                     },
                     size: 420 * 1024 * 1024,
                     sign: None,
+                    board: None,
                 }],
                 repo: TufRepoMeta {
                     file_name: String::from("repo"),

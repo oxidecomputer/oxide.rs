@@ -7543,7 +7543,9 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "display_name",
+    ///    "fleet_viewer",
     ///    "id",
+    ///    "silo_admin",
     ///    "silo_id",
     ///    "silo_name"
     ///  ],
@@ -7552,9 +7554,19 @@ pub mod types {
     ///      "description": "Human-readable name that can identify the user",
     ///      "type": "string"
     ///    },
+    ///    "fleet_viewer": {
+    ///      "description": "Whether this user has the viewer role on the fleet. Used by the web console to determine whether to show system-level UI.",
+    ///      "type": "boolean"
+    ///    },
     ///    "id": {
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "silo_admin": {
+    ///      "description": "Whether this user has the admin role on their silo.
+    /// Used by the web console to determine whether to show admin-only UI
+    /// elements.",
+    ///      "type": "boolean"
     ///    },
     ///    "silo_id": {
     ///      "description": "Uuid of the silo to which this user belongs",
@@ -7579,7 +7591,13 @@ pub mod types {
     pub struct CurrentUser {
         /// Human-readable name that can identify the user
         pub display_name: ::std::string::String,
+        /// Whether this user has the viewer role on the fleet. Used by the web
+        /// console to determine whether to show system-level UI.
+        pub fleet_viewer: bool,
         pub id: ::uuid::Uuid,
+        /// Whether this user has the admin role on their silo. Used by the web
+        /// console to determine whether to show admin-only UI elements.
+        pub silo_admin: bool,
         /// Uuid of the silo to which this user belongs
         pub silo_id: ::uuid::Uuid,
         /// Name of the silo to which this user belongs.
@@ -15516,6 +15534,15 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional networks that this interface
+    /// may send and receive traffic on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpNet"
+    ///      }
+    ///    },
     ///    "vpc_name": {
     ///      "description": "The VPC in which to create the interface.",
     ///      "allOf": [
@@ -15540,6 +15567,10 @@ pub mod types {
         pub name: Name,
         /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
+        /// A set of additional networks that this interface may send and
+        /// receive traffic on.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC in which to create the interface.
         pub vpc_name: Name,
     }
@@ -20311,7 +20342,7 @@ pub mod types {
     /// timeseries.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/Table"
+    ///        "$ref": "#/components/schemas/OxqlTable"
     ///      }
     ///    }
     ///  }
@@ -20323,7 +20354,7 @@ pub mod types {
     )]
     pub struct OxqlQueryResult {
         /// Tables resulting from the query, each containing timeseries.
-        pub tables: ::std::vec::Vec<Table>,
+        pub tables: ::std::vec::Vec<OxqlTable>,
     }
 
     impl ::std::convert::From<&OxqlQueryResult> for OxqlQueryResult {
@@ -20334,6 +20365,61 @@ pub mod types {
 
     impl OxqlQueryResult {
         pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
+        }
+    }
+
+    /// A table represents one or more timeseries with the same schema.
+    ///
+    /// A table is the result of an OxQL query. It contains a name, usually the
+    /// name of the timeseries schema from which the data is derived, and any
+    /// number of timeseries, which contain the actual data.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "timeseries"
+    ///  ],
+    ///  "properties": {
+    ///    "name": {
+    ///      "description": "The name of the table.",
+    ///      "type": "string"
+    ///    },
+    ///    "timeseries": {
+    ///      "description": "The set of timeseries in the table, ordered by
+    /// key.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Timeseries"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlTable {
+        /// The name of the table.
+        pub name: ::std::string::String,
+        /// The set of timeseries in the table, ordered by key.
+        pub timeseries: ::std::vec::Vec<Timeseries>,
+    }
+
+    impl ::std::convert::From<&OxqlTable> for OxqlTable {
+        fn from(value: &OxqlTable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlTable {
+        pub fn builder() -> builder::OxqlTable {
             Default::default()
         }
     }
@@ -28878,56 +28964,6 @@ pub mod types {
         }
     }
 
-    /// A table represents one or more timeseries with the same schema.
-    ///
-    /// A table is the result of an OxQL query. It contains a name, usually the
-    /// name of the timeseries schema from which the data is derived, and any
-    /// number of timeseries, which contain the actual data.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "name",
-    ///    "timeseries"
-    ///  ],
-    ///  "properties": {
-    ///    "name": {
-    ///      "type": "string"
-    ///    },
-    ///    "timeseries": {
-    ///      "type": "object",
-    ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/Timeseries"
-    ///      }
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct Table {
-        pub name: ::std::string::String,
-        pub timeseries: ::std::collections::HashMap<::std::string::String, Timeseries>,
-    }
-
-    impl ::std::convert::From<&Table> for Table {
-        fn from(value: &Table) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Table {
-        pub fn builder() -> builder::Table {
-            Default::default()
-        }
-    }
-
     /// View of a system software target release.
     ///
     /// <details><summary>JSON schema</summary>
@@ -29676,6 +29712,13 @@ pub mod types {
     ///    "size"
     ///  ],
     ///  "properties": {
+    ///    "board": {
+    ///      "description": "Contents of the `BORD` field of a Hubris archive caboose. Only applicable to artifacts that are Hubris archives.\n\nThis field should always be `Some(_)` if `sign` is `Some(_)`, but the opposite is not true (SP images will have a `board` but not a `sign`).",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "hash": {
     ///      "description": "The hash of the artifact.",
     ///      "type": "string",
@@ -29718,6 +29761,14 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TufArtifactMeta {
+        /// Contents of the `BORD` field of a Hubris archive caboose. Only
+        /// applicable to artifacts that are Hubris archives.
+        ///
+        /// This field should always be `Some(_)` if `sign` is `Some(_)`, but
+        /// the opposite is not true (SP images will have a `board` but not a
+        /// `sign`).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub board: ::std::option::Option<::std::string::String>,
         /// The hash of the artifact.
         pub hash: ::std::string::String,
         /// The artifact ID.
@@ -40772,7 +40823,9 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct CurrentUser {
             display_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            fleet_viewer: ::std::result::Result<bool, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            silo_admin: ::std::result::Result<bool, ::std::string::String>,
             silo_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             silo_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
@@ -40781,7 +40834,9 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     display_name: Err("no value supplied for display_name".to_string()),
+                    fleet_viewer: Err("no value supplied for fleet_viewer".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    silo_admin: Err("no value supplied for silo_admin".to_string()),
                     silo_id: Err("no value supplied for silo_id".to_string()),
                     silo_name: Err("no value supplied for silo_name".to_string()),
                 }
@@ -40799,6 +40854,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn fleet_viewer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.fleet_viewer = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for fleet_viewer: {}", e)
+                });
+                self
+            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::uuid::Uuid>,
@@ -40807,6 +40872,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn silo_admin<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.silo_admin = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_admin: {}", e));
                 self
             }
             pub fn silo_id<T>(mut self, value: T) -> Self
@@ -40838,7 +40913,9 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     display_name: value.display_name?,
+                    fleet_viewer: value.fleet_viewer?,
                     id: value.id?,
+                    silo_admin: value.silo_admin?,
                     silo_id: value.silo_id?,
                     silo_name: value.silo_name?,
                 })
@@ -40849,7 +40926,9 @@ pub mod types {
             fn from(value: super::CurrentUser) -> Self {
                 Self {
                     display_name: Ok(value.display_name),
+                    fleet_viewer: Ok(value.fleet_viewer),
                     id: Ok(value.id),
+                    silo_admin: Ok(value.silo_admin),
                     silo_id: Ok(value.silo_id),
                     silo_name: Ok(value.silo_name),
                 }
@@ -46101,6 +46180,8 @@ pub mod types {
             >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet_name: ::std::result::Result<super::Name, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
             vpc_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -46111,6 +46192,7 @@ pub mod types {
                     ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     subnet_name: Err("no value supplied for subnet_name".to_string()),
+                    transit_ips: Ok(Default::default()),
                     vpc_name: Err("no value supplied for vpc_name".to_string()),
                 }
             }
@@ -46157,6 +46239,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
                 self
             }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
             pub fn vpc_name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -46181,6 +46273,7 @@ pub mod types {
                     ip: value.ip?,
                     name: value.name?,
                     subnet_name: value.subnet_name?,
+                    transit_ips: value.transit_ips?,
                     vpc_name: value.vpc_name?,
                 })
             }
@@ -46195,6 +46288,7 @@ pub mod types {
                     ip: Ok(value.ip),
                     name: Ok(value.name),
                     subnet_name: Ok(value.subnet_name),
+                    transit_ips: Ok(value.transit_ips),
                     vpc_name: Ok(value.vpc_name),
                 }
             }
@@ -49799,7 +49893,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
-            tables: ::std::result::Result<::std::vec::Vec<super::Table>, ::std::string::String>,
+            tables: ::std::result::Result<::std::vec::Vec<super::OxqlTable>, ::std::string::String>,
         }
 
         impl ::std::default::Default for OxqlQueryResult {
@@ -49813,7 +49907,7 @@ pub mod types {
         impl OxqlQueryResult {
             pub fn tables<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::Table>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::OxqlTable>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.tables = value
@@ -49838,6 +49932,66 @@ pub mod types {
             fn from(value: super::OxqlQueryResult) -> Self {
                 Self {
                     tables: Ok(value.tables),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlTable {
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            timeseries:
+                ::std::result::Result<::std::vec::Vec<super::Timeseries>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for OxqlTable {
+            fn default() -> Self {
+                Self {
+                    name: Err("no value supplied for name".to_string()),
+                    timeseries: Err("no value supplied for timeseries".to_string()),
+                }
+            }
+        }
+
+        impl OxqlTable {
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn timeseries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Timeseries>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.timeseries = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<OxqlTable> for super::OxqlTable {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OxqlTable,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    name: value.name?,
+                    timeseries: value.timeseries?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::OxqlTable> for OxqlTable {
+            fn from(value: super::OxqlTable) -> Self {
+                Self {
+                    name: Ok(value.name),
+                    timeseries: Ok(value.timeseries),
                 }
             }
         }
@@ -56984,70 +57138,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct Table {
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            timeseries: ::std::result::Result<
-                ::std::collections::HashMap<::std::string::String, super::Timeseries>,
-                ::std::string::String,
-            >,
-        }
-
-        impl ::std::default::Default for Table {
-            fn default() -> Self {
-                Self {
-                    name: Err("no value supplied for name".to_string()),
-                    timeseries: Err("no value supplied for timeseries".to_string()),
-                }
-            }
-        }
-
-        impl Table {
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn timeseries<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::collections::HashMap<::std::string::String, super::Timeseries>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.timeseries = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<Table> for super::Table {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: Table,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    name: value.name?,
-                    timeseries: value.timeseries?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::Table> for Table {
-            fn from(value: super::Table) -> Self {
-                Self {
-                    name: Ok(value.name),
-                    timeseries: Ok(value.timeseries),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct TargetRelease {
             generation: ::std::result::Result<i64, ::std::string::String>,
             release_source:
@@ -57505,6 +57595,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TufArtifactMeta {
+            board: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             hash: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
             sign: ::std::result::Result<
@@ -57517,6 +57611,7 @@ pub mod types {
         impl ::std::default::Default for TufArtifactMeta {
             fn default() -> Self {
                 Self {
+                    board: Ok(Default::default()),
                     hash: Err("no value supplied for hash".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     sign: Ok(Default::default()),
@@ -57526,6 +57621,16 @@ pub mod types {
         }
 
         impl TufArtifactMeta {
+            pub fn board<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.board = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for board: {}", e));
+                self
+            }
             pub fn hash<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57574,6 +57679,7 @@ pub mod types {
                 value: TufArtifactMeta,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    board: value.board?,
                     hash: value.hash?,
                     id: value.id?,
                     sign: value.sign?,
@@ -57585,6 +57691,7 @@ pub mod types {
         impl ::std::convert::From<super::TufArtifactMeta> for TufArtifactMeta {
             fn from(value: super::TufArtifactMeta) -> Self {
                 Self {
+                    board: Ok(value.board),
                     hash: Ok(value.hash),
                     id: Ok(value.id),
                     sign: Ok(value.sign),
@@ -62481,132 +62588,6 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList<'_>;
-    /// Upload system release repository
-    ///
-    /// System release repositories are verified by the updates trust store.
-    ///
-    /// Sends a `PUT` request to `/v1/system/update/repository`
-    ///
-    /// Arguments:
-    /// - `file_name`: The name of the uploaded file.
-    /// - `body`
-    /// ```ignore
-    /// let response = client.system_update_put_repository()
-    ///    .file_name(file_name)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_>;
-    /// Fetch system release repository description by version
-    ///
-    /// Sends a `GET` request to `/v1/system/update/repository/{system_version}`
-    ///
-    /// Arguments:
-    /// - `system_version`: The version to get.
-    /// ```ignore
-    /// let response = client.system_update_get_repository()
-    ///    .system_version(system_version)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_>;
-    /// Get the current target release of the rack's system software
-    ///
-    /// This may not correspond to the actual software running on the rack at
-    /// the time of request; it is instead the release that the rack
-    /// reconfigurator should be moving towards as a goal state. After some
-    /// number of planning and execution phases, the software running on the
-    /// rack should eventually correspond to the release described here.
-    ///
-    /// Sends a `GET` request to `/v1/system/update/target-release`
-    ///
-    /// ```ignore
-    /// let response = client.target_release_view()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_>;
-    /// Set the current target release of the rack's system software
-    ///
-    /// The rack reconfigurator will treat the software specified here as a goal
-    /// state for the rack's software, and attempt to asynchronously update to
-    /// that release.
-    ///
-    /// Sends a `PUT` request to `/v1/system/update/target-release`
-    ///
-    /// ```ignore
-    /// let response = client.target_release_update()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_>;
-    /// List root roles in the updates trust store
-    ///
-    /// A root role is a JSON document describing the cryptographic keys that
-    /// are trusted to sign system release repositories, as described by The
-    /// Update Framework. Uploading a repository requires its metadata to be
-    /// signed by keys trusted by the trust store.
-    ///
-    /// Sends a `GET` request to `/v1/system/update/trust-roots`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.system_update_trust_root_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList<'_>;
-    /// Add trusted root role to updates trust store
-    ///
-    /// Sends a `POST` request to `/v1/system/update/trust-roots`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_trust_root_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate<'_>;
-    /// Fetch trusted root role
-    ///
-    /// Sends a `GET` request to `/v1/system/update/trust-roots/{trust_root_id}`
-    ///
-    /// Arguments:
-    /// - `trust_root_id`: ID of the trust root
-    /// ```ignore
-    /// let response = client.system_update_trust_root_view()
-    ///    .trust_root_id(trust_root_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView<'_>;
-    /// Delete trusted root role
-    ///
-    /// Note that this method does not currently check for any uploaded system
-    /// release repositories that would become untrusted after deleting the root
-    /// role.
-    ///
-    /// Sends a `DELETE` request to
-    /// `/v1/system/update/trust-roots/{trust_root_id}`
-    ///
-    /// Arguments:
-    /// - `trust_root_id`: ID of the trust root
-    /// ```ignore
-    /// let response = client.system_update_trust_root_delete()
-    ///    .trust_root_id(trust_root_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete<'_>;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -62725,38 +62706,6 @@ impl ClientExperimentalExt for Client {
 
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList<'_> {
         builder::InstanceAffinityGroupList::new(self)
-    }
-
-    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_> {
-        builder::SystemUpdatePutRepository::new(self)
-    }
-
-    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_> {
-        builder::SystemUpdateGetRepository::new(self)
-    }
-
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_> {
-        builder::TargetReleaseView::new(self)
-    }
-
-    fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_> {
-        builder::TargetReleaseUpdate::new(self)
-    }
-
-    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList<'_> {
-        builder::SystemUpdateTrustRootList::new(self)
-    }
-
-    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate<'_> {
-        builder::SystemUpdateTrustRootCreate::new(self)
-    }
-
-    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView<'_> {
-        builder::SystemUpdateTrustRootView::new(self)
-    }
-
-    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete<'_> {
-        builder::SystemUpdateTrustRootDelete::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery<'_> {
@@ -66559,6 +66508,170 @@ pub trait ClientSystemStatusExt {
 impl ClientSystemStatusExt for Client {
     fn ping(&self) -> builder::Ping<'_> {
         builder::Ping::new(self)
+    }
+}
+
+/// Upload and manage system updates
+pub trait ClientSystemUpdateExt {
+    /// Upload system release repository
+    ///
+    /// System release repositories are verified by the updates trust store.
+    ///
+    /// Sends a `PUT` request to `/v1/system/update/repository`
+    ///
+    /// Arguments:
+    /// - `file_name`: The name of the uploaded file.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.system_update_put_repository()
+    ///    .file_name(file_name)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_>;
+    /// Fetch system release repository description by version
+    ///
+    /// Sends a `GET` request to `/v1/system/update/repository/{system_version}`
+    ///
+    /// Arguments:
+    /// - `system_version`: The version to get.
+    /// ```ignore
+    /// let response = client.system_update_get_repository()
+    ///    .system_version(system_version)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_>;
+    /// Get the current target release of the rack's system software
+    ///
+    /// This may not correspond to the actual software running on the rack at
+    /// the time of request; it is instead the release that the rack
+    /// reconfigurator should be moving towards as a goal state. After some
+    /// number of planning and execution phases, the software running on the
+    /// rack should eventually correspond to the release described here.
+    ///
+    /// Sends a `GET` request to `/v1/system/update/target-release`
+    ///
+    /// ```ignore
+    /// let response = client.target_release_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn target_release_view(&self) -> builder::TargetReleaseView<'_>;
+    /// Set the current target release of the rack's system software
+    ///
+    /// The rack reconfigurator will treat the software specified here as a goal
+    /// state for the rack's software, and attempt to asynchronously update to
+    /// that release.
+    ///
+    /// Sends a `PUT` request to `/v1/system/update/target-release`
+    ///
+    /// ```ignore
+    /// let response = client.target_release_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_>;
+    /// List root roles in the updates trust store
+    ///
+    /// A root role is a JSON document describing the cryptographic keys that
+    /// are trusted to sign system release repositories, as described by The
+    /// Update Framework. Uploading a repository requires its metadata to be
+    /// signed by keys trusted by the trust store.
+    ///
+    /// Sends a `GET` request to `/v1/system/update/trust-roots`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.system_update_trust_root_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList<'_>;
+    /// Add trusted root role to updates trust store
+    ///
+    /// Sends a `POST` request to `/v1/system/update/trust-roots`
+    ///
+    /// ```ignore
+    /// let response = client.system_update_trust_root_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate<'_>;
+    /// Fetch trusted root role
+    ///
+    /// Sends a `GET` request to `/v1/system/update/trust-roots/{trust_root_id}`
+    ///
+    /// Arguments:
+    /// - `trust_root_id`: ID of the trust root
+    /// ```ignore
+    /// let response = client.system_update_trust_root_view()
+    ///    .trust_root_id(trust_root_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView<'_>;
+    /// Delete trusted root role
+    ///
+    /// Note that this method does not currently check for any uploaded system
+    /// release repositories that would become untrusted after deleting the root
+    /// role.
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/update/trust-roots/{trust_root_id}`
+    ///
+    /// Arguments:
+    /// - `trust_root_id`: ID of the trust root
+    /// ```ignore
+    /// let response = client.system_update_trust_root_delete()
+    ///    .trust_root_id(trust_root_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete<'_>;
+}
+
+impl ClientSystemUpdateExt for Client {
+    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_> {
+        builder::SystemUpdatePutRepository::new(self)
+    }
+
+    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_> {
+        builder::SystemUpdateGetRepository::new(self)
+    }
+
+    fn target_release_view(&self) -> builder::TargetReleaseView<'_> {
+        builder::TargetReleaseView::new(self)
+    }
+
+    fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_> {
+        builder::TargetReleaseUpdate::new(self)
+    }
+
+    fn system_update_trust_root_list(&self) -> builder::SystemUpdateTrustRootList<'_> {
+        builder::SystemUpdateTrustRootList::new(self)
+    }
+
+    fn system_update_trust_root_create(&self) -> builder::SystemUpdateTrustRootCreate<'_> {
+        builder::SystemUpdateTrustRootCreate::new(self)
+    }
+
+    fn system_update_trust_root_view(&self) -> builder::SystemUpdateTrustRootView<'_> {
+        builder::SystemUpdateTrustRootView::new(self)
+    }
+
+    fn system_update_trust_root_delete(&self) -> builder::SystemUpdateTrustRootDelete<'_> {
+        builder::SystemUpdateTrustRootDelete::new(self)
     }
 }
 
@@ -92134,9 +92247,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_put_repository`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_put_repository`]
     ///
-    /// [`ClientExperimentalExt::system_update_put_repository`]: super::ClientExperimentalExt::system_update_put_repository
+    /// [`ClientSystemUpdateExt::system_update_put_repository`]: super::ClientSystemUpdateExt::system_update_put_repository
     #[derive(Debug)]
     pub struct SystemUpdatePutRepository<'a> {
         client: &'a super::Client,
@@ -92226,9 +92339,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_get_repository`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_get_repository`]
     ///
-    /// [`ClientExperimentalExt::system_update_get_repository`]: super::ClientExperimentalExt::system_update_get_repository
+    /// [`ClientSystemUpdateExt::system_update_get_repository`]: super::ClientSystemUpdateExt::system_update_get_repository
     #[derive(Debug, Clone)]
     pub struct SystemUpdateGetRepository<'a> {
         client: &'a super::Client,
@@ -92304,9 +92417,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::target_release_view`]
+    /// Builder for [`ClientSystemUpdateExt::target_release_view`]
     ///
-    /// [`ClientExperimentalExt::target_release_view`]: super::ClientExperimentalExt::target_release_view
+    /// [`ClientSystemUpdateExt::target_release_view`]: super::ClientSystemUpdateExt::target_release_view
     #[derive(Debug, Clone)]
     pub struct TargetReleaseView<'a> {
         client: &'a super::Client,
@@ -92358,9 +92471,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::target_release_update`]
+    /// Builder for [`ClientSystemUpdateExt::target_release_update`]
     ///
-    /// [`ClientExperimentalExt::target_release_update`]: super::ClientExperimentalExt::target_release_update
+    /// [`ClientSystemUpdateExt::target_release_update`]: super::ClientSystemUpdateExt::target_release_update
     #[derive(Debug, Clone)]
     pub struct TargetReleaseUpdate<'a> {
         client: &'a super::Client,
@@ -92444,9 +92557,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_trust_root_list`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_trust_root_list`]
     ///
-    /// [`ClientExperimentalExt::system_update_trust_root_list`]: super::ClientExperimentalExt::system_update_trust_root_list
+    /// [`ClientSystemUpdateExt::system_update_trust_root_list`]: super::ClientSystemUpdateExt::system_update_trust_root_list
     #[derive(Debug, Clone)]
     pub struct SystemUpdateTrustRootList<'a> {
         client: &'a super::Client,
@@ -92598,9 +92711,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_trust_root_create`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_trust_root_create`]
     ///
-    /// [`ClientExperimentalExt::system_update_trust_root_create`]: super::ClientExperimentalExt::system_update_trust_root_create
+    /// [`ClientSystemUpdateExt::system_update_trust_root_create`]: super::ClientSystemUpdateExt::system_update_trust_root_create
     #[derive(Debug, Clone)]
     pub struct SystemUpdateTrustRootCreate<'a> {
         client: &'a super::Client,
@@ -92668,9 +92781,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_trust_root_view`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_trust_root_view`]
     ///
-    /// [`ClientExperimentalExt::system_update_trust_root_view`]: super::ClientExperimentalExt::system_update_trust_root_view
+    /// [`ClientSystemUpdateExt::system_update_trust_root_view`]: super::ClientSystemUpdateExt::system_update_trust_root_view
     #[derive(Debug, Clone)]
     pub struct SystemUpdateTrustRootView<'a> {
         client: &'a super::Client,
@@ -92745,9 +92858,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientExperimentalExt::system_update_trust_root_delete`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_trust_root_delete`]
     ///
-    /// [`ClientExperimentalExt::system_update_trust_root_delete`]: super::ClientExperimentalExt::system_update_trust_root_delete
+    /// [`ClientSystemUpdateExt::system_update_trust_root_delete`]: super::ClientSystemUpdateExt::system_update_trust_root_delete
     #[derive(Debug, Clone)]
     pub struct SystemUpdateTrustRootDelete<'a> {
         client: &'a super::Client,
@@ -97804,6 +97917,7 @@ pub mod prelude {
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
+    pub use super::ClientSystemUpdateExt;
     pub use super::ClientTokensExt;
     pub use super::ClientVpcsExt;
 }
