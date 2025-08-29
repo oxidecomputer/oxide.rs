@@ -69,7 +69,7 @@ tokio-util = "0.7.16"
 toml = "0.9.5"
 toml_edit = "0.23.4"
 tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
+tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
 url = "2.5.4"
 uuid = { version = "1.18.0", features = ["serde", "v4"] }
 
