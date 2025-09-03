@@ -932,7 +932,8 @@ pub mod types {
     ///          ],
     ///          "properties": {
     ///            "id": {
-    ///              "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///              "type": "string",
+    ///              "format": "uuid"
     ///            },
     ///            "name": {
     ///              "$ref": "#/components/schemas/Name"
@@ -958,7 +959,7 @@ pub mod types {
         /// Instances can belong to up to 16 affinity groups.
         #[serde(rename = "instance")]
         Instance {
-            id: TypedUuidForInstanceKind,
+            id: ::uuid::Uuid,
             name: Name,
             run_state: InstanceState,
         },
@@ -1421,11 +1422,8 @@ pub mod types {
     ///    },
     ///    "alert_id": {
     ///      "description": "The UUID of the event.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TypedUuidForAlertKind"
-    ///        }
-    ///      ]
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    },
     ///    "attempts": {
     ///      "description": "Individual attempts to deliver this webhook event,
@@ -1444,11 +1442,8 @@ pub mod types {
     ///    "receiver_id": {
     ///      "description": "The UUID of the alert receiver that this event was
     /// delivered to.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TypedUuidForAlertReceiverKind"
-    ///        }
-    ///      ]
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    },
     ///    "state": {
     ///      "description": "The state of this delivery.",
@@ -1483,14 +1478,14 @@ pub mod types {
         /// The event class.
         pub alert_class: ::std::string::String,
         /// The UUID of the event.
-        pub alert_id: TypedUuidForAlertKind,
+        pub alert_id: ::uuid::Uuid,
         /// Individual attempts to deliver this webhook event, and their
         /// outcomes.
         pub attempts: AlertDeliveryAttempts,
         /// The UUID of this delivery attempt.
         pub id: ::uuid::Uuid,
         /// The UUID of the alert receiver that this event was delivered to.
-        pub receiver_id: TypedUuidForAlertReceiverKind,
+        pub receiver_id: ::uuid::Uuid,
         /// The state of this delivery.
         pub state: AlertDeliveryState,
         /// The time at which this delivery began (i.e. the event was dispatched
@@ -2741,7 +2736,8 @@ pub mod types {
     ///          ],
     ///          "properties": {
     ///            "id": {
-    ///              "$ref": "#/components/schemas/TypedUuidForInstanceKind"
+    ///              "type": "string",
+    ///              "format": "uuid"
     ///            },
     ///            "name": {
     ///              "$ref": "#/components/schemas/Name"
@@ -2767,7 +2763,7 @@ pub mod types {
         /// Instances can belong to up to 16 anti-affinity groups.
         #[serde(rename = "instance")]
         Instance {
-            id: TypedUuidForInstanceKind,
+            id: ::uuid::Uuid,
             name: Name,
             run_state: InstanceState,
         },
@@ -26395,7 +26391,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "id": {
-    ///      "$ref": "#/components/schemas/TypedUuidForSupportBundleKind"
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    },
     ///    "reason_for_creation": {
     ///      "type": "string"
@@ -26427,7 +26424,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct SupportBundleInfo {
-        pub id: TypedUuidForSupportBundleKind,
+        pub id: ::uuid::Uuid,
         pub reason_for_creation: ::std::string::String,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub reason_for_failure: ::std::option::Option<::std::string::String>,
@@ -30453,306 +30450,6 @@ pub mod types {
     impl TxEqConfig2 {
         pub fn builder() -> builder::TxEqConfig2 {
             Default::default()
-        }
-    }
-
-    /// `TypedUuidForAlertKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForAlertKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForAlertKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForAlertKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForAlertKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForAlertKind> for TypedUuidForAlertKind {
-        fn from(value: &TypedUuidForAlertKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForAlertKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForAlertKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForAlertKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForAlertKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForAlertKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForAlertKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
-    /// `TypedUuidForAlertReceiverKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForAlertReceiverKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForAlertReceiverKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForAlertReceiverKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForAlertReceiverKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForAlertReceiverKind> for TypedUuidForAlertReceiverKind {
-        fn from(value: &TypedUuidForAlertReceiverKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForAlertReceiverKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForAlertReceiverKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForAlertReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForAlertReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForAlertReceiverKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForAlertReceiverKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
-    /// `TypedUuidForInstanceKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForInstanceKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForInstanceKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForInstanceKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForInstanceKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForInstanceKind> for TypedUuidForInstanceKind {
-        fn from(value: &TypedUuidForInstanceKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForInstanceKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForInstanceKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForInstanceKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForInstanceKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForInstanceKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForInstanceKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
-        }
-    }
-
-    /// `TypedUuidForSupportBundleKind`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(transparent)]
-    pub struct TypedUuidForSupportBundleKind(pub ::uuid::Uuid);
-    impl ::std::ops::Deref for TypedUuidForSupportBundleKind {
-        type Target = ::uuid::Uuid;
-        fn deref(&self) -> &::uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<TypedUuidForSupportBundleKind> for ::uuid::Uuid {
-        fn from(value: TypedUuidForSupportBundleKind) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&TypedUuidForSupportBundleKind> for TypedUuidForSupportBundleKind {
-        fn from(value: &TypedUuidForSupportBundleKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<::uuid::Uuid> for TypedUuidForSupportBundleKind {
-        fn from(value: ::uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl ::std::str::FromStr for TypedUuidForSupportBundleKind {
-        type Err = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TypedUuidForSupportBundleKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &str) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&String> for TypedUuidForSupportBundleKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: &String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<String> for TypedUuidForSupportBundleKind {
-        type Error = <::uuid::Uuid as ::std::str::FromStr>::Err;
-        fn try_from(value: String) -> ::std::result::Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ::std::fmt::Display for TypedUuidForSupportBundleKind {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            self.0.fmt(f)
         }
     }
 
@@ -36414,11 +36111,10 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct AlertDelivery {
             alert_class: ::std::result::Result<::std::string::String, ::std::string::String>,
-            alert_id: ::std::result::Result<super::TypedUuidForAlertKind, ::std::string::String>,
+            alert_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             attempts: ::std::result::Result<super::AlertDeliveryAttempts, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            receiver_id:
-                ::std::result::Result<super::TypedUuidForAlertReceiverKind, ::std::string::String>,
+            receiver_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             state: ::std::result::Result<super::AlertDeliveryState, ::std::string::String>,
             time_started: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -36455,7 +36151,7 @@ pub mod types {
             }
             pub fn alert_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::TypedUuidForAlertKind>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.alert_id = value
@@ -36485,7 +36181,7 @@ pub mod types {
             }
             pub fn receiver_id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::TypedUuidForAlertReceiverKind>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.receiver_id = value
@@ -55038,7 +54734,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SupportBundleInfo {
-            id: ::std::result::Result<super::TypedUuidForSupportBundleKind, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             reason_for_creation:
                 ::std::result::Result<::std::string::String, ::std::string::String>,
             reason_for_failure: ::std::result::Result<
@@ -55074,7 +54770,7 @@ pub mod types {
         impl SupportBundleInfo {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::TypedUuidForSupportBundleKind>,
+                T: ::std::convert::TryInto<::uuid::Uuid>,
                 T::Error: ::std::fmt::Display,
             {
                 self.id = value
