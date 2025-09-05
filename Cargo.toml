@@ -25,7 +25,7 @@ colored = "3.0.0"
 crossterm = { version = "0.29.0", features = [ "event-stream" ] }
 dialoguer = "0.11.0"
 dirs = "6.0.0"
-dropshot = "0.16.3"
+dropshot = "0.16.4"
 env_logger = "0.11.8"
 expectorate = { version = "1.2.0", features = ["predicates"] }
 flume = "0.11.1"
