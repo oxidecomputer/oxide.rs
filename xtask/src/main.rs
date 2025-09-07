@@ -2,16 +2,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 
-use std::{fs::File, io::Write, path::PathBuf, time::Instant};
+use std::{collections::HashSet, fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
 use newline_converter::dos2unix;
+use proc_macro2::TokenStream;
 use progenitor::{GenerationSettings, Generator, TagStyle};
+use quote::{quote, ToTokens};
 use similar::{Algorithm, ChangeTag, TextDiff};
+use syn::{
+    GenericArgument, ImplItem, Item, ItemImpl, PathArguments, PathSegment, ReturnType, Type,
+};
 
 #[derive(Parser)]
 #[command(name = "xtask")]
@@ -87,7 +92,7 @@ fn generate(
         std::io::stdout().flush().unwrap();
 
         let code = generator.generate_tokens(&spec).unwrap();
-        let contents = format_code(code.to_string());
+        let contents = format_code(code.clone().to_string());
         loc += contents.matches('\n').count();
 
         let mut out_path = root_path.clone();
@@ -96,6 +101,18 @@ fn generate(
         out_path.push("generated_sdk.rs");
 
         error |= output_contents(check, out_path, contents, verbose).is_err();
+
+        let ret_types = generate_return_types(code);
+        let ret_contents = format_code(ret_types.to_string());
+        loc += ret_contents.matches('\n').count();
+
+        let mut ret_out_path = root_path.clone();
+        ret_out_path.push("cli");
+        ret_out_path.push("tests");
+        ret_out_path.push("data");
+        ret_out_path.push("api_return_types.rs");
+
+        error |= output_contents(check, ret_out_path, ret_contents, verbose).is_err();
     }
 
     // SDK httpmock library
@@ -122,7 +139,7 @@ fn generate(
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
-        let mut out_path = root_path;
+        let mut out_path = root_path.clone();
         out_path.push("cli");
         out_path.push("src");
         out_path.push("generated_cli.rs");
@@ -141,6 +158,140 @@ fn generate(
         Err("Generated code is out of date relative to oxide.json".to_string())
     } else {
         Ok(())
+    }
+}
+
+/// For testing purposes, generate the schemas for all unique types returned by the
+/// `send` method.
+fn generate_return_types(tokens: TokenStream) -> TokenStream {
+    let file: syn::File = syn::parse2(tokens).unwrap();
+
+    // Get the `builder` mod.
+    let builder = file
+        .items
+        .iter()
+        .filter_map(|i| match i {
+            Item::Mod(module) if module.ident == "builder" => Some(module),
+            _ => None,
+        })
+        .next()
+        .unwrap();
+
+    let Some((_, builder_content)) = &builder.content else {
+        unreachable!("no items in mod 'builder'");
+    };
+
+    let mut return_types = Vec::new();
+    let mut types_as_string = HashSet::new();
+
+    // Find inherent impl blocks for structs, then find the return types from `fn send`.
+    for impl_item in builder_content.iter().filter_map(|i| match i {
+        Item::Impl(ItemImpl {
+            items,
+            trait_: None,
+            ..
+        }) => Some(items),
+        _ => None,
+    }) {
+        for method in impl_item.iter().filter_map(|i| match i {
+            ImplItem::Fn(method) if method.sig.ident == "send" => Some(method),
+            _ => None,
+        }) {
+            if let ReturnType::Type(_, ty) = &method.sig.output {
+                if let Some(return_type) = extract_response_value_inner_type(ty) {
+                    // We want to remove duplcates, but `TokenStream` cannot be inserted
+                    // into a `HashSet`. Convert to a `String`.
+                    if types_as_string.insert(return_type.to_string()) {
+                        return_types.push(return_type);
+                    }
+                }
+            }
+        }
+    }
+
+    let schemas = return_types.into_iter().map(|ty| {
+        quote! {
+            (stringify!(oxide::#ty), schemars::schema_for!(oxide::#ty))
+        }
+    });
+
+    quote! {
+        pub fn schemas() -> Vec<(&'static str, schemars::schema::RootSchema)> {
+            vec![
+                #(#schemas),*
+            ]
+        }
+    }
+}
+
+/// Extract the Oxide success type returned by `send`.
+/// For example, `types::Vpc` in `Result<ResponseValue<types::Vpc>, Error>`.
+fn extract_response_value_inner_type(ty: &Type) -> Option<TokenStream> {
+    let Type::Path(type_path) = ty else {
+        return None;
+    };
+
+    // Extract `Result<ResponseValue<T>, _>`.
+    let result_args = type_path
+        .path
+        .segments
+        .last()
+        .filter(|s| s.ident == "Result")
+        .and_then(|s| match &s.arguments {
+            PathArguments::AngleBracketed(args) => Some(args),
+            _ => None,
+        })?;
+
+    // Extract `ResponseValue<T>`.
+    let GenericArgument::Type(Type::Path(ok_path)) = result_args.args.first()? else {
+        return None;
+    };
+    let response_args = ok_path
+        .path
+        .segments
+        .last()
+        .filter(|s| s.ident == "ResponseValue")
+        .and_then(|s| match &s.arguments {
+            PathArguments::AngleBracketed(args) => Some(args),
+            _ => None,
+        })?;
+
+    // Extract inner type `T`.
+    let GenericArgument::Type(Type::Path(inner_path)) = response_args.args.first()? else {
+        return None;
+    };
+
+    // Handle container types (e.g., `Vec<types::Item>`) or direct `types::Item`.
+    match inner_path.path.segments.last()? {
+        PathSegment {
+            arguments: PathArguments::AngleBracketed(args),
+            ..
+        } => {
+            // Container type - extract the inner type.
+            let GenericArgument::Type(Type::Path(contained)) = args.args.first()? else {
+                return None;
+            };
+            // Verify it starts with "types::".
+            contained
+                .path
+                .segments
+                .first()
+                .filter(|s| s.ident == "types")
+                .map(|_| contained.path.to_token_stream())
+        }
+        PathSegment {
+            arguments: PathArguments::None,
+            ..
+        } => {
+            // Direct type - verify it starts with "types::".
+            inner_path
+                .path
+                .segments
+                .first()
+                .filter(|s| s.ident == "types")
+                .map(|_| inner_path.path.to_token_stream())
+        }
+        _ => None,
     }
 }
 
