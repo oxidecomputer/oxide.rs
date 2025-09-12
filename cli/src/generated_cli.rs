@@ -5351,6 +5351,19 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("The IP version of the pool.\n\nThe default is IPv4."),
+            )
+            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -14590,6 +14603,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.ip_pool_create();
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.body_map(|body| body.ip_version(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
