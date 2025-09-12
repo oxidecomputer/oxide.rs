@@ -3989,6 +3989,14 @@
               "long": "description"
             },
             {
+              "long": "ip-version",
+              "values": [
+                "v4",
+                "v6"
+              ],
+              "help": "The IP version of the pool.\n\nThe default is IPv4."
+            },
+            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },

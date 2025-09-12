@@ -16960,6 +16960,7 @@ pub mod types {
     ///  "required": [
     ///    "description",
     ///    "id",
+    ///    "ip_version",
     ///    "name",
     ///    "time_created",
     ///    "time_modified"
@@ -16974,6 +16975,14 @@ pub mod types {
     /// each resource",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version for the pool.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
@@ -17006,6 +17015,8 @@ pub mod types {
         pub description: ::std::string::String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
+        /// The IP version for the pool.
+        pub ip_version: IpVersion,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -17042,6 +17053,16 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
+    ///    "ip_version": {
+    ///      "description": "The IP version of the pool.\n\nThe default is
+    /// IPv4.",
+    ///      "default": "v4",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpVersion"
+    ///        }
+    ///      ]
+    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
@@ -17054,6 +17075,11 @@ pub mod types {
     )]
     pub struct IpPoolCreate {
         pub description: ::std::string::String,
+        /// The IP version of the pool.
+        ///
+        /// The default is IPv4.
+        #[serde(default = "defaults::ip_pool_create_ip_version")]
+        pub ip_version: IpVersion,
         pub name: Name,
     }
 
@@ -17503,35 +17529,41 @@ pub mod types {
         }
     }
 
-    /// `IpPoolUtilization`
+    /// The utilization of IP addresses in a pool.
+    ///
+    /// Note that both the count of remaining addresses and the total capacity
+    /// are integers, reported as floating point numbers. This accommodates
+    /// allocations larger than a 64-bit integer, which is common with IPv6
+    /// address spaces. With very large IP Pools (> 2**53 addresses), integer
+    /// precision will be lost, in exchange for representing the entire range.
+    /// In such a case the pool still has many available addresses.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
+    ///  "description": "The utilization of IP addresses in a pool.\n\nNote that
+    /// both the count of remaining addresses and the total capacity are
+    /// integers, reported as floating point numbers. This accommodates
+    /// allocations larger than a 64-bit integer, which is common with IPv6
+    /// address spaces. With very large IP Pools (> 2**53 addresses), integer
+    /// precision will be lost, in exchange for representing the entire range.
+    /// In such a case the pool still has many available addresses.",
     ///  "type": "object",
     ///  "required": [
-    ///    "ipv4",
-    ///    "ipv6"
+    ///    "capacity",
+    ///    "remaining"
     ///  ],
     ///  "properties": {
-    ///    "ipv4": {
-    ///      "description": "Number of allocated and total available IPv4
-    /// addresses in pool",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv4Utilization"
-    ///        }
-    ///      ]
+    ///    "capacity": {
+    ///      "description": "The total number of addresses in the pool.",
+    ///      "type": "number",
+    ///      "format": "double"
     ///    },
-    ///    "ipv6": {
-    ///      "description": "Number of allocated and total available IPv6
-    /// addresses in pool",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/Ipv6Utilization"
-    ///        }
-    ///      ]
+    ///    "remaining": {
+    ///      "description": "The number of remaining addresses in the pool.",
+    ///      "type": "number",
+    ///      "format": "double"
     ///    }
     ///  }
     /// }
@@ -17541,10 +17573,8 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct IpPoolUtilization {
-        /// Number of allocated and total available IPv4 addresses in pool
-        pub ipv4: Ipv4Utilization,
-        /// Number of allocated and total available IPv6 addresses in pool
-        pub ipv6: Ipv6Utilization,
+        pub capacity: f64,
+        pub remaining: f64,
     }
 
     impl ::std::convert::From<&IpPoolUtilization> for IpPoolUtilization {
@@ -17610,6 +17640,92 @@ pub mod types {
     impl ::std::convert::From<Ipv6Range> for IpRange {
         fn from(value: Ipv6Range) -> Self {
             Self::V6(value)
+        }
+    }
+
+    /// The IP address version.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The IP address version.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "v4",
+    ///    "v6"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum IpVersion {
+        #[serde(rename = "v4")]
+        V4,
+        #[serde(rename = "v6")]
+        V6,
+    }
+
+    impl ::std::convert::From<&Self> for IpVersion {
+        fn from(value: &IpVersion) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for IpVersion {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::V4 => f.write_str("v4"),
+                Self::V6 => f.write_str("v6"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for IpVersion {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "v4" => Ok(Self::V4),
+                "v6" => Ok(Self::V6),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for IpVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for IpVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for IpVersion {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -17775,59 +17891,6 @@ pub mod types {
 
     impl Ipv4Range {
         pub fn builder() -> builder::Ipv4Range {
-            Default::default()
-        }
-    }
-
-    /// `Ipv4Utilization`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allocated",
-    ///    "capacity"
-    ///  ],
-    ///  "properties": {
-    ///    "allocated": {
-    ///      "description": "The number of IPv4 addresses allocated from this
-    /// pool",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "capacity": {
-    ///      "description": "The total number of IPv4 addresses in the pool, i.e., the sum of the lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit integer because there are only 2^32 IPv4 addresses.",
-    ///      "type": "integer",
-    ///      "format": "uint32",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct Ipv4Utilization {
-        /// The number of IPv4 addresses allocated from this pool
-        pub allocated: u32,
-        /// The total number of IPv4 addresses in the pool, i.e., the sum of the
-        /// lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit
-        /// integer because there are only 2^32 IPv4 addresses.
-        pub capacity: u32,
-    }
-
-    impl ::std::convert::From<&Ipv4Utilization> for Ipv4Utilization {
-        fn from(value: &Ipv4Utilization) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Ipv4Utilization {
-        pub fn builder() -> builder::Ipv4Utilization {
             Default::default()
         }
     }
@@ -18019,62 +18082,6 @@ pub mod types {
 
     impl Ipv6Range {
         pub fn builder() -> builder::Ipv6Range {
-            Default::default()
-        }
-    }
-
-    /// `Ipv6Utilization`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allocated",
-    ///    "capacity"
-    ///  ],
-    ///  "properties": {
-    ///    "allocated": {
-    ///      "description": "The number of IPv6 addresses allocated from this
-    /// pool. A 128-bit integer string to match the capacity field.",
-    ///      "type": "string",
-    ///      "format": "uint128"
-    ///    },
-    ///    "capacity": {
-    ///      "description": "The total number of IPv6 addresses in the pool,
-    /// i.e., the sum of the lengths of the IPv6 ranges. An IPv6 range can
-    /// contain up to 2^128 addresses, so we represent this value in JSON as a
-    /// numeric string with a custom \"uint128\" format.",
-    ///      "type": "string",
-    ///      "format": "uint128"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct Ipv6Utilization {
-        /// The number of IPv6 addresses allocated from this pool. A 128-bit
-        /// integer string to match the capacity field.
-        pub allocated: ::std::string::String,
-        /// The total number of IPv6 addresses in the pool, i.e., the sum of the
-        /// lengths of the IPv6 ranges. An IPv6 range can contain up to 2^128
-        /// addresses, so we represent this value in JSON as a numeric string
-        /// with a custom "uint128" format.
-        pub capacity: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&Ipv6Utilization> for Ipv6Utilization {
-        fn from(value: &Ipv6Utilization) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Ipv6Utilization {
-        pub fn builder() -> builder::Ipv6Utilization {
             Default::default()
         }
     }
@@ -23823,6 +23830,14 @@ pub mod types {
     ///    "time_modified"
     ///  ],
     ///  "properties": {
+    ///    "admin_group_name": {
+    ///      "description": "Optionally, silos can have a group name that is
+    /// automatically granted the silo admin role.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -23885,6 +23900,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct Silo {
+        /// Optionally, silos can have a group name that is automatically
+        /// granted the silo admin role.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub admin_group_name: ::std::option::Option<::std::string::String>,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// A silo where discoverable is false can be retrieved only by its id -
@@ -47191,6 +47210,7 @@ pub mod types {
         pub struct IpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
@@ -47207,6 +47227,7 @@ pub mod types {
                 Self {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    ip_version: Err("no value supplied for ip_version".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -47233,6 +47254,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -47275,6 +47306,7 @@ pub mod types {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
+                    ip_version: value.ip_version?,
                     name: value.name?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -47287,6 +47319,7 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     id: Ok(value.id),
+                    ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -47297,6 +47330,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -47304,6 +47338,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
+                    ip_version: Ok(super::defaults::ip_pool_create_ip_version()),
                     name: Err("no value supplied for name".to_string()),
                 }
             }
@@ -47318,6 +47353,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -47339,6 +47384,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
+                    ip_version: value.ip_version?,
                     name: value.name?,
                 })
             }
@@ -47348,6 +47394,7 @@ pub mod types {
             fn from(value: super::IpPoolCreate) -> Self {
                 Self {
                     description: Ok(value.description),
+                    ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
                 }
             }
@@ -47874,38 +47921,38 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct IpPoolUtilization {
-            ipv4: ::std::result::Result<super::Ipv4Utilization, ::std::string::String>,
-            ipv6: ::std::result::Result<super::Ipv6Utilization, ::std::string::String>,
+            capacity: ::std::result::Result<f64, ::std::string::String>,
+            remaining: ::std::result::Result<f64, ::std::string::String>,
         }
 
         impl ::std::default::Default for IpPoolUtilization {
             fn default() -> Self {
                 Self {
-                    ipv4: Err("no value supplied for ipv4".to_string()),
-                    ipv6: Err("no value supplied for ipv6".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                    remaining: Err("no value supplied for remaining".to_string()),
                 }
             }
         }
 
         impl IpPoolUtilization {
-            pub fn ipv4<T>(mut self, value: T) -> Self
+            pub fn capacity<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Ipv4Utilization>,
+                T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ipv4 = value
+                self.capacity = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv4: {}", e));
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
                 self
             }
-            pub fn ipv6<T>(mut self, value: T) -> Self
+            pub fn remaining<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::Ipv6Utilization>,
+                T: ::std::convert::TryInto<f64>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ipv6 = value
+                self.remaining = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ipv6: {}", e));
+                    .map_err(|e| format!("error converting supplied value for remaining: {}", e));
                 self
             }
         }
@@ -47916,8 +47963,8 @@ pub mod types {
                 value: IpPoolUtilization,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    ipv4: value.ipv4?,
-                    ipv6: value.ipv6?,
+                    capacity: value.capacity?,
+                    remaining: value.remaining?,
                 })
             }
         }
@@ -47925,8 +47972,8 @@ pub mod types {
         impl ::std::convert::From<super::IpPoolUtilization> for IpPoolUtilization {
             fn from(value: super::IpPoolUtilization) -> Self {
                 Self {
-                    ipv4: Ok(value.ipv4),
-                    ipv6: Ok(value.ipv6),
+                    capacity: Ok(value.capacity),
+                    remaining: Ok(value.remaining),
                 }
             }
         }
@@ -47991,65 +48038,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct Ipv4Utilization {
-            allocated: ::std::result::Result<u32, ::std::string::String>,
-            capacity: ::std::result::Result<u32, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for Ipv4Utilization {
-            fn default() -> Self {
-                Self {
-                    allocated: Err("no value supplied for allocated".to_string()),
-                    capacity: Err("no value supplied for capacity".to_string()),
-                }
-            }
-        }
-
-        impl Ipv4Utilization {
-            pub fn allocated<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u32>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.allocated = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
-                self
-            }
-            pub fn capacity<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u32>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.capacity = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<Ipv4Utilization> for super::Ipv4Utilization {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: Ipv4Utilization,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    allocated: value.allocated?,
-                    capacity: value.capacity?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::Ipv4Utilization> for Ipv4Utilization {
-            fn from(value: super::Ipv4Utilization) -> Self {
-                Self {
-                    allocated: Ok(value.allocated),
-                    capacity: Ok(value.capacity),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct Ipv6Range {
             first: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
             last: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
@@ -48104,65 +48092,6 @@ pub mod types {
                 Self {
                     first: Ok(value.first),
                     last: Ok(value.last),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct Ipv6Utilization {
-            allocated: ::std::result::Result<::std::string::String, ::std::string::String>,
-            capacity: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for Ipv6Utilization {
-            fn default() -> Self {
-                Self {
-                    allocated: Err("no value supplied for allocated".to_string()),
-                    capacity: Err("no value supplied for capacity".to_string()),
-                }
-            }
-        }
-
-        impl Ipv6Utilization {
-            pub fn allocated<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.allocated = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
-                self
-            }
-            pub fn capacity<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.capacity = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<Ipv6Utilization> for super::Ipv6Utilization {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: Ipv6Utilization,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    allocated: value.allocated?,
-                    capacity: value.capacity?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::Ipv6Utilization> for Ipv6Utilization {
-            fn from(value: super::Ipv6Utilization) -> Self {
-                Self {
-                    allocated: Ok(value.allocated),
-                    capacity: Ok(value.capacity),
                 }
             }
         }
@@ -52229,6 +52158,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Silo {
+            admin_group_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             discoverable: ::std::result::Result<bool, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -52251,6 +52184,7 @@ pub mod types {
         impl ::std::default::Default for Silo {
             fn default() -> Self {
                 Self {
+                    admin_group_name: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     discoverable: Err("no value supplied for discoverable".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -52264,6 +52198,19 @@ pub mod types {
         }
 
         impl Silo {
+            pub fn admin_group_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.admin_group_name = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for admin_group_name: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -52355,6 +52302,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: Silo) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    admin_group_name: value.admin_group_name?,
                     description: value.description?,
                     discoverable: value.discoverable?,
                     id: value.id?,
@@ -52370,6 +52318,7 @@ pub mod types {
         impl ::std::convert::From<super::Silo> for Silo {
             fn from(value: super::Silo) -> Self {
                 Self {
+                    admin_group_name: Ok(value.admin_group_name),
                     description: Ok(value.description),
                     discoverable: Ok(value.discoverable),
                     id: Ok(value.id),
@@ -61203,6 +61152,10 @@ pub mod types {
         pub(super) fn instance_create_network_interfaces(
         ) -> super::InstanceNetworkInterfaceAttachment {
             super::InstanceNetworkInterfaceAttachment::Default
+        }
+
+        pub(super) fn ip_pool_create_ip_version() -> super::IpVersion {
+            super::IpVersion::V4
         }
     }
 }
