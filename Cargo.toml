@@ -66,7 +66,7 @@ test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
 tokio = { version = "1.47.1", features = ["full"] }
 tokio-util = "0.7.16"
-toml = "0.9.5"
+toml = "0.9.6"
 toml_edit = "0.23.5"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
