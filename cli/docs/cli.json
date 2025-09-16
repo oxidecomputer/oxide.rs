@@ -63,6 +63,10 @@
                   "help": "An optional glob pattern for filtering alert class names.\n\nIf provided, only alert classes which match this glob pattern will be included in the response."
                 },
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -105,6 +109,10 @@
               "about": "List alert receivers",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -143,6 +151,10 @@
                     "false"
                   ],
                   "help": "If true, include deliveries which have failed permanently.\n\nIf any of the \"pending\", \"failed\", or \"delivered\" query parameters are set to true, only deliveries matching those state(s) will be included in the response. If NO state filter parameters are set, then all deliveries are included.\n\nA delivery fails permanently when the retry limit of three total attempts is reached without a successful delivery."
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
                 },
                 {
                   "long": "limit",
@@ -268,6 +280,10 @@
               "about": "Fetch alert receiver",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -373,6 +389,10 @@
                       "name": "list",
                       "about": "List webhook receiver secret IDs",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
@@ -497,6 +517,10 @@
             {
               "long": "end-time",
               "help": "Exclusive"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
             },
             {
               "long": "limit",
@@ -637,6 +661,10 @@
           "about": "Fetch current silo's auth settings",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -745,6 +773,10 @@
           "about": "List all support bundles",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -796,6 +828,10 @@
             {
               "long": "bundle-id",
               "help": "ID of the support bundle"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
             },
             {
               "long": "profile",
@@ -879,6 +915,10 @@
           "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -905,6 +945,10 @@
             {
               "long": "certificate",
               "help": "Name or ID of the certificate"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
             },
             {
               "long": "profile",
@@ -981,6 +1025,10 @@
               "long_about": "List device access tokens for the currently authenticated user.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -1003,6 +1051,10 @@
           "name": "groups",
           "about": "Fetch current user's groups",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -1082,6 +1134,10 @@
               "long_about": "Lists SSH public keys for the currently authenticated user.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -1106,6 +1162,10 @@
               "long_about": "Fetch SSH public key associated with the currently authenticated user.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -1122,6 +1182,10 @@
           "name": "view",
           "about": "Fetch user for current session",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -1364,6 +1428,10 @@
           "about": "List disks",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -1393,6 +1461,10 @@
             {
               "long": "disk",
               "help": "Name or ID of the disk"
+            },
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
             },
             {
               "long": "profile",
@@ -1514,6 +1586,10 @@
                   "about": "List affinity groups",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -1576,6 +1652,10 @@
                           "help": "Name or ID of the affinity group"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
                         },
@@ -1625,6 +1705,10 @@
                       "args": [
                         {
                           "long": "affinity-group"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
                         },
                         {
                           "long": "instance"
@@ -1682,6 +1766,10 @@
                     {
                       "long": "affinity-group",
                       "help": "Name or ID of the affinity group"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
                     },
                     {
                       "long": "profile",
@@ -1777,6 +1865,10 @@
                   "about": "List instrumentation probes",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -1803,6 +1895,10 @@
                   "name": "view",
                   "about": "View instrumentation probe",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "probe",
                       "help": "Name or ID of the probe"
@@ -1836,6 +1932,10 @@
                   "long_about": "Queries are written in OxQL.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
                     },
@@ -1868,6 +1968,10 @@
                       "name": "list",
                       "about": "List timeseries schemas",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
                         {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
@@ -1933,6 +2037,10 @@
                       "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
                           "global": true
@@ -1992,6 +2100,10 @@
                       "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
                         },
@@ -2012,6 +2124,10 @@
                       "name": "view",
                       "about": "Fetch trusted root role",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
@@ -2064,6 +2180,10 @@
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -2220,6 +2340,10 @@
           "about": "List floating IPs",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -2284,6 +2408,10 @@
               "help": "Name or ID of the floating IP"
             },
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -2310,6 +2438,10 @@
           "name": "list",
           "about": "List groups",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -2423,6 +2555,10 @@
           "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -2470,6 +2606,10 @@
           "about": "Fetch image",
           "long_about": "Fetch the details for a specific image in a project.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "image",
               "help": "Name or ID of the image"
@@ -2573,6 +2713,10 @@
               "about": "List anti-affinity groups",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -2635,6 +2779,10 @@
                       "help": "Name or ID of the anti affinity group"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -2684,6 +2832,10 @@
                   "args": [
                     {
                       "long": "anti-affinity-group"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
                     },
                     {
                       "long": "instance"
@@ -2741,6 +2893,10 @@
                 {
                   "long": "anti-affinity-group",
                   "help": "Name or ID of the anti affinity group"
+                },
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
                 },
                 {
                   "long": "profile",
@@ -2920,6 +3076,10 @@
               "about": "List disks for instance",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3013,6 +3173,10 @@
               "about": "List external IP addresses",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3080,6 +3244,10 @@
           "name": "list",
           "about": "List instances",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -3187,6 +3355,10 @@
               "about": "List network interfaces",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3263,6 +3435,10 @@
               "about": "Fetch network interface",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3298,6 +3474,10 @@
               "about": "List affinity groups containing instance",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "instance",
                   "help": "Name or ID of the instance"
                 },
@@ -3328,6 +3508,10 @@
               "name": "anti-affinity",
               "about": "List anti-affinity groups containing instance",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3360,6 +3544,10 @@
               "about": "List SSH public keys for instance",
               "long_about": "List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
@@ -3597,6 +3785,10 @@
           "about": "Fetch instance",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "instance",
               "help": "Name or ID of the instance"
             },
@@ -3712,6 +3904,10 @@
               "name": "list",
               "about": "List IP addresses attached to internet gateway",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
@@ -3899,6 +4095,10 @@
               "about": "List IP pools attached to internet gateway",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "gateway",
                   "help": "Name or ID of the internet gateway"
                 },
@@ -3936,6 +4136,10 @@
           "about": "List internet gateways",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -3966,6 +4170,10 @@
           "name": "view",
           "about": "Fetch internet gateway",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "gateway",
               "help": "Name or ID of the gateway"
@@ -4050,6 +4258,10 @@
           "about": "List IP pools",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -4113,6 +4325,10 @@
               "about": "List ranges for IP pool",
               "long_about": "Ranges are ordered by their first address.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -4211,6 +4427,10 @@
                   "long_about": "Ranges are ordered by their first address.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -4253,6 +4473,10 @@
               "about": "Fetch Oxide service IP pool",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4276,6 +4500,10 @@
               "about": "Link IP pool to silo",
               "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "is-default",
                   "values": [
@@ -4310,6 +4538,10 @@
               "name": "list",
               "about": "List IP pool's linked silos",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -4419,6 +4651,10 @@
           "about": "Fetch IP pool utilization",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "pool",
               "help": "Name or ID of the IP pool"
             },
@@ -4433,6 +4669,10 @@
           "name": "view",
           "about": "Fetch IP pool",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"
@@ -4451,6 +4691,10 @@
       "about": "Ping API",
       "long_about": "Always responds with Ok if it responds at all.",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output: 'json' or 'table'"
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -4491,6 +4735,10 @@
           "name": "view",
           "about": "Fetch current silo's IAM policy",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -4565,6 +4813,10 @@
               "about": "List IP pools",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -4588,6 +4840,10 @@
               "about": "Fetch IP pool",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
                 },
@@ -4604,6 +4860,10 @@
           "name": "list",
           "about": "List projects",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -4661,6 +4921,10 @@
               "about": "Fetch project's IAM policy",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -4706,6 +4970,10 @@
           "name": "view",
           "about": "Fetch project",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -4803,6 +5071,10 @@
               "about": "List identity providers for silo",
               "long_about": "List identity providers for silo by silo name or ID.",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5009,6 +5281,10 @@
                   "about": "Fetch SAML identity provider",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5043,6 +5319,10 @@
               "long_about": "Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -5072,6 +5352,10 @@
           "about": "List silos",
           "long_about": "Lists silos that are discoverable based on the current permissions.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -5129,6 +5413,10 @@
               "about": "Fetch silo IAM policy",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5155,6 +5443,10 @@
               "name": "list",
               "about": "Lists resource quotas for all silos",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -5213,6 +5505,10 @@
               "about": "Fetch resource quotas for silo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5240,6 +5536,10 @@
               "about": "List built-in (system) users in silo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -5264,6 +5564,10 @@
               "name": "view",
               "about": "Fetch built-in (system) user",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -5296,6 +5600,10 @@
               "about": "List current utilization state for all silos",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -5319,6 +5627,10 @@
               "about": "Fetch current utilization for given silo",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -5336,6 +5648,10 @@
           "about": "Fetch silo",
           "long_about": "Fetch silo by name or ID.",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -5417,6 +5733,10 @@
           "about": "List snapshots",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -5443,6 +5763,10 @@
           "name": "view",
           "about": "Fetch snapshot",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
@@ -5495,6 +5819,10 @@
                   "about": "List physical disks",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5520,6 +5848,10 @@
                       "help": "ID of the physical disk"
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5543,6 +5875,10 @@
                   "about": "List racks",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5563,6 +5899,10 @@
                   "name": "view",
                   "about": "Fetch rack",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -5616,6 +5956,10 @@
                   "about": "List physical disks attached to sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5640,6 +5984,10 @@
                   "name": "instance-list",
                   "about": "List instances running on given sled",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -5666,6 +6014,10 @@
                   "about": "List sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5687,6 +6039,10 @@
                   "about": "List uninitialized sleds",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5701,6 +6057,10 @@
                   "name": "set-provision-policy",
                   "about": "Set sled provision policy",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
@@ -5733,6 +6093,10 @@
                   "about": "Fetch sled",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -5760,6 +6124,10 @@
                   "about": "List switches",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5780,6 +6148,10 @@
                   "name": "view",
                   "about": "Fetch switch",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -5866,6 +6238,10 @@
                   "about": "List switch ports",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -5901,6 +6277,10 @@
                   "name": "status",
                   "about": "Get switch port status",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
@@ -6114,6 +6494,10 @@
                           "help": "Name or ID of the address lot"
                         },
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
                         },
@@ -6185,6 +6569,10 @@
                   "about": "List address lots",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -6210,6 +6598,10 @@
                     {
                       "long": "address-lot",
                       "help": "Name or ID of the address lot"
+                    },
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
                     },
                     {
                       "long": "profile",
@@ -6259,6 +6651,10 @@
                   "name": "view",
                   "about": "Get user-facing services IP allowlist",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -6357,6 +6753,10 @@
                   "about": "Get BFD status",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6432,6 +6832,10 @@
                       "about": "List BGP announce sets",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
                         },
@@ -6499,6 +6903,10 @@
                         {
                           "long": "announce-set",
                           "help": "Name or ID of the announce set"
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
                         },
                         {
                           "long": "profile",
@@ -6645,6 +7053,10 @@
                       "about": "List BGP configurations",
                       "args": [
                         {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
+                        {
                           "long": "limit",
                           "help": "Maximum number of items returned by a single call"
                         },
@@ -6679,6 +7091,10 @@
                       "name": "ipv4",
                       "about": "Get BGP exported routes",
                       "args": [
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
+                        },
                         {
                           "long": "profile",
                           "help": "Configuration profile to use for commands",
@@ -6779,6 +7195,10 @@
                       "help": "The ASN to filter on. Required."
                     },
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -6802,6 +7222,10 @@
                         {
                           "long": "asn",
                           "help": "The ASN to filter on. Required."
+                        },
+                        {
+                          "long": "format",
+                          "help": "Format in which to print output: 'json' or 'table'"
                         },
                         {
                           "long": "profile",
@@ -7107,6 +7531,10 @@
                   "about": "Get BGP peer status",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -7176,6 +7604,10 @@
                   "name": "view",
                   "about": "Return whether API services can receive limited ICMP traffic",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
@@ -7368,6 +7800,10 @@
                   "about": "Fetch the LLDP neighbors seen on a switch port",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -7467,6 +7903,10 @@
                   "name": "view",
                   "about": "Fetch the LLDP configuration for a switch port",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "port",
                       "help": "A name to use when selecting switch ports."
@@ -7576,6 +8016,10 @@
                   "name": "list",
                   "about": "List loopback addresses",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -7813,6 +8257,10 @@
                   "about": "List switch port settings",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -7850,6 +8298,10 @@
                   "name": "view",
                   "about": "Get information about switch port",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "port",
                       "help": "A name or id to use when selecting switch port settings info objects."
@@ -7898,6 +8350,10 @@
               "name": "view",
               "about": "Fetch top-level IAM policy",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -7963,6 +8419,10 @@
           "about": "List users",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "group"
             },
             {
@@ -7986,6 +8446,10 @@
           "name": "list-sessions",
           "about": "List user's console sessions",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -8011,6 +8475,10 @@
           "name": "list-tokens",
           "about": "List user's access tokens",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -8053,6 +8521,10 @@
           "about": "Fetch user",
           "args": [
             {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
+            {
               "long": "profile",
               "help": "Configuration profile to use for commands",
               "global": true
@@ -8069,6 +8541,10 @@
       "name": "utilization",
       "about": "Fetch resource utilization for user's current silo",
       "args": [
+        {
+          "long": "format",
+          "help": "Format in which to print output: 'json' or 'table'"
+        },
         {
           "long": "profile",
           "help": "Configuration profile to use for commands",
@@ -8195,6 +8671,10 @@
               "about": "List firewall rules",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8215,6 +8695,10 @@
           "name": "list",
           "about": "List VPCs",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
@@ -8308,6 +8792,10 @@
               "name": "list",
               "about": "List routers",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
@@ -8415,6 +8903,10 @@
                   "long_about": "List the routes associated with a router in a particular VPC.",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
@@ -8491,6 +8983,10 @@
                   "about": "Fetch route",
                   "args": [
                     {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
+                    {
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
@@ -8556,6 +9052,10 @@
               "name": "view",
               "about": "Fetch router",
               "args": [
+                {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
                 {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
@@ -8660,6 +9160,10 @@
               "about": "List subnets",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
@@ -8700,6 +9204,10 @@
                   "name": "list",
                   "about": "List network interfaces",
                   "args": [
+                    {
+                      "long": "format",
+                      "help": "Format in which to print output: 'json' or 'table'"
+                    },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
@@ -8779,6 +9287,10 @@
               "about": "Fetch subnet",
               "args": [
                 {
+                  "long": "format",
+                  "help": "Format in which to print output: 'json' or 'table'"
+                },
+                {
                   "long": "profile",
                   "help": "Configuration profile to use for commands",
                   "global": true
@@ -8839,6 +9351,10 @@
           "name": "view",
           "about": "Fetch VPC",
           "args": [
+            {
+              "long": "format",
+              "help": "Format in which to print output: 'json' or 'table'"
+            },
             {
               "long": "profile",
               "help": "Configuration profile to use for commands",
