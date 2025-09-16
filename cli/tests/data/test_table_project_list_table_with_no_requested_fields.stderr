@@ -1,0 +1,9 @@
+WARNING: 'not_a_field' is not a valid field
+ERROR: None of the requested '--format' fields are present in this command's output
+
+Available fields:
+ description
+ id
+ name
+ time_created
+ time_modified

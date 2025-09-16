@@ -4,100 +4,220 @@
 
 // Copyright 2025 Oxide Computer Company
 
+use std::collections::HashSet;
 use std::net::IpAddr;
 use std::path::PathBuf;
 use std::sync::atomic::AtomicBool;
+use std::sync::Mutex;
 
-use crate::generated_cli::CliConfig;
+use crate::generated_cli::{CliConfig, ResponseFields};
 use crate::{eprintln_nopipe, print_nopipe, println_nopipe, IpOrNet};
 use anyhow::Context as _;
 use base64::Engine;
+use comfy_table::{ContentArrangement, Table};
 use oxide::types::{
     AllowedSourceIps, DerEncodedKeyPair, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range,
 };
 
-#[derive(Default)]
-pub struct OxideOverride {
-    needs_comma: AtomicBool,
+const NO_USER_REQUESTED_FIELDS: &str =
+    "ERROR: None of the requested '--format' fields are present in this command's output";
+
+pub enum OxideOverride {
+    Json { needs_comma: AtomicBool },
+    Table { table: Box<Mutex<TableFormatter>> },
 }
 
-impl OxideOverride {
-    fn ip_range(matches: &clap::ArgMatches) -> anyhow::Result<IpRange> {
-        let first = matches.get_one::<IpAddr>("first").unwrap();
-        let last = matches.get_one::<IpAddr>("last").unwrap();
+/// Format response values into a table.
+pub struct TableFormatter {
+    requested_fields: Vec<String>,
+    fields_to_print: Vec<String>,
+    table: Table,
+}
 
-        match (first, last) {
-            (IpAddr::V4(first), IpAddr::V4(last)) => {
-                let range = Ipv4Range::try_from(Ipv4Range::builder().first(*first).last(*last))?;
-                Ok(range.into())
-            }
-            (IpAddr::V6(first), IpAddr::V6(last)) => {
-                let range = Ipv6Range::try_from(Ipv6Range::builder().first(*first).last(*last))?;
-                Ok(range.into())
-            }
-            _ => anyhow::bail!(
-                "first and last must either both be ipv4 or ipv6 addresses".to_string()
-            ),
+impl TableFormatter {
+    fn new(requested_fields: &[String]) -> Self {
+        let mut table = Table::new();
+
+        table
+            .load_preset(comfy_table::presets::NOTHING)
+            .set_content_arrangement(ContentArrangement::Disabled);
+
+        Self {
+            // Downcase user-requested fields to better match the return type.
+            requested_fields: requested_fields.iter().map(|f| f.to_lowercase()).collect(),
+            fields_to_print: Vec::new(),
+            table,
         }
+    }
+
+    fn set_header_fields(&mut self, available_fields: &[&str]) -> Result<(), String> {
+        let fields_to_print = if !self.requested_fields.is_empty() {
+            let requested: HashSet<_> = self.requested_fields.iter().map(|s| s.as_str()).collect();
+            let available: HashSet<_> = available_fields.iter().copied().collect();
+            let invalid = requested.difference(&available);
+
+            for field in invalid {
+                eprintln_nopipe!("WARNING: '{field}' is not a valid field");
+            }
+
+            let mut fields = self.requested_fields.to_vec();
+            fields.retain(|f| available.contains(f.as_str()));
+
+            if fields.is_empty() {
+                // Show list of the available fields to the user.
+                let field_list = available_fields
+                    .iter()
+                    .map(|f| f.to_string())
+                    .collect::<Vec<_>>()
+                    .join("\n ");
+
+                return Err(format!(
+                    "{NO_USER_REQUESTED_FIELDS}\n\nAvailable fields:\n {field_list}"
+                ));
+            }
+
+            fields
+        } else {
+            available_fields.iter().map(|s| s.to_string()).collect()
+        };
+
+        let upcased: Vec<_> = fields_to_print.iter().map(|f| f.to_uppercase()).collect();
+
+        self.table.set_header(upcased);
+        self.fields_to_print = fields_to_print;
+
+        Ok(())
+    }
+
+    fn add_row<T: ResponseFields>(&mut self, obj: &T) {
+        let mut row = Vec::with_capacity(self.fields_to_print.len());
+
+        for field in &self.fields_to_print {
+            let s = obj
+                .get_field(field)
+                .filter(|v| !v.is_null()) // Convert Null to None
+                .map(|v| v.to_string())
+                .unwrap_or_default();
+
+            // `to_string` encloses values in double quotes. Remove these unless we're
+            // writing a multi-word field.
+            if s.contains(' ') {
+                row.push(s);
+            } else {
+                row.push(s.trim_matches('"').to_string());
+            }
+        }
+        self.table.add_row(row);
+    }
+}
+
+impl Default for OxideOverride {
+    fn default() -> Self {
+        Self::new_json()
     }
 }
 
 impl CliConfig for OxideOverride {
     fn success_item<T>(&self, value: &oxide::ResponseValue<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
-            .expect("failed to serialize return to json");
-        println_nopipe!("{}", s);
+        match &self {
+            OxideOverride::Json { needs_comma: _ } => {
+                let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
+                    .expect("failed to serialize return to json");
+                println_nopipe!("{}", s);
+            }
+            OxideOverride::Table { table: t } => {
+                let mut t = t.lock().unwrap();
+
+                if let Err(e) = t.set_header_fields(T::field_names()) {
+                    eprintln_nopipe!("{e}");
+                    std::process::exit(1);
+                }
+
+                for item in value.items() {
+                    t.add_row(item);
+                }
+
+                println_nopipe!("{}", t.table);
+            }
+        }
     }
 
     fn success_no_item(&self, _: &oxide::ResponseValue<()>) {}
 
     fn error<T>(&self, _value: &oxide::Error<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
         eprintln_nopipe!("error");
     }
 
     fn list_start<T>(&self)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        self.needs_comma
-            .store(false, std::sync::atomic::Ordering::Relaxed);
-        print_nopipe!("[");
+        match &self {
+            OxideOverride::Json { needs_comma } => {
+                needs_comma.store(false, std::sync::atomic::Ordering::Relaxed);
+                print_nopipe!("[");
+            }
+            OxideOverride::Table { table: t } => {
+                let mut t = t.lock().unwrap();
+
+                if let Err(e) = t.set_header_fields(T::field_names()) {
+                    eprintln_nopipe!("{e}");
+                    std::process::exit(1);
+                }
+            }
+        }
     }
 
     fn list_item<T>(&self, value: &T)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        let s = serde_json::to_string_pretty(&[value]).expect("failed to serialize result to json");
-        if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            print_nopipe!(", {}", &s[4..s.len() - 2]);
-        } else {
-            print_nopipe!("\n{}", &s[2..s.len() - 2]);
-        };
-        self.needs_comma
-            .store(true, std::sync::atomic::Ordering::Relaxed);
+        match &self {
+            OxideOverride::Json { needs_comma } => {
+                let s = serde_json::to_string_pretty(&[value])
+                    .expect("failed to serialize result to json");
+                if needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
+                    print_nopipe!(", {}", &s[4..s.len() - 2]);
+                } else {
+                    print_nopipe!("\n{}", &s[2..s.len() - 2]);
+                };
+                needs_comma.store(true, std::sync::atomic::Ordering::Relaxed);
+            }
+            OxideOverride::Table { table: t } => {
+                let mut t = t.lock().unwrap();
+                t.add_row(value);
+            }
+        }
     }
 
     fn list_end_success<T>(&self)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
-            println_nopipe!("\n]");
-        } else {
-            println_nopipe!("]");
+        match &self {
+            OxideOverride::Json { needs_comma } => {
+                if needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
+                    println_nopipe!("\n]");
+                } else {
+                    println_nopipe!("]");
+                }
+            }
+            OxideOverride::Table { table: t } => {
+                let t = t.lock().unwrap();
+                println_nopipe!("{}", t.table);
+            }
         }
     }
 
     fn list_end_error<T>(&self, _value: &oxide::Error<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
         self.list_end_success::<T>()
     }
@@ -219,5 +339,40 @@ impl CliConfig for OxideOverride {
         }
 
         Ok(())
+    }
+}
+
+impl OxideOverride {
+    /// Construct a new OxideOverride for JSON output.
+    pub fn new_json() -> Self {
+        OxideOverride::Json {
+            needs_comma: AtomicBool::new(false),
+        }
+    }
+
+    /// Construct a new OxideOverride for tabular output.
+    pub fn new_table(fields: &[String]) -> Self {
+        OxideOverride::Table {
+            table: Box::new(Mutex::new(TableFormatter::new(fields))),
+        }
+    }
+
+    fn ip_range(matches: &clap::ArgMatches) -> anyhow::Result<IpRange> {
+        let first = matches.get_one::<IpAddr>("first").unwrap();
+        let last = matches.get_one::<IpAddr>("last").unwrap();
+
+        match (first, last) {
+            (IpAddr::V4(first), IpAddr::V4(last)) => {
+                let range = Ipv4Range::try_from(Ipv4Range::builder().first(*first).last(*last))?;
+                Ok(range.into())
+            }
+            (IpAddr::V6(first), IpAddr::V6(last)) => {
+                let range = Ipv6Range::try_from(Ipv6Range::builder().first(*first).last(*last))?;
+                Ok(range.into())
+            }
+            _ => anyhow::bail!(
+                "first and last must either both be ipv4 or ipv6 addresses".to_string()
+            ),
+        }
     }
 }

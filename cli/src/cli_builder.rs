@@ -4,7 +4,10 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use std::{any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
+use std::{
+    any::TypeId, collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf,
+    str::FromStr,
+};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -14,9 +17,47 @@ use tracing_subscriber::EnvFilter;
 use crate::{
     context::Context,
     generated_cli::{Cli, CliCommand},
-    OxideOverride, RunnableCmd,
+    oxide_override::OxideOverride,
+    RunnableCmd,
 };
 use oxide::{types::ByteCount, ClientConfig};
+
+#[derive(Default, Clone, Debug)]
+pub enum Format {
+    /// Output as JSON
+    #[default]
+    Json,
+    /// Output as table with optional columns
+    Table {
+        /// Fields to display in the table
+        fields: Vec<String>,
+    },
+}
+
+impl FromStr for Format {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "json" {
+            return Ok(Format::Json);
+        }
+
+        if let Some(fields_str) = s.strip_prefix("table:") {
+            let fields: Vec<String> = fields_str
+                .split(',')
+                // Allow users to pass a quoted string with spaces between column names,
+                // e.g. `--format "table: name, id"`
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+                .collect();
+            Ok(Format::Table { fields })
+        } else if s == "table" {
+            Ok(Format::Table { fields: vec![] })
+        } else {
+            Err("available formats are 'json' and 'table'")
+        }
+    }
+}
 
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
@@ -113,7 +154,46 @@ impl Default for NewCli<'_> {
             let Some(path) = xxx(op) else { continue };
             runner.add_cmd(path, GeneratedCmd(op));
 
-            let cmd = Cli::<OxideOverride>::get_command(op);
+            let mut cmd = Cli::<OxideOverride>::get_command(op);
+            if !op.field_names().is_empty() {
+                // Find the position to display `--format` to retain ordering.
+                let mut arg_names = vec!["format"];
+                arg_names.extend(cmd.get_arguments().filter_map(|a| a.get_long()));
+                arg_names.sort_unstable();
+
+                let format_position = arg_names
+                    .iter()
+                    .enumerate()
+                    .find(|(_, &arg)| arg == "format")
+                    .map(|(i, _)| i)
+                    .unwrap();
+
+                cmd = cmd.arg(
+                    clap::Arg::new("format")
+                        .long("format")
+                        .required(false)
+                        .value_parser(Format::from_str)
+                        .display_order(format_position)
+                        .help("Format in which to print output: 'json' or 'table'")
+                        .long_help(format!(
+                            "Format in which to print output
+
+Possible values:
+  - json                    Output as pretty-printed JSON
+  - table                   Output as table with all columns displayed
+  - table:field1,field2,... Output as table, specifying which columns to display
+
+Examples:
+  --format json
+  --format table
+  --format table:name,id,description
+
+Available fields:
+  - {}",
+                            op.field_names().join("\n  - "),
+                        )),
+                );
+            }
             let cmd = match op {
                 CliCommand::IpPoolRangeAdd
                 | CliCommand::IpPoolRangeRemove
@@ -357,7 +437,12 @@ struct GeneratedCmd(CliCommand);
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let client = oxide::Client::new_authenticated_config(ctx.client_config())?;
-        let cli = Cli::new(client, OxideOverride::default());
+
+        let ox_override = match matches.try_get_one::<Format>("format") {
+            Ok(Some(Format::Table { fields })) => OxideOverride::new_table(fields),
+            _ => OxideOverride::new_json(),
+        };
+        let cli = Cli::new(client, ox_override);
         cli.execute(self.0, matches).await
     }
 
