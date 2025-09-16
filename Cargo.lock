@@ -634,6 +634,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "comfy-table"
+version = "7.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b03b7db8e0b4b2fdad6c551e634134e99ec000e5c8c3b6856c65e8bbaded7a3b"
+dependencies = [
+ "crossterm 0.29.0",
+ "unicode-segmentation",
+ "unicode-width 0.2.0",
+]
+
+[[package]]
 name = "compact_str"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2522,6 +2533,7 @@ dependencies = [
  "clap",
  "clap_complete",
  "colored",
+ "comfy-table",
  "crossterm 0.29.0",
  "dialoguer",
  "dirs",
@@ -4423,9 +4435,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.18"
+version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
+checksum = "f63a545481291138910575129486daeaf8ac54aee4387fe7906919f7830c7d9d"
 
 [[package]]
 name = "unicode-segmentation"
@@ -4996,13 +5008,17 @@ name = "xtask"
 version = "0.0.0"
 dependencies = [
  "clap",
+ "indexmap",
  "newline-converter",
+ "proc-macro2",
  "progenitor",
+ "quote",
  "regex",
  "rustc_version",
  "rustfmt-wrapper",
  "serde_json",
  "similar",
+ "syn 2.0.106",
 ]
 
 [[package]]
