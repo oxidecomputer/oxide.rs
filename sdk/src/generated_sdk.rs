@@ -14518,6 +14518,22 @@ pub mod types {
     ///      ],
     ///      "format": "uuid"
     ///    },
+    ///    "cpu_platform": {
+    ///      "description": "The CPU platform for this instance. If this is
+    /// `null`, the instance requires no particular CPU platform.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -14628,6 +14644,10 @@ pub mod types {
         /// assigned.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub boot_disk_id: ::std::option::Option<::uuid::Uuid>,
+        /// The CPU platform for this instance. If this is `null`, the instance
+        /// requires no particular CPU platform.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         /// RFC1035-compliant hostname for the Instance.
@@ -14858,6 +14878,150 @@ pub mod types {
         }
     }
 
+    /// A required CPU platform for an instance.
+    ///
+    /// When an instance specifies a required CPU platform:
+    ///
+    /// - The system may expose (to the VM) new CPU features that are only
+    ///   present on that platform (or on newer platforms of the same lineage
+    ///   that also support those features). - The instance must run on hosts
+    ///   that have CPUs that support all the features of the supplied platform.
+    ///
+    /// That is, the instance is restricted to hosts that have the CPUs which
+    /// support all features of the required platform, but in exchange the CPU
+    /// features exposed by the platform are available for the guest to use.
+    /// Note that this may prevent an instance from starting (if the hosts that
+    /// could run it are full but there is capacity on other incompatible
+    /// hosts).
+    ///
+    /// If an instance does not specify a required CPU platform, then when it
+    /// starts, the control plane selects a host for the instance and then
+    /// supplies the guest with the "minimum" CPU platform supported by that
+    /// host. This maximizes the number of hosts that can run the VM if it later
+    /// needs to migrate to another host.
+    ///
+    /// In all cases, the CPU features presented by a given CPU platform are a
+    /// subset of what the corresponding hardware may actually support; features
+    /// which cannot be used from a virtual environment or do not have full
+    /// hypervisor support may be masked off. See RFD 314 for specific CPU
+    /// features in a CPU platform.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A required CPU platform for an instance.\n\nWhen an
+    /// instance specifies a required CPU platform:\n\n- The system may expose
+    /// (to the VM) new CPU features that are only present on that platform (or
+    /// on newer platforms of the same lineage that also support those
+    /// features). - The instance must run on hosts that have CPUs that support
+    /// all the features of the supplied platform.\n\nThat is, the instance is
+    /// restricted to hosts that have the CPUs which support all features of the
+    /// required platform, but in exchange the CPU features exposed by the
+    /// platform are available for the guest to use. Note that this may prevent
+    /// an instance from starting (if the hosts that could run it are full but
+    /// there is capacity on other incompatible hosts).\n\nIf an instance does
+    /// not specify a required CPU platform, then when it starts, the control
+    /// plane selects a host for the instance and then supplies the guest with
+    /// the \"minimum\" CPU platform supported by that host. This maximizes the
+    /// number of hosts that can run the VM if it later needs to migrate to
+    /// another host.\n\nIn all cases, the CPU features presented by a given CPU
+    /// platform are a subset of what the corresponding hardware may actually
+    /// support; features which cannot be used from a virtual environment or do
+    /// not have full hypervisor support may be masked off. See RFD 314 for
+    /// specific CPU features in a CPU platform.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "An AMD Milan-like CPU platform.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "amd_milan"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "An AMD Turin-like CPU platform.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "amd_turin"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum InstanceCpuPlatform {
+        /// An AMD Milan-like CPU platform.
+        #[serde(rename = "amd_milan")]
+        AmdMilan,
+        /// An AMD Turin-like CPU platform.
+        #[serde(rename = "amd_turin")]
+        AmdTurin,
+    }
+
+    impl ::std::convert::From<&Self> for InstanceCpuPlatform {
+        fn from(value: &InstanceCpuPlatform) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for InstanceCpuPlatform {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AmdMilan => f.write_str("amd_milan"),
+                Self::AmdTurin => f.write_str("amd_turin"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for InstanceCpuPlatform {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "amd_milan" => Ok(Self::AmdMilan),
+                "amd_turin" => Ok(Self::AmdTurin),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for InstanceCpuPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for InstanceCpuPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for InstanceCpuPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// Create-time parameters for an `Instance`
     ///
     /// <details><summary>JSON schema</summary>
@@ -14928,6 +15092,24 @@ pub mod types {
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/InstanceDiskAttachment"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "cpu_platform": {
+    ///      "description": "The CPU platform to be used for this instance. If
+    /// this is `null`, the instance requires no particular CPU platform; when
+    /// it is started the instance will have the most general CPU platform
+    /// supported by the sled it is initially placed on.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
     ///            }
     ///          ]
     ///        }
@@ -15077,6 +15259,12 @@ pub mod types {
         /// disk is set.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub boot_disk: ::std::option::Option<InstanceDiskAttachment>,
+        /// The CPU platform to be used for this instance. If this is `null`,
+        /// the instance requires no particular CPU platform; when it is started
+        /// the instance will have the most general CPU platform supported by
+        /// the sled it is initially placed on.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         pub description: ::std::string::String,
         /// A list of disks to be attached to the instance.
         ///
@@ -16083,6 +16271,9 @@ pub mod types {
     /// after creation.",
     ///  "type": "object",
     ///  "required": [
+    ///    "auto_restart_policy",
+    ///    "boot_disk",
+    ///    "cpu_platform",
     ///    "memory",
     ///    "ncpus"
     ///  ],
@@ -16114,8 +16305,7 @@ pub mod types {
     ///    },
     ///    "boot_disk": {
     ///      "description": "Name or ID of the disk the instance should be
-    /// instructed to boot from.\n\nIf not provided, unset the instance's boot
-    /// disk.",
+    /// instructed to boot from.\n\nA null value unsets the boot disk.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16124,6 +16314,22 @@ pub mod types {
     ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "cpu_platform": {
+    ///      "description": "The CPU platform to be used for this instance. If
+    /// this is `null`, the instance requires no particular CPU platform.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/InstanceCpuPlatform"
     ///            }
     ///          ]
     ///        }
@@ -16167,14 +16373,15 @@ pub mod types {
         /// configurable through other mechanisms, such as on a per-project
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
         /// Name or ID of the disk the instance should be instructed to boot
         /// from.
         ///
-        /// If not provided, unset the instance's boot disk.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        /// A null value unsets the boot disk.
         pub boot_disk: ::std::option::Option<NameOrId>,
+        /// The CPU platform to be used for this instance. If this is `null`,
+        /// the instance requires no particular CPU platform.
+        pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// The amount of memory to assign to this instance.
         pub memory: ByteCount,
         /// The number of CPUs to assign to this instance.
@@ -45141,6 +45348,10 @@ pub mod types {
             >,
             boot_disk_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            cpu_platform: ::std::result::Result<
+                ::std::option::Option<super::InstanceCpuPlatform>,
+                ::std::string::String,
+            >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             hostname: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -45176,6 +45387,7 @@ pub mod types {
                     ),
                     auto_restart_policy: Ok(Default::default()),
                     boot_disk_id: Ok(Default::default()),
+                    cpu_platform: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     id: Err("no value supplied for id".to_string()),
@@ -45243,6 +45455,16 @@ pub mod types {
             {
                 self.boot_disk_id = value.try_into().map_err(|e| {
                     format!("error converting supplied value for boot_disk_id: {}", e)
+                });
+                self
+            }
+            pub fn cpu_platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
                 });
                 self
             }
@@ -45386,6 +45608,7 @@ pub mod types {
                     auto_restart_enabled: value.auto_restart_enabled?,
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk_id: value.boot_disk_id?,
+                    cpu_platform: value.cpu_platform?,
                     description: value.description?,
                     hostname: value.hostname?,
                     id: value.id?,
@@ -45409,6 +45632,7 @@ pub mod types {
                     auto_restart_enabled: Ok(value.auto_restart_enabled),
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk_id: Ok(value.boot_disk_id),
+                    cpu_platform: Ok(value.cpu_platform),
                     description: Ok(value.description),
                     hostname: Ok(value.hostname),
                     id: Ok(value.id),
@@ -45435,6 +45659,10 @@ pub mod types {
             >,
             boot_disk: ::std::result::Result<
                 ::std::option::Option<super::InstanceDiskAttachment>,
+                ::std::string::String,
+            >,
+            cpu_platform: ::std::result::Result<
+                ::std::option::Option<super::InstanceCpuPlatform>,
                 ::std::string::String,
             >,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -45468,6 +45696,7 @@ pub mod types {
                     anti_affinity_groups: Ok(Default::default()),
                     auto_restart_policy: Ok(Default::default()),
                     boot_disk: Ok(Default::default()),
+                    cpu_platform: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     disks: Ok(Default::default()),
                     external_ips: Ok(Default::default()),
@@ -45518,6 +45747,16 @@ pub mod types {
                 self.boot_disk = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
+            pub fn cpu_platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
+                });
                 self
             }
             pub fn description<T>(mut self, value: T) -> Self
@@ -45644,6 +45883,7 @@ pub mod types {
                     anti_affinity_groups: value.anti_affinity_groups?,
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
+                    cpu_platform: value.cpu_platform?,
                     description: value.description?,
                     disks: value.disks?,
                     external_ips: value.external_ips?,
@@ -45665,6 +45905,7 @@ pub mod types {
                     anti_affinity_groups: Ok(value.anti_affinity_groups),
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk: Ok(value.boot_disk),
+                    cpu_platform: Ok(value.cpu_platform),
                     description: Ok(value.description),
                     disks: Ok(value.disks),
                     external_ips: Ok(value.external_ips),
@@ -46307,6 +46548,10 @@ pub mod types {
                 ::std::option::Option<super::NameOrId>,
                 ::std::string::String,
             >,
+            cpu_platform: ::std::result::Result<
+                ::std::option::Option<super::InstanceCpuPlatform>,
+                ::std::string::String,
+            >,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
         }
@@ -46314,8 +46559,11 @@ pub mod types {
         impl ::std::default::Default for InstanceUpdate {
             fn default() -> Self {
                 Self {
-                    auto_restart_policy: Ok(Default::default()),
-                    boot_disk: Ok(Default::default()),
+                    auto_restart_policy: Err(
+                        "no value supplied for auto_restart_policy".to_string()
+                    ),
+                    boot_disk: Err("no value supplied for boot_disk".to_string()),
+                    cpu_platform: Err("no value supplied for cpu_platform".to_string()),
                     memory: Err("no value supplied for memory".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                 }
@@ -46344,6 +46592,16 @@ pub mod types {
                 self.boot_disk = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for boot_disk: {}", e));
+                self
+            }
+            pub fn cpu_platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::InstanceCpuPlatform>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cpu_platform = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for cpu_platform: {}", e)
+                });
                 self
             }
             pub fn memory<T>(mut self, value: T) -> Self
@@ -46376,6 +46634,7 @@ pub mod types {
                 Ok(Self {
                     auto_restart_policy: value.auto_restart_policy?,
                     boot_disk: value.boot_disk?,
+                    cpu_platform: value.cpu_platform?,
                     memory: value.memory?,
                     ncpus: value.ncpus?,
                 })
@@ -46387,6 +46646,7 @@ pub mod types {
                 Self {
                     auto_restart_policy: Ok(value.auto_restart_policy),
                     boot_disk: Ok(value.boot_disk),
+                    cpu_platform: Ok(value.cpu_platform),
                     memory: Ok(value.memory),
                     ncpus: Ok(value.ncpus),
                 }
