@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2025 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 
@@ -12,6 +12,8 @@ use clap::Parser;
 use newline_converter::dos2unix;
 use progenitor::{GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
+
+mod cli_extras;
 
 #[derive(Parser)]
 #[command(name = "xtask")]
@@ -72,21 +74,23 @@ fn generate(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
             .with_tag(TagStyle::Separate)
-            .with_derive("schemars::JsonSchema"),
+            .with_derive("schemars::JsonSchema")
+            .with_cli_bounds("ResponseFields"),
     );
 
     let mut error = false;
     let mut loc = 0;
+    let mut sdk_tokens = None;
 
     // TODO I'd like to generate a hash as well to have a way to check if the
     // spec has changed since the last generation.
-
     // SDK
     if sdk {
         print!("generating sdk ... ");
         std::io::stdout().flush().unwrap();
 
         let code = generator.generate_tokens(&spec).unwrap();
+        sdk_tokens = Some(code.clone());
         let contents = format_code(code.to_string());
         loc += contents.matches('\n').count();
 
@@ -118,11 +122,20 @@ fn generate(
     if cli {
         print!("generating cli ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.cli(&spec, "oxide").unwrap().to_string();
+
+        // Running `generator.generate_tokens()` a second time will create duplicate types.
+        let sdk_tokens = sdk_tokens.unwrap_or_else(|| generator.generate_tokens(&spec).unwrap());
+
+        let cli_tokens = generator.cli(&spec, "oxide").unwrap();
+        let mut code = cli_tokens.to_string();
+
+        let response_fields = cli_extras::gen_response_fields(sdk_tokens, cli_tokens).to_string();
+        code.push_str(&response_fields);
+
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
-        let mut out_path = root_path;
+        let mut out_path = root_path.clone();
         out_path.push("cli");
         out_path.push("src");
         out_path.push("generated_cli.rs");

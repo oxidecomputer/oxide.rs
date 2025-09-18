@@ -18234,23 +18234,23 @@ impl<T: CliConfig> Cli<T> {
 pub trait CliConfig {
     fn success_item<T>(&self, value: &ResponseValue<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn success_no_item(&self, value: &ResponseValue<()>);
     fn error<T>(&self, value: &Error<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn list_start<T>(&self)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn list_item<T>(&self, value: &T)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn list_end_success<T>(&self)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn list_end_error<T>(&self, value: &Error<T>)
     where
-        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+        T: ResponseFields + schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn execute_device_auth_request(
         &self,
         matches: &::clap::ArgMatches,
@@ -20991,5 +20991,10426 @@ impl CliCommand {
             CliCommand::WebhookSecretsDelete,
         ]
         .into_iter()
+    }
+}
+
+/// A trait for flexibly accessing objects returned by the Oxide API.
+pub trait ResponseFields {
+    /// The individual object type returned from the API.
+    ///
+    /// Generally this is the type wrapped by a `ResponseValue`, but in some
+    /// cases
+    /// this is a collection of items. For example,
+    /// `/v1/system/networking/bgp-routes-ipv4` returns a
+    /// `ResponseValue<Vec<types::BgpImportedRouteIpv4>>`.
+    type Item: ResponseFields;
+    /// Get the field names of the object.
+    ///
+    /// For enums, the variant is included as "type".
+    /// Unnamed fields are accessed as "value" for a tuple of arity 1, or
+    /// "value_N", for
+    /// larger arities.
+    fn field_names() -> &'static [&'static str];
+    /// Attempt to retrieve the specified field of an object as a JSON value.
+    ///
+    /// We convert to JSON instead of a string to provide callers with more
+    /// flexibility
+    /// in how they format the object.
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value>;
+    /// Get an iterator over all `Item`s contained in the response.
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_>;
+}
+
+impl<T: ResponseFields> ResponseFields for Vec<T> {
+    type Item = T;
+    fn field_names() -> &'static [&'static str] {
+        T::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.iter())
+    }
+}
+
+impl ResponseFields for types::Address {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["address", "address_lot", "vlan_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "address_lot" => serde_json::to_value(&self.address_lot).ok(),
+            "vlan_id" => serde_json::to_value(&self.vlan_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["addresses", "link_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addresses" => serde_json::to_value(&self.addresses).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLot {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "kind",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotBlock {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["first_address", "id", "last_address"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "first_address" => serde_json::to_value(&self.first_address).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "last_address" => serde_json::to_value(&self.last_address).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotBlockCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["first_address", "last_address"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "first_address" => serde_json::to_value(&self.first_address).ok(),
+            "last_address" => serde_json::to_value(&self.last_address).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotBlockResultsPage {
+    type Item = types::AddressLotBlock;
+    fn field_names() -> &'static [&'static str] {
+        types::AddressLotBlock::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AddressLotCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["blocks", "description", "kind", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "blocks" => serde_json::to_value(&self.blocks).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotCreateResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["blocks", "lot"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "blocks" => serde_json::to_value(&self.blocks).ok(),
+            "lot" => serde_json::to_value(&self.lot).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AddressLotKind::Infra => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Infra"))),
+                _ => None,
+            },
+            types::AddressLotKind::Pool => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Pool"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AddressLotResultsPage {
+    type Item = types::AddressLot;
+    fn field_names() -> &'static [&'static str] {
+        types::AddressLot::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AddressLotViewResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["blocks", "lot"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "blocks" => serde_json::to_value(&self.blocks).ok(),
+            "lot" => serde_json::to_value(&self.lot).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AffinityGroup {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "failure_domain",
+            "id",
+            "name",
+            "policy",
+            "project_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "failure_domain" => serde_json::to_value(&self.failure_domain).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AffinityGroupCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "failure_domain", "name", "policy"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "failure_domain" => serde_json::to_value(&self.failure_domain).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AffinityGroupMember {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "id", "name", "run_state"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AffinityGroupMember::Instance {
+                id,
+                name,
+                run_state,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Instance"))),
+                "id" => serde_json::to_value(id).ok(),
+                "name" => serde_json::to_value(name).ok(),
+                "run_state" => serde_json::to_value(run_state).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AffinityGroupMemberResultsPage {
+    type Item = types::AffinityGroupMember;
+    fn field_names() -> &'static [&'static str] {
+        types::AffinityGroupMember::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AffinityGroupResultsPage {
+    type Item = types::AffinityGroup;
+    fn field_names() -> &'static [&'static str] {
+        types::AffinityGroup::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AffinityGroupUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AffinityPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AffinityPolicy::Allow => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Allow"))),
+                _ => None,
+            },
+            types::AffinityPolicy::Fail => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Fail"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AggregateBgpMessageHistory {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["switch_histories"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "switch_histories" => serde_json::to_value(&self.switch_histories).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertClass {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertClassResultsPage {
+    type Item = types::AlertClass;
+    fn field_names() -> &'static [&'static str] {
+        types::AlertClass::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AlertDelivery {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "alert_class",
+            "alert_id",
+            "attempts",
+            "id",
+            "receiver_id",
+            "state",
+            "time_started",
+            "trigger",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "alert_class" => serde_json::to_value(&self.alert_class).ok(),
+            "alert_id" => serde_json::to_value(&self.alert_id).ok(),
+            "attempts" => serde_json::to_value(&self.attempts).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "receiver_id" => serde_json::to_value(&self.receiver_id).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_started" => serde_json::to_value(&self.time_started).ok(),
+            "trigger" => serde_json::to_value(&self.trigger).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertDeliveryAttempts {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AlertDeliveryAttempts::Webhook(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertDeliveryId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["delivery_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "delivery_id" => serde_json::to_value(&self.delivery_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertDeliveryResultsPage {
+    type Item = types::AlertDelivery;
+    fn field_names() -> &'static [&'static str] {
+        types::AlertDelivery::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AlertDeliveryState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AlertDeliveryState::Pending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Pending"))),
+                _ => None,
+            },
+            types::AlertDeliveryState::Delivered => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Delivered"))),
+                _ => None,
+            },
+            types::AlertDeliveryState::Failed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Failed"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertDeliveryTrigger {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AlertDeliveryTrigger::Alert => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Alert"))),
+                _ => None,
+            },
+            types::AlertDeliveryTrigger::Resend => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Resend"))),
+                _ => None,
+            },
+            types::AlertDeliveryTrigger::Probe => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Probe"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertProbeResult {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["probe", "resends_started"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "probe" => serde_json::to_value(&self.probe).ok(),
+            "resends_started" => serde_json::to_value(&self.resends_started).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertReceiver {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "kind",
+            "name",
+            "subscriptions",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "subscriptions" => serde_json::to_value(&self.subscriptions).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertReceiverKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "endpoint", "secrets"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AlertReceiverKind::Webhook { endpoint, secrets } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Webhook"))),
+                "endpoint" => serde_json::to_value(endpoint).ok(),
+                "secrets" => serde_json::to_value(secrets).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertReceiverResultsPage {
+    type Item = types::AlertReceiver;
+    fn field_names() -> &'static [&'static str] {
+        types::AlertReceiver::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AlertSubscription {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertSubscriptionCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["subscription"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "subscription" => serde_json::to_value(&self.subscription).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AlertSubscriptionCreated {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["subscription"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "subscription" => serde_json::to_value(&self.subscription).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AllowList {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["allowed_ips", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "allowed_ips" => serde_json::to_value(&self.allowed_ips).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AllowListUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["allowed_ips"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "allowed_ips" => serde_json::to_value(&self.allowed_ips).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AllowedSourceIps {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AllowedSourceIps::Any => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Any"))),
+                _ => None,
+            },
+            types::AllowedSourceIps::List(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroup {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "failure_domain",
+            "id",
+            "name",
+            "policy",
+            "project_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "failure_domain" => serde_json::to_value(&self.failure_domain).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroupCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "failure_domain", "name", "policy"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "failure_domain" => serde_json::to_value(&self.failure_domain).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroupMember {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "id", "name", "run_state"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AntiAffinityGroupMember::Instance {
+                id,
+                name,
+                run_state,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Instance"))),
+                "id" => serde_json::to_value(id).ok(),
+                "name" => serde_json::to_value(name).ok(),
+                "run_state" => serde_json::to_value(run_state).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroupMemberResultsPage {
+    type Item = types::AntiAffinityGroupMember;
+    fn field_names() -> &'static [&'static str] {
+        types::AntiAffinityGroupMember::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroupResultsPage {
+    type Item = types::AntiAffinityGroup;
+    fn field_names() -> &'static [&'static str] {
+        types::AntiAffinityGroup::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AntiAffinityGroupUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ArtifactId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["kind", "name", "version"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "version" => serde_json::to_value(&self.version).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AuditLogEntry {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "actor",
+            "auth_method",
+            "id",
+            "operation_id",
+            "request_id",
+            "request_uri",
+            "result",
+            "source_ip",
+            "time_completed",
+            "time_started",
+            "user_agent",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "actor" => serde_json::to_value(&self.actor).ok(),
+            "auth_method" => serde_json::to_value(&self.auth_method).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "operation_id" => serde_json::to_value(&self.operation_id).ok(),
+            "request_id" => serde_json::to_value(&self.request_id).ok(),
+            "request_uri" => serde_json::to_value(&self.request_uri).ok(),
+            "result" => serde_json::to_value(&self.result).ok(),
+            "source_ip" => serde_json::to_value(&self.source_ip).ok(),
+            "time_completed" => serde_json::to_value(&self.time_completed).ok(),
+            "time_started" => serde_json::to_value(&self.time_started).ok(),
+            "user_agent" => serde_json::to_value(&self.user_agent).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AuditLogEntryActor {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "user_builtin_id", "silo_id", "silo_user_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AuditLogEntryActor::UserBuiltin { user_builtin_id } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("UserBuiltin"))),
+                "user_builtin_id" => serde_json::to_value(user_builtin_id).ok(),
+                _ => None,
+            },
+            types::AuditLogEntryActor::SiloUser {
+                silo_id,
+                silo_user_id,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SiloUser"))),
+                "silo_id" => serde_json::to_value(silo_id).ok(),
+                "silo_user_id" => serde_json::to_value(silo_user_id).ok(),
+                _ => None,
+            },
+            types::AuditLogEntryActor::Unauthenticated => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Unauthenticated"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AuditLogEntryResult {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "http_status_code", "error_code", "error_message"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AuditLogEntryResult::Success { http_status_code } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Success"))),
+                "http_status_code" => serde_json::to_value(http_status_code).ok(),
+                _ => None,
+            },
+            types::AuditLogEntryResult::Error {
+                error_code,
+                error_message,
+                http_status_code,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Error"))),
+                "error_code" => serde_json::to_value(error_code).ok(),
+                "error_message" => serde_json::to_value(error_message).ok(),
+                "http_status_code" => serde_json::to_value(http_status_code).ok(),
+                _ => None,
+            },
+            types::AuditLogEntryResult::Unknown => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Unknown"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::AuditLogEntryResultsPage {
+    type Item = types::AuditLogEntry;
+    fn field_names() -> &'static [&'static str] {
+        types::AuditLogEntry::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::AuthzScope {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::AuthzScope::Fleet => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Fleet"))),
+                _ => None,
+            },
+            types::AuthzScope::Silo => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Silo"))),
+                _ => None,
+            },
+            types::AuthzScope::Project => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Project"))),
+                _ => None,
+            },
+            types::AuthzScope::ViewableToAll => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("ViewableToAll"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Baseboard {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["part", "revision", "serial"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "part" => serde_json::to_value(&self.part).ok(),
+            "revision" => serde_json::to_value(&self.revision).ok(),
+            "serial" => serde_json::to_value(&self.serial).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BfdMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BfdMode::SingleHop => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SingleHop"))),
+                _ => None,
+            },
+            types::BfdMode::MultiHop => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("MultiHop"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BfdSessionDisable {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["remote", "switch"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "remote" => serde_json::to_value(&self.remote).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BfdSessionEnable {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "detection_threshold",
+            "local",
+            "mode",
+            "remote",
+            "required_rx",
+            "switch",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "detection_threshold" => serde_json::to_value(&self.detection_threshold).ok(),
+            "local" => serde_json::to_value(&self.local).ok(),
+            "mode" => serde_json::to_value(&self.mode).ok(),
+            "remote" => serde_json::to_value(&self.remote).ok(),
+            "required_rx" => serde_json::to_value(&self.required_rx).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BfdState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BfdState::AdminDown => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("AdminDown"))),
+                _ => None,
+            },
+            types::BfdState::Down => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Down"))),
+                _ => None,
+            },
+            types::BfdState::Init => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Init"))),
+                _ => None,
+            },
+            types::BfdState::Up => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Up"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BfdStatus {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "detection_threshold",
+            "local",
+            "mode",
+            "peer",
+            "required_rx",
+            "state",
+            "switch",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "detection_threshold" => serde_json::to_value(&self.detection_threshold).ok(),
+            "local" => serde_json::to_value(&self.local).ok(),
+            "mode" => serde_json::to_value(&self.mode).ok(),
+            "peer" => serde_json::to_value(&self.peer).ok(),
+            "required_rx" => serde_json::to_value(&self.required_rx).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpAnnounceSet {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "id", "name", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpAnnounceSetCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["announcement", "description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "announcement" => serde_json::to_value(&self.announcement).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpAnnouncement {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["address_lot_block_id", "announce_set_id", "network"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address_lot_block_id" => serde_json::to_value(&self.address_lot_block_id).ok(),
+            "announce_set_id" => serde_json::to_value(&self.announce_set_id).ok(),
+            "network" => serde_json::to_value(&self.network).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpAnnouncementCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["address_lot_block", "network"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address_lot_block" => serde_json::to_value(&self.address_lot_block).ok(),
+            "network" => serde_json::to_value(&self.network).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "asn",
+            "description",
+            "id",
+            "name",
+            "time_created",
+            "time_modified",
+            "vrf",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "asn" => serde_json::to_value(&self.asn).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vrf" => serde_json::to_value(&self.vrf).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpConfigCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["asn", "bgp_announce_set_id", "description", "name", "vrf"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "asn" => serde_json::to_value(&self.asn).ok(),
+            "bgp_announce_set_id" => serde_json::to_value(&self.bgp_announce_set_id).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "vrf" => serde_json::to_value(&self.vrf).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpConfigResultsPage {
+    type Item = types::BgpConfig;
+    fn field_names() -> &'static [&'static str] {
+        types::BgpConfig::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::BgpExported {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["exports"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "exports" => serde_json::to_value(&self.exports).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpImportedRouteIpv4 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "nexthop", "prefix", "switch"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "nexthop" => serde_json::to_value(&self.nexthop).ok(),
+            "prefix" => serde_json::to_value(&self.prefix).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpMessageHistory {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpPeer {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "addr",
+            "allowed_export",
+            "allowed_import",
+            "bgp_config",
+            "communities",
+            "connect_retry",
+            "delay_open",
+            "enforce_first_as",
+            "hold_time",
+            "idle_hold_time",
+            "interface_name",
+            "keepalive",
+            "local_pref",
+            "md5_auth_key",
+            "min_ttl",
+            "multi_exit_discriminator",
+            "remote_asn",
+            "vlan_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addr" => serde_json::to_value(&self.addr).ok(),
+            "allowed_export" => serde_json::to_value(&self.allowed_export).ok(),
+            "allowed_import" => serde_json::to_value(&self.allowed_import).ok(),
+            "bgp_config" => serde_json::to_value(&self.bgp_config).ok(),
+            "communities" => serde_json::to_value(&self.communities).ok(),
+            "connect_retry" => serde_json::to_value(&self.connect_retry).ok(),
+            "delay_open" => serde_json::to_value(&self.delay_open).ok(),
+            "enforce_first_as" => serde_json::to_value(&self.enforce_first_as).ok(),
+            "hold_time" => serde_json::to_value(&self.hold_time).ok(),
+            "idle_hold_time" => serde_json::to_value(&self.idle_hold_time).ok(),
+            "interface_name" => serde_json::to_value(&self.interface_name).ok(),
+            "keepalive" => serde_json::to_value(&self.keepalive).ok(),
+            "local_pref" => serde_json::to_value(&self.local_pref).ok(),
+            "md5_auth_key" => serde_json::to_value(&self.md5_auth_key).ok(),
+            "min_ttl" => serde_json::to_value(&self.min_ttl).ok(),
+            "multi_exit_discriminator" => serde_json::to_value(&self.multi_exit_discriminator).ok(),
+            "remote_asn" => serde_json::to_value(&self.remote_asn).ok(),
+            "vlan_id" => serde_json::to_value(&self.vlan_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpPeerConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["link_name", "peers"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "peers" => serde_json::to_value(&self.peers).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpPeerState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BgpPeerState::Idle => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Idle"))),
+                _ => None,
+            },
+            types::BgpPeerState::Connect => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Connect"))),
+                _ => None,
+            },
+            types::BgpPeerState::Active => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Active"))),
+                _ => None,
+            },
+            types::BgpPeerState::OpenSent => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("OpenSent"))),
+                _ => None,
+            },
+            types::BgpPeerState::OpenConfirm => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("OpenConfirm"))),
+                _ => None,
+            },
+            types::BgpPeerState::SessionSetup => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SessionSetup"))),
+                _ => None,
+            },
+            types::BgpPeerState::Established => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Established"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BgpPeerStatus {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "addr",
+            "local_asn",
+            "remote_asn",
+            "state",
+            "state_duration_millis",
+            "switch",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addr" => serde_json::to_value(&self.addr).ok(),
+            "local_asn" => serde_json::to_value(&self.local_asn).ok(),
+            "remote_asn" => serde_json::to_value(&self.remote_asn).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "state_duration_millis" => serde_json::to_value(&self.state_duration_millis).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangedouble {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangedouble::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangedouble::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangedouble::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangefloat {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangefloat::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangefloat::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangefloat::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeint16::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeint16::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeint16::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeint32::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeint32::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeint32::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeint64::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeint64::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeint64::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeint8::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeint8::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeint8::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeuint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeuint16::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeuint16::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeuint16::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeuint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeuint32::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeuint32::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeuint32::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeuint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeuint64::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeuint64::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeuint64::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BinRangeuint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "end", "start"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::BinRangeuint8::RangeTo { end } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeTo"))),
+                "end" => serde_json::to_value(end).ok(),
+                _ => None,
+            },
+            types::BinRangeuint8::Range { end, start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Range"))),
+                "end" => serde_json::to_value(end).ok(),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+            types::BinRangeuint8::RangeFrom { start } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RangeFrom"))),
+                "start" => serde_json::to_value(start).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Bindouble {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binfloat {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binuint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binuint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binuint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Binuint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["count", "range"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "count" => serde_json::to_value(&self.count).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::BlockSize {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ByteCount {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Certificate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "cert",
+            "description",
+            "id",
+            "name",
+            "service",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cert" => serde_json::to_value(&self.cert).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "service" => serde_json::to_value(&self.service).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::CertificateCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["cert", "description", "key", "name", "service"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cert" => serde_json::to_value(&self.cert).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "key" => serde_json::to_value(&self.key).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "service" => serde_json::to_value(&self.service).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::CertificateResultsPage {
+    type Item = types::Certificate;
+    fn field_names() -> &'static [&'static str] {
+        types::Certificate::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::ConsoleSession {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "time_created", "time_last_used"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_last_used" => serde_json::to_value(&self.time_last_used).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ConsoleSessionResultsPage {
+    type Item = types::ConsoleSession;
+    fn field_names() -> &'static [&'static str] {
+        types::ConsoleSession::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Cumulativedouble {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["start_time", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "value" => serde_json::to_value(&self.value).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Cumulativefloat {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["start_time", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "value" => serde_json::to_value(&self.value).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Cumulativeint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["start_time", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "value" => serde_json::to_value(&self.value).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Cumulativeuint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["start_time", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "value" => serde_json::to_value(&self.value).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::CurrentUser {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "display_name",
+            "fleet_viewer",
+            "id",
+            "silo_admin",
+            "silo_id",
+            "silo_name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "display_name" => serde_json::to_value(&self.display_name).ok(),
+            "fleet_viewer" => serde_json::to_value(&self.fleet_viewer).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "silo_admin" => serde_json::to_value(&self.silo_admin).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            "silo_name" => serde_json::to_value(&self.silo_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Datum {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::Datum::Bool(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::I8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::U8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::I16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::U16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::I32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::U32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::I64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::U64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::F32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::F64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::String(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::Bytes(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::CumulativeI64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::CumulativeU64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::CumulativeF32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::CumulativeF64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramI8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramU8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramI16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramU16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramI32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramU32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramI64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramU64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramF32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::HistogramF64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::Datum::Missing(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DatumType {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::DatumType::Bool => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Bool"))),
+                _ => None,
+            },
+            types::DatumType::I8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I8"))),
+                _ => None,
+            },
+            types::DatumType::U8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U8"))),
+                _ => None,
+            },
+            types::DatumType::I16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I16"))),
+                _ => None,
+            },
+            types::DatumType::U16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U16"))),
+                _ => None,
+            },
+            types::DatumType::I32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I32"))),
+                _ => None,
+            },
+            types::DatumType::U32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U32"))),
+                _ => None,
+            },
+            types::DatumType::I64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I64"))),
+                _ => None,
+            },
+            types::DatumType::U64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U64"))),
+                _ => None,
+            },
+            types::DatumType::F32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("F32"))),
+                _ => None,
+            },
+            types::DatumType::F64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("F64"))),
+                _ => None,
+            },
+            types::DatumType::String => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("String"))),
+                _ => None,
+            },
+            types::DatumType::Bytes => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Bytes"))),
+                _ => None,
+            },
+            types::DatumType::CumulativeI64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("CumulativeI64"))),
+                _ => None,
+            },
+            types::DatumType::CumulativeU64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("CumulativeU64"))),
+                _ => None,
+            },
+            types::DatumType::CumulativeF32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("CumulativeF32"))),
+                _ => None,
+            },
+            types::DatumType::CumulativeF64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("CumulativeF64"))),
+                _ => None,
+            },
+            types::DatumType::HistogramI8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramI8"))),
+                _ => None,
+            },
+            types::DatumType::HistogramU8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramU8"))),
+                _ => None,
+            },
+            types::DatumType::HistogramI16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramI16"))),
+                _ => None,
+            },
+            types::DatumType::HistogramU16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramU16"))),
+                _ => None,
+            },
+            types::DatumType::HistogramI32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramI32"))),
+                _ => None,
+            },
+            types::DatumType::HistogramU32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramU32"))),
+                _ => None,
+            },
+            types::DatumType::HistogramI64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramI64"))),
+                _ => None,
+            },
+            types::DatumType::HistogramU64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramU64"))),
+                _ => None,
+            },
+            types::DatumType::HistogramF32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramF32"))),
+                _ => None,
+            },
+            types::DatumType::HistogramF64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("HistogramF64"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DerEncodedKeyPair {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["private_key", "public_cert"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "private_key" => serde_json::to_value(&self.private_key).ok(),
+            "public_cert" => serde_json::to_value(&self.public_cert).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DeviceAccessToken {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "time_created", "time_expires"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_expires" => serde_json::to_value(&self.time_expires).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DeviceAccessTokenRequest {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["client_id", "device_code", "grant_type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "client_id" => serde_json::to_value(&self.client_id).ok(),
+            "device_code" => serde_json::to_value(&self.device_code).ok(),
+            "grant_type" => serde_json::to_value(&self.grant_type).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DeviceAccessTokenResultsPage {
+    type Item = types::DeviceAccessToken;
+    fn field_names() -> &'static [&'static str] {
+        types::DeviceAccessToken::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::DeviceAuthRequest {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["client_id", "ttl_seconds"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "client_id" => serde_json::to_value(&self.client_id).ok(),
+            "ttl_seconds" => serde_json::to_value(&self.ttl_seconds).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DeviceAuthVerify {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["user_code"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "user_code" => serde_json::to_value(&self.user_code).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Digest {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::Digest::Sha256(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Disk {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "block_size",
+            "description",
+            "device_path",
+            "id",
+            "image_id",
+            "name",
+            "project_id",
+            "size",
+            "snapshot_id",
+            "state",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "block_size" => serde_json::to_value(&self.block_size).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "device_path" => serde_json::to_value(&self.device_path).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "image_id" => serde_json::to_value(&self.image_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "size" => serde_json::to_value(&self.size).ok(),
+            "snapshot_id" => serde_json::to_value(&self.snapshot_id).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DiskCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "disk_source", "name", "size"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "disk_source" => serde_json::to_value(&self.disk_source).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "size" => serde_json::to_value(&self.size).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DiskPath {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["disk"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "disk" => serde_json::to_value(&self.disk).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DiskResultsPage {
+    type Item = types::Disk;
+    fn field_names() -> &'static [&'static str] {
+        types::Disk::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::DiskSource {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "block_size", "snapshot_id", "image_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::DiskSource::Blank { block_size } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Blank"))),
+                "block_size" => serde_json::to_value(block_size).ok(),
+                _ => None,
+            },
+            types::DiskSource::Snapshot { snapshot_id } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Snapshot"))),
+                "snapshot_id" => serde_json::to_value(snapshot_id).ok(),
+                _ => None,
+            },
+            types::DiskSource::Image { image_id } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Image"))),
+                "image_id" => serde_json::to_value(image_id).ok(),
+                _ => None,
+            },
+            types::DiskSource::ImportingBlocks { block_size } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("ImportingBlocks"))),
+                "block_size" => serde_json::to_value(block_size).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::DiskState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::DiskState::Creating => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Creating"))),
+                _ => None,
+            },
+            types::DiskState::Detached => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Detached"))),
+                _ => None,
+            },
+            types::DiskState::ImportReady => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("ImportReady"))),
+                _ => None,
+            },
+            types::DiskState::ImportingFromUrl => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("ImportingFromUrl"))),
+                _ => None,
+            },
+            types::DiskState::ImportingFromBulkWrites => match field_name {
+                "type" => Some(serde_json::Value::String(String::from(
+                    "ImportingFromBulkWrites",
+                ))),
+                _ => None,
+            },
+            types::DiskState::Finalizing => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Finalizing"))),
+                _ => None,
+            },
+            types::DiskState::Maintenance => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Maintenance"))),
+                _ => None,
+            },
+            types::DiskState::Attaching(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::DiskState::Attached(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::DiskState::Detaching(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::DiskState::Destroyed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Destroyed"))),
+                _ => None,
+            },
+            types::DiskState::Faulted => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Faulted"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Distributiondouble {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "counts",
+            "max",
+            "min",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "counts" => serde_json::to_value(&self.counts).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Distributionint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "counts",
+            "max",
+            "min",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "counts" => serde_json::to_value(&self.counts).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::EphemeralIpCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["pool"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "pool" => serde_json::to_value(&self.pool).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Error {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["error_code", "message", "request_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "error_code" => serde_json::to_value(&self.error_code).ok(),
+            "message" => serde_json::to_value(&self.message).ok(),
+            "request_id" => serde_json::to_value(&self.request_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ExternalIp {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "type",
+            "first_port",
+            "ip",
+            "ip_pool_id",
+            "last_port",
+            "description",
+            "id",
+            "instance_id",
+            "name",
+            "project_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ExternalIp::Snat {
+                first_port,
+                ip,
+                ip_pool_id,
+                last_port,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Snat"))),
+                "first_port" => serde_json::to_value(first_port).ok(),
+                "ip" => serde_json::to_value(ip).ok(),
+                "ip_pool_id" => serde_json::to_value(ip_pool_id).ok(),
+                "last_port" => serde_json::to_value(last_port).ok(),
+                _ => None,
+            },
+            types::ExternalIp::Ephemeral { ip, ip_pool_id } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ephemeral"))),
+                "ip" => serde_json::to_value(ip).ok(),
+                "ip_pool_id" => serde_json::to_value(ip_pool_id).ok(),
+                _ => None,
+            },
+            types::ExternalIp::Floating {
+                description,
+                id,
+                instance_id,
+                ip,
+                ip_pool_id,
+                name,
+                project_id,
+                time_created,
+                time_modified,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Floating"))),
+                "description" => serde_json::to_value(description).ok(),
+                "id" => serde_json::to_value(id).ok(),
+                "instance_id" => serde_json::to_value(instance_id).ok(),
+                "ip" => serde_json::to_value(ip).ok(),
+                "ip_pool_id" => serde_json::to_value(ip_pool_id).ok(),
+                "name" => serde_json::to_value(name).ok(),
+                "project_id" => serde_json::to_value(project_id).ok(),
+                "time_created" => serde_json::to_value(time_created).ok(),
+                "time_modified" => serde_json::to_value(time_modified).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ExternalIpCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "pool", "floating_ip"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ExternalIpCreate::Ephemeral { pool } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ephemeral"))),
+                "pool" => serde_json::to_value(pool).ok(),
+                _ => None,
+            },
+            types::ExternalIpCreate::Floating { floating_ip } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Floating"))),
+                "floating_ip" => serde_json::to_value(floating_ip).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ExternalIpResultsPage {
+    type Item = types::ExternalIp;
+    fn field_names() -> &'static [&'static str] {
+        types::ExternalIp::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::FailureDomain {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FailureDomain::Sled => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Sled"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FieldSchema {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "field_type", "name", "source"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "field_type" => serde_json::to_value(&self.field_type).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "source" => serde_json::to_value(&self.source).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FieldSource {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FieldSource::Target => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Target"))),
+                _ => None,
+            },
+            types::FieldSource::Metric => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Metric"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FieldType {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FieldType::String => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("String"))),
+                _ => None,
+            },
+            types::FieldType::I8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I8"))),
+                _ => None,
+            },
+            types::FieldType::U8 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U8"))),
+                _ => None,
+            },
+            types::FieldType::I16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I16"))),
+                _ => None,
+            },
+            types::FieldType::U16 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U16"))),
+                _ => None,
+            },
+            types::FieldType::I32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I32"))),
+                _ => None,
+            },
+            types::FieldType::U32 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U32"))),
+                _ => None,
+            },
+            types::FieldType::I64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("I64"))),
+                _ => None,
+            },
+            types::FieldType::U64 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U64"))),
+                _ => None,
+            },
+            types::FieldType::IpAddr => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("IpAddr"))),
+                _ => None,
+            },
+            types::FieldType::Uuid => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Uuid"))),
+                _ => None,
+            },
+            types::FieldType::Bool => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Bool"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FieldValue {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FieldValue::String(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::I8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::U8(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::I16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::U16(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::I32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::U32(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::I64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::U64(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::IpAddr(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::Uuid(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::FieldValue::Bool(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FinalizeDisk {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["snapshot_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "snapshot_name" => serde_json::to_value(&self.snapshot_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FleetRole {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FleetRole::Admin => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Admin"))),
+                _ => None,
+            },
+            types::FleetRole::Collaborator => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Collaborator"))),
+                _ => None,
+            },
+            types::FleetRole::Viewer => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Viewer"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FleetRolePolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["role_assignments"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "role_assignments" => serde_json::to_value(&self.role_assignments).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FleetRoleRoleAssignment {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["identity_id", "identity_type", "role_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "identity_id" => serde_json::to_value(&self.identity_id).ok(),
+            "identity_type" => serde_json::to_value(&self.identity_type).ok(),
+            "role_name" => serde_json::to_value(&self.role_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FloatingIp {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "instance_id",
+            "ip",
+            "ip_pool_id",
+            "name",
+            "project_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "instance_id" => serde_json::to_value(&self.instance_id).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "ip_pool_id" => serde_json::to_value(&self.ip_pool_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FloatingIpAttach {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["kind", "parent"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "parent" => serde_json::to_value(&self.parent).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FloatingIpCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "ip", "name", "pool"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "pool" => serde_json::to_value(&self.pool).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FloatingIpParentKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::FloatingIpParentKind::Instance => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Instance"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::FloatingIpResultsPage {
+    type Item = types::FloatingIp;
+    fn field_names() -> &'static [&'static str] {
+        types::FloatingIp::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::FloatingIpUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Group {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["display_name", "id", "silo_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "display_name" => serde_json::to_value(&self.display_name).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::GroupResultsPage {
+    type Item = types::Group;
+    fn field_names() -> &'static [&'static str] {
+        types::Group::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Histogramdouble {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramfloat {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramuint16 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramuint32 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramuint64 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Histogramuint8 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "bins",
+            "max",
+            "min",
+            "n_samples",
+            "p50",
+            "p90",
+            "p99",
+            "squared_mean",
+            "start_time",
+            "sum_of_samples",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "bins" => serde_json::to_value(&self.bins).ok(),
+            "max" => serde_json::to_value(&self.max).ok(),
+            "min" => serde_json::to_value(&self.min).ok(),
+            "n_samples" => serde_json::to_value(&self.n_samples).ok(),
+            "p50" => serde_json::to_value(&self.p50).ok(),
+            "p90" => serde_json::to_value(&self.p90).ok(),
+            "p99" => serde_json::to_value(&self.p99).ok(),
+            "squared_mean" => serde_json::to_value(&self.squared_mean).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            "sum_of_samples" => serde_json::to_value(&self.sum_of_samples).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Hostname {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IcmpParamRange {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IdSortMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IdSortMode::IdAscending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("IdAscending"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IdentityProvider {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "name",
+            "provider_type",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "provider_type" => serde_json::to_value(&self.provider_type).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IdentityProviderResultsPage {
+    type Item = types::IdentityProvider;
+    fn field_names() -> &'static [&'static str] {
+        types::IdentityProvider::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::IdentityProviderType {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IdentityProviderType::Saml => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Saml"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IdentityType {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IdentityType::SiloUser => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SiloUser"))),
+                _ => None,
+            },
+            types::IdentityType::SiloGroup => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SiloGroup"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IdpMetadataSource {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "url", "data"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IdpMetadataSource::Url { url } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Url"))),
+                "url" => serde_json::to_value(url).ok(),
+                _ => None,
+            },
+            types::IdpMetadataSource::Base64EncodedXml { data } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Base64EncodedXml"))),
+                "data" => serde_json::to_value(data).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Image {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "block_size",
+            "description",
+            "digest",
+            "id",
+            "name",
+            "os",
+            "project_id",
+            "size",
+            "time_created",
+            "time_modified",
+            "version",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "block_size" => serde_json::to_value(&self.block_size).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "digest" => serde_json::to_value(&self.digest).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "os" => serde_json::to_value(&self.os).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "size" => serde_json::to_value(&self.size).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "version" => serde_json::to_value(&self.version).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ImageCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name", "os", "source", "version"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "os" => serde_json::to_value(&self.os).ok(),
+            "source" => serde_json::to_value(&self.source).ok(),
+            "version" => serde_json::to_value(&self.version).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ImageResultsPage {
+    type Item = types::Image;
+    fn field_names() -> &'static [&'static str] {
+        types::Image::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::ImageSource {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ImageSource::Snapshot(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ImportBlocksBulkWrite {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["base64_encoded_data", "offset"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "base64_encoded_data" => serde_json::to_value(&self.base64_encoded_data).ok(),
+            "offset" => serde_json::to_value(&self.offset).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ImportExportPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ImportExportPolicy::NoFiltering => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("NoFiltering"))),
+                _ => None,
+            },
+            types::ImportExportPolicy::Allow(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Instance {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "auto_restart_cooldown_expiration",
+            "auto_restart_enabled",
+            "auto_restart_policy",
+            "boot_disk_id",
+            "description",
+            "hostname",
+            "id",
+            "memory",
+            "name",
+            "ncpus",
+            "project_id",
+            "run_state",
+            "time_created",
+            "time_last_auto_restarted",
+            "time_modified",
+            "time_run_state_updated",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "auto_restart_cooldown_expiration" => {
+                serde_json::to_value(&self.auto_restart_cooldown_expiration).ok()
+            }
+            "auto_restart_enabled" => serde_json::to_value(&self.auto_restart_enabled).ok(),
+            "auto_restart_policy" => serde_json::to_value(&self.auto_restart_policy).ok(),
+            "boot_disk_id" => serde_json::to_value(&self.boot_disk_id).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "hostname" => serde_json::to_value(&self.hostname).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "ncpus" => serde_json::to_value(&self.ncpus).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "run_state" => serde_json::to_value(&self.run_state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_last_auto_restarted" => serde_json::to_value(&self.time_last_auto_restarted).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "time_run_state_updated" => serde_json::to_value(&self.time_run_state_updated).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceAutoRestartPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::InstanceAutoRestartPolicy::Never => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Never"))),
+                _ => None,
+            },
+            types::InstanceAutoRestartPolicy::BestEffort => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("BestEffort"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceCpuCount {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "anti_affinity_groups",
+            "auto_restart_policy",
+            "boot_disk",
+            "description",
+            "disks",
+            "external_ips",
+            "hostname",
+            "memory",
+            "name",
+            "ncpus",
+            "network_interfaces",
+            "ssh_public_keys",
+            "start",
+            "user_data",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "anti_affinity_groups" => serde_json::to_value(&self.anti_affinity_groups).ok(),
+            "auto_restart_policy" => serde_json::to_value(&self.auto_restart_policy).ok(),
+            "boot_disk" => serde_json::to_value(&self.boot_disk).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "disks" => serde_json::to_value(&self.disks).ok(),
+            "external_ips" => serde_json::to_value(&self.external_ips).ok(),
+            "hostname" => serde_json::to_value(&self.hostname).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "ncpus" => serde_json::to_value(&self.ncpus).ok(),
+            "network_interfaces" => serde_json::to_value(&self.network_interfaces).ok(),
+            "ssh_public_keys" => serde_json::to_value(&self.ssh_public_keys).ok(),
+            "start" => serde_json::to_value(&self.start).ok(),
+            "user_data" => serde_json::to_value(&self.user_data).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceDiskAttachment {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "description", "disk_source", "name", "size"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::InstanceDiskAttachment::Create {
+                description,
+                disk_source,
+                name,
+                size,
+            } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Create"))),
+                "description" => serde_json::to_value(description).ok(),
+                "disk_source" => serde_json::to_value(disk_source).ok(),
+                "name" => serde_json::to_value(name).ok(),
+                "size" => serde_json::to_value(size).ok(),
+                _ => None,
+            },
+            types::InstanceDiskAttachment::Attach { name } => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Attach"))),
+                "name" => serde_json::to_value(name).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceNetworkInterface {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "instance_id",
+            "ip",
+            "mac",
+            "name",
+            "primary",
+            "subnet_id",
+            "time_created",
+            "time_modified",
+            "transit_ips",
+            "vpc_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "instance_id" => serde_json::to_value(&self.instance_id).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "mac" => serde_json::to_value(&self.mac).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "primary" => serde_json::to_value(&self.primary).ok(),
+            "subnet_id" => serde_json::to_value(&self.subnet_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "transit_ips" => serde_json::to_value(&self.transit_ips).ok(),
+            "vpc_id" => serde_json::to_value(&self.vpc_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceNetworkInterfaceAttachment {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::InstanceNetworkInterfaceAttachment::Create(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::InstanceNetworkInterfaceAttachment::Default => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Default"))),
+                _ => None,
+            },
+            types::InstanceNetworkInterfaceAttachment::None => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("None"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceNetworkInterfaceCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "ip",
+            "name",
+            "subnet_name",
+            "transit_ips",
+            "vpc_name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "subnet_name" => serde_json::to_value(&self.subnet_name).ok(),
+            "transit_ips" => serde_json::to_value(&self.transit_ips).ok(),
+            "vpc_name" => serde_json::to_value(&self.vpc_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceNetworkInterfaceResultsPage {
+    type Item = types::InstanceNetworkInterface;
+    fn field_names() -> &'static [&'static str] {
+        types::InstanceNetworkInterface::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::InstanceNetworkInterfaceUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name", "primary", "transit_ips"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "primary" => serde_json::to_value(&self.primary).ok(),
+            "transit_ips" => serde_json::to_value(&self.transit_ips).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceResultsPage {
+    type Item = types::Instance;
+    fn field_names() -> &'static [&'static str] {
+        types::Instance::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::InstanceSerialConsoleData {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["data", "last_byte_offset"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "data" => serde_json::to_value(&self.data).ok(),
+            "last_byte_offset" => serde_json::to_value(&self.last_byte_offset).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::InstanceState::Creating => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Creating"))),
+                _ => None,
+            },
+            types::InstanceState::Starting => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Starting"))),
+                _ => None,
+            },
+            types::InstanceState::Running => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Running"))),
+                _ => None,
+            },
+            types::InstanceState::Stopping => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Stopping"))),
+                _ => None,
+            },
+            types::InstanceState::Stopped => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Stopped"))),
+                _ => None,
+            },
+            types::InstanceState::Rebooting => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Rebooting"))),
+                _ => None,
+            },
+            types::InstanceState::Migrating => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Migrating"))),
+                _ => None,
+            },
+            types::InstanceState::Repairing => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Repairing"))),
+                _ => None,
+            },
+            types::InstanceState::Failed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Failed"))),
+                _ => None,
+            },
+            types::InstanceState::Destroyed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Destroyed"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InstanceUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["auto_restart_policy", "boot_disk", "memory", "ncpus"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "auto_restart_policy" => serde_json::to_value(&self.auto_restart_policy).ok(),
+            "boot_disk" => serde_json::to_value(&self.boot_disk).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "ncpus" => serde_json::to_value(&self.ncpus).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InterfaceNum {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::InterfaceNum::Unknown(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::InterfaceNum::IfIndex(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::InterfaceNum::PortNumber(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGateway {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "name",
+            "time_created",
+            "time_modified",
+            "vpc_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vpc_id" => serde_json::to_value(&self.vpc_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpAddress {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "address",
+            "description",
+            "id",
+            "internet_gateway_id",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "internet_gateway_id" => serde_json::to_value(&self.internet_gateway_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpAddressCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["address", "description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpAddressResultsPage {
+    type Item = types::InternetGatewayIpAddress;
+    fn field_names() -> &'static [&'static str] {
+        types::InternetGatewayIpAddress::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpPool {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "internet_gateway_id",
+            "ip_pool_id",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "internet_gateway_id" => serde_json::to_value(&self.internet_gateway_id).ok(),
+            "ip_pool_id" => serde_json::to_value(&self.ip_pool_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpPoolCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "ip_pool", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ip_pool" => serde_json::to_value(&self.ip_pool).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::InternetGatewayIpPoolResultsPage {
+    type Item = types::InternetGatewayIpPool;
+    fn field_names() -> &'static [&'static str] {
+        types::InternetGatewayIpPool::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::InternetGatewayResultsPage {
+    type Item = types::InternetGateway;
+    fn field_names() -> &'static [&'static str] {
+        types::InternetGateway::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::IpNet {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IpNet::V4(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::IpNet::V6(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPool {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "ip_version",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "ip_version" => serde_json::to_value(&self.ip_version).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "ip_version", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ip_version" => serde_json::to_value(&self.ip_version).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolLinkSilo {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["is_default", "silo"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "is_default" => serde_json::to_value(&self.is_default).ok(),
+            "silo" => serde_json::to_value(&self.silo).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolRange {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "ip_pool_id", "range", "time_created"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "ip_pool_id" => serde_json::to_value(&self.ip_pool_id).ok(),
+            "range" => serde_json::to_value(&self.range).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolRangeResultsPage {
+    type Item = types::IpPoolRange;
+    fn field_names() -> &'static [&'static str] {
+        types::IpPoolRange::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::IpPoolResultsPage {
+    type Item = types::IpPool;
+    fn field_names() -> &'static [&'static str] {
+        types::IpPool::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::IpPoolSiloLink {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["ip_pool_id", "is_default", "silo_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "ip_pool_id" => serde_json::to_value(&self.ip_pool_id).ok(),
+            "is_default" => serde_json::to_value(&self.is_default).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolSiloLinkResultsPage {
+    type Item = types::IpPoolSiloLink;
+    fn field_names() -> &'static [&'static str] {
+        types::IpPoolSiloLink::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::IpPoolSiloUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["is_default"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "is_default" => serde_json::to_value(&self.is_default).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpPoolUtilization {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["capacity", "remaining"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "capacity" => serde_json::to_value(&self.capacity).ok(),
+            "remaining" => serde_json::to_value(&self.remaining).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpRange {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IpRange::V4(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::IpRange::V6(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::IpVersion {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::IpVersion::V4 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("V4"))),
+                _ => None,
+            },
+            types::IpVersion::V6 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("V6"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Ipv4Net {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Ipv4Range {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["first", "last"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "first" => serde_json::to_value(&self.first).ok(),
+            "last" => serde_json::to_value(&self.last).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Ipv6Net {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Ipv6Range {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["first", "last"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "first" => serde_json::to_value(&self.first).ok(),
+            "last" => serde_json::to_value(&self.last).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::L4PortRange {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LinkConfigCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "autoneg",
+            "fec",
+            "link_name",
+            "lldp",
+            "mtu",
+            "speed",
+            "tx_eq",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "autoneg" => serde_json::to_value(&self.autoneg).ok(),
+            "fec" => serde_json::to_value(&self.fec).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "lldp" => serde_json::to_value(&self.lldp).ok(),
+            "mtu" => serde_json::to_value(&self.mtu).ok(),
+            "speed" => serde_json::to_value(&self.speed).ok(),
+            "tx_eq" => serde_json::to_value(&self.tx_eq).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LinkFec {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::LinkFec::Firecode => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Firecode"))),
+                _ => None,
+            },
+            types::LinkFec::None => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("None"))),
+                _ => None,
+            },
+            types::LinkFec::Rs => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Rs"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LinkSpeed {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::LinkSpeed::Speed0G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed0G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed1G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed1G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed10G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed10G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed25G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed25G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed40G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed40G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed50G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed50G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed100G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed100G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed200G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed200G"))),
+                _ => None,
+            },
+            types::LinkSpeed::Speed400G => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Speed400G"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LldpLinkConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "chassis_id",
+            "enabled",
+            "id",
+            "link_description",
+            "link_name",
+            "management_ip",
+            "system_description",
+            "system_name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "chassis_id" => serde_json::to_value(&self.chassis_id).ok(),
+            "enabled" => serde_json::to_value(&self.enabled).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "link_description" => serde_json::to_value(&self.link_description).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "management_ip" => serde_json::to_value(&self.management_ip).ok(),
+            "system_description" => serde_json::to_value(&self.system_description).ok(),
+            "system_name" => serde_json::to_value(&self.system_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LldpLinkConfigCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "chassis_id",
+            "enabled",
+            "link_description",
+            "link_name",
+            "management_ip",
+            "system_description",
+            "system_name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "chassis_id" => serde_json::to_value(&self.chassis_id).ok(),
+            "enabled" => serde_json::to_value(&self.enabled).ok(),
+            "link_description" => serde_json::to_value(&self.link_description).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "management_ip" => serde_json::to_value(&self.management_ip).ok(),
+            "system_description" => serde_json::to_value(&self.system_description).ok(),
+            "system_name" => serde_json::to_value(&self.system_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LldpNeighbor {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "chassis_id",
+            "first_seen",
+            "last_seen",
+            "link_description",
+            "link_name",
+            "local_port",
+            "management_ip",
+            "system_description",
+            "system_name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "chassis_id" => serde_json::to_value(&self.chassis_id).ok(),
+            "first_seen" => serde_json::to_value(&self.first_seen).ok(),
+            "last_seen" => serde_json::to_value(&self.last_seen).ok(),
+            "link_description" => serde_json::to_value(&self.link_description).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "local_port" => serde_json::to_value(&self.local_port).ok(),
+            "management_ip" => serde_json::to_value(&self.management_ip).ok(),
+            "system_description" => serde_json::to_value(&self.system_description).ok(),
+            "system_name" => serde_json::to_value(&self.system_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LldpNeighborResultsPage {
+    type Item = types::LldpNeighbor;
+    fn field_names() -> &'static [&'static str] {
+        types::LldpNeighbor::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::LoopbackAddress {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "address",
+            "address_lot_block_id",
+            "id",
+            "rack_id",
+            "switch_location",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "address_lot_block_id" => serde_json::to_value(&self.address_lot_block_id).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            "switch_location" => serde_json::to_value(&self.switch_location).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LoopbackAddressCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "address",
+            "address_lot",
+            "anycast",
+            "mask",
+            "rack_id",
+            "switch_location",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "address_lot" => serde_json::to_value(&self.address_lot).ok(),
+            "anycast" => serde_json::to_value(&self.anycast).ok(),
+            "mask" => serde_json::to_value(&self.mask).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            "switch_location" => serde_json::to_value(&self.switch_location).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::LoopbackAddressResultsPage {
+    type Item = types::LoopbackAddress;
+    fn field_names() -> &'static [&'static str] {
+        types::LoopbackAddress::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::MacAddr {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ManagementAddress {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["addr", "interface_num", "oid"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addr" => serde_json::to_value(&self.addr).ok(),
+            "interface_num" => serde_json::to_value(&self.interface_num).ok(),
+            "oid" => serde_json::to_value(&self.oid).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Measurement {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["datum", "timestamp"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "datum" => serde_json::to_value(&self.datum).ok(),
+            "timestamp" => serde_json::to_value(&self.timestamp).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::MeasurementResultsPage {
+    type Item = types::Measurement;
+    fn field_names() -> &'static [&'static str] {
+        types::Measurement::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::MetricType {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::MetricType::Gauge => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Gauge"))),
+                _ => None,
+            },
+            types::MetricType::Delta => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Delta"))),
+                _ => None,
+            },
+            types::MetricType::Cumulative => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Cumulative"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::MissingDatum {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["datum_type", "start_time"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "datum_type" => serde_json::to_value(&self.datum_type).ok(),
+            "start_time" => serde_json::to_value(&self.start_time).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Name {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NameOrId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::NameOrId::Id(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::NameOrId::Name(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NameOrIdSortMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::NameOrIdSortMode::NameAscending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("NameAscending"))),
+                _ => None,
+            },
+            types::NameOrIdSortMode::NameDescending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("NameDescending"))),
+                _ => None,
+            },
+            types::NameOrIdSortMode::IdAscending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("IdAscending"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NameSortMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::NameSortMode::NameAscending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("NameAscending"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NetworkAddress {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::NetworkAddress::IpAddr(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::NetworkAddress::IEEE802(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NetworkInterface {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "id",
+            "ip",
+            "kind",
+            "mac",
+            "name",
+            "primary",
+            "slot",
+            "subnet",
+            "transit_ips",
+            "vni",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "mac" => serde_json::to_value(&self.mac).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "primary" => serde_json::to_value(&self.primary).ok(),
+            "slot" => serde_json::to_value(&self.slot).ok(),
+            "subnet" => serde_json::to_value(&self.subnet).ok(),
+            "transit_ips" => serde_json::to_value(&self.transit_ips).ok(),
+            "vni" => serde_json::to_value(&self.vni).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::NetworkInterfaceKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::NetworkInterfaceKind::Instance(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::NetworkInterfaceKind::Service(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::NetworkInterfaceKind::Probe(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::OxqlQueryResult {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["tables"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "tables" => serde_json::to_value(&self.tables).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::OxqlTable {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["name", "timeseries"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "name" => serde_json::to_value(&self.name).ok(),
+            "timeseries" => serde_json::to_value(&self.timeseries).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PaginationOrder {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::PaginationOrder::Ascending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ascending"))),
+                _ => None,
+            },
+            types::PaginationOrder::Descending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Descending"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Password {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PhysicalDisk {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "form_factor",
+            "id",
+            "model",
+            "policy",
+            "serial",
+            "sled_id",
+            "state",
+            "time_created",
+            "time_modified",
+            "vendor",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "form_factor" => serde_json::to_value(&self.form_factor).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "model" => serde_json::to_value(&self.model).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            "serial" => serde_json::to_value(&self.serial).ok(),
+            "sled_id" => serde_json::to_value(&self.sled_id).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vendor" => serde_json::to_value(&self.vendor).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PhysicalDiskKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::PhysicalDiskKind::M2 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("M2"))),
+                _ => None,
+            },
+            types::PhysicalDiskKind::U2 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("U2"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PhysicalDiskPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::PhysicalDiskPolicy::InService => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("InService"))),
+                _ => None,
+            },
+            types::PhysicalDiskPolicy::Expunged => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Expunged"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PhysicalDiskResultsPage {
+    type Item = types::PhysicalDisk;
+    fn field_names() -> &'static [&'static str] {
+        types::PhysicalDisk::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::PhysicalDiskState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::PhysicalDiskState::Active => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Active"))),
+                _ => None,
+            },
+            types::PhysicalDiskState::Decommissioned => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Decommissioned"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Ping {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["status"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "status" => serde_json::to_value(&self.status).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::PingStatus {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::PingStatus::Ok => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ok"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Points {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["start_times", "timestamps", "values"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "start_times" => serde_json::to_value(&self.start_times).ok(),
+            "timestamps" => serde_json::to_value(&self.timestamps).ok(),
+            "values" => serde_json::to_value(&self.values).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Probe {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "name",
+            "sled",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "sled" => serde_json::to_value(&self.sled).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProbeCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "ip_pool", "name", "sled"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ip_pool" => serde_json::to_value(&self.ip_pool).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "sled" => serde_json::to_value(&self.sled).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProbeExternalIp {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["first_port", "ip", "kind", "last_port"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "first_port" => serde_json::to_value(&self.first_port).ok(),
+            "ip" => serde_json::to_value(&self.ip).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "last_port" => serde_json::to_value(&self.last_port).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProbeExternalIpKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ProbeExternalIpKind::Snat => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Snat"))),
+                _ => None,
+            },
+            types::ProbeExternalIpKind::Floating => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Floating"))),
+                _ => None,
+            },
+            types::ProbeExternalIpKind::Ephemeral => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ephemeral"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProbeInfo {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["external_ips", "id", "interface", "name", "sled"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "external_ips" => serde_json::to_value(&self.external_ips).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "interface" => serde_json::to_value(&self.interface).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "sled" => serde_json::to_value(&self.sled).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProbeInfoResultsPage {
+    type Item = types::ProbeInfo;
+    fn field_names() -> &'static [&'static str] {
+        types::ProbeInfo::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Project {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "id", "name", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProjectCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProjectResultsPage {
+    type Item = types::Project;
+    fn field_names() -> &'static [&'static str] {
+        types::Project::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::ProjectRole {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ProjectRole::Admin => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Admin"))),
+                _ => None,
+            },
+            types::ProjectRole::Collaborator => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Collaborator"))),
+                _ => None,
+            },
+            types::ProjectRole::Viewer => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Viewer"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProjectRolePolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["role_assignments"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "role_assignments" => serde_json::to_value(&self.role_assignments).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProjectRoleRoleAssignment {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["identity_id", "identity_type", "role_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "identity_id" => serde_json::to_value(&self.identity_id).ok(),
+            "identity_type" => serde_json::to_value(&self.identity_type).ok(),
+            "role_name" => serde_json::to_value(&self.role_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ProjectUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Quantile {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "desired_marker_positions",
+            "marker_heights",
+            "marker_positions",
+            "p",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "desired_marker_positions" => serde_json::to_value(&self.desired_marker_positions).ok(),
+            "marker_heights" => serde_json::to_value(&self.marker_heights).ok(),
+            "marker_positions" => serde_json::to_value(&self.marker_positions).ok(),
+            "p" => serde_json::to_value(&self.p).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Rack {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RackResultsPage {
+    type Item = types::Rack;
+    fn field_names() -> &'static [&'static str] {
+        types::Rack::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Route {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["dst", "gw", "rib_priority", "vid"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "dst" => serde_json::to_value(&self.dst).ok(),
+            "gw" => serde_json::to_value(&self.gw).ok(),
+            "rib_priority" => serde_json::to_value(&self.rib_priority).ok(),
+            "vid" => serde_json::to_value(&self.vid).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouteConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["link_name", "routes"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "routes" => serde_json::to_value(&self.routes).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouteDestination {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::RouteDestination::Ip(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteDestination::IpNet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteDestination::Vpc(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteDestination::Subnet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouteTarget {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::RouteTarget::Ip(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteTarget::Vpc(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteTarget::Subnet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteTarget::Instance(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteTarget::InternetGateway(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::RouteTarget::Drop => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Drop"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouterRoute {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "destination",
+            "id",
+            "kind",
+            "name",
+            "target",
+            "time_created",
+            "time_modified",
+            "vpc_router_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "destination" => serde_json::to_value(&self.destination).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "target" => serde_json::to_value(&self.target).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vpc_router_id" => serde_json::to_value(&self.vpc_router_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouterRouteCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "destination", "name", "target"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "destination" => serde_json::to_value(&self.destination).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "target" => serde_json::to_value(&self.target).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouterRouteKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::RouterRouteKind::Default => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Default"))),
+                _ => None,
+            },
+            types::RouterRouteKind::VpcSubnet => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("VpcSubnet"))),
+                _ => None,
+            },
+            types::RouterRouteKind::VpcPeering => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("VpcPeering"))),
+                _ => None,
+            },
+            types::RouterRouteKind::Custom => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Custom"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::RouterRouteResultsPage {
+    type Item = types::RouterRoute;
+    fn field_names() -> &'static [&'static str] {
+        types::RouterRoute::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::RouterRouteUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "destination", "name", "target"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "destination" => serde_json::to_value(&self.destination).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "target" => serde_json::to_value(&self.target).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SamlIdentityProvider {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "acs_url",
+            "description",
+            "group_attribute_name",
+            "id",
+            "idp_entity_id",
+            "name",
+            "public_cert",
+            "slo_url",
+            "sp_client_id",
+            "technical_contact_email",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "acs_url" => serde_json::to_value(&self.acs_url).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "group_attribute_name" => serde_json::to_value(&self.group_attribute_name).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "idp_entity_id" => serde_json::to_value(&self.idp_entity_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "public_cert" => serde_json::to_value(&self.public_cert).ok(),
+            "slo_url" => serde_json::to_value(&self.slo_url).ok(),
+            "sp_client_id" => serde_json::to_value(&self.sp_client_id).ok(),
+            "technical_contact_email" => serde_json::to_value(&self.technical_contact_email).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SamlIdentityProviderCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "acs_url",
+            "description",
+            "group_attribute_name",
+            "idp_entity_id",
+            "idp_metadata_source",
+            "name",
+            "signing_keypair",
+            "slo_url",
+            "sp_client_id",
+            "technical_contact_email",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "acs_url" => serde_json::to_value(&self.acs_url).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "group_attribute_name" => serde_json::to_value(&self.group_attribute_name).ok(),
+            "idp_entity_id" => serde_json::to_value(&self.idp_entity_id).ok(),
+            "idp_metadata_source" => serde_json::to_value(&self.idp_metadata_source).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "signing_keypair" => serde_json::to_value(&self.signing_keypair).ok(),
+            "slo_url" => serde_json::to_value(&self.slo_url).ok(),
+            "sp_client_id" => serde_json::to_value(&self.sp_client_id).ok(),
+            "technical_contact_email" => serde_json::to_value(&self.technical_contact_email).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ServiceIcmpConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["enabled"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "enabled" => serde_json::to_value(&self.enabled).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ServiceUsingCertificate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ServiceUsingCertificate::ExternalApi => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("ExternalApi"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SetTargetReleaseParams {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["system_version"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "system_version" => serde_json::to_value(&self.system_version).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SetTargetReleaseParamsSystemVersion {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Silo {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "admin_group_name",
+            "description",
+            "discoverable",
+            "id",
+            "identity_mode",
+            "mapped_fleet_roles",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "admin_group_name" => serde_json::to_value(&self.admin_group_name).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "discoverable" => serde_json::to_value(&self.discoverable).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "identity_mode" => serde_json::to_value(&self.identity_mode).ok(),
+            "mapped_fleet_roles" => serde_json::to_value(&self.mapped_fleet_roles).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloAuthSettings {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["device_token_max_ttl_seconds", "silo_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "device_token_max_ttl_seconds" => {
+                serde_json::to_value(&self.device_token_max_ttl_seconds).ok()
+            }
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloAuthSettingsUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["device_token_max_ttl_seconds"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "device_token_max_ttl_seconds" => {
+                serde_json::to_value(&self.device_token_max_ttl_seconds).ok()
+            }
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "admin_group_name",
+            "description",
+            "discoverable",
+            "identity_mode",
+            "mapped_fleet_roles",
+            "name",
+            "quotas",
+            "tls_certificates",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "admin_group_name" => serde_json::to_value(&self.admin_group_name).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "discoverable" => serde_json::to_value(&self.discoverable).ok(),
+            "identity_mode" => serde_json::to_value(&self.identity_mode).ok(),
+            "mapped_fleet_roles" => serde_json::to_value(&self.mapped_fleet_roles).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "quotas" => serde_json::to_value(&self.quotas).ok(),
+            "tls_certificates" => serde_json::to_value(&self.tls_certificates).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloIdentityMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SiloIdentityMode::SamlJit => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("SamlJit"))),
+                _ => None,
+            },
+            types::SiloIdentityMode::LocalOnly => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("LocalOnly"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloIpPool {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "is_default",
+            "name",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "is_default" => serde_json::to_value(&self.is_default).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloIpPoolResultsPage {
+    type Item = types::SiloIpPool;
+    fn field_names() -> &'static [&'static str] {
+        types::SiloIpPool::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SiloQuotas {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["cpus", "memory", "silo_id", "storage"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cpus" => serde_json::to_value(&self.cpus).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            "storage" => serde_json::to_value(&self.storage).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloQuotasCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["cpus", "memory", "storage"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cpus" => serde_json::to_value(&self.cpus).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "storage" => serde_json::to_value(&self.storage).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloQuotasResultsPage {
+    type Item = types::SiloQuotas;
+    fn field_names() -> &'static [&'static str] {
+        types::SiloQuotas::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SiloQuotasUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["cpus", "memory", "storage"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cpus" => serde_json::to_value(&self.cpus).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "storage" => serde_json::to_value(&self.storage).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloResultsPage {
+    type Item = types::Silo;
+    fn field_names() -> &'static [&'static str] {
+        types::Silo::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SiloRole {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SiloRole::Admin => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Admin"))),
+                _ => None,
+            },
+            types::SiloRole::Collaborator => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Collaborator"))),
+                _ => None,
+            },
+            types::SiloRole::Viewer => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Viewer"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloRolePolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["role_assignments"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "role_assignments" => serde_json::to_value(&self.role_assignments).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloRoleRoleAssignment {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["identity_id", "identity_type", "role_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "identity_id" => serde_json::to_value(&self.identity_id).ok(),
+            "identity_type" => serde_json::to_value(&self.identity_type).ok(),
+            "role_name" => serde_json::to_value(&self.role_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloUtilization {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["allocated", "provisioned", "silo_id", "silo_name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "allocated" => serde_json::to_value(&self.allocated).ok(),
+            "provisioned" => serde_json::to_value(&self.provisioned).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            "silo_name" => serde_json::to_value(&self.silo_name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SiloUtilizationResultsPage {
+    type Item = types::SiloUtilization;
+    fn field_names() -> &'static [&'static str] {
+        types::SiloUtilization::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Sled {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "baseboard",
+            "id",
+            "policy",
+            "rack_id",
+            "state",
+            "time_created",
+            "time_modified",
+            "usable_hardware_threads",
+            "usable_physical_ram",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "baseboard" => serde_json::to_value(&self.baseboard).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "policy" => serde_json::to_value(&self.policy).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "usable_hardware_threads" => serde_json::to_value(&self.usable_hardware_threads).ok(),
+            "usable_physical_ram" => serde_json::to_value(&self.usable_physical_ram).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledInstance {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "active_sled_id",
+            "id",
+            "memory",
+            "migration_id",
+            "name",
+            "ncpus",
+            "project_name",
+            "silo_name",
+            "state",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "active_sled_id" => serde_json::to_value(&self.active_sled_id).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "migration_id" => serde_json::to_value(&self.migration_id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "ncpus" => serde_json::to_value(&self.ncpus).ok(),
+            "project_name" => serde_json::to_value(&self.project_name).ok(),
+            "silo_name" => serde_json::to_value(&self.silo_name).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledInstanceResultsPage {
+    type Item = types::SledInstance;
+    fn field_names() -> &'static [&'static str] {
+        types::SledInstance::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SledPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SledPolicy::InService(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::SledPolicy::Expunged => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Expunged"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledProvisionPolicy {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SledProvisionPolicy::Provisionable => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Provisionable"))),
+                _ => None,
+            },
+            types::SledProvisionPolicy::NonProvisionable => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("NonProvisionable"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledProvisionPolicyParams {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["state"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "state" => serde_json::to_value(&self.state).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledProvisionPolicyResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["new_state", "old_state"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "new_state" => serde_json::to_value(&self.new_state).ok(),
+            "old_state" => serde_json::to_value(&self.old_state).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SledResultsPage {
+    type Item = types::Sled;
+    fn field_names() -> &'static [&'static str] {
+        types::Sled::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SledState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SledState::Active => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Active"))),
+                _ => None,
+            },
+            types::SledState::Decommissioned => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Decommissioned"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Snapshot {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "disk_id",
+            "id",
+            "name",
+            "project_id",
+            "size",
+            "state",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "disk_id" => serde_json::to_value(&self.disk_id).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "size" => serde_json::to_value(&self.size).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SnapshotCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "disk", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "disk" => serde_json::to_value(&self.disk).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SnapshotResultsPage {
+    type Item = types::Snapshot;
+    fn field_names() -> &'static [&'static str] {
+        types::Snapshot::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SnapshotState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SnapshotState::Creating => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Creating"))),
+                _ => None,
+            },
+            types::SnapshotState::Ready => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Ready"))),
+                _ => None,
+            },
+            types::SnapshotState::Faulted => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Faulted"))),
+                _ => None,
+            },
+            types::SnapshotState::Destroyed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Destroyed"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SshKey {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "name",
+            "public_key",
+            "silo_user_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "public_key" => serde_json::to_value(&self.public_key).ok(),
+            "silo_user_id" => serde_json::to_value(&self.silo_user_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SshKeyCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name", "public_key"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "public_key" => serde_json::to_value(&self.public_key).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SshKeyResultsPage {
+    type Item = types::SshKey;
+    fn field_names() -> &'static [&'static str] {
+        types::SshKey::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SupportBundleCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["user_comment"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "user_comment" => serde_json::to_value(&self.user_comment).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SupportBundleInfo {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "id",
+            "reason_for_creation",
+            "reason_for_failure",
+            "state",
+            "time_created",
+            "user_comment",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "reason_for_creation" => serde_json::to_value(&self.reason_for_creation).ok(),
+            "reason_for_failure" => serde_json::to_value(&self.reason_for_failure).ok(),
+            "state" => serde_json::to_value(&self.state).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "user_comment" => serde_json::to_value(&self.user_comment).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SupportBundleInfoResultsPage {
+    type Item = types::SupportBundleInfo;
+    fn field_names() -> &'static [&'static str] {
+        types::SupportBundleInfo::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SupportBundleState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SupportBundleState::Collecting => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Collecting"))),
+                _ => None,
+            },
+            types::SupportBundleState::Destroying => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Destroying"))),
+                _ => None,
+            },
+            types::SupportBundleState::Failed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Failed"))),
+                _ => None,
+            },
+            types::SupportBundleState::Active => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Active"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SupportBundleUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["user_comment"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "user_comment" => serde_json::to_value(&self.user_comment).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Switch {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "baseboard",
+            "id",
+            "rack_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "baseboard" => serde_json::to_value(&self.baseboard).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchBgpHistory {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["history", "switch"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "history" => serde_json::to_value(&self.history).ok(),
+            "switch" => serde_json::to_value(&self.switch).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchInterfaceConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "id",
+            "interface_name",
+            "kind",
+            "port_settings_id",
+            "v6_enabled",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "interface_name" => serde_json::to_value(&self.interface_name).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            "v6_enabled" => serde_json::to_value(&self.v6_enabled).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchInterfaceConfigCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["kind", "link_name", "v6_enabled"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "v6_enabled" => serde_json::to_value(&self.v6_enabled).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchInterfaceKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SwitchInterfaceKind::Primary => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Primary"))),
+                _ => None,
+            },
+            types::SwitchInterfaceKind::Vlan(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::SwitchInterfaceKind::Loopback => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Loopback"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchInterfaceKind2 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SwitchInterfaceKind2::Primary => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Primary"))),
+                _ => None,
+            },
+            types::SwitchInterfaceKind2::Vlan => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Vlan"))),
+                _ => None,
+            },
+            types::SwitchInterfaceKind2::Loopback => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Loopback"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchLinkState {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchLocation {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SwitchLocation::Switch0 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Switch0"))),
+                _ => None,
+            },
+            types::SwitchLocation::Switch1 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Switch1"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPort {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "id",
+            "port_name",
+            "port_settings_id",
+            "rack_id",
+            "switch_location",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "port_name" => serde_json::to_value(&self.port_name).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            "switch_location" => serde_json::to_value(&self.switch_location).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortAddressView {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "address",
+            "address_lot_block_id",
+            "address_lot_id",
+            "address_lot_name",
+            "interface_name",
+            "port_settings_id",
+            "vlan_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "address" => serde_json::to_value(&self.address).ok(),
+            "address_lot_block_id" => serde_json::to_value(&self.address_lot_block_id).ok(),
+            "address_lot_id" => serde_json::to_value(&self.address_lot_id).ok(),
+            "address_lot_name" => serde_json::to_value(&self.address_lot_name).ok(),
+            "interface_name" => serde_json::to_value(&self.interface_name).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            "vlan_id" => serde_json::to_value(&self.vlan_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortApplySettings {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["port_settings"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "port_settings" => serde_json::to_value(&self.port_settings).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["geometry", "port_settings_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "geometry" => serde_json::to_value(&self.geometry).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortConfigCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["geometry"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "geometry" => serde_json::to_value(&self.geometry).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortGeometry {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SwitchPortGeometry::Qsfp28x1 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Qsfp28x1"))),
+                _ => None,
+            },
+            types::SwitchPortGeometry::Qsfp28x2 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Qsfp28x2"))),
+                _ => None,
+            },
+            types::SwitchPortGeometry::Sfp28x4 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Sfp28x4"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortGeometry2 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SwitchPortGeometry2::Qsfp28x1 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Qsfp28x1"))),
+                _ => None,
+            },
+            types::SwitchPortGeometry2::Qsfp28x2 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Qsfp28x2"))),
+                _ => None,
+            },
+            types::SwitchPortGeometry2::Sfp28x4 => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Sfp28x4"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortLinkConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "autoneg",
+            "fec",
+            "link_name",
+            "lldp_link_config",
+            "mtu",
+            "port_settings_id",
+            "speed",
+            "tx_eq_config",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "autoneg" => serde_json::to_value(&self.autoneg).ok(),
+            "fec" => serde_json::to_value(&self.fec).ok(),
+            "link_name" => serde_json::to_value(&self.link_name).ok(),
+            "lldp_link_config" => serde_json::to_value(&self.lldp_link_config).ok(),
+            "mtu" => serde_json::to_value(&self.mtu).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            "speed" => serde_json::to_value(&self.speed).ok(),
+            "tx_eq_config" => serde_json::to_value(&self.tx_eq_config).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortResultsPage {
+    type Item = types::SwitchPort;
+    fn field_names() -> &'static [&'static str] {
+        types::SwitchPort::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SwitchPortRouteConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "dst",
+            "gw",
+            "interface_name",
+            "port_settings_id",
+            "rib_priority",
+            "vlan_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "dst" => serde_json::to_value(&self.dst).ok(),
+            "gw" => serde_json::to_value(&self.gw).ok(),
+            "interface_name" => serde_json::to_value(&self.interface_name).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            "rib_priority" => serde_json::to_value(&self.rib_priority).ok(),
+            "vlan_id" => serde_json::to_value(&self.vlan_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortSettings {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "addresses",
+            "bgp_peers",
+            "description",
+            "groups",
+            "id",
+            "interfaces",
+            "links",
+            "name",
+            "port",
+            "routes",
+            "time_created",
+            "time_modified",
+            "vlan_interfaces",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addresses" => serde_json::to_value(&self.addresses).ok(),
+            "bgp_peers" => serde_json::to_value(&self.bgp_peers).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "groups" => serde_json::to_value(&self.groups).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "interfaces" => serde_json::to_value(&self.interfaces).ok(),
+            "links" => serde_json::to_value(&self.links).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "port" => serde_json::to_value(&self.port).ok(),
+            "routes" => serde_json::to_value(&self.routes).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vlan_interfaces" => serde_json::to_value(&self.vlan_interfaces).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortSettingsCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "addresses",
+            "bgp_peers",
+            "description",
+            "groups",
+            "interfaces",
+            "links",
+            "name",
+            "port_config",
+            "routes",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "addresses" => serde_json::to_value(&self.addresses).ok(),
+            "bgp_peers" => serde_json::to_value(&self.bgp_peers).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "groups" => serde_json::to_value(&self.groups).ok(),
+            "interfaces" => serde_json::to_value(&self.interfaces).ok(),
+            "links" => serde_json::to_value(&self.links).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "port_config" => serde_json::to_value(&self.port_config).ok(),
+            "routes" => serde_json::to_value(&self.routes).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortSettingsGroups {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["port_settings_group_id", "port_settings_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "port_settings_group_id" => serde_json::to_value(&self.port_settings_group_id).ok(),
+            "port_settings_id" => serde_json::to_value(&self.port_settings_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortSettingsIdentity {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "id", "name", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SwitchPortSettingsIdentityResultsPage {
+    type Item = types::SwitchPortSettingsIdentity;
+    fn field_names() -> &'static [&'static str] {
+        types::SwitchPortSettingsIdentity::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SwitchResultsPage {
+    type Item = types::Switch;
+    fn field_names() -> &'static [&'static str] {
+        types::Switch::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::SwitchVlanInterfaceConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["interface_config_id", "vlan_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "interface_config_id" => serde_json::to_value(&self.interface_config_id).ok(),
+            "vlan_id" => serde_json::to_value(&self.vlan_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SystemMetricName {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::SystemMetricName::VirtualDiskSpaceProvisioned => match field_name {
+                "type" => Some(serde_json::Value::String(String::from(
+                    "VirtualDiskSpaceProvisioned",
+                ))),
+                _ => None,
+            },
+            types::SystemMetricName::CpusProvisioned => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("CpusProvisioned"))),
+                _ => None,
+            },
+            types::SystemMetricName::RamProvisioned => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("RamProvisioned"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::SystemUpdateGetRepositorySystemVersion {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TargetRelease {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["generation", "release_source", "time_requested"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "generation" => serde_json::to_value(&self.generation).ok(),
+            "release_source" => serde_json::to_value(&self.release_source).ok(),
+            "time_requested" => serde_json::to_value(&self.time_requested).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TargetReleaseSource {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::TargetReleaseSource::Unspecified => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Unspecified"))),
+                _ => None,
+            },
+            types::TargetReleaseSource::SystemVersion(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TargetReleaseSourceVersion {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeAndIdSortMode {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::TimeAndIdSortMode::TimeAndIdAscending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from(
+                    "TimeAndIdAscending",
+                ))),
+                _ => None,
+            },
+            types::TimeAndIdSortMode::TimeAndIdDescending => match field_name {
+                "type" => Some(serde_json::Value::String(String::from(
+                    "TimeAndIdDescending",
+                ))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Timeseries {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["fields", "points"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "fields" => serde_json::to_value(&self.fields).ok(),
+            "points" => serde_json::to_value(&self.points).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeseriesDescription {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["metric", "target"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "metric" => serde_json::to_value(&self.metric).ok(),
+            "target" => serde_json::to_value(&self.target).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeseriesName {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeseriesQuery {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["query"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "query" => serde_json::to_value(&self.query).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeseriesSchema {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "authz_scope",
+            "created",
+            "datum_type",
+            "description",
+            "field_schema",
+            "timeseries_name",
+            "units",
+            "version",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "authz_scope" => serde_json::to_value(&self.authz_scope).ok(),
+            "created" => serde_json::to_value(&self.created).ok(),
+            "datum_type" => serde_json::to_value(&self.datum_type).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "field_schema" => serde_json::to_value(&self.field_schema).ok(),
+            "timeseries_name" => serde_json::to_value(&self.timeseries_name).ok(),
+            "units" => serde_json::to_value(&self.units).ok(),
+            "version" => serde_json::to_value(&self.version).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TimeseriesSchemaResultsPage {
+    type Item = types::TimeseriesSchema;
+    fn field_names() -> &'static [&'static str] {
+        types::TimeseriesSchema::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::TufArtifactMeta {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["board", "hash", "id", "sign", "size"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "board" => serde_json::to_value(&self.board).ok(),
+            "hash" => serde_json::to_value(&self.hash).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "sign" => serde_json::to_value(&self.sign).ok(),
+            "size" => serde_json::to_value(&self.size).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoDescription {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["artifacts", "repo"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "artifacts" => serde_json::to_value(&self.artifacts).ok(),
+            "repo" => serde_json::to_value(&self.repo).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoGetResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoInsertResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["recorded", "status"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "recorded" => serde_json::to_value(&self.recorded).ok(),
+            "status" => serde_json::to_value(&self.status).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoInsertStatus {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::TufRepoInsertStatus::AlreadyExists => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("AlreadyExists"))),
+                _ => None,
+            },
+            types::TufRepoInsertStatus::Inserted => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Inserted"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoMeta {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "file_name",
+            "hash",
+            "system_version",
+            "targets_role_version",
+            "valid_until",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "file_name" => serde_json::to_value(&self.file_name).ok(),
+            "hash" => serde_json::to_value(&self.hash).ok(),
+            "system_version" => serde_json::to_value(&self.system_version).ok(),
+            "targets_role_version" => serde_json::to_value(&self.targets_role_version).ok(),
+            "valid_until" => serde_json::to_value(&self.valid_until).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TufRepoMetaSystemVersion {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TxEqConfig {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["main", "post1", "post2", "pre1", "pre2"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "main" => serde_json::to_value(&self.main).ok(),
+            "post1" => serde_json::to_value(&self.post1).ok(),
+            "post2" => serde_json::to_value(&self.post2).ok(),
+            "pre1" => serde_json::to_value(&self.pre1).ok(),
+            "pre2" => serde_json::to_value(&self.pre2).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::TxEqConfig2 {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["main", "post1", "post2", "pre1", "pre2"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "main" => serde_json::to_value(&self.main).ok(),
+            "post1" => serde_json::to_value(&self.post1).ok(),
+            "post2" => serde_json::to_value(&self.post2).ok(),
+            "pre1" => serde_json::to_value(&self.pre1).ok(),
+            "pre2" => serde_json::to_value(&self.pre2).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UninitializedSled {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["baseboard", "cubby", "rack_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "baseboard" => serde_json::to_value(&self.baseboard).ok(),
+            "cubby" => serde_json::to_value(&self.cubby).ok(),
+            "rack_id" => serde_json::to_value(&self.rack_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UninitializedSledId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["part", "serial"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "part" => serde_json::to_value(&self.part).ok(),
+            "serial" => serde_json::to_value(&self.serial).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UninitializedSledResultsPage {
+    type Item = types::UninitializedSled;
+    fn field_names() -> &'static [&'static str] {
+        types::UninitializedSled::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::Units {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::Units::Count => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Count"))),
+                _ => None,
+            },
+            types::Units::Bytes => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Bytes"))),
+                _ => None,
+            },
+            types::Units::Seconds => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Seconds"))),
+                _ => None,
+            },
+            types::Units::Nanoseconds => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Nanoseconds"))),
+                _ => None,
+            },
+            types::Units::Volts => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Volts"))),
+                _ => None,
+            },
+            types::Units::Amps => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Amps"))),
+                _ => None,
+            },
+            types::Units::Watts => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Watts"))),
+                _ => None,
+            },
+            types::Units::DegreesCelsius => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("DegreesCelsius"))),
+                _ => None,
+            },
+            types::Units::None => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("None"))),
+                _ => None,
+            },
+            types::Units::Rpm => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Rpm"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UpdatesTrustRoot {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "root_role", "time_created"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "root_role" => serde_json::to_value(&self.root_role).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UpdatesTrustRootResultsPage {
+    type Item = types::UpdatesTrustRoot;
+    fn field_names() -> &'static [&'static str] {
+        types::UpdatesTrustRoot::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::User {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["display_name", "id", "silo_id"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "display_name" => serde_json::to_value(&self.display_name).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "silo_id" => serde_json::to_value(&self.silo_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UserBuiltin {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "id", "name", "time_created", "time_modified"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UserBuiltinResultsPage {
+    type Item = types::UserBuiltin;
+    fn field_names() -> &'static [&'static str] {
+        types::UserBuiltin::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::UserCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["external_id", "password"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "external_id" => serde_json::to_value(&self.external_id).ok(),
+            "password" => serde_json::to_value(&self.password).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UserId {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UserPassword {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::UserPassword::Password(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::UserPassword::LoginDisallowed => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("LoginDisallowed"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::UserResultsPage {
+    type Item = types::User;
+    fn field_names() -> &'static [&'static str] {
+        types::User::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::UsernamePasswordCredentials {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["password", "username"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "password" => serde_json::to_value(&self.password).ok(),
+            "username" => serde_json::to_value(&self.username).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Utilization {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["capacity", "provisioned"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "capacity" => serde_json::to_value(&self.capacity).ok(),
+            "provisioned" => serde_json::to_value(&self.provisioned).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::ValueArray {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::ValueArray::Integer(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::ValueArray::Double(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::ValueArray::Boolean(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::ValueArray::String(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::ValueArray::IntegerDistribution(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::ValueArray::DoubleDistribution(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Values {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["metric_type", "values"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "metric_type" => serde_json::to_value(&self.metric_type).ok(),
+            "values" => serde_json::to_value(&self.values).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VirtualResourceCounts {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["cpus", "memory", "storage"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "cpus" => serde_json::to_value(&self.cpus).ok(),
+            "memory" => serde_json::to_value(&self.memory).ok(),
+            "storage" => serde_json::to_value(&self.storage).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Vni {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "value" => serde_json::to_value(&*self).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::Vpc {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "dns_name",
+            "id",
+            "ipv6_prefix",
+            "name",
+            "project_id",
+            "system_router_id",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "dns_name" => serde_json::to_value(&self.dns_name).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "ipv6_prefix" => serde_json::to_value(&self.ipv6_prefix).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "project_id" => serde_json::to_value(&self.project_id).ok(),
+            "system_router_id" => serde_json::to_value(&self.system_router_id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "dns_name", "ipv6_prefix", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "dns_name" => serde_json::to_value(&self.dns_name).ok(),
+            "ipv6_prefix" => serde_json::to_value(&self.ipv6_prefix).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallIcmpFilter {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["code", "icmp_type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "code" => serde_json::to_value(&self.code).ok(),
+            "icmp_type" => serde_json::to_value(&self.icmp_type).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRule {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "action",
+            "description",
+            "direction",
+            "filters",
+            "id",
+            "name",
+            "priority",
+            "status",
+            "targets",
+            "time_created",
+            "time_modified",
+            "vpc_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "action" => serde_json::to_value(&self.action).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "direction" => serde_json::to_value(&self.direction).ok(),
+            "filters" => serde_json::to_value(&self.filters).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "priority" => serde_json::to_value(&self.priority).ok(),
+            "status" => serde_json::to_value(&self.status).ok(),
+            "targets" => serde_json::to_value(&self.targets).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vpc_id" => serde_json::to_value(&self.vpc_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleAction {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleAction::Allow => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Allow"))),
+                _ => None,
+            },
+            types::VpcFirewallRuleAction::Deny => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Deny"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleDirection {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleDirection::Inbound => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Inbound"))),
+                _ => None,
+            },
+            types::VpcFirewallRuleDirection::Outbound => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Outbound"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleFilter {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["hosts", "ports", "protocols"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "hosts" => serde_json::to_value(&self.hosts).ok(),
+            "ports" => serde_json::to_value(&self.ports).ok(),
+            "protocols" => serde_json::to_value(&self.protocols).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleHostFilter {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleHostFilter::Vpc(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleHostFilter::Subnet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleHostFilter::Instance(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleHostFilter::Ip(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleHostFilter::IpNet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleProtocol {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleProtocol::Tcp => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Tcp"))),
+                _ => None,
+            },
+            types::VpcFirewallRuleProtocol::Udp => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Udp"))),
+                _ => None,
+            },
+            types::VpcFirewallRuleProtocol::Icmp(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleStatus {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleStatus::Disabled => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Disabled"))),
+                _ => None,
+            },
+            types::VpcFirewallRuleStatus::Enabled => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Enabled"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleTarget {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type", "value"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcFirewallRuleTarget::Vpc(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleTarget::Subnet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleTarget::Instance(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleTarget::Ip(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+            types::VpcFirewallRuleTarget::IpNet(value) => match field_name {
+                "value" => serde_json::to_value(&value).ok(),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "action",
+            "description",
+            "direction",
+            "filters",
+            "name",
+            "priority",
+            "status",
+            "targets",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "action" => serde_json::to_value(&self.action).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "direction" => serde_json::to_value(&self.direction).ok(),
+            "filters" => serde_json::to_value(&self.filters).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "priority" => serde_json::to_value(&self.priority).ok(),
+            "status" => serde_json::to_value(&self.status).ok(),
+            "targets" => serde_json::to_value(&self.targets).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRuleUpdateParams {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["rules"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "rules" => serde_json::to_value(&self.rules).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcFirewallRules {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["rules"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "rules" => serde_json::to_value(&self.rules).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcResultsPage {
+    type Item = types::Vpc;
+    fn field_names() -> &'static [&'static str] {
+        types::Vpc::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::VpcRouter {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "id",
+            "kind",
+            "name",
+            "time_created",
+            "time_modified",
+            "vpc_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "kind" => serde_json::to_value(&self.kind).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vpc_id" => serde_json::to_value(&self.vpc_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcRouterCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcRouterKind {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::VpcRouterKind::System => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("System"))),
+                _ => None,
+            },
+            types::VpcRouterKind::Custom => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Custom"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcRouterResultsPage {
+    type Item = types::VpcRouter;
+    fn field_names() -> &'static [&'static str] {
+        types::VpcRouter::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::VpcRouterUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcSubnet {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "custom_router_id",
+            "description",
+            "id",
+            "ipv4_block",
+            "ipv6_block",
+            "name",
+            "time_created",
+            "time_modified",
+            "vpc_id",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "custom_router_id" => serde_json::to_value(&self.custom_router_id).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "ipv4_block" => serde_json::to_value(&self.ipv4_block).ok(),
+            "ipv6_block" => serde_json::to_value(&self.ipv6_block).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            "vpc_id" => serde_json::to_value(&self.vpc_id).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcSubnetCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "custom_router",
+            "description",
+            "ipv4_block",
+            "ipv6_block",
+            "name",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "custom_router" => serde_json::to_value(&self.custom_router).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "ipv4_block" => serde_json::to_value(&self.ipv4_block).ok(),
+            "ipv6_block" => serde_json::to_value(&self.ipv6_block).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcSubnetResultsPage {
+    type Item = types::VpcSubnet;
+    fn field_names() -> &'static [&'static str] {
+        types::VpcSubnet::field_names()
+    }
+
+    fn get_field(&self, _field_name: &str) -> Option<serde_json::Value> {
+        None
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(self.items.iter())
+    }
+}
+
+impl ResponseFields for types::VpcSubnetUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["custom_router", "description", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "custom_router" => serde_json::to_value(&self.custom_router).ok(),
+            "description" => serde_json::to_value(&self.description).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::VpcUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "dns_name", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "dns_name" => serde_json::to_value(&self.dns_name).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "endpoint",
+            "name",
+            "secrets",
+            "subscriptions",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "endpoint" => serde_json::to_value(&self.endpoint).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "secrets" => serde_json::to_value(&self.secrets).ok(),
+            "subscriptions" => serde_json::to_value(&self.subscriptions).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookDeliveryAttempt {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["attempt", "response", "result", "time_sent"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "attempt" => serde_json::to_value(&self.attempt).ok(),
+            "response" => serde_json::to_value(&self.response).ok(),
+            "result" => serde_json::to_value(&self.result).ok(),
+            "time_sent" => serde_json::to_value(&self.time_sent).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookDeliveryAttemptResult {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["type"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match self {
+            types::WebhookDeliveryAttemptResult::Succeeded => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("Succeeded"))),
+                _ => None,
+            },
+            types::WebhookDeliveryAttemptResult::FailedHttpError => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("FailedHttpError"))),
+                _ => None,
+            },
+            types::WebhookDeliveryAttemptResult::FailedUnreachable => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("FailedUnreachable"))),
+                _ => None,
+            },
+            types::WebhookDeliveryAttemptResult::FailedTimeout => match field_name {
+                "type" => Some(serde_json::Value::String(String::from("FailedTimeout"))),
+                _ => None,
+            },
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookDeliveryResponse {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["duration_ms", "status"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "duration_ms" => serde_json::to_value(&self.duration_ms).ok(),
+            "status" => serde_json::to_value(&self.status).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookReceiver {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &[
+            "description",
+            "endpoint",
+            "id",
+            "name",
+            "secrets",
+            "subscriptions",
+            "time_created",
+            "time_modified",
+        ]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "endpoint" => serde_json::to_value(&self.endpoint).ok(),
+            "id" => serde_json::to_value(&self.id).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            "secrets" => serde_json::to_value(&self.secrets).ok(),
+            "subscriptions" => serde_json::to_value(&self.subscriptions).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            "time_modified" => serde_json::to_value(&self.time_modified).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookReceiverUpdate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["description", "endpoint", "name"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "description" => serde_json::to_value(&self.description).ok(),
+            "endpoint" => serde_json::to_value(&self.endpoint).ok(),
+            "name" => serde_json::to_value(&self.name).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookSecret {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["id", "time_created"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "id" => serde_json::to_value(&self.id).ok(),
+            "time_created" => serde_json::to_value(&self.time_created).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookSecretCreate {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["secret"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "secret" => serde_json::to_value(&self.secret).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl ResponseFields for types::WebhookSecrets {
+    type Item = Self;
+    fn field_names() -> &'static [&'static str] {
+        &["secrets"]
+    }
+
+    fn get_field(&self, field_name: &str) -> Option<serde_json::Value> {
+        match field_name {
+            "secrets" => serde_json::to_value(&self.secrets).ok(),
+            _ => None,
+        }
+    }
+
+    fn items(&self) -> Box<dyn Iterator<Item = &Self::Item> + '_> {
+        Box::new(std::iter::once(self))
+    }
+}
+
+impl CliCommand {
+    pub fn field_names(&self) -> &'static [&'static str] {
+        match self {
+            CliCommand::ProbeList => types::ProbeInfoResultsPage::field_names(),
+            CliCommand::ProbeCreate => types::Probe::field_names(),
+            CliCommand::ProbeView => types::ProbeInfo::field_names(),
+            CliCommand::SupportBundleList => types::SupportBundleInfoResultsPage::field_names(),
+            CliCommand::SupportBundleCreate => types::SupportBundleInfo::field_names(),
+            CliCommand::SupportBundleView => types::SupportBundleInfo::field_names(),
+            CliCommand::SupportBundleUpdate => types::SupportBundleInfo::field_names(),
+            CliCommand::AffinityGroupList => types::AffinityGroupResultsPage::field_names(),
+            CliCommand::AffinityGroupCreate => types::AffinityGroup::field_names(),
+            CliCommand::AffinityGroupView => types::AffinityGroup::field_names(),
+            CliCommand::AffinityGroupUpdate => types::AffinityGroup::field_names(),
+            CliCommand::AffinityGroupMemberList => {
+                types::AffinityGroupMemberResultsPage::field_names()
+            }
+            CliCommand::AffinityGroupMemberInstanceView => {
+                types::AffinityGroupMember::field_names()
+            }
+            CliCommand::AffinityGroupMemberInstanceAdd => types::AffinityGroupMember::field_names(),
+            CliCommand::AlertClassList => types::AlertClassResultsPage::field_names(),
+            CliCommand::AlertReceiverList => types::AlertReceiverResultsPage::field_names(),
+            CliCommand::AlertReceiverView => types::AlertReceiver::field_names(),
+            CliCommand::AlertDeliveryList => types::AlertDeliveryResultsPage::field_names(),
+            CliCommand::AlertReceiverProbe => types::AlertProbeResult::field_names(),
+            CliCommand::AlertReceiverSubscriptionAdd => {
+                types::AlertSubscriptionCreated::field_names()
+            }
+            CliCommand::AlertDeliveryResend => types::AlertDeliveryId::field_names(),
+            CliCommand::AntiAffinityGroupList => types::AntiAffinityGroupResultsPage::field_names(),
+            CliCommand::AntiAffinityGroupCreate => types::AntiAffinityGroup::field_names(),
+            CliCommand::AntiAffinityGroupView => types::AntiAffinityGroup::field_names(),
+            CliCommand::AntiAffinityGroupUpdate => types::AntiAffinityGroup::field_names(),
+            CliCommand::AntiAffinityGroupMemberList => {
+                types::AntiAffinityGroupMemberResultsPage::field_names()
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceView => {
+                types::AntiAffinityGroupMember::field_names()
+            }
+            CliCommand::AntiAffinityGroupMemberInstanceAdd => {
+                types::AntiAffinityGroupMember::field_names()
+            }
+            CliCommand::AuthSettingsView => types::SiloAuthSettings::field_names(),
+            CliCommand::AuthSettingsUpdate => types::SiloAuthSettings::field_names(),
+            CliCommand::CertificateList => types::CertificateResultsPage::field_names(),
+            CliCommand::CertificateCreate => types::Certificate::field_names(),
+            CliCommand::CertificateView => types::Certificate::field_names(),
+            CliCommand::DiskList => types::DiskResultsPage::field_names(),
+            CliCommand::DiskCreate => types::Disk::field_names(),
+            CliCommand::DiskView => types::Disk::field_names(),
+            CliCommand::FloatingIpList => types::FloatingIpResultsPage::field_names(),
+            CliCommand::FloatingIpCreate => types::FloatingIp::field_names(),
+            CliCommand::FloatingIpView => types::FloatingIp::field_names(),
+            CliCommand::FloatingIpUpdate => types::FloatingIp::field_names(),
+            CliCommand::FloatingIpAttach => types::FloatingIp::field_names(),
+            CliCommand::FloatingIpDetach => types::FloatingIp::field_names(),
+            CliCommand::GroupList => types::GroupResultsPage::field_names(),
+            CliCommand::GroupView => types::Group::field_names(),
+            CliCommand::ImageList => types::ImageResultsPage::field_names(),
+            CliCommand::ImageCreate => types::Image::field_names(),
+            CliCommand::ImageView => types::Image::field_names(),
+            CliCommand::ImageDemote => types::Image::field_names(),
+            CliCommand::ImagePromote => types::Image::field_names(),
+            CliCommand::InstanceList => types::InstanceResultsPage::field_names(),
+            CliCommand::InstanceCreate => types::Instance::field_names(),
+            CliCommand::InstanceView => types::Instance::field_names(),
+            CliCommand::InstanceUpdate => types::Instance::field_names(),
+            CliCommand::InstanceAffinityGroupList => types::AffinityGroupResultsPage::field_names(),
+            CliCommand::InstanceAntiAffinityGroupList => {
+                types::AntiAffinityGroupResultsPage::field_names()
+            }
+            CliCommand::InstanceDiskList => types::DiskResultsPage::field_names(),
+            CliCommand::InstanceDiskAttach => types::Disk::field_names(),
+            CliCommand::InstanceDiskDetach => types::Disk::field_names(),
+            CliCommand::InstanceExternalIpList => types::ExternalIpResultsPage::field_names(),
+            CliCommand::InstanceEphemeralIpAttach => types::ExternalIp::field_names(),
+            CliCommand::InstanceReboot => types::Instance::field_names(),
+            CliCommand::InstanceSshPublicKeyList => types::SshKeyResultsPage::field_names(),
+            CliCommand::InstanceStart => types::Instance::field_names(),
+            CliCommand::InstanceStop => types::Instance::field_names(),
+            CliCommand::InternetGatewayIpAddressList => {
+                types::InternetGatewayIpAddressResultsPage::field_names()
+            }
+            CliCommand::InternetGatewayIpAddressCreate => {
+                types::InternetGatewayIpAddress::field_names()
+            }
+            CliCommand::InternetGatewayIpPoolList => {
+                types::InternetGatewayIpPoolResultsPage::field_names()
+            }
+            CliCommand::InternetGatewayIpPoolCreate => types::InternetGatewayIpPool::field_names(),
+            CliCommand::InternetGatewayList => types::InternetGatewayResultsPage::field_names(),
+            CliCommand::InternetGatewayCreate => types::InternetGateway::field_names(),
+            CliCommand::InternetGatewayView => types::InternetGateway::field_names(),
+            CliCommand::ProjectIpPoolList => types::SiloIpPoolResultsPage::field_names(),
+            CliCommand::ProjectIpPoolView => types::SiloIpPool::field_names(),
+            CliCommand::CurrentUserView => types::CurrentUser::field_names(),
+            CliCommand::CurrentUserAccessTokenList => {
+                types::DeviceAccessTokenResultsPage::field_names()
+            }
+            CliCommand::CurrentUserGroups => types::GroupResultsPage::field_names(),
+            CliCommand::CurrentUserSshKeyList => types::SshKeyResultsPage::field_names(),
+            CliCommand::CurrentUserSshKeyCreate => types::SshKey::field_names(),
+            CliCommand::CurrentUserSshKeyView => types::SshKey::field_names(),
+            CliCommand::SiloMetric => types::MeasurementResultsPage::field_names(),
+            CliCommand::InstanceNetworkInterfaceList => {
+                types::InstanceNetworkInterfaceResultsPage::field_names()
+            }
+            CliCommand::InstanceNetworkInterfaceCreate => {
+                types::InstanceNetworkInterface::field_names()
+            }
+            CliCommand::InstanceNetworkInterfaceView => {
+                types::InstanceNetworkInterface::field_names()
+            }
+            CliCommand::InstanceNetworkInterfaceUpdate => {
+                types::InstanceNetworkInterface::field_names()
+            }
+            CliCommand::Ping => types::Ping::field_names(),
+            CliCommand::PolicyView => types::SiloRolePolicy::field_names(),
+            CliCommand::PolicyUpdate => types::SiloRolePolicy::field_names(),
+            CliCommand::ProjectList => types::ProjectResultsPage::field_names(),
+            CliCommand::ProjectCreate => types::Project::field_names(),
+            CliCommand::ProjectView => types::Project::field_names(),
+            CliCommand::ProjectUpdate => types::Project::field_names(),
+            CliCommand::ProjectPolicyView => types::ProjectRolePolicy::field_names(),
+            CliCommand::ProjectPolicyUpdate => types::ProjectRolePolicy::field_names(),
+            CliCommand::SnapshotList => types::SnapshotResultsPage::field_names(),
+            CliCommand::SnapshotCreate => types::Snapshot::field_names(),
+            CliCommand::SnapshotView => types::Snapshot::field_names(),
+            CliCommand::AuditLogList => types::AuditLogEntryResultsPage::field_names(),
+            CliCommand::PhysicalDiskList => types::PhysicalDiskResultsPage::field_names(),
+            CliCommand::PhysicalDiskView => types::PhysicalDisk::field_names(),
+            CliCommand::NetworkingSwitchPortLldpNeighbors => {
+                types::LldpNeighborResultsPage::field_names()
+            }
+            CliCommand::RackList => types::RackResultsPage::field_names(),
+            CliCommand::RackView => types::Rack::field_names(),
+            CliCommand::SledList => types::SledResultsPage::field_names(),
+            CliCommand::SledAdd => types::SledId::field_names(),
+            CliCommand::SledView => types::Sled::field_names(),
+            CliCommand::SledPhysicalDiskList => types::PhysicalDiskResultsPage::field_names(),
+            CliCommand::SledInstanceList => types::SledInstanceResultsPage::field_names(),
+            CliCommand::SledSetProvisionPolicy => types::SledProvisionPolicyResponse::field_names(),
+            CliCommand::SledListUninitialized => types::UninitializedSledResultsPage::field_names(),
+            CliCommand::NetworkingSwitchPortList => types::SwitchPortResultsPage::field_names(),
+            CliCommand::NetworkingSwitchPortLldpConfigView => types::LldpLinkConfig::field_names(),
+            CliCommand::NetworkingSwitchPortStatus => types::SwitchLinkState::field_names(),
+            CliCommand::SwitchList => types::SwitchResultsPage::field_names(),
+            CliCommand::SwitchView => types::Switch::field_names(),
+            CliCommand::SiloIdentityProviderList => {
+                types::IdentityProviderResultsPage::field_names()
+            }
+            CliCommand::LocalIdpUserCreate => types::User::field_names(),
+            CliCommand::SamlIdentityProviderCreate => types::SamlIdentityProvider::field_names(),
+            CliCommand::SamlIdentityProviderView => types::SamlIdentityProvider::field_names(),
+            CliCommand::IpPoolList => types::IpPoolResultsPage::field_names(),
+            CliCommand::IpPoolCreate => types::IpPool::field_names(),
+            CliCommand::IpPoolView => types::IpPool::field_names(),
+            CliCommand::IpPoolUpdate => types::IpPool::field_names(),
+            CliCommand::IpPoolRangeList => types::IpPoolRangeResultsPage::field_names(),
+            CliCommand::IpPoolRangeAdd => types::IpPoolRange::field_names(),
+            CliCommand::IpPoolSiloList => types::IpPoolSiloLinkResultsPage::field_names(),
+            CliCommand::IpPoolSiloLink => types::IpPoolSiloLink::field_names(),
+            CliCommand::IpPoolSiloUpdate => types::IpPoolSiloLink::field_names(),
+            CliCommand::IpPoolUtilizationView => types::IpPoolUtilization::field_names(),
+            CliCommand::IpPoolServiceView => types::IpPool::field_names(),
+            CliCommand::IpPoolServiceRangeList => types::IpPoolRangeResultsPage::field_names(),
+            CliCommand::IpPoolServiceRangeAdd => types::IpPoolRange::field_names(),
+            CliCommand::SystemMetric => types::MeasurementResultsPage::field_names(),
+            CliCommand::NetworkingAddressLotList => types::AddressLotResultsPage::field_names(),
+            CliCommand::NetworkingAddressLotCreate => {
+                types::AddressLotCreateResponse::field_names()
+            }
+            CliCommand::NetworkingAddressLotView => types::AddressLotViewResponse::field_names(),
+            CliCommand::NetworkingAddressLotBlockList => {
+                types::AddressLotBlockResultsPage::field_names()
+            }
+            CliCommand::NetworkingAllowListView => types::AllowList::field_names(),
+            CliCommand::NetworkingAllowListUpdate => types::AllowList::field_names(),
+            CliCommand::NetworkingBfdStatus => ::std::vec::Vec::<types::BfdStatus>::field_names(),
+            CliCommand::NetworkingBgpConfigList => types::BgpConfigResultsPage::field_names(),
+            CliCommand::NetworkingBgpConfigCreate => types::BgpConfig::field_names(),
+            CliCommand::NetworkingBgpAnnounceSetList => {
+                ::std::vec::Vec::<types::BgpAnnounceSet>::field_names()
+            }
+            CliCommand::NetworkingBgpAnnounceSetUpdate => types::BgpAnnounceSet::field_names(),
+            CliCommand::NetworkingBgpAnnouncementList => {
+                ::std::vec::Vec::<types::BgpAnnouncement>::field_names()
+            }
+            CliCommand::NetworkingBgpExported => types::BgpExported::field_names(),
+            CliCommand::NetworkingBgpMessageHistory => {
+                types::AggregateBgpMessageHistory::field_names()
+            }
+            CliCommand::NetworkingBgpImportedRoutesIpv4 => {
+                ::std::vec::Vec::<types::BgpImportedRouteIpv4>::field_names()
+            }
+            CliCommand::NetworkingBgpStatus => {
+                ::std::vec::Vec::<types::BgpPeerStatus>::field_names()
+            }
+            CliCommand::NetworkingInboundIcmpView => types::ServiceIcmpConfig::field_names(),
+            CliCommand::NetworkingLoopbackAddressList => {
+                types::LoopbackAddressResultsPage::field_names()
+            }
+            CliCommand::NetworkingLoopbackAddressCreate => types::LoopbackAddress::field_names(),
+            CliCommand::NetworkingSwitchPortSettingsList => {
+                types::SwitchPortSettingsIdentityResultsPage::field_names()
+            }
+            CliCommand::NetworkingSwitchPortSettingsCreate => {
+                types::SwitchPortSettings::field_names()
+            }
+            CliCommand::NetworkingSwitchPortSettingsView => {
+                types::SwitchPortSettings::field_names()
+            }
+            CliCommand::SystemPolicyView => types::FleetRolePolicy::field_names(),
+            CliCommand::SystemPolicyUpdate => types::FleetRolePolicy::field_names(),
+            CliCommand::SystemQuotasList => types::SiloQuotasResultsPage::field_names(),
+            CliCommand::SiloList => types::SiloResultsPage::field_names(),
+            CliCommand::SiloCreate => types::Silo::field_names(),
+            CliCommand::SiloView => types::Silo::field_names(),
+            CliCommand::SiloIpPoolList => types::SiloIpPoolResultsPage::field_names(),
+            CliCommand::SiloPolicyView => types::SiloRolePolicy::field_names(),
+            CliCommand::SiloPolicyUpdate => types::SiloRolePolicy::field_names(),
+            CliCommand::SiloQuotasView => types::SiloQuotas::field_names(),
+            CliCommand::SiloQuotasUpdate => types::SiloQuotas::field_names(),
+            CliCommand::SystemTimeseriesQuery => types::OxqlQueryResult::field_names(),
+            CliCommand::SystemTimeseriesSchemaList => {
+                types::TimeseriesSchemaResultsPage::field_names()
+            }
+            CliCommand::SystemUpdatePutRepository => types::TufRepoInsertResponse::field_names(),
+            CliCommand::SystemUpdateGetRepository => types::TufRepoGetResponse::field_names(),
+            CliCommand::TargetReleaseView => types::TargetRelease::field_names(),
+            CliCommand::TargetReleaseUpdate => types::TargetRelease::field_names(),
+            CliCommand::SystemUpdateTrustRootList => {
+                types::UpdatesTrustRootResultsPage::field_names()
+            }
+            CliCommand::SystemUpdateTrustRootCreate => types::UpdatesTrustRoot::field_names(),
+            CliCommand::SystemUpdateTrustRootView => types::UpdatesTrustRoot::field_names(),
+            CliCommand::SiloUserList => types::UserResultsPage::field_names(),
+            CliCommand::SiloUserView => types::User::field_names(),
+            CliCommand::UserBuiltinList => types::UserBuiltinResultsPage::field_names(),
+            CliCommand::UserBuiltinView => types::UserBuiltin::field_names(),
+            CliCommand::SiloUtilizationList => types::SiloUtilizationResultsPage::field_names(),
+            CliCommand::SiloUtilizationView => types::SiloUtilization::field_names(),
+            CliCommand::TimeseriesQuery => types::OxqlQueryResult::field_names(),
+            CliCommand::UserList => types::UserResultsPage::field_names(),
+            CliCommand::UserView => types::User::field_names(),
+            CliCommand::UserTokenList => types::DeviceAccessTokenResultsPage::field_names(),
+            CliCommand::UserSessionList => types::ConsoleSessionResultsPage::field_names(),
+            CliCommand::UtilizationView => types::Utilization::field_names(),
+            CliCommand::VpcFirewallRulesView => types::VpcFirewallRules::field_names(),
+            CliCommand::VpcFirewallRulesUpdate => types::VpcFirewallRules::field_names(),
+            CliCommand::VpcRouterRouteList => types::RouterRouteResultsPage::field_names(),
+            CliCommand::VpcRouterRouteCreate => types::RouterRoute::field_names(),
+            CliCommand::VpcRouterRouteView => types::RouterRoute::field_names(),
+            CliCommand::VpcRouterRouteUpdate => types::RouterRoute::field_names(),
+            CliCommand::VpcRouterList => types::VpcRouterResultsPage::field_names(),
+            CliCommand::VpcRouterCreate => types::VpcRouter::field_names(),
+            CliCommand::VpcRouterView => types::VpcRouter::field_names(),
+            CliCommand::VpcRouterUpdate => types::VpcRouter::field_names(),
+            CliCommand::VpcSubnetList => types::VpcSubnetResultsPage::field_names(),
+            CliCommand::VpcSubnetCreate => types::VpcSubnet::field_names(),
+            CliCommand::VpcSubnetView => types::VpcSubnet::field_names(),
+            CliCommand::VpcSubnetUpdate => types::VpcSubnet::field_names(),
+            CliCommand::VpcSubnetListNetworkInterfaces => {
+                types::InstanceNetworkInterfaceResultsPage::field_names()
+            }
+            CliCommand::VpcList => types::VpcResultsPage::field_names(),
+            CliCommand::VpcCreate => types::Vpc::field_names(),
+            CliCommand::VpcView => types::Vpc::field_names(),
+            CliCommand::VpcUpdate => types::Vpc::field_names(),
+            CliCommand::WebhookReceiverCreate => types::WebhookReceiver::field_names(),
+            CliCommand::WebhookSecretsList => types::WebhookSecrets::field_names(),
+            CliCommand::WebhookSecretsAdd => types::WebhookSecret::field_names(),
+            _ => &[],
+        }
     }
 }
