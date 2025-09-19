@@ -2,6 +2,7 @@
   "auto_restart_cooldown_expiration": "1992-06-10T18:09:26Z",
   "auto_restart_enabled": false,
   "boot_disk_id": "8083692d-37f4-1d8a-b55a-50890c4c60a8",
+  "cpu_platform": "amd_milan",
   "description": "description is required for some reason",
   "hostname": "hostname",
   "id": "603800ff-07da-3298-0070-bbd45865eabb",
@@ -11,7 +12,7 @@
   "project_id": "b181e272-d3bf-c637-7d5d-3a7dab448196",
   "run_state": "creating",
   "time_created": "2014-12-31T04:03:55Z",
-  "time_last_auto_restarted": "1966-03-17T00:26:50Z",
+  "time_last_auto_restarted": "2015-09-24T03:08:30Z",
   "time_modified": "1983-04-19T14:12:03Z",
   "time_run_state_updated": "1948-10-31T09:57:00Z"
 }

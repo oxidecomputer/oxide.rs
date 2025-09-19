@@ -2480,6 +2480,24 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
+                ::clap::Arg::new("cpu-platform")
+                    .long("cpu-platform")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::InstanceCpuPlatform::AmdMilan.to_string(),
+                            types::InstanceCpuPlatform::AmdTurin.to_string(),
+                        ]),
+                        |s| types::InstanceCpuPlatform::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "The CPU platform to be used for this instance. If this is `null`, the \
+                         instance requires no particular CPU platform; when it is started the \
+                         instance will have the most general CPU platform supported by the sled \
+                         it is initially placed on.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("description")
                     .long("description")
                     .value_parser(::clap::value_parser!(::std::string::String))
@@ -2585,11 +2603,11 @@ impl<T: CliConfig> Cli<T> {
                         ]),
                         |s| types::InstanceAutoRestartPolicy::try_from(s).unwrap(),
                     ))
-                    .required(false)
+                    .required_unless_present("json-body")
                     .help(
-                        "Sets the auto-restart policy for this instance.\n\nThis policy \
-                         determines whether the instance should be automatically restarted by the \
-                         control plane on failure. If this is `null`, any explicitly configured \
+                        "The auto-restart policy for this instance.\n\nThis policy determines \
+                         whether the instance should be automatically restarted by the control \
+                         plane on failure. If this is `null`, any explicitly configured \
                          auto-restart policy will be unset, and the control plane will select the \
                          default policy when determining whether the instance can be \
                          automatically restarted.\n\nCurrently, the global default auto-restart \
@@ -2604,10 +2622,35 @@ impl<T: CliConfig> Cli<T> {
                 ::clap::Arg::new("boot-disk")
                     .long("boot-disk")
                     .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required_unless_present("json-body")
                     .help(
-                        "Name or ID of the disk the instance should be instructed to boot \
-                         from.\n\nIf not provided, unset the instance's boot disk.",
+                        "The disk the instance is configured to boot from.\n\nSetting a boot disk \
+                         is optional but recommended to ensure predictable boot behavior. The \
+                         boot disk can be set during instance creation or later if the instance \
+                         is stopped. The boot disk counts against the disk attachment \
+                         limit.\n\nAn instance that does not have a boot disk set will use the \
+                         boot options specified in its UEFI settings, which are controlled by \
+                         both the instance's UEFI firmware and the guest operating system. Boot \
+                         options can change as disks are attached and detached, which may result \
+                         in an instance that only boots to the EFI shell until a boot disk is set.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("cpu-platform")
+                    .long("cpu-platform")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::InstanceCpuPlatform::AmdMilan.to_string(),
+                            types::InstanceCpuPlatform::AmdTurin.to_string(),
+                        ]),
+                        |s| types::InstanceCpuPlatform::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The CPU platform to be used for this instance. If this is `null`, the \
+                         instance requires no particular CPU platform; when it is started the \
+                         instance will have the most general CPU platform supported by the sled \
+                         it is initially placed on.",
                     ),
             )
             .arg(
@@ -2622,14 +2665,14 @@ impl<T: CliConfig> Cli<T> {
                     .long("memory")
                     .value_parser(::clap::value_parser!(types::ByteCount))
                     .required_unless_present("json-body")
-                    .help("The amount of memory to assign to this instance."),
+                    .help("The amount of RAM (in bytes) to be allocated to the instance"),
             )
             .arg(
                 ::clap::Arg::new("ncpus")
                     .long("ncpus")
                     .value_parser(::clap::value_parser!(types::InstanceCpuCount))
                     .required_unless_present("json-body")
-                    .help("The number of CPUs to assign to this instance."),
+                    .help("The number of vCPUs to be allocated to the instance"),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -11435,6 +11478,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.auto_restart_policy(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::InstanceCpuPlatform>("cpu-platform") {
+            request = request.body_map(|body| body.cpu_platform(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -11524,6 +11571,10 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("boot-disk") {
             request = request.body_map(|body| body.boot_disk(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::InstanceCpuPlatform>("cpu-platform") {
+            request = request.body_map(|body| body.cpu_platform(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
