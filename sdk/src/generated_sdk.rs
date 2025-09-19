@@ -16279,17 +16279,17 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "auto_restart_policy": {
-    ///      "description": "Sets the auto-restart policy for this
-    /// instance.\n\nThis policy determines whether the instance should be
-    /// automatically restarted by the control plane on failure. If this is
-    /// `null`, any explicitly configured auto-restart policy will be unset, and
-    /// the control plane will select the default policy when determining
-    /// whether the instance can be automatically restarted.\n\nCurrently, the
-    /// global default auto-restart policy is \"best-effort\", so instances with
-    /// `null` auto-restart policies will be automatically restarted. However,
-    /// in the future, the default policy may be configurable through other
-    /// mechanisms, such as on a per-project basis. In that case, any configured
-    /// default policy will be used if this is `null`.",
+    ///      "description": "The auto-restart policy for this instance.\n\nThis
+    /// policy determines whether the instance should be automatically restarted
+    /// by the control plane on failure. If this is `null`, any explicitly
+    /// configured auto-restart policy will be unset, and the control plane will
+    /// select the default policy when determining whether the instance can be
+    /// automatically restarted.\n\nCurrently, the global default auto-restart
+    /// policy is \"best-effort\", so instances with `null` auto-restart
+    /// policies will be automatically restarted. However, in the future, the
+    /// default policy may be configurable through other mechanisms, such as on
+    /// a per-project basis. In that case, any configured default policy will be
+    /// used if this is `null`.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16304,8 +16304,16 @@ pub mod types {
     ///      ]
     ///    },
     ///    "boot_disk": {
-    ///      "description": "Name or ID of the disk the instance should be
-    /// instructed to boot from.\n\nA null value unsets the boot disk.",
+    ///      "description": "The disk the instance is configured to boot
+    /// from.\n\nSetting a boot disk is optional but recommended to ensure
+    /// predictable boot behavior. The boot disk can be set during instance
+    /// creation or later if the instance is stopped. The boot disk counts
+    /// against the disk attachment limit.\n\nAn instance that does not have a
+    /// boot disk set will use the boot options specified in its UEFI settings,
+    /// which are controlled by both the instance's UEFI firmware and the guest
+    /// operating system. Boot options can change as disks are attached and
+    /// detached, which may result in an instance that only boots to the EFI
+    /// shell until a boot disk is set.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16321,7 +16329,9 @@ pub mod types {
     ///    },
     ///    "cpu_platform": {
     ///      "description": "The CPU platform to be used for this instance. If
-    /// this is `null`, the instance requires no particular CPU platform.",
+    /// this is `null`, the instance requires no particular CPU platform; when
+    /// it is started the instance will have the most general CPU platform
+    /// supported by the sled it is initially placed on.",
     ///      "oneOf": [
     ///        {
     ///          "type": "null"
@@ -16336,7 +16346,8 @@ pub mod types {
     ///      ]
     ///    },
     ///    "memory": {
-    ///      "description": "The amount of memory to assign to this instance.",
+    ///      "description": "The amount of RAM (in bytes) to be allocated to the
+    /// instance",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
@@ -16344,7 +16355,8 @@ pub mod types {
     ///      ]
     ///    },
     ///    "ncpus": {
-    ///      "description": "The number of CPUs to assign to this instance.",
+    ///      "description": "The number of vCPUs to be allocated to the
+    /// instance",
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/InstanceCpuCount"
@@ -16359,7 +16371,7 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct InstanceUpdate {
-        /// Sets the auto-restart policy for this instance.
+        /// The auto-restart policy for this instance.
         ///
         /// This policy determines whether the instance should be automatically
         /// restarted by the control plane on failure. If this is `null`, any
@@ -16374,17 +16386,28 @@ pub mod types {
         /// basis. In that case, any configured default policy will be used if
         /// this is `null`.
         pub auto_restart_policy: ::std::option::Option<InstanceAutoRestartPolicy>,
-        /// Name or ID of the disk the instance should be instructed to boot
-        /// from.
+        /// The disk the instance is configured to boot from.
         ///
-        /// A null value unsets the boot disk.
+        /// Setting a boot disk is optional but recommended to ensure
+        /// predictable boot behavior. The boot disk can be set during instance
+        /// creation or later if the instance is stopped. The boot disk counts
+        /// against the disk attachment limit.
+        ///
+        /// An instance that does not have a boot disk set will use the boot
+        /// options specified in its UEFI settings, which are controlled by both
+        /// the instance's UEFI firmware and the guest operating system. Boot
+        /// options can change as disks are attached and detached, which may
+        /// result in an instance that only boots to the EFI shell until a boot
+        /// disk is set.
         pub boot_disk: ::std::option::Option<NameOrId>,
         /// The CPU platform to be used for this instance. If this is `null`,
-        /// the instance requires no particular CPU platform.
+        /// the instance requires no particular CPU platform; when it is started
+        /// the instance will have the most general CPU platform supported by
+        /// the sled it is initially placed on.
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
-        /// The amount of memory to assign to this instance.
+        /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
-        /// The number of CPUs to assign to this instance.
+        /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
     }
 
