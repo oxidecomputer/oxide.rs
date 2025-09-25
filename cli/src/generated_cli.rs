@@ -6875,6 +6875,13 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_system_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("include-summaries")
+                    .long("include-summaries")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help("Whether to include ClickHouse query summaries in the response."),
+            )
+            .arg(
                 ::clap::Arg::new("query")
                     .long("query")
                     .value_parser(::clap::value_parser!(::std::string::String))
@@ -7180,6 +7187,13 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("include-summaries")
+                    .long("include-summaries")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help("Whether to include ClickHouse query summaries in the response."),
+            )
             .arg(
                 ::clap::Arg::new("project")
                     .long("project")
@@ -16506,6 +16520,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_query();
+        if let Some(value) = matches.get_one::<bool>("include-summaries") {
+            request = request.body_map(|body| body.include_summaries(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("query") {
             request = request.body_map(|body| body.query(value.clone()))
         }
@@ -16983,6 +17001,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.timeseries_query();
+        if let Some(value) = matches.get_one::<bool>("include-summaries") {
+            request = request.body_map(|body| body.include_summaries(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
