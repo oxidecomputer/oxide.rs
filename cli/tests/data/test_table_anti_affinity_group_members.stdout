@@ -1,0 +1,5 @@
+ TYPE      ID                                    NAME    RUN_STATE 
+ Instance  603800ff-07da-3298-0070-bbd45865eabb  qintar  starting  
+ Instance  e272d3bf-c637-7d5d-3a7d-ab4481968f52  suqs    starting  
+ Instance  26254a50-c57c-8083-692d-37f41d8ab55a  umiaq   failed    
+ Instance  a880ac27-4e97-15bf-8098-8119595a2344  qaid    running   
