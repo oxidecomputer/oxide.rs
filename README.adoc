@@ -1,7 +1,7 @@
 # Oxide SDK and CLI
 
 This repo contains the CLI, Rust SDK, and SDK mocking library. The CLI is
-released as binaries for various operating systens. The SDK and mocking library
+released as binaries for various operating systems. The SDK and mocking library
 published to crates.io. All are derived from the Oxide API OpenAPI spec.
 
 ## Installing the CLI
