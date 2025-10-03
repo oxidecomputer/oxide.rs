@@ -17071,6 +17071,112 @@ pub mod types {
         }
     }
 
+    /// A count of bytes / rows accessed during a query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A count of bytes / rows accessed during a query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "bytes",
+    ///    "rows"
+    ///  ],
+    ///  "properties": {
+    ///    "bytes": {
+    ///      "description": "The number of bytes accessed.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "rows": {
+    ///      "description": "The number of rows accessed.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct IoCount {
+        /// The number of bytes accessed.
+        pub bytes: u64,
+        /// The number of rows accessed.
+        pub rows: u64,
+    }
+
+    impl ::std::convert::From<&IoCount> for IoCount {
+        fn from(value: &IoCount) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IoCount {
+        pub fn builder() -> builder::IoCount {
+            Default::default()
+        }
+    }
+
+    /// Summary of the I/O resources used by a query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Summary of the I/O resources used by a query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "read",
+    ///    "written"
+    ///  ],
+    ///  "properties": {
+    ///    "read": {
+    ///      "description": "The bytes and rows read by the query.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoCount"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "written": {
+    ///      "description": "The bytes and rows written by the query.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoCount"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct IoSummary {
+        /// The bytes and rows read by the query.
+        pub read: IoCount,
+        /// The bytes and rows written by the query.
+        pub written: IoCount,
+    }
+
+    impl ::std::convert::From<&IoSummary> for IoSummary {
+        fn from(value: &IoSummary) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IoSummary {
+        pub fn builder() -> builder::IoSummary {
+            Default::default()
+        }
+    }
+
     /// `IpNet`
     ///
     /// <details><summary>JSON schema</summary>
@@ -20570,6 +20676,16 @@ pub mod types {
     ///    "tables"
     ///  ],
     ///  "properties": {
+    ///    "query_summaries": {
+    ///      "description": "Summaries of queries run against ClickHouse.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/OxqlQuerySummary"
+    ///      }
+    ///    },
     ///    "tables": {
     ///      "description": "Tables resulting from the query, each containing
     /// timeseries.",
@@ -20586,6 +20702,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct OxqlQueryResult {
+        /// Summaries of queries run against ClickHouse.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub query_summaries: ::std::option::Option<::std::vec::Vec<OxqlQuerySummary>>,
         /// Tables resulting from the query, each containing timeseries.
         pub tables: ::std::vec::Vec<OxqlTable>,
     }
@@ -20598,6 +20717,77 @@ pub mod types {
 
     impl OxqlQueryResult {
         pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
+        }
+    }
+
+    /// Basic metadata about the resource usage of a single ClickHouse SQL
+    /// query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Basic metadata about the resource usage of a single
+    /// ClickHouse SQL query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "elapsed_ms",
+    ///    "id",
+    ///    "io_summary",
+    ///    "query"
+    ///  ],
+    ///  "properties": {
+    ///    "elapsed_ms": {
+    ///      "description": "The total duration of the ClickHouse query (network
+    /// plus execution).",
+    ///      "type": "integer",
+    ///      "format": "uint",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "id": {
+    ///      "description": "The database-assigned query ID.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "io_summary": {
+    ///      "description": "Summary of the data read and written.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoSummary"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "query": {
+    ///      "description": "The raw ClickHouse SQL query.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlQuerySummary {
+        /// The total duration of the ClickHouse query (network plus execution).
+        pub elapsed_ms: u32,
+        /// The database-assigned query ID.
+        pub id: ::uuid::Uuid,
+        /// Summary of the data read and written.
+        pub io_summary: IoSummary,
+        /// The raw ClickHouse SQL query.
+        pub query: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&OxqlQuerySummary> for OxqlQuerySummary {
+        fn from(value: &OxqlQuerySummary) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlQuerySummary {
+        pub fn builder() -> builder::OxqlQuerySummary {
             Default::default()
         }
     }
@@ -29773,6 +29963,12 @@ pub mod types {
     ///    "query"
     ///  ],
     ///  "properties": {
+    ///    "include_summaries": {
+    ///      "description": "Whether to include ClickHouse query summaries in
+    /// the response.",
+    ///      "default": false,
+    ///      "type": "boolean"
+    ///    },
     ///    "query": {
     ///      "description": "A timeseries query string, written in the Oximeter
     /// query language.",
@@ -29786,6 +29982,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TimeseriesQuery {
+        /// Whether to include ClickHouse query summaries in the response.
+        #[serde(default)]
+        pub include_summaries: bool,
         /// A timeseries query string, written in the Oximeter query language.
         pub query: ::std::string::String,
     }
@@ -47490,6 +47689,124 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IoCount {
+            bytes: ::std::result::Result<u64, ::std::string::String>,
+            rows: ::std::result::Result<u64, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for IoCount {
+            fn default() -> Self {
+                Self {
+                    bytes: Err("no value supplied for bytes".to_string()),
+                    rows: Err("no value supplied for rows".to_string()),
+                }
+            }
+        }
+
+        impl IoCount {
+            pub fn bytes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bytes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bytes: {}", e));
+                self
+            }
+            pub fn rows<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rows = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rows: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<IoCount> for super::IoCount {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: IoCount,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bytes: value.bytes?,
+                    rows: value.rows?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::IoCount> for IoCount {
+            fn from(value: super::IoCount) -> Self {
+                Self {
+                    bytes: Ok(value.bytes),
+                    rows: Ok(value.rows),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IoSummary {
+            read: ::std::result::Result<super::IoCount, ::std::string::String>,
+            written: ::std::result::Result<super::IoCount, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for IoSummary {
+            fn default() -> Self {
+                Self {
+                    read: Err("no value supplied for read".to_string()),
+                    written: Err("no value supplied for written".to_string()),
+                }
+            }
+        }
+
+        impl IoSummary {
+            pub fn read<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoCount>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.read = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for read: {}", e));
+                self
+            }
+            pub fn written<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoCount>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.written = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for written: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<IoSummary> for super::IoSummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: IoSummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    read: value.read?,
+                    written: value.written?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::IoSummary> for IoSummary {
+            fn from(value: super::IoSummary) -> Self {
+                Self {
+                    read: Ok(value.read),
+                    written: Ok(value.written),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct IpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -49801,18 +50118,35 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
+            query_summaries: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
+                ::std::string::String,
+            >,
             tables: ::std::result::Result<::std::vec::Vec<super::OxqlTable>, ::std::string::String>,
         }
 
         impl ::std::default::Default for OxqlQueryResult {
             fn default() -> Self {
                 Self {
+                    query_summaries: Ok(Default::default()),
                     tables: Err("no value supplied for tables".to_string()),
                 }
             }
         }
 
         impl OxqlQueryResult {
+            pub fn query_summaries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.query_summaries = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for query_summaries: {}", e)
+                });
+                self
+            }
             pub fn tables<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::vec::Vec<super::OxqlTable>>,
@@ -49831,6 +50165,7 @@ pub mod types {
                 value: OxqlQueryResult,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    query_summaries: value.query_summaries?,
                     tables: value.tables?,
                 })
             }
@@ -49839,7 +50174,95 @@ pub mod types {
         impl ::std::convert::From<super::OxqlQueryResult> for OxqlQueryResult {
             fn from(value: super::OxqlQueryResult) -> Self {
                 Self {
+                    query_summaries: Ok(value.query_summaries),
                     tables: Ok(value.tables),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlQuerySummary {
+            elapsed_ms: ::std::result::Result<u32, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            io_summary: ::std::result::Result<super::IoSummary, ::std::string::String>,
+            query: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for OxqlQuerySummary {
+            fn default() -> Self {
+                Self {
+                    elapsed_ms: Err("no value supplied for elapsed_ms".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    io_summary: Err("no value supplied for io_summary".to_string()),
+                    query: Err("no value supplied for query".to_string()),
+                }
+            }
+        }
+
+        impl OxqlQuerySummary {
+            pub fn elapsed_ms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.elapsed_ms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for elapsed_ms: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn io_summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.io_summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for io_summary: {}", e));
+                self
+            }
+            pub fn query<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.query = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for query: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<OxqlQuerySummary> for super::OxqlQuerySummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OxqlQuerySummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    elapsed_ms: value.elapsed_ms?,
+                    id: value.id?,
+                    io_summary: value.io_summary?,
+                    query: value.query?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::OxqlQuerySummary> for OxqlQuerySummary {
+            fn from(value: super::OxqlQuerySummary) -> Self {
+                Self {
+                    elapsed_ms: Ok(value.elapsed_ms),
+                    id: Ok(value.id),
+                    io_summary: Ok(value.io_summary),
+                    query: Ok(value.query),
                 }
             }
         }
@@ -57267,18 +57690,33 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesQuery {
+            include_summaries: ::std::result::Result<bool, ::std::string::String>,
             query: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl ::std::default::Default for TimeseriesQuery {
             fn default() -> Self {
                 Self {
+                    include_summaries: Ok(Default::default()),
                     query: Err("no value supplied for query".to_string()),
                 }
             }
         }
 
         impl TimeseriesQuery {
+            pub fn include_summaries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.include_summaries = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for include_summaries: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn query<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57297,6 +57735,7 @@ pub mod types {
                 value: TimeseriesQuery,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    include_summaries: value.include_summaries?,
                     query: value.query?,
                 })
             }
@@ -57305,6 +57744,7 @@ pub mod types {
         impl ::std::convert::From<super::TimeseriesQuery> for TimeseriesQuery {
             fn from(value: super::TimeseriesQuery) -> Self {
                 Self {
+                    include_summaries: Ok(value.include_summaries),
                     query: Ok(value.query),
                 }
             }
@@ -61448,7 +61888,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20250730.0.0
+/// Version: 20251008.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -61489,7 +61929,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20250730.0.0"
+        "20251008.0.0"
     }
 
     fn baseurl(&self) -> &str {
