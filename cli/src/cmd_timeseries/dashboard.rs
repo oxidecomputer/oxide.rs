@@ -219,7 +219,10 @@ async fn client_query_loop(
             _ = interval.tick() => {
                 let request = client
                     .system_timeseries_query()
-                    .body(TimeseriesQuery { query: query.clone() });
+                    .body(TimeseriesQuery {
+                        query: query.clone(),
+                        include_summaries: false,
+                    });
                 match request.send().await {
                     Ok(response) => {
                         tx.send(Message::Table(response.into_inner().tables))

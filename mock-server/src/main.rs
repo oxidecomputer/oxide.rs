@@ -7,12 +7,13 @@
 use std::time::Duration;
 
 use chrono::DateTime;
+use chrono::Utc;
 use dropshot::{
     endpoint, ApiDescription, ConfigDropshot, ConfigLogging, ConfigLoggingLevel, HttpError,
     HttpResponseOk, Query, RequestContext, ServerBuilder, StreamingBody,
 };
 use futures::{pin_mut, StreamExt};
-use oxide::types::{TufRepoDescription, TufRepoInsertResponse, TufRepoInsertStatus, TufRepoMeta};
+use oxide::types::{TufRepo, TufRepoUpload, TufRepoUploadStatus};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use tokio::time::{sleep, Instant};
@@ -35,7 +36,7 @@ async fn system_update_put_repository(
     _rqctx: RequestContext<()>,
     query: Query<UpdatesPutRepositoryParams>,
     body: StreamingBody,
-) -> Result<HttpResponseOk<TufRepoInsertResponse>, HttpError> {
+) -> Result<HttpResponseOk<TufRepoUpload>, HttpError> {
     const BYTES_PER_SEC: usize = 200 * MIB;
 
     let start = Instant::now();
@@ -59,18 +60,14 @@ async fn system_update_put_repository(
         }
     }
 
-    Ok(HttpResponseOk(TufRepoInsertResponse {
-        recorded: TufRepoDescription {
-            artifacts: vec![],
-            repo: TufRepoMeta {
-                file_name: query.into_inner().file_name,
-                hash: String::new(),
-                system_version: "1.2.3".parse().unwrap(),
-                targets_role_version: 100,
-                valid_until: DateTime::from_timestamp(0x8000_0000, 0).unwrap(),
-            },
+    Ok(HttpResponseOk(TufRepoUpload {
+        repo: TufRepo {
+            file_name: query.into_inner().file_name,
+            hash: String::new(),
+            system_version: "1.2.3".parse().unwrap(),
+            time_created: DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap(),
         },
-        status: TufRepoInsertStatus::Inserted,
+        status: TufRepoUploadStatus::Inserted,
     }))
 }
 

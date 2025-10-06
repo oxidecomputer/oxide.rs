@@ -7,10 +7,7 @@
 use assert_cmd::Command;
 use chrono::{DateTime, Utc};
 use httpmock::MockServer;
-use oxide::types::{
-    ArtifactId, TufArtifactMeta, TufRepoDescription, TufRepoInsertResponse, TufRepoInsertStatus,
-    TufRepoMeta,
-};
+use oxide::types::{TufRepo, TufRepoUpload, TufRepoUploadStatus};
 use oxide_httpmock::MockServerExt;
 
 #[test]
@@ -18,30 +15,16 @@ fn test_update_upload() {
     const CONTENTS: &str = "nuggets";
     let server = MockServer::start();
 
-    let mock = server.system_update_put_repository(|when, then| {
+    let mock = server.system_update_repository_upload(|when, then| {
         when.into_inner().body(CONTENTS);
-        then.ok(&TufRepoInsertResponse {
-            recorded: TufRepoDescription {
-                artifacts: vec![TufArtifactMeta {
-                    hash: String::from("ish"),
-                    id: ArtifactId {
-                        kind: String::from("buds"),
-                        name: String::from("trees"),
-                        version: String::from("4.2.0"),
-                    },
-                    size: 420 * 1024 * 1024,
-                    sign: None,
-                    board: None,
-                }],
-                repo: TufRepoMeta {
-                    file_name: String::from("repo"),
-                    hash: String::from("browns"),
-                    system_version: "0.0.0".parse().unwrap(),
-                    targets_role_version: 42,
-                    valid_until: DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap(),
-                },
+        then.ok(&TufRepoUpload {
+            repo: TufRepo {
+                file_name: String::from("repo"),
+                hash: String::from("browns"),
+                system_version: "0.0.0".parse().unwrap(),
+                time_created: DateTime::<Utc>::from_timestamp(0x8000_0000, 0).unwrap(),
             },
-            status: TufRepoInsertStatus::Inserted,
+            status: TufRepoUploadStatus::Inserted,
         });
     });
 

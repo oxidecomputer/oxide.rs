@@ -51,7 +51,7 @@ impl AuthenticatedCmd for CmdUpload {
         let body = reqwest::Body::wrap_stream(file_stream);
 
         let response = client
-            .system_update_put_repository()
+            .system_update_repository_upload()
             .file_name(file_name)
             .body(body)
             .send()

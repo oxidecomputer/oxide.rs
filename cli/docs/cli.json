@@ -1836,6 +1836,14 @@
                   "long_about": "Queries are written in OxQL.",
                   "args": [
                     {
+                      "long": "include-summaries",
+                      "values": [
+                        "true",
+                        "false"
+                      ],
+                      "help": "Whether to include ClickHouse query summaries in the response."
+                    },
+                    {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
                     },
@@ -2064,6 +2072,14 @@
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
+                {
+                  "long": "include-summaries",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Whether to include ClickHouse query summaries in the response."
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."

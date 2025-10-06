@@ -303,8 +303,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SystemTimeseriesQuery => Self::cli_system_timeseries_query(),
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
-            CliCommand::SystemUpdatePutRepository => Self::cli_system_update_put_repository(),
-            CliCommand::SystemUpdateGetRepository => Self::cli_system_update_get_repository(),
+            CliCommand::SystemUpdateRepositoryList => Self::cli_system_update_repository_list(),
+            CliCommand::SystemUpdateRepositoryUpload => Self::cli_system_update_repository_upload(),
+            CliCommand::SystemUpdateRepositoryView => Self::cli_system_update_repository_view(),
             CliCommand::TargetReleaseView => Self::cli_target_release_view(),
             CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
             CliCommand::SystemUpdateTrustRootList => Self::cli_system_update_trust_root_list(),
@@ -6875,6 +6876,13 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_system_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
+                ::clap::Arg::new("include-summaries")
+                    .long("include-summaries")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help("Whether to include ClickHouse query summaries in the response."),
+            )
+            .arg(
                 ::clap::Arg::new("query")
                     .long("query")
                     .value_parser(::clap::value_parser!(::std::string::String))
@@ -6911,7 +6919,35 @@ impl<T: CliConfig> Cli<T> {
             .about("List timeseries schemas")
     }
 
-    pub fn cli_system_update_put_repository() -> ::clap::Command {
+    pub fn cli_system_update_repository_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::VersionSortMode::VersionAscending.to_string(),
+                            types::VersionSortMode::VersionDescending.to_string(),
+                        ]),
+                        |s| types::VersionSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List all TUF repositories")
+            .long_about(
+                "Returns a paginated list of all TUF repositories ordered by system version \
+                 (newest first by default).",
+            )
+    }
+
+    pub fn cli_system_update_repository_upload() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("file-name")
@@ -6924,13 +6960,13 @@ impl<T: CliConfig> Cli<T> {
             .long_about("System release repositories are verified by the updates trust store.")
     }
 
-    pub fn cli_system_update_get_repository() -> ::clap::Command {
+    pub fn cli_system_update_repository_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
                 ::clap::Arg::new("system-version")
                     .long("system-version")
                     .value_parser(::clap::value_parser!(
-                        types::SystemUpdateGetRepositorySystemVersion
+                        types::SystemUpdateRepositoryViewSystemVersion
                     ))
                     .required(true)
                     .help("The version to get."),
@@ -7180,6 +7216,13 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("include-summaries")
+                    .long("include-summaries")
+                    .value_parser(::clap::value_parser!(bool))
+                    .required(false)
+                    .help("Whether to include ClickHouse query summaries in the response."),
+            )
             .arg(
                 ::clap::Arg::new("project")
                     .long("project")
@@ -8901,11 +8944,14 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemTimeseriesSchemaList => {
                 self.execute_system_timeseries_schema_list(matches).await
             }
-            CliCommand::SystemUpdatePutRepository => {
-                self.execute_system_update_put_repository(matches).await
+            CliCommand::SystemUpdateRepositoryList => {
+                self.execute_system_update_repository_list(matches).await
             }
-            CliCommand::SystemUpdateGetRepository => {
-                self.execute_system_update_get_repository(matches).await
+            CliCommand::SystemUpdateRepositoryUpload => {
+                self.execute_system_update_repository_upload(matches).await
+            }
+            CliCommand::SystemUpdateRepositoryView => {
+                self.execute_system_update_repository_view(matches).await
             }
             CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
             CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
@@ -16506,6 +16552,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_query();
+        if let Some(value) = matches.get_one::<bool>("include-summaries") {
+            request = request.body_map(|body| body.include_summaries(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<::std::string::String>("query") {
             request = request.body_map(|body| body.query(value.clone()))
         }
@@ -16568,17 +16618,56 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_system_update_put_repository(
+    pub async fn execute_system_update_repository_list(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.system_update_put_repository();
+        let mut request = self.client.system_update_repository_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::VersionSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_system_update_repository_list(matches, &mut request)?;
+        self.config.list_start::<types::TufRepoResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config.list_end_success::<types::TufRepoResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_system_update_repository_upload(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.system_update_repository_upload();
         if let Some(value) = matches.get_one::<::std::string::String>("file-name") {
             request = request.file_name(value.clone());
         }
 
         self.config
-            .execute_system_update_put_repository(matches, &mut request)?;
+            .execute_system_update_repository_upload(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16592,19 +16681,19 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_system_update_get_repository(
+    pub async fn execute_system_update_repository_view(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.system_update_get_repository();
+        let mut request = self.client.system_update_repository_view();
         if let Some(value) =
-            matches.get_one::<types::SystemUpdateGetRepositorySystemVersion>("system-version")
+            matches.get_one::<types::SystemUpdateRepositoryViewSystemVersion>("system-version")
         {
             request = request.system_version(value.clone());
         }
 
         self.config
-            .execute_system_update_get_repository(matches, &mut request)?;
+            .execute_system_update_repository_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16983,6 +17072,10 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.timeseries_query();
+        if let Some(value) = matches.get_one::<bool>("include-summaries") {
+            request = request.body_map(|body| body.include_summaries(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -20094,18 +20187,26 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_system_update_put_repository(
+    fn execute_system_update_repository_list(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SystemUpdatePutRepository,
+        request: &mut builder::SystemUpdateRepositoryList,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_system_update_get_repository(
+    fn execute_system_update_repository_upload(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::SystemUpdateGetRepository,
+        request: &mut builder::SystemUpdateRepositoryUpload,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_system_update_repository_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::SystemUpdateRepositoryView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -20713,8 +20814,9 @@ pub enum CliCommand {
     SiloQuotasUpdate,
     SystemTimeseriesQuery,
     SystemTimeseriesSchemaList,
-    SystemUpdatePutRepository,
-    SystemUpdateGetRepository,
+    SystemUpdateRepositoryList,
+    SystemUpdateRepositoryUpload,
+    SystemUpdateRepositoryView,
     TargetReleaseView,
     TargetReleaseUpdate,
     SystemUpdateTrustRootList,
@@ -20991,8 +21093,9 @@ impl CliCommand {
             CliCommand::SiloQuotasUpdate,
             CliCommand::SystemTimeseriesQuery,
             CliCommand::SystemTimeseriesSchemaList,
-            CliCommand::SystemUpdatePutRepository,
-            CliCommand::SystemUpdateGetRepository,
+            CliCommand::SystemUpdateRepositoryList,
+            CliCommand::SystemUpdateRepositoryUpload,
+            CliCommand::SystemUpdateRepositoryView,
             CliCommand::TargetReleaseView,
             CliCommand::TargetReleaseUpdate,
             CliCommand::SystemUpdateTrustRootList,

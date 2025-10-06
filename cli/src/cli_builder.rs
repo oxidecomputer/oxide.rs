@@ -645,9 +645,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("experimental system update trust-root delete")
         }
         // Manually implemented
-        CliCommand::SystemUpdatePutRepository => None,
-        // Not implemented
-        CliCommand::SystemUpdateGetRepository => None,
+        CliCommand::SystemUpdateRepositoryList => None,
+        CliCommand::SystemUpdateRepositoryUpload => None,
+        CliCommand::SystemUpdateRepositoryView => None,
 
         CliCommand::SwitchList => Some("system hardware switch list"),
         CliCommand::SwitchView => Some("system hardware switch view"),
