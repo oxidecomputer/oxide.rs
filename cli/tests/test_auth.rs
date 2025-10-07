@@ -589,7 +589,7 @@ fn test_cmd_auth_status_env() {
         .success()
         .stdout(format!(
             "Profile \"funky-town\" ({}) status: Authenticated\n",
-            server.url("")
+            server.url(""),
         ));
 
     // OXIDE_HOST conflicts with OXIDE_PROFILE
