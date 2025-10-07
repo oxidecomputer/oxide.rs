@@ -60,7 +60,7 @@ serde_json = "1.0.145"
 similar = "2.7.0"
 support-bundle-viewer = "0.1.2"
 tabwriter = "1.4.1"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 tempfile = "3.23.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart" }
