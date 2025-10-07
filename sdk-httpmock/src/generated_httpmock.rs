@@ -18093,13 +18093,13 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseViewWhen(::httpmock::When);
-    impl TargetReleaseViewWhen {
+    pub struct SystemUpdateStatusWhen(::httpmock::When);
+    impl SystemUpdateStatusWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
                     .method(::httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/target-release$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/update/status$").unwrap()),
             )
         }
 
@@ -18108,8 +18108,8 @@ pub mod operations {
         }
     }
 
-    pub struct TargetReleaseViewThen(::httpmock::Then);
-    impl TargetReleaseViewThen {
+    pub struct SystemUpdateStatusThen(::httpmock::Then);
+    impl SystemUpdateStatusThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -18118,7 +18118,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::TargetRelease) -> Self {
+        pub fn ok(self, value: &types::UpdateStatus) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -18177,13 +18177,8 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::TargetRelease) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -23027,9 +23022,9 @@ pub trait MockServerExt {
             operations::SystemUpdateRepositoryViewWhen,
             operations::SystemUpdateRepositoryViewThen,
         );
-    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_update_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen);
+        F: FnOnce(operations::SystemUpdateStatusWhen, operations::SystemUpdateStatusThen);
     fn target_release_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::TargetReleaseUpdateWhen, operations::TargetReleaseUpdateThen);
@@ -26114,14 +26109,14 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn target_release_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn system_update_status<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::TargetReleaseViewWhen, operations::TargetReleaseViewThen),
+        F: FnOnce(operations::SystemUpdateStatusWhen, operations::SystemUpdateStatusThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::TargetReleaseViewWhen::new(when),
-                operations::TargetReleaseViewThen::new(then),
+                operations::SystemUpdateStatusWhen::new(when),
+                operations::SystemUpdateStatusThen::new(then),
             )
         })
     }

@@ -29346,37 +29346,32 @@ pub mod types {
         }
     }
 
-    /// View of a system software target release.
+    /// View of a system software target release
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of a system software target release.",
+    ///  "description": "View of a system software target release",
     ///  "type": "object",
     ///  "required": [
-    ///    "generation",
-    ///    "release_source",
-    ///    "time_requested"
+    ///    "time_requested",
+    ///    "version"
     ///  ],
     ///  "properties": {
-    ///    "generation": {
-    ///      "description": "The target-release generation number.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "release_source": {
-    ///      "description": "The source of the target release.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TargetReleaseSource"
-    ///        }
-    ///      ]
-    ///    },
     ///    "time_requested": {
-    ///      "description": "The time it was set as the target release.",
+    ///      "description": "Time this was set as the target release",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "description": "The specified release of the rack's system
+    /// software",
+    ///      "type": "string",
+    ///      "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
     ///    }
     ///  }
     /// }
@@ -29386,12 +29381,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TargetRelease {
-        /// The target-release generation number.
-        pub generation: i64,
-        /// The source of the target release.
-        pub release_source: TargetReleaseSource,
-        /// The time it was set as the target release.
+        /// Time this was set as the target release
         pub time_requested: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The specified release of the rack's system software
+        pub version: TargetReleaseVersion,
     }
 
     impl ::std::convert::From<&TargetRelease> for TargetRelease {
@@ -29406,87 +29399,13 @@ pub mod types {
         }
     }
 
-    /// Source of a system software target release.
+    /// The specified release of the rack's system software
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Source of a system software target release.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Unspecified or unknown source (probably MUPdate).",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "unspecified"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The specified release of the rack's system
-    /// software.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "version"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "system_version"
-    ///          ]
-    ///        },
-    ///        "version": {
-    ///          "type": "string",
-    ///          "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(tag = "type", content = "version")]
-    pub enum TargetReleaseSource {
-        #[serde(rename = "unspecified")]
-        Unspecified,
-        /// The specified release of the rack's system software.
-        #[serde(rename = "system_version")]
-        SystemVersion(TargetReleaseSourceVersion),
-    }
-
-    impl ::std::convert::From<&Self> for TargetReleaseSource {
-        fn from(value: &TargetReleaseSource) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<TargetReleaseSourceVersion> for TargetReleaseSource {
-        fn from(value: TargetReleaseSourceVersion) -> Self {
-            Self::SystemVersion(value)
-        }
-    }
-
-    /// `TargetReleaseSourceVersion`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
+    ///  "description": "The specified release of the rack's system software",
     ///  "type": "string",
     ///  "pattern":
     /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
@@ -29507,27 +29426,27 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct TargetReleaseSourceVersion(::std::string::String);
-    impl ::std::ops::Deref for TargetReleaseSourceVersion {
+    pub struct TargetReleaseVersion(::std::string::String);
+    impl ::std::ops::Deref for TargetReleaseVersion {
         type Target = ::std::string::String;
         fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl ::std::convert::From<TargetReleaseSourceVersion> for ::std::string::String {
-        fn from(value: TargetReleaseSourceVersion) -> Self {
+    impl ::std::convert::From<TargetReleaseVersion> for ::std::string::String {
+        fn from(value: TargetReleaseVersion) -> Self {
             value.0
         }
     }
 
-    impl ::std::convert::From<&TargetReleaseSourceVersion> for TargetReleaseSourceVersion {
-        fn from(value: &TargetReleaseSourceVersion) -> Self {
+    impl ::std::convert::From<&TargetReleaseVersion> for TargetReleaseVersion {
+        fn from(value: &TargetReleaseVersion) -> Self {
             value.clone()
         }
     }
 
-    impl ::std::str::FromStr for TargetReleaseSourceVersion {
+    impl ::std::str::FromStr for TargetReleaseVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
@@ -29551,14 +29470,14 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<&str> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: &::std::string::String,
@@ -29567,7 +29486,7 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
@@ -29576,7 +29495,7 @@ pub mod types {
         }
     }
 
-    impl<'de> ::serde::Deserialize<'de> for TargetReleaseSourceVersion {
+    impl<'de> ::serde::Deserialize<'de> for TargetReleaseVersion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
@@ -30966,6 +30885,110 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// `UpdateStatus`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "components_by_release_version",
+    ///    "paused",
+    ///    "target_release",
+    ///    "time_last_blueprint"
+    ///  ],
+    ///  "properties": {
+    ///    "components_by_release_version": {
+    ///      "description": "Count of components running each release version",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "type": "integer",
+    ///        "format": "uint",
+    ///        "minimum": 0.0
+    ///      }
+    ///    },
+    ///    "paused": {
+    ///      "description": "Whether update activity is paused\n\nWhen true, the
+    /// system has stopped attempting to make progress toward the target
+    /// release. This happens after a MUPdate because the system wants to make
+    /// sure of the operator's intent. To resume update, set a new target
+    /// release.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "target_release": {
+    ///      "description": "Current target release of the system software\n\nThis may not correspond to the actual system software running at the time of request; it is instead the release that the system should be moving towards as a goal state. The system asynchronously updates software to match this target release.\n\nWill only be null if a target release has never been set. In that case, the system is not automatically attempting to manage software versions.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/TargetRelease"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_last_blueprint": {
+    ///      "description": "Time of most recent update planning
+    /// activity\n\nThis is intended as a rough indicator of the last time
+    /// something happened in the update planner. A blueprint is the update
+    /// system's plan for the next state of the system, so this timestamp
+    /// indicates the last time the update system made a plan.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UpdateStatus {
+        /// Count of components running each release version
+        pub components_by_release_version: ::std::collections::HashMap<::std::string::String, u32>,
+        /// Whether update activity is paused
+        ///
+        /// When true, the system has stopped attempting to make progress toward
+        /// the target release. This happens after a MUPdate because the system
+        /// wants to make sure of the operator's intent. To resume update, set a
+        /// new target release.
+        pub paused: bool,
+        /// Current target release of the system software
+        ///
+        /// This may not correspond to the actual system software running at the
+        /// time of request; it is instead the release that the system should be
+        /// moving towards as a goal state. The system asynchronously updates
+        /// software to match this target release.
+        ///
+        /// Will only be null if a target release has never been set. In that
+        /// case, the system is not automatically attempting to manage software
+        /// versions.
+        pub target_release: ::std::option::Option<TargetRelease>,
+        /// Time of most recent update planning activity
+        ///
+        /// This is intended as a rough indicator of the last time something
+        /// happened in the update planner. A blueprint is the update system's
+        /// plan for the next state of the system, so this timestamp indicates
+        /// the last time the update system made a plan.
+        pub time_last_blueprint: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&UpdateStatus> for UpdateStatus {
+        fn from(value: &UpdateStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UpdateStatus {
+        pub fn builder() -> builder::UpdateStatus {
+            Default::default()
         }
     }
 
@@ -57293,46 +57316,23 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TargetRelease {
-            generation: ::std::result::Result<i64, ::std::string::String>,
-            release_source:
-                ::std::result::Result<super::TargetReleaseSource, ::std::string::String>,
             time_requested: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
+            version: ::std::result::Result<super::TargetReleaseVersion, ::std::string::String>,
         }
 
         impl ::std::default::Default for TargetRelease {
             fn default() -> Self {
                 Self {
-                    generation: Err("no value supplied for generation".to_string()),
-                    release_source: Err("no value supplied for release_source".to_string()),
                     time_requested: Err("no value supplied for time_requested".to_string()),
+                    version: Err("no value supplied for version".to_string()),
                 }
             }
         }
 
         impl TargetRelease {
-            pub fn generation<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<i64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.generation = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for generation: {}", e));
-                self
-            }
-            pub fn release_source<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TargetReleaseSource>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.release_source = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for release_source: {}", e)
-                });
-                self
-            }
             pub fn time_requested<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -57343,6 +57343,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TargetReleaseVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<TargetRelease> for super::TargetRelease {
@@ -57351,9 +57361,8 @@ pub mod types {
                 value: TargetRelease,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    generation: value.generation?,
-                    release_source: value.release_source?,
                     time_requested: value.time_requested?,
+                    version: value.version?,
                 })
             }
         }
@@ -57361,9 +57370,8 @@ pub mod types {
         impl ::std::convert::From<super::TargetRelease> for TargetRelease {
             fn from(value: super::TargetRelease) -> Self {
                 Self {
-                    generation: Ok(value.generation),
-                    release_source: Ok(value.release_source),
                     time_requested: Ok(value.time_requested),
+                    version: Ok(value.version),
                 }
             }
         }
@@ -58371,6 +58379,112 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct UpdateStatus {
+            components_by_release_version: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, u32>,
+                ::std::string::String,
+            >,
+            paused: ::std::result::Result<bool, ::std::string::String>,
+            target_release: ::std::result::Result<
+                ::std::option::Option<super::TargetRelease>,
+                ::std::string::String,
+            >,
+            time_last_blueprint: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for UpdateStatus {
+            fn default() -> Self {
+                Self {
+                    components_by_release_version: Err("no value supplied for \
+                                                        components_by_release_version"
+                        .to_string()),
+                    paused: Err("no value supplied for paused".to_string()),
+                    target_release: Err("no value supplied for target_release".to_string()),
+                    time_last_blueprint: Err(
+                        "no value supplied for time_last_blueprint".to_string()
+                    ),
+                }
+            }
+        }
+
+        impl UpdateStatus {
+            pub fn components_by_release_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::collections::HashMap<::std::string::String, u32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.components_by_release_version = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for components_by_release_version: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn paused<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.paused = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for paused: {}", e));
+                self
+            }
+            pub fn target_release<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::TargetRelease>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.target_release = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for target_release: {}", e)
+                });
+                self
+            }
+            pub fn time_last_blueprint<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_last_blueprint = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for time_last_blueprint: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UpdateStatus> for super::UpdateStatus {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UpdateStatus,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    components_by_release_version: value.components_by_release_version?,
+                    paused: value.paused?,
+                    target_release: value.target_release?,
+                    time_last_blueprint: value.time_last_blueprint?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UpdateStatus> for UpdateStatus {
+            fn from(value: super::UpdateStatus) -> Self {
+                Self {
+                    components_by_release_version: Ok(value.components_by_release_version),
+                    paused: Ok(value.paused),
+                    target_release: Ok(value.target_release),
+                    time_last_blueprint: Ok(value.time_last_blueprint),
                 }
             }
         }
@@ -66569,27 +66683,26 @@ pub trait ClientSystemUpdateExt {
     ///    .await;
     /// ```
     fn system_update_repository_view(&self) -> builder::SystemUpdateRepositoryView<'_>;
-    /// Get the current target release of the rack's system software
+    /// Fetch system update status
     ///
-    /// This may not correspond to the actual software running on the rack at
-    /// the time of request; it is instead the release that the rack
-    /// reconfigurator should be moving towards as a goal state. After some
-    /// number of planning and execution phases, the software running on the
-    /// rack should eventually correspond to the release described here.
+    /// Returns information about the current target release and the progress of
+    /// system software updates.
     ///
-    /// Sends a `GET` request to `/v1/system/update/target-release`
+    /// Sends a `GET` request to `/v1/system/update/status`
     ///
     /// ```ignore
-    /// let response = client.target_release_view()
+    /// let response = client.system_update_status()
     ///    .send()
     ///    .await;
     /// ```
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_>;
-    /// Set the current target release of the rack's system software
+    fn system_update_status(&self) -> builder::SystemUpdateStatus<'_>;
+    /// Set target release
     ///
-    /// The rack reconfigurator will treat the software specified here as a goal
-    /// state for the rack's software, and attempt to asynchronously update to
-    /// that release.
+    /// Set the current target release of the rack's system software. The rack
+    /// reconfigurator will treat the software specified here as a goal state
+    /// for the rack's software, and attempt to asynchronously update to that
+    /// release. Use the update status endpoint to view the current target
+    /// release.
     ///
     /// Sends a `PUT` request to `/v1/system/update/target-release`
     ///
@@ -66680,8 +66793,8 @@ impl ClientSystemUpdateExt for Client {
         builder::SystemUpdateRepositoryView::new(self)
     }
 
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_> {
-        builder::TargetReleaseView::new(self)
+    fn system_update_status(&self) -> builder::SystemUpdateStatus<'_> {
+        builder::SystemUpdateStatus::new(self)
     }
 
     fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_> {
@@ -92598,25 +92711,23 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemUpdateExt::target_release_view`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_status`]
     ///
-    /// [`ClientSystemUpdateExt::target_release_view`]: super::ClientSystemUpdateExt::target_release_view
+    /// [`ClientSystemUpdateExt::system_update_status`]: super::ClientSystemUpdateExt::system_update_status
     #[derive(Debug, Clone)]
-    pub struct TargetReleaseView<'a> {
+    pub struct SystemUpdateStatus<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> TargetReleaseView<'a> {
+    impl<'a> SystemUpdateStatus<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
 
-        /// Sends a `GET` request to `/v1/system/update/target-release`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+        /// Sends a `GET` request to `/v1/system/update/status`
+        pub async fn send(self) -> Result<ResponseValue<types::UpdateStatus>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/system/update/target-release", client.baseurl,);
+            let url = format!("{}/v1/system/update/status", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -92633,7 +92744,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "target_release_view",
+                operation_id: "system_update_status",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92694,9 +92805,7 @@ pub mod builder {
         }
 
         /// Sends a `PUT` request to `/v1/system/update/target-release`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::SetTargetReleaseParams::try_from(v).map_err(|e| e.to_string()))
@@ -92726,7 +92835,7 @@ pub mod builder {
             client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

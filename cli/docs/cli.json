@@ -1902,6 +1902,18 @@
               ],
               "subcommands": [
                 {
+                  "name": "status",
+                  "about": "Fetch system update status",
+                  "long_about": "Returns information about the current target release and the progress of system software updates.",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
                   "name": "target-release",
                   "args": [
                     {
@@ -1913,8 +1925,8 @@
                   "subcommands": [
                     {
                       "name": "update",
-                      "about": "Set the current target release of the rack's system software",
-                      "long_about": "The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release.",
+                      "about": "Set target release",
+                      "long_about": "Set the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.",
                       "args": [
                         {
                           "long": "json-body",
@@ -1932,18 +1944,6 @@
                         {
                           "long": "system-version",
                           "help": "Version of the system software to make the target release."
-                        }
-                      ]
-                    },
-                    {
-                      "name": "view",
-                      "about": "Get the current target release of the rack's system software",
-                      "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
                         }
                       ]
                     }
