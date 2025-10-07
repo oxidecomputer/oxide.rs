@@ -604,7 +604,7 @@ fn test_cmd_auth_status_env() {
         .arg("status")
         .assert()
         .failure()
-        .stderr(format!("{}\n", oxide::OxideAuthError::HostProfileConflict,));
+        .stderr(format!("{}\n", oxide::OxideAuthError::HostProfileConflict));
 
     oxide_mock.assert_hits(2);
 
