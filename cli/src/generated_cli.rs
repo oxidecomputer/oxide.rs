@@ -291,6 +291,11 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
+            CliCommand::ScimIdpGetTokens => Self::cli_scim_idp_get_tokens(),
+            CliCommand::ScimIdpCreateToken => Self::cli_scim_idp_create_token(),
+            CliCommand::ScimIdpDeleteAllTokens => Self::cli_scim_idp_delete_all_tokens(),
+            CliCommand::ScimIdpGetTokenById => Self::cli_scim_idp_get_token_by_id(),
+            CliCommand::ScimIdpDeleteTokenById => Self::cli_scim_idp_delete_token_by_id(),
             CliCommand::SystemQuotasList => Self::cli_system_quotas_list(),
             CliCommand::SiloList => Self::cli_silo_list(),
             CliCommand::SiloCreate => Self::cli_silo_create(),
@@ -6597,6 +6602,70 @@ impl<T: CliConfig> Cli<T> {
             .about("Update top-level IAM policy")
     }
 
+    pub fn cli_scim_idp_get_tokens() -> ::clap::Command {
+        ::clap::Command::new("").arg(
+            ::clap::Arg::new("silo")
+                .long("silo")
+                .value_parser(::clap::value_parser!(types::NameOrId))
+                .required(true)
+                .help("Name or ID of the silo"),
+        )
+    }
+
+    pub fn cli_scim_idp_create_token() -> ::clap::Command {
+        ::clap::Command::new("").arg(
+            ::clap::Arg::new("silo")
+                .long("silo")
+                .value_parser(::clap::value_parser!(types::NameOrId))
+                .required(true)
+                .help("Name or ID of the silo"),
+        )
+    }
+
+    pub fn cli_scim_idp_delete_all_tokens() -> ::clap::Command {
+        ::clap::Command::new("").arg(
+            ::clap::Arg::new("silo")
+                .long("silo")
+                .value_parser(::clap::value_parser!(types::NameOrId))
+                .required(true)
+                .help("Name or ID of the silo"),
+        )
+    }
+
+    pub fn cli_scim_idp_get_token_by_id() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("token-id")
+                    .long("token-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true),
+            )
+    }
+
+    pub fn cli_scim_idp_delete_token_by_id() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                ::clap::Arg::new("token-id")
+                    .long("token-id")
+                    .value_parser(::clap::value_parser!(::uuid::Uuid))
+                    .required(true),
+            )
+    }
+
     pub fn cli_system_quotas_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -8899,6 +8968,15 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::SystemPolicyView => self.execute_system_policy_view(matches).await,
             CliCommand::SystemPolicyUpdate => self.execute_system_policy_update(matches).await,
+            CliCommand::ScimIdpGetTokens => self.execute_scim_idp_get_tokens(matches).await,
+            CliCommand::ScimIdpCreateToken => self.execute_scim_idp_create_token(matches).await,
+            CliCommand::ScimIdpDeleteAllTokens => {
+                self.execute_scim_idp_delete_all_tokens(matches).await
+            }
+            CliCommand::ScimIdpGetTokenById => self.execute_scim_idp_get_token_by_id(matches).await,
+            CliCommand::ScimIdpDeleteTokenById => {
+                self.execute_scim_idp_delete_token_by_id(matches).await
+            }
             CliCommand::SystemQuotasList => self.execute_system_quotas_list(matches).await,
             CliCommand::SiloList => self.execute_silo_list(matches).await,
             CliCommand::SiloCreate => self.execute_silo_create(matches).await,
@@ -16194,6 +16272,134 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_scim_idp_get_tokens(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.scim_idp_get_tokens();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_scim_idp_get_tokens(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_scim_idp_create_token(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.scim_idp_create_token();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_scim_idp_create_token(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_scim_idp_delete_all_tokens(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.scim_idp_delete_all_tokens();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.config
+            .execute_scim_idp_delete_all_tokens(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_scim_idp_get_token_by_id(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.scim_idp_get_token_by_id();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("token-id") {
+            request = request.token_id(value.clone());
+        }
+
+        self.config
+            .execute_scim_idp_get_token_by_id(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_scim_idp_delete_token_by_id(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.scim_idp_delete_token_by_id();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<::uuid::Uuid>("token-id") {
+            request = request.token_id(value.clone());
+        }
+
+        self.config
+            .execute_scim_idp_delete_token_by_id(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_system_quotas_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20020,6 +20226,46 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_scim_idp_get_tokens(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ScimIdpGetTokens,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_scim_idp_create_token(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ScimIdpCreateToken,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_scim_idp_delete_all_tokens(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ScimIdpDeleteAllTokens,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_scim_idp_get_token_by_id(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ScimIdpGetTokenById,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_scim_idp_delete_token_by_id(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::ScimIdpDeleteTokenById,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_system_quotas_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -20723,6 +20969,11 @@ pub enum CliCommand {
     NetworkingSwitchPortSettingsView,
     SystemPolicyView,
     SystemPolicyUpdate,
+    ScimIdpGetTokens,
+    ScimIdpCreateToken,
+    ScimIdpDeleteAllTokens,
+    ScimIdpGetTokenById,
+    ScimIdpDeleteTokenById,
     SystemQuotasList,
     SiloList,
     SiloCreate,
@@ -21001,6 +21252,11 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortSettingsView,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
+            CliCommand::ScimIdpGetTokens,
+            CliCommand::ScimIdpCreateToken,
+            CliCommand::ScimIdpDeleteAllTokens,
+            CliCommand::ScimIdpGetTokenById,
+            CliCommand::ScimIdpDeleteTokenById,
             CliCommand::SystemQuotasList,
             CliCommand::SiloList,
             CliCommand::SiloCreate,

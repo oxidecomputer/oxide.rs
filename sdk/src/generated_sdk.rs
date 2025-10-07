@@ -23932,6 +23932,120 @@ pub mod types {
         }
     }
 
+    /// `ScimClientBearerToken`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_expires": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ScimClientBearerToken {
+        pub id: ::uuid::Uuid,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+    }
+
+    impl ::std::convert::From<&ScimClientBearerToken> for ScimClientBearerToken {
+        fn from(value: &ScimClientBearerToken) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ScimClientBearerToken {
+        pub fn builder() -> builder::ScimClientBearerToken {
+            Default::default()
+        }
+    }
+
+    /// The POST response is the only time the generated bearer token is
+    /// returned to the client.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The POST response is the only time the generated bearer
+    /// token is returned to the client.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "bearer_token",
+    ///    "id",
+    ///    "time_created"
+    ///  ],
+    ///  "properties": {
+    ///    "bearer_token": {
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_expires": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct ScimClientBearerTokenValue {
+        pub bearer_token: ::std::string::String,
+        pub id: ::uuid::Uuid,
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_expires: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+    }
+
+    impl ::std::convert::From<&ScimClientBearerTokenValue> for ScimClientBearerTokenValue {
+        fn from(value: &ScimClientBearerTokenValue) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ScimClientBearerTokenValue {
+        pub fn builder() -> builder::ScimClientBearerTokenValue {
+            Default::default()
+        }
+    }
+
     /// Configuration of inbound ICMP allowed by API services.
     ///
     /// <details><summary>JSON schema</summary>
@@ -52770,6 +52884,182 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct ScimClientBearerToken {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_expires: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ScimClientBearerToken {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_expires: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ScimClientBearerToken {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_expires<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ScimClientBearerToken> for super::ScimClientBearerToken {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ScimClientBearerToken,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    time_created: value.time_created?,
+                    time_expires: value.time_expires?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ScimClientBearerToken> for ScimClientBearerToken {
+            fn from(value: super::ScimClientBearerToken) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_expires: Ok(value.time_expires),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ScimClientBearerTokenValue {
+            bearer_token: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_expires: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for ScimClientBearerTokenValue {
+            fn default() -> Self {
+                Self {
+                    bearer_token: Err("no value supplied for bearer_token".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_expires: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ScimClientBearerTokenValue {
+            pub fn bearer_token<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bearer_token = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for bearer_token: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_expires<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_expires = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_expires: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<ScimClientBearerTokenValue> for super::ScimClientBearerTokenValue {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ScimClientBearerTokenValue,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bearer_token: value.bearer_token?,
+                    id: value.id?,
+                    time_created: value.time_created?,
+                    time_expires: value.time_expires?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::ScimClientBearerTokenValue> for ScimClientBearerTokenValue {
+            fn from(value: super::ScimClientBearerTokenValue) -> Self {
+                Self {
+                    bearer_token: Ok(value.bearer_token),
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_expires: Ok(value.time_expires),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct ServiceIcmpConfig {
             enabled: ::std::result::Result<bool, ::std::string::String>,
         }
@@ -66513,6 +66803,65 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView<'_>;
+    /// Sends a `GET` request to `/v1/system/scim/tokens`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.scim_idp_get_tokens()
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn scim_idp_get_tokens(&self) -> builder::ScimIdpGetTokens<'_>;
+    /// Sends a `POST` request to `/v1/system/scim/tokens`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.scim_idp_create_token()
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn scim_idp_create_token(&self) -> builder::ScimIdpCreateToken<'_>;
+    /// Sends a `DELETE` request to `/v1/system/scim/tokens`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.scim_idp_delete_all_tokens()
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn scim_idp_delete_all_tokens(&self) -> builder::ScimIdpDeleteAllTokens<'_>;
+    /// Sends a `GET` request to `/v1/system/scim/tokens/{token_id}`
+    ///
+    /// Arguments:
+    /// - `token_id`
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.scim_idp_get_token_by_id()
+    ///    .token_id(token_id)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn scim_idp_get_token_by_id(&self) -> builder::ScimIdpGetTokenById<'_>;
+    /// Sends a `DELETE` request to `/v1/system/scim/tokens/{token_id}`
+    ///
+    /// Arguments:
+    /// - `token_id`
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.scim_idp_delete_token_by_id()
+    ///    .token_id(token_id)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn scim_idp_delete_token_by_id(&self) -> builder::ScimIdpDeleteTokenById<'_>;
     /// Lists resource quotas for all silos
     ///
     /// Sends a `GET` request to `/v1/system/silo-quotas`
@@ -66794,6 +67143,26 @@ impl ClientSystemSilosExt for Client {
 
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView<'_> {
         builder::SamlIdentityProviderView::new(self)
+    }
+
+    fn scim_idp_get_tokens(&self) -> builder::ScimIdpGetTokens<'_> {
+        builder::ScimIdpGetTokens::new(self)
+    }
+
+    fn scim_idp_create_token(&self) -> builder::ScimIdpCreateToken<'_> {
+        builder::ScimIdpCreateToken::new(self)
+    }
+
+    fn scim_idp_delete_all_tokens(&self) -> builder::ScimIdpDeleteAllTokens<'_> {
+        builder::ScimIdpDeleteAllTokens::new(self)
+    }
+
+    fn scim_idp_get_token_by_id(&self) -> builder::ScimIdpGetTokenById<'_> {
+        builder::ScimIdpGetTokenById::new(self)
+    }
+
+    fn scim_idp_delete_token_by_id(&self) -> builder::ScimIdpDeleteTokenById<'_> {
+        builder::ScimIdpDeleteTokenById::new(self)
     }
 
     fn system_quotas_list(&self) -> builder::SystemQuotasList<'_> {
@@ -91348,6 +91717,395 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::scim_idp_get_tokens`]
+    ///
+    /// [`ClientSystemSilosExt::scim_idp_get_tokens`]: super::ClientSystemSilosExt::scim_idp_get_tokens
+    #[derive(Debug, Clone)]
+    pub struct ScimIdpGetTokens<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ScimIdpGetTokens<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/scim/tokens`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::ScimClientBearerToken>>, Error<types::Error>>
+        {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/scim/tokens", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "scim_idp_get_tokens",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::scim_idp_create_token`]
+    ///
+    /// [`ClientSystemSilosExt::scim_idp_create_token`]: super::ClientSystemSilosExt::scim_idp_create_token
+    #[derive(Debug, Clone)]
+    pub struct ScimIdpCreateToken<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ScimIdpCreateToken<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/scim/tokens`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ScimClientBearerTokenValue>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/scim/tokens", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "scim_idp_create_token",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::scim_idp_delete_all_tokens`]
+    ///
+    /// [`ClientSystemSilosExt::scim_idp_delete_all_tokens`]: super::ClientSystemSilosExt::scim_idp_delete_all_tokens
+    #[derive(Debug, Clone)]
+    pub struct ScimIdpDeleteAllTokens<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ScimIdpDeleteAllTokens<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/scim/tokens`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/scim/tokens", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "scim_idp_delete_all_tokens",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::scim_idp_get_token_by_id`]
+    ///
+    /// [`ClientSystemSilosExt::scim_idp_get_token_by_id`]: super::ClientSystemSilosExt::scim_idp_get_token_by_id
+    #[derive(Debug, Clone)]
+    pub struct ScimIdpGetTokenById<'a> {
+        client: &'a super::Client,
+        token_id: Result<::uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ScimIdpGetTokenById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                token_id: Err("token_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn token_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.token_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for token_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/scim/tokens/{token_id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ScimClientBearerToken>, Error<types::Error>> {
+            let Self {
+                client,
+                token_id,
+                silo,
+            } = self;
+            let token_id = token_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/scim/tokens/{}",
+                client.baseurl,
+                encode_path(&token_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "scim_idp_get_token_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::scim_idp_delete_token_by_id`]
+    ///
+    /// [`ClientSystemSilosExt::scim_idp_delete_token_by_id`]: super::ClientSystemSilosExt::scim_idp_delete_token_by_id
+    #[derive(Debug, Clone)]
+    pub struct ScimIdpDeleteTokenById<'a> {
+        client: &'a super::Client,
+        token_id: Result<::uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ScimIdpDeleteTokenById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                token_id: Err("token_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn token_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.token_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for token_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/scim/tokens/{token_id}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                token_id,
+                silo,
+            } = self;
+            let token_id = token_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/scim/tokens/{}",
+                client.baseurl,
+                encode_path(&token_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("silo", &silo))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "scim_idp_delete_token_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
