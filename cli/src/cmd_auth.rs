@@ -497,8 +497,7 @@ impl CmdAuthStatus {
         {
             let client = Client::new_authenticated_config(
                 &ClientConfig::default().with_host_and_token(&host_env, &token_env),
-            )
-            .expect("client authentication from host/token failed");
+            )?;
 
             spinner.set_message(format!("Checking {}...", host_env));
             spinner.enable_steady_tick(Duration::from_millis(100));
@@ -521,8 +520,7 @@ impl CmdAuthStatus {
                 let client = Client::new_authenticated_config(
                     &ClientConfig::default()
                         .with_host_and_token(&profile_info.host, &profile_info.token),
-                )
-                .expect("client authentication from host/token failed");
+                )?;
 
                 spinner.reset();
                 spinner.set_message(format!("Checking {}...", &profile_info.host));

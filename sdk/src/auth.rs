@@ -188,6 +188,10 @@ impl Client {
             ..
         } = config;
 
+        if std::env::var("OXIDE_HOST").is_ok() && std::env::var("OXIDE_PROFILE").is_ok() {
+            return Err(OxideAuthError::HostProfileConflict);
+        }
+
         let (host, token) = match auth_method {
             AuthMethod::DefaultProfile => get_profile_auth(config_dir, None)?,
             AuthMethod::Profile(profile) => get_profile_auth(config_dir, Some(profile))?,
@@ -296,6 +300,8 @@ fn get_profile_auth(
                 .next()
                 .ok_or(OxideAuthError::MissingToken(env_host))?
                 .clone()
+        } else if let Ok(env_profile) = std::env::var("OXIDE_PROFILE") {
+            env_profile
         } else {
             let config_path = config_dir.join("config.toml");
             let contents = std::fs::read_to_string(&config_path).map_err(|e| {

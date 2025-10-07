@@ -37,6 +37,8 @@ pub enum OxideAuthError {
                 Login without $OXIDE_HOST set or set $OXIDE_TOKEN."
     )]
     MissingToken(String),
+    #[error("Both $OXIDE_HOST and $OXIDE_PROFILE are set, only one may be used")]
+    HostProfileConflict,
     #[error("Parse error for {0}: {1}")]
     TomlError(PathBuf, toml::de::Error),
     #[error("IO Error: {0}")]
