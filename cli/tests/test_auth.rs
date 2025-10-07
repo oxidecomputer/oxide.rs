@@ -184,14 +184,8 @@ fn test_auth_login_first() {
     assert_mode(&config_dir.join("config.toml"), 0o644);
 }
 
-fn write_first_creds(dir: &Path) {
+fn write_creds(dir: &Path, creds: &str) {
     let cred_path = dir.join("credentials.toml");
-    let creds = "\
-        [profile.first]\n\
-        host = \"https://oxide.internal\"\n\
-        token = \"***-***-***\"\n\
-        user = \"00000000-0000-0000-0000-000000000000\"\n\
-    ";
     write(&cred_path, creds).unwrap();
 
     // On Unix set permissions to 0600 to avoid triggering permissions warning.
@@ -204,6 +198,19 @@ fn write_first_creds(dir: &Path) {
         file.set_permissions(perms).unwrap();
     }
 }
+
+fn write_first_creds(dir: &Path) {
+    write_creds(
+        dir,
+        "\
+        [profile.first]\n\
+        host = \"https://oxide.internal\"\n\
+        token = \"***-***-***\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+    ",
+    );
+}
+
 fn write_first_config(dir: &Path) {
     let config_path = dir.join("config.toml");
     let config = "\
@@ -540,6 +547,22 @@ fn test_cmd_auth_status_env() {
         });
     });
 
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_path = temp_dir.path();
+
+    write_creds(
+        temp_dir_path,
+        &format!(
+            "\
+        [profile.funky-town]\n\
+        host = \"{}\"\n\
+        token = \"oxide-token-good\"\n\
+        user = \"00000000-0000-0000-0000-000000000000\"\n\
+    ",
+            server.url("")
+        ),
+    );
+
     // Validate authenticated credentials
     Command::cargo_bin("oxide")
         .unwrap()
@@ -554,7 +577,36 @@ fn test_cmd_auth_status_env() {
             server.url("")
         ));
 
-    oxide_mock.assert();
+    // OXIDE_PROFILE also works, uses creds file
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("OXIDE_PROFILE", "funky-town")
+        .arg("--config-dir")
+        .arg(temp_dir.path().as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .success()
+        .stdout(format!(
+            "Profile \"funky-town\" ({}) status: Authenticated\n",
+            server.url(""),
+        ));
+
+    // OXIDE_HOST conflicts with OXIDE_PROFILE
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-good")
+        .env("OXIDE_PROFILE", "ignored")
+        .arg("--config-dir")
+        .arg(temp_dir.path().as_os_str())
+        .arg("auth")
+        .arg("status")
+        .assert()
+        .failure()
+        .stderr(format!("{}\n", oxide::OxideAuthError::HostProfileConflict));
+
+    oxide_mock.assert_hits(2);
 
     let oxide_mock = server.current_user_view(|when, then| {
         when.into_inner()
