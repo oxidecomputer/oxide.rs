@@ -64,7 +64,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/oxidecomputer/cargo-dist/releases/download/v1.0.7/dist-installer.sh | sh"
+        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/oxidecomputer/cargo-dist/releases/download/v1.0.14/dist-installer.sh | sh"
       - name: Cache dist
         uses: actions/upload-artifact@v4
         with:
@@ -318,17 +318,18 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
 
           for release in $(echo "$PLAN" | jq --compact-output '.releases[] | select([.artifacts[] | endswith(".rb")] | any)'); do
-            filename=$(echo "$release" | jq '.artifacts[] | select(endswith(".rb"))' --raw-output)
-            name=$(echo "$filename" | sed "s/\.rb$//")
-            version=$(echo "$release" | jq .app_version --raw-output)
+            for filename in $(echo "$release" | jq '.artifacts[] | select(endswith(".rb"))' --raw-output); do
+              name=$(echo "$filename" | sed "s/\.rb$//")
+              version=$(echo "$release" | jq .app_version --raw-output)
 
-            export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-            brew update
-            # We avoid reformatting user-provided data such as the app description and homepage.
-            brew style --except-cops FormulaAudit/Homepage,FormulaAudit/Desc,FormulaAuditStrict --fix "Formula/${filename}" || true
+              export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+              brew update
+              # We avoid reformatting user-provided data such as the app description and homepage.
+              brew style --except-cops FormulaAudit/Homepage,FormulaAudit/Desc,FormulaAuditStrict --fix "Formula/${filename}" || true
 
-            git add "Formula/${filename}"
-            git commit -m "${name} ${version}"
+              git add "Formula/${filename}"
+              git commit -m "${name} ${version}"
+            done
           done
           git push
 
