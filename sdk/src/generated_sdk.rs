@@ -66803,65 +66803,87 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView<'_>;
+    /// List SCIM tokens
+    ///
+    /// Specify the silo by name or ID using the `silo` query parameter.
+    ///
     /// Sends a `GET` request to `/v1/system/scim/tokens`
     ///
     /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.scim_idp_get_tokens()
+    /// let response = client.scim_token_list()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn scim_idp_get_tokens(&self) -> builder::ScimIdpGetTokens<'_>;
+    fn scim_token_list(&self) -> builder::ScimTokenList<'_>;
+    /// Create SCIM token
+    ///
+    /// Specify the silo by name or ID using the `silo` query parameter. Be sure
+    /// to save the bearer token in the response. It will not be retrievable
+    /// later through the token view and list endpoints.
+    ///
     /// Sends a `POST` request to `/v1/system/scim/tokens`
     ///
     /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.scim_idp_create_token()
+    /// let response = client.scim_token_create()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn scim_idp_create_token(&self) -> builder::ScimIdpCreateToken<'_>;
+    fn scim_token_create(&self) -> builder::ScimTokenCreate<'_>;
+    /// Delete all SCIM tokens
+    ///
+    /// Specify the silo by name or ID using the `silo` query parameter.
+    ///
     /// Sends a `DELETE` request to `/v1/system/scim/tokens`
     ///
     /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.scim_idp_delete_all_tokens()
+    /// let response = client.scim_token_delete_all()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn scim_idp_delete_all_tokens(&self) -> builder::ScimIdpDeleteAllTokens<'_>;
+    fn scim_token_delete_all(&self) -> builder::ScimTokenDeleteAll<'_>;
+    /// Fetch SCIM token
+    ///
+    /// Specify the silo by name or ID using the `silo` query parameter.
+    ///
     /// Sends a `GET` request to `/v1/system/scim/tokens/{token_id}`
     ///
     /// Arguments:
     /// - `token_id`
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.scim_idp_get_token_by_id()
+    /// let response = client.scim_token_view()
     ///    .token_id(token_id)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn scim_idp_get_token_by_id(&self) -> builder::ScimIdpGetTokenById<'_>;
+    fn scim_token_view(&self) -> builder::ScimTokenView<'_>;
+    /// Delete SCIM token
+    ///
+    /// Specify the silo by name or ID using the `silo` query parameter.
+    ///
     /// Sends a `DELETE` request to `/v1/system/scim/tokens/{token_id}`
     ///
     /// Arguments:
     /// - `token_id`
     /// - `silo`: Name or ID of the silo
     /// ```ignore
-    /// let response = client.scim_idp_delete_token_by_id()
+    /// let response = client.scim_token_delete()
     ///    .token_id(token_id)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
     /// ```
-    fn scim_idp_delete_token_by_id(&self) -> builder::ScimIdpDeleteTokenById<'_>;
+    fn scim_token_delete(&self) -> builder::ScimTokenDelete<'_>;
     /// Lists resource quotas for all silos
     ///
     /// Sends a `GET` request to `/v1/system/silo-quotas`
@@ -67145,24 +67167,24 @@ impl ClientSystemSilosExt for Client {
         builder::SamlIdentityProviderView::new(self)
     }
 
-    fn scim_idp_get_tokens(&self) -> builder::ScimIdpGetTokens<'_> {
-        builder::ScimIdpGetTokens::new(self)
+    fn scim_token_list(&self) -> builder::ScimTokenList<'_> {
+        builder::ScimTokenList::new(self)
     }
 
-    fn scim_idp_create_token(&self) -> builder::ScimIdpCreateToken<'_> {
-        builder::ScimIdpCreateToken::new(self)
+    fn scim_token_create(&self) -> builder::ScimTokenCreate<'_> {
+        builder::ScimTokenCreate::new(self)
     }
 
-    fn scim_idp_delete_all_tokens(&self) -> builder::ScimIdpDeleteAllTokens<'_> {
-        builder::ScimIdpDeleteAllTokens::new(self)
+    fn scim_token_delete_all(&self) -> builder::ScimTokenDeleteAll<'_> {
+        builder::ScimTokenDeleteAll::new(self)
     }
 
-    fn scim_idp_get_token_by_id(&self) -> builder::ScimIdpGetTokenById<'_> {
-        builder::ScimIdpGetTokenById::new(self)
+    fn scim_token_view(&self) -> builder::ScimTokenView<'_> {
+        builder::ScimTokenView::new(self)
     }
 
-    fn scim_idp_delete_token_by_id(&self) -> builder::ScimIdpDeleteTokenById<'_> {
-        builder::ScimIdpDeleteTokenById::new(self)
+    fn scim_token_delete(&self) -> builder::ScimTokenDelete<'_> {
+        builder::ScimTokenDelete::new(self)
     }
 
     fn system_quotas_list(&self) -> builder::SystemQuotasList<'_> {
@@ -91728,16 +91750,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::scim_idp_get_tokens`]
+    /// Builder for [`ClientSystemSilosExt::scim_token_list`]
     ///
-    /// [`ClientSystemSilosExt::scim_idp_get_tokens`]: super::ClientSystemSilosExt::scim_idp_get_tokens
+    /// [`ClientSystemSilosExt::scim_token_list`]: super::ClientSystemSilosExt::scim_token_list
     #[derive(Debug, Clone)]
-    pub struct ScimIdpGetTokens<'a> {
+    pub struct ScimTokenList<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ScimIdpGetTokens<'a> {
+    impl<'a> ScimTokenList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -91780,7 +91802,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "scim_idp_get_tokens",
+                operation_id: "scim_token_list",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -91799,16 +91821,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::scim_idp_create_token`]
+    /// Builder for [`ClientSystemSilosExt::scim_token_create`]
     ///
-    /// [`ClientSystemSilosExt::scim_idp_create_token`]: super::ClientSystemSilosExt::scim_idp_create_token
+    /// [`ClientSystemSilosExt::scim_token_create`]: super::ClientSystemSilosExt::scim_token_create
     #[derive(Debug, Clone)]
-    pub struct ScimIdpCreateToken<'a> {
+    pub struct ScimTokenCreate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ScimIdpCreateToken<'a> {
+    impl<'a> ScimTokenCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -91850,7 +91872,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "scim_idp_create_token",
+                operation_id: "scim_token_create",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -91869,16 +91891,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::scim_idp_delete_all_tokens`]
+    /// Builder for [`ClientSystemSilosExt::scim_token_delete_all`]
     ///
-    /// [`ClientSystemSilosExt::scim_idp_delete_all_tokens`]: super::ClientSystemSilosExt::scim_idp_delete_all_tokens
+    /// [`ClientSystemSilosExt::scim_token_delete_all`]: super::ClientSystemSilosExt::scim_token_delete_all
     #[derive(Debug, Clone)]
-    pub struct ScimIdpDeleteAllTokens<'a> {
+    pub struct ScimTokenDeleteAll<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ScimIdpDeleteAllTokens<'a> {
+    impl<'a> ScimTokenDeleteAll<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -91918,7 +91940,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "scim_idp_delete_all_tokens",
+                operation_id: "scim_token_delete_all",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -91937,17 +91959,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::scim_idp_get_token_by_id`]
+    /// Builder for [`ClientSystemSilosExt::scim_token_view`]
     ///
-    /// [`ClientSystemSilosExt::scim_idp_get_token_by_id`]: super::ClientSystemSilosExt::scim_idp_get_token_by_id
+    /// [`ClientSystemSilosExt::scim_token_view`]: super::ClientSystemSilosExt::scim_token_view
     #[derive(Debug, Clone)]
-    pub struct ScimIdpGetTokenById<'a> {
+    pub struct ScimTokenView<'a> {
         client: &'a super::Client,
         token_id: Result<::uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ScimIdpGetTokenById<'a> {
+    impl<'a> ScimTokenView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92009,7 +92031,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "scim_idp_get_token_by_id",
+                operation_id: "scim_token_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92028,17 +92050,17 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::scim_idp_delete_token_by_id`]
+    /// Builder for [`ClientSystemSilosExt::scim_token_delete`]
     ///
-    /// [`ClientSystemSilosExt::scim_idp_delete_token_by_id`]: super::ClientSystemSilosExt::scim_idp_delete_token_by_id
+    /// [`ClientSystemSilosExt::scim_token_delete`]: super::ClientSystemSilosExt::scim_token_delete
     #[derive(Debug, Clone)]
-    pub struct ScimIdpDeleteTokenById<'a> {
+    pub struct ScimTokenDelete<'a> {
         client: &'a super::Client,
         token_id: Result<::uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> ScimIdpDeleteTokenById<'a> {
+    impl<'a> ScimTokenDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92098,7 +92120,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "scim_idp_delete_token_by_id",
+                operation_id: "scim_token_delete",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;

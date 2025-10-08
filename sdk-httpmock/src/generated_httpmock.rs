@@ -16968,8 +16968,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpGetTokensWhen(::httpmock::When);
-    impl ScimIdpGetTokensWhen {
+    pub struct ScimTokenListWhen(::httpmock::When);
+    impl ScimTokenListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -16987,8 +16987,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpGetTokensThen(::httpmock::Then);
-    impl ScimIdpGetTokensThen {
+    pub struct ScimTokenListThen(::httpmock::Then);
+    impl ScimTokenListThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -17027,8 +17027,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpCreateTokenWhen(::httpmock::When);
-    impl ScimIdpCreateTokenWhen {
+    pub struct ScimTokenCreateWhen(::httpmock::When);
+    impl ScimTokenCreateWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -17046,8 +17046,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpCreateTokenThen(::httpmock::Then);
-    impl ScimIdpCreateTokenThen {
+    pub struct ScimTokenCreateThen(::httpmock::Then);
+    impl ScimTokenCreateThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -17086,8 +17086,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpDeleteAllTokensWhen(::httpmock::When);
-    impl ScimIdpDeleteAllTokensWhen {
+    pub struct ScimTokenDeleteAllWhen(::httpmock::When);
+    impl ScimTokenDeleteAllWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -17105,8 +17105,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpDeleteAllTokensThen(::httpmock::Then);
-    impl ScimIdpDeleteAllTokensThen {
+    pub struct ScimTokenDeleteAllThen(::httpmock::Then);
+    impl ScimTokenDeleteAllThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -17140,8 +17140,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpGetTokenByIdWhen(::httpmock::When);
-    impl ScimIdpGetTokenByIdWhen {
+    pub struct ScimTokenViewWhen(::httpmock::When);
+    impl ScimTokenViewWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -17165,8 +17165,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpGetTokenByIdThen(::httpmock::Then);
-    impl ScimIdpGetTokenByIdThen {
+    pub struct ScimTokenViewThen(::httpmock::Then);
+    impl ScimTokenViewThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -17205,8 +17205,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpDeleteTokenByIdWhen(::httpmock::When);
-    impl ScimIdpDeleteTokenByIdWhen {
+    pub struct ScimTokenDeleteWhen(::httpmock::When);
+    impl ScimTokenDeleteWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
             Self(
                 inner
@@ -17230,8 +17230,8 @@ pub mod operations {
         }
     }
 
-    pub struct ScimIdpDeleteTokenByIdThen(::httpmock::Then);
-    impl ScimIdpDeleteTokenByIdThen {
+    pub struct ScimTokenDeleteThen(::httpmock::Then);
+    impl ScimTokenDeleteThen {
         pub fn new(inner: ::httpmock::Then) -> Self {
             Self(inner)
         }
@@ -23161,21 +23161,21 @@ pub trait MockServerExt {
     fn system_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
-    fn scim_idp_get_tokens<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpGetTokensWhen, operations::ScimIdpGetTokensThen);
-    fn scim_idp_create_token<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::ScimTokenListWhen, operations::ScimTokenListThen);
+    fn scim_token_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpCreateTokenWhen, operations::ScimIdpCreateTokenThen);
-    fn scim_idp_delete_all_tokens<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::ScimTokenCreateWhen, operations::ScimTokenCreateThen);
+    fn scim_token_delete_all<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpDeleteAllTokensWhen, operations::ScimIdpDeleteAllTokensThen);
-    fn scim_idp_get_token_by_id<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::ScimTokenDeleteAllWhen, operations::ScimTokenDeleteAllThen);
+    fn scim_token_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpGetTokenByIdWhen, operations::ScimIdpGetTokenByIdThen);
-    fn scim_idp_delete_token_by_id<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+        F: FnOnce(operations::ScimTokenViewWhen, operations::ScimTokenViewThen);
+    fn scim_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpDeleteTokenByIdWhen, operations::ScimIdpDeleteTokenByIdThen);
+        F: FnOnce(operations::ScimTokenDeleteWhen, operations::ScimTokenDeleteThen);
     fn system_quotas_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen);
@@ -26122,62 +26122,62 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
-    fn scim_idp_get_tokens<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpGetTokensWhen, operations::ScimIdpGetTokensThen),
+        F: FnOnce(operations::ScimTokenListWhen, operations::ScimTokenListThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ScimIdpGetTokensWhen::new(when),
-                operations::ScimIdpGetTokensThen::new(then),
+                operations::ScimTokenListWhen::new(when),
+                operations::ScimTokenListThen::new(then),
             )
         })
     }
 
-    fn scim_idp_create_token<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpCreateTokenWhen, operations::ScimIdpCreateTokenThen),
+        F: FnOnce(operations::ScimTokenCreateWhen, operations::ScimTokenCreateThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ScimIdpCreateTokenWhen::new(when),
-                operations::ScimIdpCreateTokenThen::new(then),
+                operations::ScimTokenCreateWhen::new(when),
+                operations::ScimTokenCreateThen::new(then),
             )
         })
     }
 
-    fn scim_idp_delete_all_tokens<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_delete_all<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpDeleteAllTokensWhen, operations::ScimIdpDeleteAllTokensThen),
+        F: FnOnce(operations::ScimTokenDeleteAllWhen, operations::ScimTokenDeleteAllThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ScimIdpDeleteAllTokensWhen::new(when),
-                operations::ScimIdpDeleteAllTokensThen::new(then),
+                operations::ScimTokenDeleteAllWhen::new(when),
+                operations::ScimTokenDeleteAllThen::new(then),
             )
         })
     }
 
-    fn scim_idp_get_token_by_id<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpGetTokenByIdWhen, operations::ScimIdpGetTokenByIdThen),
+        F: FnOnce(operations::ScimTokenViewWhen, operations::ScimTokenViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ScimIdpGetTokenByIdWhen::new(when),
-                operations::ScimIdpGetTokenByIdThen::new(then),
+                operations::ScimTokenViewWhen::new(when),
+                operations::ScimTokenViewThen::new(then),
             )
         })
     }
 
-    fn scim_idp_delete_token_by_id<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    fn scim_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
-        F: FnOnce(operations::ScimIdpDeleteTokenByIdWhen, operations::ScimIdpDeleteTokenByIdThen),
+        F: FnOnce(operations::ScimTokenDeleteWhen, operations::ScimTokenDeleteThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::ScimIdpDeleteTokenByIdWhen::new(when),
-                operations::ScimIdpDeleteTokenByIdThen::new(then),
+                operations::ScimTokenDeleteWhen::new(when),
+                operations::ScimTokenDeleteThen::new(then),
             )
         })
     }
