@@ -6767,6 +6767,7 @@ impl<T: CliConfig> Cli<T> {
                         ::clap::builder::PossibleValuesParser::new([
                             types::SiloIdentityMode::SamlJit.to_string(),
                             types::SiloIdentityMode::LocalOnly.to_string(),
+                            types::SiloIdentityMode::SamlScim.to_string(),
                         ]),
                         |s| types::SiloIdentityMode::try_from(s).unwrap(),
                     ))

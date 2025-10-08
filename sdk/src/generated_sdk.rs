@@ -24727,6 +24727,15 @@ pub mod types {
     ///      "enum": [
     ///        "local_only"
     ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Users are authenticated with SAML using an external
+    /// authentication provider. Users and groups are managed with SCIM API
+    /// calls, likely from the same authentication provider.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "saml_scim"
+    ///      ]
     ///    }
     ///  ]
     /// }
@@ -24756,6 +24765,11 @@ pub mod types {
         /// to an external authentication provider or identity provider.
         #[serde(rename = "local_only")]
         LocalOnly,
+        /// Users are authenticated with SAML using an external authentication
+        /// provider. Users and groups are managed with SCIM API calls, likely
+        /// from the same authentication provider.
+        #[serde(rename = "saml_scim")]
+        SamlScim,
     }
 
     impl ::std::convert::From<&Self> for SiloIdentityMode {
@@ -24769,6 +24783,7 @@ pub mod types {
             match *self {
                 Self::SamlJit => f.write_str("saml_jit"),
                 Self::LocalOnly => f.write_str("local_only"),
+                Self::SamlScim => f.write_str("saml_scim"),
             }
         }
     }
@@ -24779,6 +24794,7 @@ pub mod types {
             match value {
                 "saml_jit" => Ok(Self::SamlJit),
                 "local_only" => Ok(Self::LocalOnly),
+                "saml_scim" => Ok(Self::SamlScim),
                 _ => Err("invalid value".into()),
             }
         }
