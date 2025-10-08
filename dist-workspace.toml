@@ -4,7 +4,7 @@ members = ["cargo:."]
 # Config for 'dist'
 [dist]
 # The preferred dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "1.0.7"
+cargo-dist-version = "1.0.14"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
@@ -21,6 +21,8 @@ macos-sign = true
 ssldotcom-windows-sign = "prod"
 # A GitHub repo to push Homebrew formulas to
 tap = "oxidecomputer/homebrew-tap"
+# Create versioned Homebrew forumlas
+version-formulas = true
 # Publish jobs to run in CI
 publish-jobs = ["homebrew"]
 
