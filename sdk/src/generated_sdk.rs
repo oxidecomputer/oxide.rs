@@ -30021,16 +30021,12 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "file_name": {
-    ///      "description": "The file name of the repository\n\nThis is purely
-    /// used for debugging and may not always be correct (e.g., with wicket, we
-    /// read the file contents from stdin so we don't know the correct file
-    /// name).",
+    ///      "description": "The file name of the repository\n\nThis is intended
+    /// for debugging and may not always be correct.",
     ///      "type": "string"
     ///    },
     ///    "hash": {
-    ///      "description": "The hash of the repository.\n\nThis is a slight
-    /// abuse of `ArtifactHash`, since that's the hash of individual artifacts
-    /// within the repository. However, we use it here for convenience.",
+    ///      "description": "The hash of the repository",
     ///      "type": "string",
     ///      "format": "hex string (32 bytes)"
     ///    },
@@ -30057,15 +30053,9 @@ pub mod types {
     pub struct TufRepo {
         /// The file name of the repository
         ///
-        /// This is purely used for debugging and may not always be correct
-        /// (e.g., with wicket, we read the file contents from stdin so we don't
-        /// know the correct file name).
+        /// This is intended for debugging and may not always be correct.
         pub file_name: ::std::string::String,
-        /// The hash of the repository.
-        ///
-        /// This is a slight abuse of `ArtifactHash`, since that's the hash of
-        /// individual artifacts within the repository. However, we use it here
-        /// for convenience.
+        /// The hash of the repository
         pub hash: ::std::string::String,
         /// The system version in artifacts.json
         pub system_version: TufRepoSystemVersion,
@@ -30897,13 +30887,17 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "components_by_release_version",
-    ///    "paused",
+    ///    "suspended",
     ///    "target_release",
-    ///    "time_last_blueprint"
+    ///    "time_last_step_planned"
     ///  ],
     ///  "properties": {
     ///    "components_by_release_version": {
-    ///      "description": "Count of components running each release version",
+    ///      "description": "Count of components running each release
+    /// version\n\nKeys will be either:\n\n* Semver-like release version strings
+    /// * \"install dataset\", representing the initial rack software before any
+    /// updates * \"unknown\", which means there is no TUF repo uploaded that
+    /// matches the software running on the component)",
     ///      "type": "object",
     ///      "additionalProperties": {
     ///        "type": "integer",
@@ -30911,11 +30905,12 @@ pub mod types {
     ///        "minimum": 0.0
     ///      }
     ///    },
-    ///    "paused": {
-    ///      "description": "Whether update activity is paused\n\nWhen true, the
-    /// system has stopped attempting to make progress toward the target
-    /// release. This happens after a MUPdate because the system wants to make
-    /// sure of the operator's intent. To resume update, set a new target
+    ///    "suspended": {
+    ///      "description": "Whether automatic update is suspended due to manual
+    /// update activity\n\nAfter a manual support procedure that changes the
+    /// system software, automatic update activity is suspended to avoid undoing
+    /// the change. To resume automatic update, first upload the TUF repository
+    /// matching the manually applied update, then set that as the target
     /// release.",
     ///      "type": "boolean"
     ///    },
@@ -30934,12 +30929,10 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
-    ///    "time_last_blueprint": {
+    ///    "time_last_step_planned": {
     ///      "description": "Time of most recent update planning
     /// activity\n\nThis is intended as a rough indicator of the last time
-    /// something happened in the update planner. A blueprint is the update
-    /// system's plan for the next state of the system, so this timestamp
-    /// indicates the last time the update system made a plan.",
+    /// something happened in the update planner.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -30952,14 +30945,21 @@ pub mod types {
     )]
     pub struct UpdateStatus {
         /// Count of components running each release version
-        pub components_by_release_version: ::std::collections::HashMap<::std::string::String, u32>,
-        /// Whether update activity is paused
         ///
-        /// When true, the system has stopped attempting to make progress toward
-        /// the target release. This happens after a MUPdate because the system
-        /// wants to make sure of the operator's intent. To resume update, set a
-        /// new target release.
-        pub paused: bool,
+        /// Keys will be either:
+        ///
+        /// * Semver-like release version strings * "install dataset",
+        ///   representing the initial rack software before any updates *
+        ///   "unknown", which means there is no TUF repo uploaded that matches
+        ///   the software running on the component)
+        pub components_by_release_version: ::std::collections::HashMap<::std::string::String, u32>,
+        /// Whether automatic update is suspended due to manual update activity
+        ///
+        /// After a manual support procedure that changes the system software,
+        /// automatic update activity is suspended to avoid undoing the change.
+        /// To resume automatic update, first upload the TUF repository matching
+        /// the manually applied update, then set that as the target release.
+        pub suspended: bool,
         /// Current target release of the system software
         ///
         /// This may not correspond to the actual system software running at the
@@ -30974,10 +30974,8 @@ pub mod types {
         /// Time of most recent update planning activity
         ///
         /// This is intended as a rough indicator of the last time something
-        /// happened in the update planner. A blueprint is the update system's
-        /// plan for the next state of the system, so this timestamp indicates
-        /// the last time the update system made a plan.
-        pub time_last_blueprint: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// happened in the update planner.
+        pub time_last_step_planned: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
     impl ::std::convert::From<&UpdateStatus> for UpdateStatus {
@@ -58389,12 +58387,12 @@ pub mod types {
                 ::std::collections::HashMap<::std::string::String, u32>,
                 ::std::string::String,
             >,
-            paused: ::std::result::Result<bool, ::std::string::String>,
+            suspended: ::std::result::Result<bool, ::std::string::String>,
             target_release: ::std::result::Result<
                 ::std::option::Option<super::TargetRelease>,
                 ::std::string::String,
             >,
-            time_last_blueprint: ::std::result::Result<
+            time_last_step_planned: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
@@ -58406,10 +58404,10 @@ pub mod types {
                     components_by_release_version: Err("no value supplied for \
                                                         components_by_release_version"
                         .to_string()),
-                    paused: Err("no value supplied for paused".to_string()),
+                    suspended: Err("no value supplied for suspended".to_string()),
                     target_release: Err("no value supplied for target_release".to_string()),
-                    time_last_blueprint: Err(
-                        "no value supplied for time_last_blueprint".to_string()
+                    time_last_step_planned: Err(
+                        "no value supplied for time_last_step_planned".to_string()
                     ),
                 }
             }
@@ -58429,14 +58427,14 @@ pub mod types {
                 });
                 self
             }
-            pub fn paused<T>(mut self, value: T) -> Self
+            pub fn suspended<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<bool>,
                 T::Error: ::std::fmt::Display,
             {
-                self.paused = value
+                self.suspended = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for paused: {}", e));
+                    .map_err(|e| format!("error converting supplied value for suspended: {}", e));
                 self
             }
             pub fn target_release<T>(mut self, value: T) -> Self
@@ -58449,14 +58447,14 @@ pub mod types {
                 });
                 self
             }
-            pub fn time_last_blueprint<T>(mut self, value: T) -> Self
+            pub fn time_last_step_planned<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.time_last_blueprint = value.try_into().map_err(|e| {
+                self.time_last_step_planned = value.try_into().map_err(|e| {
                     format!(
-                        "error converting supplied value for time_last_blueprint: {}",
+                        "error converting supplied value for time_last_step_planned: {}",
                         e
                     )
                 });
@@ -58471,9 +58469,9 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     components_by_release_version: value.components_by_release_version?,
-                    paused: value.paused?,
+                    suspended: value.suspended?,
                     target_release: value.target_release?,
-                    time_last_blueprint: value.time_last_blueprint?,
+                    time_last_step_planned: value.time_last_step_planned?,
                 })
             }
         }
@@ -58482,9 +58480,9 @@ pub mod types {
             fn from(value: super::UpdateStatus) -> Self {
                 Self {
                     components_by_release_version: Ok(value.components_by_release_version),
-                    paused: Ok(value.paused),
+                    suspended: Ok(value.suspended),
                     target_release: Ok(value.target_release),
-                    time_last_blueprint: Ok(value.time_last_blueprint),
+                    time_last_step_planned: Ok(value.time_last_step_planned),
                 }
             }
         }
