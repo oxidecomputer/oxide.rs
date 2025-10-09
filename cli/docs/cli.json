@@ -1890,102 +1890,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "name": "update",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ],
-              "subcommands": [
-                {
-                  "name": "trust-root",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "create",
-                      "about": "Add trusted root role to updates trust store",
-                      "args": [
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
-                    },
-                    {
-                      "name": "delete",
-                      "about": "Delete trusted root role",
-                      "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "trust-root-id",
-                          "help": "ID of the trust root"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "list",
-                      "about": "List root roles in the updates trust store",
-                      "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
-                      "args": [
-                        {
-                          "long": "limit",
-                          "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "sort-by",
-                          "values": [
-                            "id_ascending"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "name": "view",
-                      "about": "Fetch trusted root role",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "trust-root-id",
-                          "help": "ID of the trust root"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         },
@@ -7993,6 +7897,90 @@
                     {
                       "long": "system-version",
                       "help": "Version of the system software to make the target release."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "trust-root",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Add trusted root role to updates trust store",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete trusted root role",
+                  "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "trust-root-id",
+                      "help": "ID of the trust root"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List root roles in the updates trust store",
+                  "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch trusted root role",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "trust-root-id",
+                      "help": "ID of the trust root"
                     }
                   ]
                 }

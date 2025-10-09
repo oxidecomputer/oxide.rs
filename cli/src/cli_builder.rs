@@ -634,14 +634,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::AuthSettingsUpdate => Some("auth-settings update"),
 
         // Update subcommands
-        CliCommand::SystemUpdateTrustRootList => Some("experimental system update trust-root list"),
-        CliCommand::SystemUpdateTrustRootCreate => {
-            Some("experimental system update trust-root create")
-        }
-        CliCommand::SystemUpdateTrustRootView => Some("experimental system update trust-root view"),
-        CliCommand::SystemUpdateTrustRootDelete => {
-            Some("experimental system update trust-root delete")
-        }
+        CliCommand::SystemUpdateTrustRootList => Some("system update trust-root list"),
+        CliCommand::SystemUpdateTrustRootCreate => Some("system update trust-root create"),
+        CliCommand::SystemUpdateTrustRootView => Some("system update trust-root view"),
+        CliCommand::SystemUpdateTrustRootDelete => Some("system update trust-root delete"),
         CliCommand::TargetReleaseUpdate => Some("system update target-release update"),
         CliCommand::SystemUpdateStatus => Some("system update status"),
         CliCommand::SystemUpdateRepositoryList => Some("system update repo list"),
