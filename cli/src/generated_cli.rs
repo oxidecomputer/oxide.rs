@@ -310,7 +310,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemTimeseriesSchemaList => Self::cli_system_timeseries_schema_list(),
             CliCommand::SystemUpdatePutRepository => Self::cli_system_update_put_repository(),
             CliCommand::SystemUpdateGetRepository => Self::cli_system_update_get_repository(),
-            CliCommand::TargetReleaseView => Self::cli_target_release_view(),
+            CliCommand::SystemUpdateStatus => Self::cli_system_update_status(),
             CliCommand::TargetReleaseUpdate => Self::cli_target_release_update(),
             CliCommand::SystemUpdateTrustRootList => Self::cli_system_update_trust_root_list(),
             CliCommand::SystemUpdateTrustRootCreate => Self::cli_system_update_trust_root_create(),
@@ -7032,15 +7032,12 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch system release repository description by version")
     }
 
-    pub fn cli_target_release_view() -> ::clap::Command {
+    pub fn cli_system_update_status() -> ::clap::Command {
         ::clap::Command::new("")
-            .about("Get the current target release of the rack's system software")
+            .about("Fetch system update status")
             .long_about(
-                "This may not correspond to the actual software running on the rack at the time \
-                 of request; it is instead the release that the rack reconfigurator should be \
-                 moving towards as a goal state. After some number of planning and execution \
-                 phases, the software running on the rack should eventually correspond to the \
-                 release described here.",
+                "Returns information about the current target release and the progress of system \
+                 software updates.",
             )
     }
 
@@ -7069,10 +7066,12 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set the current target release of the rack's system software")
+            .about("Set target release")
             .long_about(
-                "The rack reconfigurator will treat the software specified here as a goal state \
-                 for the rack's software, and attempt to asynchronously update to that release.",
+                "Set the current target release of the rack's system software. The rack \
+                 reconfigurator will treat the software specified here as a goal state for the \
+                 rack's software, and attempt to asynchronously update to that release. Use the \
+                 update status endpoint to view the current target release.",
             )
     }
 
@@ -9013,7 +9012,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemUpdateGetRepository => {
                 self.execute_system_update_get_repository(matches).await
             }
-            CliCommand::TargetReleaseView => self.execute_target_release_view(matches).await,
+            CliCommand::SystemUpdateStatus => self.execute_system_update_status(matches).await,
             CliCommand::TargetReleaseUpdate => self.execute_target_release_update(matches).await,
             CliCommand::SystemUpdateTrustRootList => {
                 self.execute_system_update_trust_root_list(matches).await
@@ -16854,13 +16853,13 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_target_release_view(
+    pub async fn execute_system_update_status(
         &self,
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.target_release_view();
+        let mut request = self.client.system_update_status();
         self.config
-            .execute_target_release_view(matches, &mut request)?;
+            .execute_system_update_status(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -16897,7 +16896,7 @@ impl<T: CliConfig> Cli<T> {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                self.config.success_item(&r);
+                self.config.success_no_item(&r);
                 Ok(())
             }
             Err(r) => {
@@ -20390,10 +20389,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_target_release_view(
+    fn execute_system_update_status(
         &self,
         matches: &::clap::ArgMatches,
-        request: &mut builder::TargetReleaseView,
+        request: &mut builder::SystemUpdateStatus,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -21000,7 +20999,7 @@ pub enum CliCommand {
     SystemTimeseriesSchemaList,
     SystemUpdatePutRepository,
     SystemUpdateGetRepository,
-    TargetReleaseView,
+    SystemUpdateStatus,
     TargetReleaseUpdate,
     SystemUpdateTrustRootList,
     SystemUpdateTrustRootCreate,
@@ -21283,7 +21282,7 @@ impl CliCommand {
             CliCommand::SystemTimeseriesSchemaList,
             CliCommand::SystemUpdatePutRepository,
             CliCommand::SystemUpdateGetRepository,
-            CliCommand::TargetReleaseView,
+            CliCommand::SystemUpdateStatus,
             CliCommand::TargetReleaseUpdate,
             CliCommand::SystemUpdateTrustRootList,
             CliCommand::SystemUpdateTrustRootCreate,
