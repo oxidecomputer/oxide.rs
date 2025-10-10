@@ -1836,6 +1836,14 @@
                   "long_about": "Queries are written in OxQL.",
                   "args": [
                     {
+                      "long": "include-summaries",
+                      "values": [
+                        "true",
+                        "false"
+                      ],
+                      "help": "Whether to include ClickHouse query summaries in the response."
+                    },
+                    {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
                     },
@@ -1882,150 +1890,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "name": "update",
-              "args": [
-                {
-                  "long": "profile",
-                  "help": "Configuration profile to use for commands",
-                  "global": true
-                }
-              ],
-              "subcommands": [
-                {
-                  "name": "target-release",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "update",
-                      "about": "Set the current target release of the rack's system software",
-                      "long_about": "The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release.",
-                      "args": [
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "system-version",
-                          "help": "Version of the system software to make the target release."
-                        }
-                      ]
-                    },
-                    {
-                      "name": "view",
-                      "about": "Get the current target release of the rack's system software",
-                      "long_about": "This may not correspond to the actual software running on the rack at the time of request; it is instead the release that the rack reconfigurator should be moving towards as a goal state. After some number of planning and execution phases, the software running on the rack should eventually correspond to the release described here.",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "trust-root",
-                  "args": [
-                    {
-                      "long": "profile",
-                      "help": "Configuration profile to use for commands",
-                      "global": true
-                    }
-                  ],
-                  "subcommands": [
-                    {
-                      "name": "create",
-                      "about": "Add trusted root role to updates trust store",
-                      "args": [
-                        {
-                          "long": "json-body",
-                          "help": "Path to a file that contains the full json body."
-                        },
-                        {
-                          "long": "json-body-template",
-                          "help": "XXX"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        }
-                      ]
-                    },
-                    {
-                      "name": "delete",
-                      "about": "Delete trusted root role",
-                      "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "trust-root-id",
-                          "help": "ID of the trust root"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "list",
-                      "about": "List root roles in the updates trust store",
-                      "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
-                      "args": [
-                        {
-                          "long": "limit",
-                          "help": "Maximum number of items returned by a single call"
-                        },
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "sort-by",
-                          "values": [
-                            "id_ascending"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "name": "view",
-                      "about": "Fetch trusted root role",
-                      "args": [
-                        {
-                          "long": "profile",
-                          "help": "Configuration profile to use for commands",
-                          "global": true
-                        },
-                        {
-                          "long": "trust-root-id",
-                          "help": "ID of the trust root"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         },
@@ -2064,6 +1928,14 @@
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
+                {
+                  "long": "include-summaries",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "Whether to include ClickHouse query summaries in the response."
+                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -7928,6 +7800,29 @@
               ],
               "subcommands": [
                 {
+                  "name": "list",
+                  "about": "List all TUF repositories",
+                  "long_about": "Returns a paginated list of all TUF repositories ordered by system version (newest first by default).",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "version_ascending",
+                        "version_descending"
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "upload",
                   "args": [
                     {
@@ -7939,6 +7834,153 @@
                       "long": "profile",
                       "help": "Configuration profile to use for commands",
                       "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch system release repository description by version",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "system-version",
+                      "help": "The version to get."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "status",
+              "about": "Fetch system update status",
+              "long_about": "Returns information about the current target release and the progress of system software updates.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ]
+            },
+            {
+              "name": "target-release",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "update",
+                  "about": "Set target release",
+                  "long_about": "Set the current target release of the rack's system software. The rack reconfigurator will treat the software specified here as a goal state for the rack's software, and attempt to asynchronously update to that release. Use the update status endpoint to view the current target release.",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "system-version",
+                      "help": "Version of the system software to make the target release."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "trust-root",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                }
+              ],
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Add trusted root role to updates trust store",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete trusted root role",
+                  "long_about": "Note that this method does not currently check for any uploaded system release repositories that would become untrusted after deleting the root role.",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "trust-root-id",
+                      "help": "ID of the trust root"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List root roles in the updates trust store",
+                  "long_about": "A root role is a JSON document describing the cryptographic keys that are trusted to sign system release repositories, as described by The Update Framework. Uploading a repository requires its metadata to be signed by keys trusted by the trust store.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch trusted root role",
+                  "args": [
+                    {
+                      "long": "profile",
+                      "help": "Configuration profile to use for commands",
+                      "global": true
+                    },
+                    {
+                      "long": "trust-root-id",
+                      "help": "ID of the trust root"
                     }
                   ]
                 }

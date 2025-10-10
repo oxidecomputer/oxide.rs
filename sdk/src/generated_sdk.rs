@@ -2949,60 +2949,6 @@ pub mod types {
         }
     }
 
-    /// An identifier for an artifact.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "An identifier for an artifact.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "kind",
-    ///    "name",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "kind": {
-    ///      "description": "The kind of artifact this is.",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "description": "The artifact's name.",
-    ///      "type": "string"
-    ///    },
-    ///    "version": {
-    ///      "description": "The artifact's version.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct ArtifactId {
-        /// The kind of artifact this is.
-        pub kind: ::std::string::String,
-        /// The artifact's name.
-        pub name: ::std::string::String,
-        /// The artifact's version.
-        pub version: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ArtifactId> for ArtifactId {
-        fn from(value: &ArtifactId) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ArtifactId {
-        pub fn builder() -> builder::ArtifactId {
-            Default::default()
-        }
-    }
-
     /// Audit log entry
     ///
     /// <details><summary>JSON schema</summary>
@@ -17071,6 +17017,112 @@ pub mod types {
         }
     }
 
+    /// A count of bytes / rows accessed during a query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A count of bytes / rows accessed during a query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "bytes",
+    ///    "rows"
+    ///  ],
+    ///  "properties": {
+    ///    "bytes": {
+    ///      "description": "The number of bytes accessed.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "rows": {
+    ///      "description": "The number of rows accessed.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct IoCount {
+        /// The number of bytes accessed.
+        pub bytes: u64,
+        /// The number of rows accessed.
+        pub rows: u64,
+    }
+
+    impl ::std::convert::From<&IoCount> for IoCount {
+        fn from(value: &IoCount) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IoCount {
+        pub fn builder() -> builder::IoCount {
+            Default::default()
+        }
+    }
+
+    /// Summary of the I/O resources used by a query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Summary of the I/O resources used by a query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "read",
+    ///    "written"
+    ///  ],
+    ///  "properties": {
+    ///    "read": {
+    ///      "description": "The bytes and rows read by the query.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoCount"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "written": {
+    ///      "description": "The bytes and rows written by the query.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoCount"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct IoSummary {
+        /// The bytes and rows read by the query.
+        pub read: IoCount,
+        /// The bytes and rows written by the query.
+        pub written: IoCount,
+    }
+
+    impl ::std::convert::From<&IoSummary> for IoSummary {
+        fn from(value: &IoSummary) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IoSummary {
+        pub fn builder() -> builder::IoSummary {
+            Default::default()
+        }
+    }
+
     /// `IpNet`
     ///
     /// <details><summary>JSON schema</summary>
@@ -20570,6 +20622,16 @@ pub mod types {
     ///    "tables"
     ///  ],
     ///  "properties": {
+    ///    "query_summaries": {
+    ///      "description": "Summaries of queries run against ClickHouse.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/OxqlQuerySummary"
+    ///      }
+    ///    },
     ///    "tables": {
     ///      "description": "Tables resulting from the query, each containing
     /// timeseries.",
@@ -20586,6 +20648,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct OxqlQueryResult {
+        /// Summaries of queries run against ClickHouse.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub query_summaries: ::std::option::Option<::std::vec::Vec<OxqlQuerySummary>>,
         /// Tables resulting from the query, each containing timeseries.
         pub tables: ::std::vec::Vec<OxqlTable>,
     }
@@ -20598,6 +20663,77 @@ pub mod types {
 
     impl OxqlQueryResult {
         pub fn builder() -> builder::OxqlQueryResult {
+            Default::default()
+        }
+    }
+
+    /// Basic metadata about the resource usage of a single ClickHouse SQL
+    /// query.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Basic metadata about the resource usage of a single
+    /// ClickHouse SQL query.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "elapsed_ms",
+    ///    "id",
+    ///    "io_summary",
+    ///    "query"
+    ///  ],
+    ///  "properties": {
+    ///    "elapsed_ms": {
+    ///      "description": "The total duration of the ClickHouse query (network
+    /// plus execution).",
+    ///      "type": "integer",
+    ///      "format": "uint",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "id": {
+    ///      "description": "The database-assigned query ID.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "io_summary": {
+    ///      "description": "Summary of the data read and written.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IoSummary"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "query": {
+    ///      "description": "The raw ClickHouse SQL query.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct OxqlQuerySummary {
+        /// The total duration of the ClickHouse query (network plus execution).
+        pub elapsed_ms: u32,
+        /// The database-assigned query ID.
+        pub id: ::uuid::Uuid,
+        /// Summary of the data read and written.
+        pub io_summary: IoSummary,
+        /// The raw ClickHouse SQL query.
+        pub query: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&OxqlQuerySummary> for OxqlQuerySummary {
+        fn from(value: &OxqlQuerySummary) -> Self {
+            value.clone()
+        }
+    }
+
+    impl OxqlQuerySummary {
+        pub fn builder() -> builder::OxqlQuerySummary {
             Default::default()
         }
     }
@@ -29100,7 +29236,7 @@ pub mod types {
         }
     }
 
-    /// `SystemUpdateGetRepositorySystemVersion`
+    /// `SystemUpdateRepositoryViewSystemVersion`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -29126,29 +29262,29 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct SystemUpdateGetRepositorySystemVersion(::std::string::String);
-    impl ::std::ops::Deref for SystemUpdateGetRepositorySystemVersion {
+    pub struct SystemUpdateRepositoryViewSystemVersion(::std::string::String);
+    impl ::std::ops::Deref for SystemUpdateRepositoryViewSystemVersion {
         type Target = ::std::string::String;
         fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl ::std::convert::From<SystemUpdateGetRepositorySystemVersion> for ::std::string::String {
-        fn from(value: SystemUpdateGetRepositorySystemVersion) -> Self {
+    impl ::std::convert::From<SystemUpdateRepositoryViewSystemVersion> for ::std::string::String {
+        fn from(value: SystemUpdateRepositoryViewSystemVersion) -> Self {
             value.0
         }
     }
 
-    impl ::std::convert::From<&SystemUpdateGetRepositorySystemVersion>
-        for SystemUpdateGetRepositorySystemVersion
+    impl ::std::convert::From<&SystemUpdateRepositoryViewSystemVersion>
+        for SystemUpdateRepositoryViewSystemVersion
     {
-        fn from(value: &SystemUpdateGetRepositorySystemVersion) -> Self {
+        fn from(value: &SystemUpdateRepositoryViewSystemVersion) -> Self {
             value.clone()
         }
     }
 
-    impl ::std::str::FromStr for SystemUpdateGetRepositorySystemVersion {
+    impl ::std::str::FromStr for SystemUpdateRepositoryViewSystemVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
@@ -29172,14 +29308,14 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for SystemUpdateGetRepositorySystemVersion {
+    impl ::std::convert::TryFrom<&str> for SystemUpdateRepositoryViewSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for SystemUpdateGetRepositorySystemVersion {
+    impl ::std::convert::TryFrom<&::std::string::String> for SystemUpdateRepositoryViewSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: &::std::string::String,
@@ -29188,7 +29324,7 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<::std::string::String> for SystemUpdateGetRepositorySystemVersion {
+    impl ::std::convert::TryFrom<::std::string::String> for SystemUpdateRepositoryViewSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
@@ -29197,7 +29333,7 @@ pub mod types {
         }
     }
 
-    impl<'de> ::serde::Deserialize<'de> for SystemUpdateGetRepositorySystemVersion {
+    impl<'de> ::serde::Deserialize<'de> for SystemUpdateRepositoryViewSystemVersion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
@@ -29210,37 +29346,32 @@ pub mod types {
         }
     }
 
-    /// View of a system software target release.
+    /// View of a system software target release
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of a system software target release.",
+    ///  "description": "View of a system software target release",
     ///  "type": "object",
     ///  "required": [
-    ///    "generation",
-    ///    "release_source",
-    ///    "time_requested"
+    ///    "time_requested",
+    ///    "version"
     ///  ],
     ///  "properties": {
-    ///    "generation": {
-    ///      "description": "The target-release generation number.",
-    ///      "type": "integer",
-    ///      "format": "int64"
-    ///    },
-    ///    "release_source": {
-    ///      "description": "The source of the target release.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TargetReleaseSource"
-    ///        }
-    ///      ]
-    ///    },
     ///    "time_requested": {
-    ///      "description": "The time it was set as the target release.",
+    ///      "description": "Time this was set as the target release",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "description": "The specified release of the rack's system
+    /// software",
+    ///      "type": "string",
+    ///      "pattern":
+    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
+    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
+    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
     ///    }
     ///  }
     /// }
@@ -29250,12 +29381,10 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TargetRelease {
-        /// The target-release generation number.
-        pub generation: i64,
-        /// The source of the target release.
-        pub release_source: TargetReleaseSource,
-        /// The time it was set as the target release.
+        /// Time this was set as the target release
         pub time_requested: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The specified release of the rack's system software
+        pub version: TargetReleaseVersion,
     }
 
     impl ::std::convert::From<&TargetRelease> for TargetRelease {
@@ -29270,87 +29399,13 @@ pub mod types {
         }
     }
 
-    /// Source of a system software target release.
+    /// The specified release of the rack's system software
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Source of a system software target release.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Unspecified or unknown source (probably MUPdate).",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "unspecified"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "The specified release of the rack's system
-    /// software.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "type",
-    ///        "version"
-    ///      ],
-    ///      "properties": {
-    ///        "type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "system_version"
-    ///          ]
-    ///        },
-    ///        "version": {
-    ///          "type": "string",
-    ///          "pattern":
-    /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
-    /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
-    /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    #[serde(tag = "type", content = "version")]
-    pub enum TargetReleaseSource {
-        #[serde(rename = "unspecified")]
-        Unspecified,
-        /// The specified release of the rack's system software.
-        #[serde(rename = "system_version")]
-        SystemVersion(TargetReleaseSourceVersion),
-    }
-
-    impl ::std::convert::From<&Self> for TargetReleaseSource {
-        fn from(value: &TargetReleaseSource) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<TargetReleaseSourceVersion> for TargetReleaseSource {
-        fn from(value: TargetReleaseSourceVersion) -> Self {
-            Self::SystemVersion(value)
-        }
-    }
-
-    /// `TargetReleaseSourceVersion`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
+    ///  "description": "The specified release of the rack's system software",
     ///  "type": "string",
     ///  "pattern":
     /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
@@ -29371,27 +29426,27 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct TargetReleaseSourceVersion(::std::string::String);
-    impl ::std::ops::Deref for TargetReleaseSourceVersion {
+    pub struct TargetReleaseVersion(::std::string::String);
+    impl ::std::ops::Deref for TargetReleaseVersion {
         type Target = ::std::string::String;
         fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl ::std::convert::From<TargetReleaseSourceVersion> for ::std::string::String {
-        fn from(value: TargetReleaseSourceVersion) -> Self {
+    impl ::std::convert::From<TargetReleaseVersion> for ::std::string::String {
+        fn from(value: TargetReleaseVersion) -> Self {
             value.0
         }
     }
 
-    impl ::std::convert::From<&TargetReleaseSourceVersion> for TargetReleaseSourceVersion {
-        fn from(value: &TargetReleaseSourceVersion) -> Self {
+    impl ::std::convert::From<&TargetReleaseVersion> for TargetReleaseVersion {
+        fn from(value: &TargetReleaseVersion) -> Self {
             value.clone()
         }
     }
 
-    impl ::std::str::FromStr for TargetReleaseSourceVersion {
+    impl ::std::str::FromStr for TargetReleaseVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
@@ -29415,14 +29470,14 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<&str> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<&::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: &::std::string::String,
@@ -29431,7 +29486,7 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseSourceVersion {
+    impl ::std::convert::TryFrom<::std::string::String> for TargetReleaseVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
@@ -29440,7 +29495,7 @@ pub mod types {
         }
     }
 
-    impl<'de> ::serde::Deserialize<'de> for TargetReleaseSourceVersion {
+    impl<'de> ::serde::Deserialize<'de> for TargetReleaseVersion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
@@ -29773,6 +29828,12 @@ pub mod types {
     ///    "query"
     ///  ],
     ///  "properties": {
+    ///    "include_summaries": {
+    ///      "description": "Whether to include ClickHouse query summaries in
+    /// the response.",
+    ///      "default": false,
+    ///      "type": "boolean"
+    ///    },
     ///    "query": {
     ///      "description": "A timeseries query string, written in the Oximeter
     /// query language.",
@@ -29786,6 +29847,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TimeseriesQuery {
+        /// Whether to include ClickHouse query summaries in the response.
+        #[serde(default)]
+        pub include_summaries: bool,
         /// A timeseries query string, written in the Oximeter query language.
         pub query: ::std::string::String,
     }
@@ -29941,413 +30005,41 @@ pub mod types {
         }
     }
 
-    /// Metadata about an individual TUF artifact.
-    ///
-    /// Found within a `TufRepoDescription`.
+    /// Metadata about a TUF repository
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Metadata about an individual TUF artifact.\n\nFound
-    /// within a `TufRepoDescription`.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "hash",
-    ///    "id",
-    ///    "size"
-    ///  ],
-    ///  "properties": {
-    ///    "board": {
-    ///      "description": "Contents of the `BORD` field of a Hubris archive caboose. Only applicable to artifacts that are Hubris archives.\n\nThis field should always be `Some(_)` if `sign` is `Some(_)`, but the opposite is not true (SP images will have a `board` but not a `sign`).",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "hash": {
-    ///      "description": "The hash of the artifact.",
-    ///      "type": "string",
-    ///      "format": "hex string (32 bytes)"
-    ///    },
-    ///    "id": {
-    ///      "description": "The artifact ID.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/ArtifactId"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "sign": {
-    ///      "description": "Contents of the `SIGN` field of a Hubris archive
-    /// caboose, i.e., an identifier for the set of valid signing keys.
-    /// Currently only applicable to RoT image and bootloader artifacts, where
-    /// it will be an LPC55 Root Key Table Hash (RKTH).",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "integer",
-    ///        "format": "uint8",
-    ///        "minimum": 0.0
-    ///      }
-    ///    },
-    ///    "size": {
-    ///      "description": "The size of the artifact in bytes.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct TufArtifactMeta {
-        /// Contents of the `BORD` field of a Hubris archive caboose. Only
-        /// applicable to artifacts that are Hubris archives.
-        ///
-        /// This field should always be `Some(_)` if `sign` is `Some(_)`, but
-        /// the opposite is not true (SP images will have a `board` but not a
-        /// `sign`).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub board: ::std::option::Option<::std::string::String>,
-        /// The hash of the artifact.
-        pub hash: ::std::string::String,
-        /// The artifact ID.
-        pub id: ArtifactId,
-        /// Contents of the `SIGN` field of a Hubris archive caboose, i.e., an
-        /// identifier for the set of valid signing keys. Currently only
-        /// applicable to RoT image and bootloader artifacts, where it will be
-        /// an LPC55 Root Key Table Hash (RKTH).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub sign: ::std::option::Option<::std::vec::Vec<u8>>,
-        /// The size of the artifact in bytes.
-        pub size: u64,
-    }
-
-    impl ::std::convert::From<&TufArtifactMeta> for TufArtifactMeta {
-        fn from(value: &TufArtifactMeta) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TufArtifactMeta {
-        pub fn builder() -> builder::TufArtifactMeta {
-            Default::default()
-        }
-    }
-
-    /// A description of an uploaded TUF repository.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A description of an uploaded TUF repository.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "artifacts",
-    ///    "repo"
-    ///  ],
-    ///  "properties": {
-    ///    "artifacts": {
-    ///      "description": "Information about the artifacts present in the
-    /// repository.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/TufArtifactMeta"
-    ///      }
-    ///    },
-    ///    "repo": {
-    ///      "description": "Information about the repository.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TufRepoMeta"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct TufRepoDescription {
-        /// Information about the artifacts present in the repository.
-        pub artifacts: ::std::vec::Vec<TufArtifactMeta>,
-        /// Information about the repository.
-        pub repo: TufRepoMeta,
-    }
-
-    impl ::std::convert::From<&TufRepoDescription> for TufRepoDescription {
-        fn from(value: &TufRepoDescription) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TufRepoDescription {
-        pub fn builder() -> builder::TufRepoDescription {
-            Default::default()
-        }
-    }
-
-    /// Data about a successful TUF repo get from Nexus.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Data about a successful TUF repo get from Nexus.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "description"
-    ///  ],
-    ///  "properties": {
-    ///    "description": {
-    ///      "description": "The description of the repository.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TufRepoDescription"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct TufRepoGetResponse {
-        /// The description of the repository.
-        pub description: TufRepoDescription,
-    }
-
-    impl ::std::convert::From<&TufRepoGetResponse> for TufRepoGetResponse {
-        fn from(value: &TufRepoGetResponse) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TufRepoGetResponse {
-        pub fn builder() -> builder::TufRepoGetResponse {
-            Default::default()
-        }
-    }
-
-    /// Data about a successful TUF repo import into Nexus.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Data about a successful TUF repo import into Nexus.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "recorded",
-    ///    "status"
-    ///  ],
-    ///  "properties": {
-    ///    "recorded": {
-    ///      "description": "The repository as present in the database.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TufRepoDescription"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "status": {
-    ///      "description": "Whether this repository already existed or is
-    /// new.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/TufRepoInsertStatus"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct TufRepoInsertResponse {
-        /// The repository as present in the database.
-        pub recorded: TufRepoDescription,
-        /// Whether this repository already existed or is new.
-        pub status: TufRepoInsertStatus,
-    }
-
-    impl ::std::convert::From<&TufRepoInsertResponse> for TufRepoInsertResponse {
-        fn from(value: &TufRepoInsertResponse) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TufRepoInsertResponse {
-        pub fn builder() -> builder::TufRepoInsertResponse {
-            Default::default()
-        }
-    }
-
-    /// Status of a TUF repo import.
-    ///
-    /// Part of `TufRepoInsertResponse`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Status of a TUF repo import.\n\nPart of
-    /// `TufRepoInsertResponse`.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "The repository already existed in the database.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "already_exists"
-    ///      ]
-    ///    },
-    ///    {
-    ///      "description": "The repository did not exist, and was inserted into
-    /// the database.",
-    ///      "type": "string",
-    ///      "enum": [
-    ///        "inserted"
-    ///      ]
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize,
-        :: serde :: Serialize,
-        Clone,
-        Copy,
-        Debug,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        schemars :: JsonSchema,
-    )]
-    pub enum TufRepoInsertStatus {
-        /// The repository already existed in the database.
-        #[serde(rename = "already_exists")]
-        AlreadyExists,
-        /// The repository did not exist, and was inserted into the database.
-        #[serde(rename = "inserted")]
-        Inserted,
-    }
-
-    impl ::std::convert::From<&Self> for TufRepoInsertStatus {
-        fn from(value: &TufRepoInsertStatus) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for TufRepoInsertStatus {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::AlreadyExists => f.write_str("already_exists"),
-                Self::Inserted => f.write_str("inserted"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for TufRepoInsertStatus {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "already_exists" => Ok(Self::AlreadyExists),
-                "inserted" => Ok(Self::Inserted),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for TufRepoInsertStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoInsertStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: &::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for TufRepoInsertStatus {
-        type Error = self::error::ConversionError;
-        fn try_from(
-            value: ::std::string::String,
-        ) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    /// Metadata about a TUF repository.
-    ///
-    /// Found within a `TufRepoDescription`.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Metadata about a TUF repository.\n\nFound within a
-    /// `TufRepoDescription`.",
+    ///  "description": "Metadata about a TUF repository",
     ///  "type": "object",
     ///  "required": [
     ///    "file_name",
     ///    "hash",
     ///    "system_version",
-    ///    "targets_role_version",
-    ///    "valid_until"
+    ///    "time_created"
     ///  ],
     ///  "properties": {
     ///    "file_name": {
-    ///      "description": "The file name of the repository.\n\nThis is purely
-    /// used for debugging and may not always be correct (e.g. with wicket, we
-    /// read the file contents from stdin so we don't know the correct file
-    /// name).",
+    ///      "description": "The file name of the repository\n\nThis is intended
+    /// for debugging and may not always be correct.",
     ///      "type": "string"
     ///    },
     ///    "hash": {
-    ///      "description": "The hash of the repository.\n\nThis is a slight
-    /// abuse of `ArtifactHash`, since that's the hash of individual artifacts
-    /// within the repository. However, we use it here for convenience.",
+    ///      "description": "The hash of the repository",
     ///      "type": "string",
     ///      "format": "hex string (32 bytes)"
     ///    },
     ///    "system_version": {
-    ///      "description": "The system version in artifacts.json.",
+    ///      "description": "The system version in artifacts.json",
     ///      "type": "string",
     ///      "pattern":
     /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
     /// [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*
     /// ))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
     ///    },
-    ///    "targets_role_version": {
-    ///      "description": "The version of the targets role.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "valid_until": {
-    ///      "description": "The time until which the repo is valid.",
+    ///    "time_created": {
+    ///      "description": "Time the repository was uploaded",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
@@ -30358,46 +30050,92 @@ pub mod types {
     #[derive(
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
-    pub struct TufRepoMeta {
-        /// The file name of the repository.
+    pub struct TufRepo {
+        /// The file name of the repository
         ///
-        /// This is purely used for debugging and may not always be correct
-        /// (e.g. with wicket, we read the file contents from stdin so we don't
-        /// know the correct file name).
+        /// This is intended for debugging and may not always be correct.
         pub file_name: ::std::string::String,
-        /// The hash of the repository.
-        ///
-        /// This is a slight abuse of `ArtifactHash`, since that's the hash of
-        /// individual artifacts within the repository. However, we use it here
-        /// for convenience.
+        /// The hash of the repository
         pub hash: ::std::string::String,
-        /// The system version in artifacts.json.
-        pub system_version: TufRepoMetaSystemVersion,
-        /// The version of the targets role.
-        pub targets_role_version: u64,
-        /// The time until which the repo is valid.
-        pub valid_until: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// The system version in artifacts.json
+        pub system_version: TufRepoSystemVersion,
+        /// Time the repository was uploaded
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
     }
 
-    impl ::std::convert::From<&TufRepoMeta> for TufRepoMeta {
-        fn from(value: &TufRepoMeta) -> Self {
+    impl ::std::convert::From<&TufRepo> for TufRepo {
+        fn from(value: &TufRepo) -> Self {
             value.clone()
         }
     }
 
-    impl TufRepoMeta {
-        pub fn builder() -> builder::TufRepoMeta {
+    impl TufRepo {
+        pub fn builder() -> builder::TufRepo {
             Default::default()
         }
     }
 
-    /// The system version in artifacts.json.
+    /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "The system version in artifacts.json.",
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/TufRepo"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<TufRepo>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&TufRepoResultsPage> for TufRepoResultsPage {
+        fn from(value: &TufRepoResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoResultsPage {
+        pub fn builder() -> builder::TufRepoResultsPage {
+            Default::default()
+        }
+    }
+
+    /// The system version in artifacts.json
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The system version in artifacts.json",
     ///  "type": "string",
     ///  "pattern":
     /// "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*
@@ -30418,27 +30156,27 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     #[serde(transparent)]
-    pub struct TufRepoMetaSystemVersion(::std::string::String);
-    impl ::std::ops::Deref for TufRepoMetaSystemVersion {
+    pub struct TufRepoSystemVersion(::std::string::String);
+    impl ::std::ops::Deref for TufRepoSystemVersion {
         type Target = ::std::string::String;
         fn deref(&self) -> &::std::string::String {
             &self.0
         }
     }
 
-    impl ::std::convert::From<TufRepoMetaSystemVersion> for ::std::string::String {
-        fn from(value: TufRepoMetaSystemVersion) -> Self {
+    impl ::std::convert::From<TufRepoSystemVersion> for ::std::string::String {
+        fn from(value: TufRepoSystemVersion) -> Self {
             value.0
         }
     }
 
-    impl ::std::convert::From<&TufRepoMetaSystemVersion> for TufRepoMetaSystemVersion {
-        fn from(value: &TufRepoMetaSystemVersion) -> Self {
+    impl ::std::convert::From<&TufRepoSystemVersion> for TufRepoSystemVersion {
+        fn from(value: &TufRepoSystemVersion) -> Self {
             value.clone()
         }
     }
 
-    impl ::std::str::FromStr for TufRepoMetaSystemVersion {
+    impl ::std::str::FromStr for TufRepoSystemVersion {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             static PATTERN: ::std::sync::LazyLock<::regress::Regex> =
@@ -30462,14 +30200,14 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<&str> for TufRepoMetaSystemVersion {
+    impl ::std::convert::TryFrom<&str> for TufRepoSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoMetaSystemVersion {
+    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: &::std::string::String,
@@ -30478,7 +30216,7 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::TryFrom<::std::string::String> for TufRepoMetaSystemVersion {
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoSystemVersion {
         type Error = self::error::ConversionError;
         fn try_from(
             value: ::std::string::String,
@@ -30487,7 +30225,7 @@ pub mod types {
         }
     }
 
-    impl<'de> ::serde::Deserialize<'de> for TufRepoMetaSystemVersion {
+    impl<'de> ::serde::Deserialize<'de> for TufRepoSystemVersion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
@@ -30497,6 +30235,150 @@ pub mod types {
                 .map_err(|e: self::error::ConversionError| {
                     <D::Error as ::serde::de::Error>::custom(e.to_string())
                 })
+        }
+    }
+
+    /// `TufRepoUpload`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "repo",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "repo": {
+    ///      "$ref": "#/components/schemas/TufRepo"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/TufRepoUploadStatus"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct TufRepoUpload {
+        pub repo: TufRepo,
+        pub status: TufRepoUploadStatus,
+    }
+
+    impl ::std::convert::From<&TufRepoUpload> for TufRepoUpload {
+        fn from(value: &TufRepoUpload) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TufRepoUpload {
+        pub fn builder() -> builder::TufRepoUpload {
+            Default::default()
+        }
+    }
+
+    /// Whether the uploaded TUF repo already existed or was new and had to be
+    /// inserted. Part of `TufRepoUpload`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Whether the uploaded TUF repo already existed or was
+    /// new and had to be inserted. Part of `TufRepoUpload`.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The repository already existed in the database",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "already_exists"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The repository did not exist, and was inserted into
+    /// the database",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "inserted"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum TufRepoUploadStatus {
+        /// The repository already existed in the database
+        #[serde(rename = "already_exists")]
+        AlreadyExists,
+        /// The repository did not exist, and was inserted into the database
+        #[serde(rename = "inserted")]
+        Inserted,
+    }
+
+    impl ::std::convert::From<&Self> for TufRepoUploadStatus {
+        fn from(value: &TufRepoUploadStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for TufRepoUploadStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AlreadyExists => f.write_str("already_exists"),
+                Self::Inserted => f.write_str("inserted"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for TufRepoUploadStatus {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "already_exists" => Ok(Self::AlreadyExists),
+                "inserted" => Ok(Self::Inserted),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TufRepoUploadStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for TufRepoUploadStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TufRepoUploadStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -30993,6 +30875,118 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// `UpdateStatus`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "components_by_release_version",
+    ///    "suspended",
+    ///    "target_release",
+    ///    "time_last_step_planned"
+    ///  ],
+    ///  "properties": {
+    ///    "components_by_release_version": {
+    ///      "description": "Count of components running each release
+    /// version\n\nKeys will be either:\n\n* Semver-like release version strings
+    /// * \"install dataset\", representing the initial rack software before any
+    /// updates * \"unknown\", which means there is no TUF repo uploaded that
+    /// matches the software running on the component)",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "type": "integer",
+    ///        "format": "uint",
+    ///        "minimum": 0.0
+    ///      }
+    ///    },
+    ///    "suspended": {
+    ///      "description": "Whether automatic update is suspended due to manual
+    /// update activity\n\nAfter a manual support procedure that changes the
+    /// system software, automatic update activity is suspended to avoid undoing
+    /// the change. To resume automatic update, first upload the TUF repository
+    /// matching the manually applied update, then set that as the target
+    /// release.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "target_release": {
+    ///      "description": "Current target release of the system software\n\nThis may not correspond to the actual system software running at the time of request; it is instead the release that the system should be moving towards as a goal state. The system asynchronously updates software to match this target release.\n\nWill only be null if a target release has never been set. In that case, the system is not automatically attempting to manage software versions.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/TargetRelease"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_last_step_planned": {
+    ///      "description": "Time of most recent update planning
+    /// activity\n\nThis is intended as a rough indicator of the last time
+    /// something happened in the update planner.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct UpdateStatus {
+        /// Count of components running each release version
+        ///
+        /// Keys will be either:
+        ///
+        /// * Semver-like release version strings * "install dataset",
+        ///   representing the initial rack software before any updates *
+        ///   "unknown", which means there is no TUF repo uploaded that matches
+        ///   the software running on the component)
+        pub components_by_release_version: ::std::collections::HashMap<::std::string::String, u32>,
+        /// Whether automatic update is suspended due to manual update activity
+        ///
+        /// After a manual support procedure that changes the system software,
+        /// automatic update activity is suspended to avoid undoing the change.
+        /// To resume automatic update, first upload the TUF repository matching
+        /// the manually applied update, then set that as the target release.
+        pub suspended: bool,
+        /// Current target release of the system software
+        ///
+        /// This may not correspond to the actual system software running at the
+        /// time of request; it is instead the release that the system should be
+        /// moving towards as a goal state. The system asynchronously updates
+        /// software to match this target release.
+        ///
+        /// Will only be null if a target release has never been set. In that
+        /// case, the system is not automatically attempting to manage software
+        /// versions.
+        pub target_release: ::std::option::Option<TargetRelease>,
+        /// Time of most recent update planning activity
+        ///
+        /// This is intended as a rough indicator of the last time something
+        /// happened in the update planner.
+        pub time_last_step_planned: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&UpdateStatus> for UpdateStatus {
+        fn from(value: &UpdateStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UpdateStatus {
+        pub fn builder() -> builder::UpdateStatus {
+            Default::default()
         }
     }
 
@@ -31998,6 +31992,108 @@ pub mod types {
     impl Values {
         pub fn builder() -> builder::Values {
             Default::default()
+        }
+    }
+
+    /// Supported sort modes when scanning by semantic version
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Supported sort modes when scanning by semantic
+    /// version",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Sort in increasing semantic version order (oldest
+    /// first)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "version_ascending"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Sort in decreasing semantic version order (newest
+    /// first)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "version_descending"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum VersionSortMode {
+        /// Sort in increasing semantic version order (oldest first)
+        #[serde(rename = "version_ascending")]
+        VersionAscending,
+        /// Sort in decreasing semantic version order (newest first)
+        #[serde(rename = "version_descending")]
+        VersionDescending,
+    }
+
+    impl ::std::convert::From<&Self> for VersionSortMode {
+        fn from(value: &VersionSortMode) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for VersionSortMode {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::VersionAscending => f.write_str("version_ascending"),
+                Self::VersionDescending => f.write_str("version_descending"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for VersionSortMode {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "version_ascending" => Ok(Self::VersionAscending),
+                "version_descending" => Ok(Self::VersionDescending),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for VersionSortMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for VersionSortMode {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for VersionSortMode {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -37514,79 +37610,6 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     name: Ok(value.name),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct ArtifactId {
-            kind: ::std::result::Result<::std::string::String, ::std::string::String>,
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            version: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for ArtifactId {
-            fn default() -> Self {
-                Self {
-                    kind: Err("no value supplied for kind".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl ArtifactId {
-            pub fn kind<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.kind = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<ArtifactId> for super::ArtifactId {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: ArtifactId,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    kind: value.kind?,
-                    name: value.name?,
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::ArtifactId> for ArtifactId {
-            fn from(value: super::ArtifactId) -> Self {
-                Self {
-                    kind: Ok(value.kind),
-                    name: Ok(value.name),
-                    version: Ok(value.version),
                 }
             }
         }
@@ -47490,6 +47513,124 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IoCount {
+            bytes: ::std::result::Result<u64, ::std::string::String>,
+            rows: ::std::result::Result<u64, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for IoCount {
+            fn default() -> Self {
+                Self {
+                    bytes: Err("no value supplied for bytes".to_string()),
+                    rows: Err("no value supplied for rows".to_string()),
+                }
+            }
+        }
+
+        impl IoCount {
+            pub fn bytes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.bytes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bytes: {}", e));
+                self
+            }
+            pub fn rows<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rows = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rows: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<IoCount> for super::IoCount {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: IoCount,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bytes: value.bytes?,
+                    rows: value.rows?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::IoCount> for IoCount {
+            fn from(value: super::IoCount) -> Self {
+                Self {
+                    bytes: Ok(value.bytes),
+                    rows: Ok(value.rows),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IoSummary {
+            read: ::std::result::Result<super::IoCount, ::std::string::String>,
+            written: ::std::result::Result<super::IoCount, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for IoSummary {
+            fn default() -> Self {
+                Self {
+                    read: Err("no value supplied for read".to_string()),
+                    written: Err("no value supplied for written".to_string()),
+                }
+            }
+        }
+
+        impl IoSummary {
+            pub fn read<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoCount>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.read = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for read: {}", e));
+                self
+            }
+            pub fn written<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoCount>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.written = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for written: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<IoSummary> for super::IoSummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: IoSummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    read: value.read?,
+                    written: value.written?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::IoSummary> for IoSummary {
+            fn from(value: super::IoSummary) -> Self {
+                Self {
+                    read: Ok(value.read),
+                    written: Ok(value.written),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct IpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -49801,18 +49942,35 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
+            query_summaries: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
+                ::std::string::String,
+            >,
             tables: ::std::result::Result<::std::vec::Vec<super::OxqlTable>, ::std::string::String>,
         }
 
         impl ::std::default::Default for OxqlQueryResult {
             fn default() -> Self {
                 Self {
+                    query_summaries: Ok(Default::default()),
                     tables: Err("no value supplied for tables".to_string()),
                 }
             }
         }
 
         impl OxqlQueryResult {
+            pub fn query_summaries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.query_summaries = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for query_summaries: {}", e)
+                });
+                self
+            }
             pub fn tables<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::vec::Vec<super::OxqlTable>>,
@@ -49831,6 +49989,7 @@ pub mod types {
                 value: OxqlQueryResult,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    query_summaries: value.query_summaries?,
                     tables: value.tables?,
                 })
             }
@@ -49839,7 +49998,95 @@ pub mod types {
         impl ::std::convert::From<super::OxqlQueryResult> for OxqlQueryResult {
             fn from(value: super::OxqlQueryResult) -> Self {
                 Self {
+                    query_summaries: Ok(value.query_summaries),
                     tables: Ok(value.tables),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct OxqlQuerySummary {
+            elapsed_ms: ::std::result::Result<u32, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            io_summary: ::std::result::Result<super::IoSummary, ::std::string::String>,
+            query: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for OxqlQuerySummary {
+            fn default() -> Self {
+                Self {
+                    elapsed_ms: Err("no value supplied for elapsed_ms".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    io_summary: Err("no value supplied for io_summary".to_string()),
+                    query: Err("no value supplied for query".to_string()),
+                }
+            }
+        }
+
+        impl OxqlQuerySummary {
+            pub fn elapsed_ms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.elapsed_ms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for elapsed_ms: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn io_summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IoSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.io_summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for io_summary: {}", e));
+                self
+            }
+            pub fn query<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.query = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for query: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<OxqlQuerySummary> for super::OxqlQuerySummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OxqlQuerySummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    elapsed_ms: value.elapsed_ms?,
+                    id: value.id?,
+                    io_summary: value.io_summary?,
+                    query: value.query?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::OxqlQuerySummary> for OxqlQuerySummary {
+            fn from(value: super::OxqlQuerySummary) -> Self {
+                Self {
+                    elapsed_ms: Ok(value.elapsed_ms),
+                    id: Ok(value.id),
+                    io_summary: Ok(value.io_summary),
+                    query: Ok(value.query),
                 }
             }
         }
@@ -57067,46 +57314,23 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TargetRelease {
-            generation: ::std::result::Result<i64, ::std::string::String>,
-            release_source:
-                ::std::result::Result<super::TargetReleaseSource, ::std::string::String>,
             time_requested: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
+            version: ::std::result::Result<super::TargetReleaseVersion, ::std::string::String>,
         }
 
         impl ::std::default::Default for TargetRelease {
             fn default() -> Self {
                 Self {
-                    generation: Err("no value supplied for generation".to_string()),
-                    release_source: Err("no value supplied for release_source".to_string()),
                     time_requested: Err("no value supplied for time_requested".to_string()),
+                    version: Err("no value supplied for version".to_string()),
                 }
             }
         }
 
         impl TargetRelease {
-            pub fn generation<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<i64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.generation = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for generation: {}", e));
-                self
-            }
-            pub fn release_source<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TargetReleaseSource>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.release_source = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for release_source: {}", e)
-                });
-                self
-            }
             pub fn time_requested<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -57117,6 +57341,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TargetReleaseVersion>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<TargetRelease> for super::TargetRelease {
@@ -57125,9 +57359,8 @@ pub mod types {
                 value: TargetRelease,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    generation: value.generation?,
-                    release_source: value.release_source?,
                     time_requested: value.time_requested?,
+                    version: value.version?,
                 })
             }
         }
@@ -57135,9 +57368,8 @@ pub mod types {
         impl ::std::convert::From<super::TargetRelease> for TargetRelease {
             fn from(value: super::TargetRelease) -> Self {
                 Self {
-                    generation: Ok(value.generation),
-                    release_source: Ok(value.release_source),
                     time_requested: Ok(value.time_requested),
+                    version: Ok(value.version),
                 }
             }
         }
@@ -57267,18 +57499,33 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesQuery {
+            include_summaries: ::std::result::Result<bool, ::std::string::String>,
             query: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl ::std::default::Default for TimeseriesQuery {
             fn default() -> Self {
                 Self {
+                    include_summaries: Ok(Default::default()),
                     query: Err("no value supplied for query".to_string()),
                 }
             }
         }
 
         impl TimeseriesQuery {
+            pub fn include_summaries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.include_summaries = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for include_summaries: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn query<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57297,6 +57544,7 @@ pub mod types {
                 value: TimeseriesQuery,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    include_summaries: value.include_summaries?,
                     query: value.query?,
                 })
             }
@@ -57305,6 +57553,7 @@ pub mod types {
         impl ::std::convert::From<super::TimeseriesQuery> for TimeseriesQuery {
             fn from(value: super::TimeseriesQuery) -> Self {
                 Self {
+                    include_summaries: Ok(value.include_summaries),
                     query: Ok(value.query),
                 }
             }
@@ -57522,306 +57771,29 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct TufArtifactMeta {
-            board: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
-            hash: ::std::result::Result<::std::string::String, ::std::string::String>,
-            id: ::std::result::Result<super::ArtifactId, ::std::string::String>,
-            sign: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<u8>>,
-                ::std::string::String,
-            >,
-            size: ::std::result::Result<u64, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for TufArtifactMeta {
-            fn default() -> Self {
-                Self {
-                    board: Ok(Default::default()),
-                    hash: Err("no value supplied for hash".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    sign: Ok(Default::default()),
-                    size: Err("no value supplied for size".to_string()),
-                }
-            }
-        }
-
-        impl TufArtifactMeta {
-            pub fn board<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.board = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for board: {}", e));
-                self
-            }
-            pub fn hash<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.hash = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for hash: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::ArtifactId>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn sign<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<u8>>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.sign = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for sign: {}", e));
-                self
-            }
-            pub fn size<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.size = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for size: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<TufArtifactMeta> for super::TufArtifactMeta {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: TufArtifactMeta,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    board: value.board?,
-                    hash: value.hash?,
-                    id: value.id?,
-                    sign: value.sign?,
-                    size: value.size?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::TufArtifactMeta> for TufArtifactMeta {
-            fn from(value: super::TufArtifactMeta) -> Self {
-                Self {
-                    board: Ok(value.board),
-                    hash: Ok(value.hash),
-                    id: Ok(value.id),
-                    sign: Ok(value.sign),
-                    size: Ok(value.size),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct TufRepoDescription {
-            artifacts: ::std::result::Result<
-                ::std::vec::Vec<super::TufArtifactMeta>,
-                ::std::string::String,
-            >,
-            repo: ::std::result::Result<super::TufRepoMeta, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for TufRepoDescription {
-            fn default() -> Self {
-                Self {
-                    artifacts: Err("no value supplied for artifacts".to_string()),
-                    repo: Err("no value supplied for repo".to_string()),
-                }
-            }
-        }
-
-        impl TufRepoDescription {
-            pub fn artifacts<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::TufArtifactMeta>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.artifacts = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for artifacts: {}", e));
-                self
-            }
-            pub fn repo<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TufRepoMeta>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.repo = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for repo: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<TufRepoDescription> for super::TufRepoDescription {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: TufRepoDescription,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    artifacts: value.artifacts?,
-                    repo: value.repo?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::TufRepoDescription> for TufRepoDescription {
-            fn from(value: super::TufRepoDescription) -> Self {
-                Self {
-                    artifacts: Ok(value.artifacts),
-                    repo: Ok(value.repo),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct TufRepoGetResponse {
-            description: ::std::result::Result<super::TufRepoDescription, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for TufRepoGetResponse {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                }
-            }
-        }
-
-        impl TufRepoGetResponse {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TufRepoDescription>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<TufRepoGetResponse> for super::TufRepoGetResponse {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: TufRepoGetResponse,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    description: value.description?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::TufRepoGetResponse> for TufRepoGetResponse {
-            fn from(value: super::TufRepoGetResponse) -> Self {
-                Self {
-                    description: Ok(value.description),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct TufRepoInsertResponse {
-            recorded: ::std::result::Result<super::TufRepoDescription, ::std::string::String>,
-            status: ::std::result::Result<super::TufRepoInsertStatus, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for TufRepoInsertResponse {
-            fn default() -> Self {
-                Self {
-                    recorded: Err("no value supplied for recorded".to_string()),
-                    status: Err("no value supplied for status".to_string()),
-                }
-            }
-        }
-
-        impl TufRepoInsertResponse {
-            pub fn recorded<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TufRepoDescription>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.recorded = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for recorded: {}", e));
-                self
-            }
-            pub fn status<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::TufRepoInsertStatus>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.status = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<TufRepoInsertResponse> for super::TufRepoInsertResponse {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: TufRepoInsertResponse,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    recorded: value.recorded?,
-                    status: value.status?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::TufRepoInsertResponse> for TufRepoInsertResponse {
-            fn from(value: super::TufRepoInsertResponse) -> Self {
-                Self {
-                    recorded: Ok(value.recorded),
-                    status: Ok(value.status),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct TufRepoMeta {
+        pub struct TufRepo {
             file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             hash: ::std::result::Result<::std::string::String, ::std::string::String>,
             system_version:
-                ::std::result::Result<super::TufRepoMetaSystemVersion, ::std::string::String>,
-            targets_role_version: ::std::result::Result<u64, ::std::string::String>,
-            valid_until: ::std::result::Result<
+                ::std::result::Result<super::TufRepoSystemVersion, ::std::string::String>,
+            time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
         }
 
-        impl ::std::default::Default for TufRepoMeta {
+        impl ::std::default::Default for TufRepo {
             fn default() -> Self {
                 Self {
                     file_name: Err("no value supplied for file_name".to_string()),
                     hash: Err("no value supplied for hash".to_string()),
                     system_version: Err("no value supplied for system_version".to_string()),
-                    targets_role_version: Err(
-                        "no value supplied for targets_role_version".to_string()
-                    ),
-                    valid_until: Err("no value supplied for valid_until".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
                 }
             }
         }
 
-        impl TufRepoMeta {
+        impl TufRepo {
             pub fn file_name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57844,7 +57816,7 @@ pub mod types {
             }
             pub fn system_version<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::TufRepoMetaSystemVersion>,
+                T: ::std::convert::TryInto<super::TufRepoSystemVersion>,
                 T::Error: ::std::fmt::Display,
             {
                 self.system_version = value.try_into().map_err(|e| {
@@ -57852,54 +57824,160 @@ pub mod types {
                 });
                 self
             }
-            pub fn targets_role_version<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.targets_role_version = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for targets_role_version: {}",
-                        e
-                    )
-                });
-                self
-            }
-            pub fn valid_until<T>(mut self, value: T) -> Self
+            pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
                 T::Error: ::std::fmt::Display,
             {
-                self.valid_until = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for valid_until: {}", e));
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
                 self
             }
         }
 
-        impl ::std::convert::TryFrom<TufRepoMeta> for super::TufRepoMeta {
+        impl ::std::convert::TryFrom<TufRepo> for super::TufRepo {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: TufRepoMeta,
+                value: TufRepo,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     file_name: value.file_name?,
                     hash: value.hash?,
                     system_version: value.system_version?,
-                    targets_role_version: value.targets_role_version?,
-                    valid_until: value.valid_until?,
+                    time_created: value.time_created?,
                 })
             }
         }
 
-        impl ::std::convert::From<super::TufRepoMeta> for TufRepoMeta {
-            fn from(value: super::TufRepoMeta) -> Self {
+        impl ::std::convert::From<super::TufRepo> for TufRepo {
+            fn from(value: super::TufRepo) -> Self {
                 Self {
                     file_name: Ok(value.file_name),
                     hash: Ok(value.hash),
                     system_version: Ok(value.system_version),
-                    targets_role_version: Ok(value.targets_role_version),
-                    valid_until: Ok(value.valid_until),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoResultsPage {
+            items: ::std::result::Result<::std::vec::Vec<super::TufRepo>, ::std::string::String>,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for TufRepoResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl TufRepoResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::TufRepo>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoResultsPage> for super::TufRepoResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoResultsPage> for TufRepoResultsPage {
+            fn from(value: super::TufRepoResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TufRepoUpload {
+            repo: ::std::result::Result<super::TufRepo, ::std::string::String>,
+            status: ::std::result::Result<super::TufRepoUploadStatus, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for TufRepoUpload {
+            fn default() -> Self {
+                Self {
+                    repo: Err("no value supplied for repo".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+
+        impl TufRepoUpload {
+            pub fn repo<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepo>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.repo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for repo: {}", e));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::TufRepoUploadStatus>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<TufRepoUpload> for super::TufRepoUpload {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TufRepoUpload,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    repo: value.repo?,
+                    status: value.status?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::TufRepoUpload> for TufRepoUpload {
+            fn from(value: super::TufRepoUpload) -> Self {
+                Self {
+                    repo: Ok(value.repo),
+                    status: Ok(value.status),
                 }
             }
         }
@@ -58299,6 +58377,112 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct UpdateStatus {
+            components_by_release_version: ::std::result::Result<
+                ::std::collections::HashMap<::std::string::String, u32>,
+                ::std::string::String,
+            >,
+            suspended: ::std::result::Result<bool, ::std::string::String>,
+            target_release: ::std::result::Result<
+                ::std::option::Option<super::TargetRelease>,
+                ::std::string::String,
+            >,
+            time_last_step_planned: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for UpdateStatus {
+            fn default() -> Self {
+                Self {
+                    components_by_release_version: Err("no value supplied for \
+                                                        components_by_release_version"
+                        .to_string()),
+                    suspended: Err("no value supplied for suspended".to_string()),
+                    target_release: Err("no value supplied for target_release".to_string()),
+                    time_last_step_planned: Err(
+                        "no value supplied for time_last_step_planned".to_string()
+                    ),
+                }
+            }
+        }
+
+        impl UpdateStatus {
+            pub fn components_by_release_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::collections::HashMap<::std::string::String, u32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.components_by_release_version = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for components_by_release_version: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn suspended<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.suspended = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for suspended: {}", e));
+                self
+            }
+            pub fn target_release<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::TargetRelease>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.target_release = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for target_release: {}", e)
+                });
+                self
+            }
+            pub fn time_last_step_planned<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_last_step_planned = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for time_last_step_planned: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<UpdateStatus> for super::UpdateStatus {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: UpdateStatus,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    components_by_release_version: value.components_by_release_version?,
+                    suspended: value.suspended?,
+                    target_release: value.target_release?,
+                    time_last_step_planned: value.time_last_step_planned?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::UpdateStatus> for UpdateStatus {
+            fn from(value: super::UpdateStatus) -> Self {
+                Self {
+                    components_by_release_version: Ok(value.components_by_release_version),
+                    suspended: Ok(value.suspended),
+                    target_release: Ok(value.target_release),
+                    time_last_step_planned: Ok(value.time_last_step_planned),
                 }
             }
         }
@@ -61448,7 +61632,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20250730.0.0
+/// Version: 20251008.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -61489,7 +61673,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20250730.0.0"
+        "20251008.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -66445,57 +66629,78 @@ impl ClientSystemStatusExt for Client {
 
 /// Upload and manage system updates
 pub trait ClientSystemUpdateExt {
+    /// List all TUF repositories
+    ///
+    /// Returns a paginated list of all TUF repositories ordered by system
+    /// version (newest first by default).
+    ///
+    /// Sends a `GET` request to `/v1/system/update/repositories`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.system_update_repository_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_update_repository_list(&self) -> builder::SystemUpdateRepositoryList<'_>;
     /// Upload system release repository
     ///
     /// System release repositories are verified by the updates trust store.
     ///
-    /// Sends a `PUT` request to `/v1/system/update/repository`
+    /// Sends a `PUT` request to `/v1/system/update/repositories`
     ///
     /// Arguments:
     /// - `file_name`: The name of the uploaded file.
     /// - `body`
     /// ```ignore
-    /// let response = client.system_update_put_repository()
+    /// let response = client.system_update_repository_upload()
     ///    .file_name(file_name)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_>;
+    fn system_update_repository_upload(&self) -> builder::SystemUpdateRepositoryUpload<'_>;
     /// Fetch system release repository description by version
     ///
-    /// Sends a `GET` request to `/v1/system/update/repository/{system_version}`
+    /// Sends a `GET` request to
+    /// `/v1/system/update/repositories/{system_version}`
     ///
     /// Arguments:
     /// - `system_version`: The version to get.
     /// ```ignore
-    /// let response = client.system_update_get_repository()
+    /// let response = client.system_update_repository_view()
     ///    .system_version(system_version)
     ///    .send()
     ///    .await;
     /// ```
-    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_>;
-    /// Get the current target release of the rack's system software
+    fn system_update_repository_view(&self) -> builder::SystemUpdateRepositoryView<'_>;
+    /// Fetch system update status
     ///
-    /// This may not correspond to the actual software running on the rack at
-    /// the time of request; it is instead the release that the rack
-    /// reconfigurator should be moving towards as a goal state. After some
-    /// number of planning and execution phases, the software running on the
-    /// rack should eventually correspond to the release described here.
+    /// Returns information about the current target release and the progress of
+    /// system software updates.
     ///
-    /// Sends a `GET` request to `/v1/system/update/target-release`
+    /// Sends a `GET` request to `/v1/system/update/status`
     ///
     /// ```ignore
-    /// let response = client.target_release_view()
+    /// let response = client.system_update_status()
     ///    .send()
     ///    .await;
     /// ```
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_>;
-    /// Set the current target release of the rack's system software
+    fn system_update_status(&self) -> builder::SystemUpdateStatus<'_>;
+    /// Set target release
     ///
-    /// The rack reconfigurator will treat the software specified here as a goal
-    /// state for the rack's software, and attempt to asynchronously update to
-    /// that release.
+    /// Set the current target release of the rack's system software. The rack
+    /// reconfigurator will treat the software specified here as a goal state
+    /// for the rack's software, and attempt to asynchronously update to that
+    /// release. Use the update status endpoint to view the current target
+    /// release.
     ///
     /// Sends a `PUT` request to `/v1/system/update/target-release`
     ///
@@ -66574,16 +66779,20 @@ pub trait ClientSystemUpdateExt {
 }
 
 impl ClientSystemUpdateExt for Client {
-    fn system_update_put_repository(&self) -> builder::SystemUpdatePutRepository<'_> {
-        builder::SystemUpdatePutRepository::new(self)
+    fn system_update_repository_list(&self) -> builder::SystemUpdateRepositoryList<'_> {
+        builder::SystemUpdateRepositoryList::new(self)
     }
 
-    fn system_update_get_repository(&self) -> builder::SystemUpdateGetRepository<'_> {
-        builder::SystemUpdateGetRepository::new(self)
+    fn system_update_repository_upload(&self) -> builder::SystemUpdateRepositoryUpload<'_> {
+        builder::SystemUpdateRepositoryUpload::new(self)
     }
 
-    fn target_release_view(&self) -> builder::TargetReleaseView<'_> {
-        builder::TargetReleaseView::new(self)
+    fn system_update_repository_view(&self) -> builder::SystemUpdateRepositoryView<'_> {
+        builder::SystemUpdateRepositoryView::new(self)
+    }
+
+    fn system_update_status(&self) -> builder::SystemUpdateStatus<'_> {
+        builder::SystemUpdateStatus::new(self)
     }
 
     fn target_release_update(&self) -> builder::TargetReleaseUpdate<'_> {
@@ -92179,17 +92388,170 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemUpdateExt::system_update_put_repository`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_repository_list`]
     ///
-    /// [`ClientSystemUpdateExt::system_update_put_repository`]: super::ClientSystemUpdateExt::system_update_put_repository
+    /// [`ClientSystemUpdateExt::system_update_repository_list`]: super::ClientSystemUpdateExt::system_update_repository_list
+    #[derive(Debug, Clone)]
+    pub struct SystemUpdateRepositoryList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::VersionSortMode>, String>,
+    }
+
+    impl<'a> SystemUpdateRepositoryList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::VersionSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `VersionSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/update/repositories`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TufRepoResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/update/repositories", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "system_update_repository_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/update/repositories`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::TufRepo, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemUpdateExt::system_update_repository_upload`]
+    ///
+    /// [`ClientSystemUpdateExt::system_update_repository_upload`]: super::ClientSystemUpdateExt::system_update_repository_upload
     #[derive(Debug)]
-    pub struct SystemUpdatePutRepository<'a> {
+    pub struct SystemUpdateRepositoryUpload<'a> {
         client: &'a super::Client,
         file_name: Result<::std::string::String, String>,
         body: Result<reqwest::Body, String>,
     }
 
-    impl<'a> SystemUpdatePutRepository<'a> {
+    impl<'a> SystemUpdateRepositoryUpload<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92218,10 +92580,10 @@ pub mod builder {
             self
         }
 
-        /// Sends a `PUT` request to `/v1/system/update/repository`
+        /// Sends a `PUT` request to `/v1/system/update/repositories`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::TufRepoInsertResponse>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::TufRepoUpload>, Error<types::Error>> {
             let Self {
                 client,
                 file_name,
@@ -92229,7 +92591,7 @@ pub mod builder {
             } = self;
             let file_name = file_name.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/update/repository", client.baseurl,);
+            let url = format!("{}/v1/system/update/repositories", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -92252,7 +92614,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "system_update_put_repository",
+                operation_id: "system_update_repository_upload",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92271,16 +92633,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemUpdateExt::system_update_get_repository`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_repository_view`]
     ///
-    /// [`ClientSystemUpdateExt::system_update_get_repository`]: super::ClientSystemUpdateExt::system_update_get_repository
+    /// [`ClientSystemUpdateExt::system_update_repository_view`]: super::ClientSystemUpdateExt::system_update_repository_view
     #[derive(Debug, Clone)]
-    pub struct SystemUpdateGetRepository<'a> {
+    pub struct SystemUpdateRepositoryView<'a> {
         client: &'a super::Client,
-        system_version: Result<types::SystemUpdateGetRepositorySystemVersion, String>,
+        system_version: Result<types::SystemUpdateRepositoryViewSystemVersion, String>,
     }
 
-    impl<'a> SystemUpdateGetRepository<'a> {
+    impl<'a> SystemUpdateRepositoryView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -92290,27 +92652,25 @@ pub mod builder {
 
         pub fn system_version<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::SystemUpdateGetRepositorySystemVersion>,
+            V: std::convert::TryInto<types::SystemUpdateRepositoryViewSystemVersion>,
         {
             self.system_version = value.try_into().map_err(|_| {
-                "conversion to `SystemUpdateGetRepositorySystemVersion` for system_version failed"
+                "conversion to `SystemUpdateRepositoryViewSystemVersion` for system_version failed"
                     .to_string()
             });
             self
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/update/repository/{system_version}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TufRepoGetResponse>, Error<types::Error>> {
+        /// `/v1/system/update/repositories/{system_version}`
+        pub async fn send(self) -> Result<ResponseValue<types::TufRepo>, Error<types::Error>> {
             let Self {
                 client,
                 system_version,
             } = self;
             let system_version = system_version.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/system/update/repository/{}",
+                "{}/v1/system/update/repositories/{}",
                 client.baseurl,
                 encode_path(&system_version.to_string()),
             );
@@ -92330,7 +92690,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "system_update_get_repository",
+                operation_id: "system_update_repository_view",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92349,25 +92709,23 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemUpdateExt::target_release_view`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_status`]
     ///
-    /// [`ClientSystemUpdateExt::target_release_view`]: super::ClientSystemUpdateExt::target_release_view
+    /// [`ClientSystemUpdateExt::system_update_status`]: super::ClientSystemUpdateExt::system_update_status
     #[derive(Debug, Clone)]
-    pub struct TargetReleaseView<'a> {
+    pub struct SystemUpdateStatus<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> TargetReleaseView<'a> {
+    impl<'a> SystemUpdateStatus<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
 
-        /// Sends a `GET` request to `/v1/system/update/target-release`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+        /// Sends a `GET` request to `/v1/system/update/status`
+        pub async fn send(self) -> Result<ResponseValue<types::UpdateStatus>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/system/update/target-release", client.baseurl,);
+            let url = format!("{}/v1/system/update/status", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -92384,7 +92742,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "target_release_view",
+                operation_id: "system_update_status",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -92445,9 +92803,7 @@ pub mod builder {
         }
 
         /// Sends a `PUT` request to `/v1/system/update/target-release`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TargetRelease>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::SetTargetReleaseParams::try_from(v).map_err(|e| e.to_string()))
@@ -92477,7 +92833,7 @@ pub mod builder {
             client.post(&result, &info).await?;
             let response = result?;
             match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

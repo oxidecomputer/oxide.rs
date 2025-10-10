@@ -634,20 +634,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::AuthSettingsUpdate => Some("auth-settings update"),
 
         // Update subcommands
-        CliCommand::TargetReleaseView => Some("experimental system update target-release view"),
-        CliCommand::TargetReleaseUpdate => Some("experimental system update target-release update"),
-        CliCommand::SystemUpdateTrustRootList => Some("experimental system update trust-root list"),
-        CliCommand::SystemUpdateTrustRootCreate => {
-            Some("experimental system update trust-root create")
-        }
-        CliCommand::SystemUpdateTrustRootView => Some("experimental system update trust-root view"),
-        CliCommand::SystemUpdateTrustRootDelete => {
-            Some("experimental system update trust-root delete")
-        }
-        // Manually implemented
-        CliCommand::SystemUpdatePutRepository => None,
-        // Not implemented
-        CliCommand::SystemUpdateGetRepository => None,
+        CliCommand::SystemUpdateTrustRootList => Some("system update trust-root list"),
+        CliCommand::SystemUpdateTrustRootCreate => Some("system update trust-root create"),
+        CliCommand::SystemUpdateTrustRootView => Some("system update trust-root view"),
+        CliCommand::SystemUpdateTrustRootDelete => Some("system update trust-root delete"),
+        CliCommand::TargetReleaseUpdate => Some("system update target-release update"),
+        CliCommand::SystemUpdateStatus => Some("system update status"),
+        CliCommand::SystemUpdateRepositoryList => Some("system update repo list"),
+        CliCommand::SystemUpdateRepositoryView => Some("system update repo view"),
+        CliCommand::SystemUpdateRepositoryUpload => None, // Manually implemented
 
         CliCommand::SwitchList => Some("system hardware switch list"),
         CliCommand::SwitchView => Some("system hardware switch view"),
