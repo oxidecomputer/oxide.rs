@@ -4592,6 +4592,100 @@
       ]
     },
     {
+      "name": "scim",
+      "args": [
+        {
+          "long": "profile",
+          "help": "Configuration profile to use for commands",
+          "global": true
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "token",
+          "args": [
+            {
+              "long": "profile",
+              "help": "Configuration profile to use for commands",
+              "global": true
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Create SCIM token",
+              "long_about": "Specify the silo by name or ID using the `silo` query parameter. Be sure to save the bearer token in the response. It will not be retrievable later through the token view and list endpoints.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Delete SCIM token",
+              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "token-id"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List SCIM tokens",
+              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch SCIM token",
+              "long_about": "Specify the silo by name or ID using the `silo` query parameter.",
+              "args": [
+                {
+                  "long": "profile",
+                  "help": "Configuration profile to use for commands",
+                  "global": true
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "token-id"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "silo",
       "args": [
         {
@@ -4623,7 +4717,8 @@
               "long": "identity-mode",
               "values": [
                 "saml_jit",
-                "local_only"
+                "local_only",
+                "saml_scim"
               ]
             },
             {

@@ -16968,6 +16968,303 @@ pub mod operations {
         }
     }
 
+    pub struct ScimTokenListWhen(::httpmock::When);
+    impl ScimTokenListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/scim/tokens$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct ScimTokenListThen(::httpmock::Then);
+    impl ScimTokenListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &::std::vec::Vec<types::ScimClientBearerToken>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ScimTokenCreateWhen(::httpmock::When);
+    impl ScimTokenCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/scim/tokens$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct ScimTokenCreateThen(::httpmock::Then);
+    impl ScimTokenCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::ScimClientBearerTokenValue) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ScimTokenDeleteAllWhen(::httpmock::When);
+    impl ScimTokenDeleteAllWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/scim/tokens$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct ScimTokenDeleteAllThen(::httpmock::Then);
+    impl ScimTokenDeleteAllThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ScimTokenViewWhen(::httpmock::When);
+    impl ScimTokenViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/scim/tokens/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn token_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/scim/tokens/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct ScimTokenViewThen(::httpmock::Then);
+    impl ScimTokenViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ScimClientBearerToken) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ScimTokenDeleteWhen(::httpmock::When);
+    impl ScimTokenDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/scim/tokens/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn token_id(self, value: &::uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/scim/tokens/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct ScimTokenDeleteThen(::httpmock::Then);
+    impl ScimTokenDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SystemQuotasListWhen(::httpmock::When);
     impl SystemQuotasListWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -22965,6 +23262,21 @@ pub trait MockServerExt {
     fn system_policy_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
+    fn scim_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenListWhen, operations::ScimTokenListThen);
+    fn scim_token_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenCreateWhen, operations::ScimTokenCreateThen);
+    fn scim_token_delete_all<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenDeleteAllWhen, operations::ScimTokenDeleteAllThen);
+    fn scim_token_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenViewWhen, operations::ScimTokenViewThen);
+    fn scim_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenDeleteWhen, operations::ScimTokenDeleteThen);
     fn system_quotas_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen);
@@ -25913,6 +26225,66 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemPolicyUpdateWhen::new(when),
                 operations::SystemPolicyUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn scim_token_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenListWhen, operations::ScimTokenListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ScimTokenListWhen::new(when),
+                operations::ScimTokenListThen::new(then),
+            )
+        })
+    }
+
+    fn scim_token_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenCreateWhen, operations::ScimTokenCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ScimTokenCreateWhen::new(when),
+                operations::ScimTokenCreateThen::new(then),
+            )
+        })
+    }
+
+    fn scim_token_delete_all<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenDeleteAllWhen, operations::ScimTokenDeleteAllThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ScimTokenDeleteAllWhen::new(when),
+                operations::ScimTokenDeleteAllThen::new(then),
+            )
+        })
+    }
+
+    fn scim_token_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenViewWhen, operations::ScimTokenViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ScimTokenViewWhen::new(when),
+                operations::ScimTokenViewThen::new(then),
+            )
+        })
+    }
+
+    fn scim_token_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::ScimTokenDeleteWhen, operations::ScimTokenDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ScimTokenDeleteWhen::new(when),
+                operations::ScimTokenDeleteThen::new(then),
             )
         })
     }

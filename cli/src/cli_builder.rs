@@ -485,6 +485,13 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SamlIdentityProviderCreate => Some("silo idp saml create"),
         CliCommand::SamlIdentityProviderView => Some("silo idp saml view"),
 
+        CliCommand::ScimTokenList => Some("scim token list"),
+        CliCommand::ScimTokenCreate => Some("scim token create"),
+        CliCommand::ScimTokenView => Some("scim token view"),
+        CliCommand::ScimTokenDelete => Some("scim token delete"),
+        // endpoint to be deleted in https://github.com/oxidecomputer/omicron/pull/9180
+        CliCommand::ScimTokenDeleteAll => None,
+
         CliCommand::SystemQuotasList => Some("silo quotas list"),
         CliCommand::SiloQuotasView => Some("silo quotas view"),
         CliCommand::SiloQuotasUpdate => Some("silo quotas update"),
