@@ -221,7 +221,6 @@ async fn client_query_loop(
                     .system_timeseries_query()
                     .body(TimeseriesQuery {
                         query: query.clone(),
-                        include_summaries: false,
                     });
                 match request.send().await {
                     Ok(response) => {

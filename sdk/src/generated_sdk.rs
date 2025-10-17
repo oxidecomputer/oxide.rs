@@ -17017,112 +17017,6 @@ pub mod types {
         }
     }
 
-    /// A count of bytes / rows accessed during a query.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A count of bytes / rows accessed during a query.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "bytes",
-    ///    "rows"
-    ///  ],
-    ///  "properties": {
-    ///    "bytes": {
-    ///      "description": "The number of bytes accessed.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "rows": {
-    ///      "description": "The number of rows accessed.",
-    ///      "type": "integer",
-    ///      "format": "uint64",
-    ///      "minimum": 0.0
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct IoCount {
-        /// The number of bytes accessed.
-        pub bytes: u64,
-        /// The number of rows accessed.
-        pub rows: u64,
-    }
-
-    impl ::std::convert::From<&IoCount> for IoCount {
-        fn from(value: &IoCount) -> Self {
-            value.clone()
-        }
-    }
-
-    impl IoCount {
-        pub fn builder() -> builder::IoCount {
-            Default::default()
-        }
-    }
-
-    /// Summary of the I/O resources used by a query.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Summary of the I/O resources used by a query.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "read",
-    ///    "written"
-    ///  ],
-    ///  "properties": {
-    ///    "read": {
-    ///      "description": "The bytes and rows read by the query.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IoCount"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "written": {
-    ///      "description": "The bytes and rows written by the query.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IoCount"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct IoSummary {
-        /// The bytes and rows read by the query.
-        pub read: IoCount,
-        /// The bytes and rows written by the query.
-        pub written: IoCount,
-    }
-
-    impl ::std::convert::From<&IoSummary> for IoSummary {
-        fn from(value: &IoSummary) -> Self {
-            value.clone()
-        }
-    }
-
-    impl IoSummary {
-        pub fn builder() -> builder::IoSummary {
-            Default::default()
-        }
-    }
-
     /// `IpNet`
     ///
     /// <details><summary>JSON schema</summary>
@@ -17244,6 +17138,7 @@ pub mod types {
     ///    "id",
     ///    "ip_version",
     ///    "name",
+    ///    "pool_type",
     ///    "time_created",
     ///    "time_modified"
     ///  ],
@@ -17275,6 +17170,14 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "pool_type": {
+    ///      "description": "Type of IP pool (unicast or multicast)",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolType"
+    ///        }
+    ///      ]
+    ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
     ///      "type": "string",
@@ -17301,6 +17204,8 @@ pub mod types {
         pub ip_version: IpVersion,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        /// Type of IP pool (unicast or multicast)
+        pub pool_type: IpPoolType,
         /// timestamp when this resource was created
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -17319,13 +17224,26 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an `IpPool`
+    /// Create-time parameters for an `IpPool`.
+    ///
+    /// For multicast pools, all ranges must be either Any-Source Multicast
+    /// (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and
+    /// SSM ranges in the same pool is not allowed.
+    ///
+    /// ASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field
+    /// != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field
+    /// = 3
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Create-time parameters for an `IpPool`",
+    ///  "description": "Create-time parameters for an `IpPool`.\n\nFor
+    /// multicast pools, all ranges must be either Any-Source Multicast (ASM) or
+    /// Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges
+    /// in the same pool is not allowed.\n\nASM: IPv4 addresses outside
+    /// 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in
+    /// 232.0.0.0/8, IPv6 addresses with flag field = 3",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -17347,6 +17265,15 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "pool_type": {
+    ///      "description": "Type of IP pool (defaults to Unicast)",
+    ///      "default": "unicast",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/IpPoolType"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -17363,6 +17290,9 @@ pub mod types {
         #[serde(default = "defaults::ip_pool_create_ip_version")]
         pub ip_version: IpVersion,
         pub name: Name,
+        /// Type of IP pool (defaults to Unicast)
+        #[serde(default = "defaults::ip_pool_create_pool_type")]
+        pub pool_type: IpPoolType,
     }
 
     impl ::std::convert::From<&IpPoolCreate> for IpPoolCreate {
@@ -17744,6 +17674,110 @@ pub mod types {
     impl IpPoolSiloUpdate {
         pub fn builder() -> builder::IpPoolSiloUpdate {
             Default::default()
+        }
+    }
+
+    /// Type of IP pool.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Type of IP pool.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Unicast IP pool for standard IP allocations.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "unicast"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Multicast IP pool for multicast group
+    /// allocations.\n\nAll ranges in a multicast pool must be either ASM or SSM
+    /// (not mixed).",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "multicast"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum IpPoolType {
+        /// Unicast IP pool for standard IP allocations.
+        #[serde(rename = "unicast")]
+        Unicast,
+        /// Multicast IP pool for multicast group allocations.
+        ///
+        /// All ranges in a multicast pool must be either ASM or SSM (not
+        /// mixed).
+        #[serde(rename = "multicast")]
+        Multicast,
+    }
+
+    impl ::std::convert::From<&Self> for IpPoolType {
+        fn from(value: &IpPoolType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for IpPoolType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Unicast => f.write_str("unicast"),
+                Self::Multicast => f.write_str("multicast"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for IpPoolType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "unicast" => Ok(Self::Unicast),
+                "multicast" => Ok(Self::Multicast),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for IpPoolType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for IpPoolType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for IpPoolType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -20622,16 +20656,6 @@ pub mod types {
     ///    "tables"
     ///  ],
     ///  "properties": {
-    ///    "query_summaries": {
-    ///      "description": "Summaries of queries run against ClickHouse.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/OxqlQuerySummary"
-    ///      }
-    ///    },
     ///    "tables": {
     ///      "description": "Tables resulting from the query, each containing
     /// timeseries.",
@@ -20648,9 +20672,6 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct OxqlQueryResult {
-        /// Summaries of queries run against ClickHouse.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub query_summaries: ::std::option::Option<::std::vec::Vec<OxqlQuerySummary>>,
         /// Tables resulting from the query, each containing timeseries.
         pub tables: ::std::vec::Vec<OxqlTable>,
     }
@@ -20663,77 +20684,6 @@ pub mod types {
 
     impl OxqlQueryResult {
         pub fn builder() -> builder::OxqlQueryResult {
-            Default::default()
-        }
-    }
-
-    /// Basic metadata about the resource usage of a single ClickHouse SQL
-    /// query.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Basic metadata about the resource usage of a single
-    /// ClickHouse SQL query.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "elapsed_ms",
-    ///    "id",
-    ///    "io_summary",
-    ///    "query"
-    ///  ],
-    ///  "properties": {
-    ///    "elapsed_ms": {
-    ///      "description": "The total duration of the ClickHouse query (network
-    /// plus execution).",
-    ///      "type": "integer",
-    ///      "format": "uint",
-    ///      "minimum": 0.0
-    ///    },
-    ///    "id": {
-    ///      "description": "The database-assigned query ID.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "io_summary": {
-    ///      "description": "Summary of the data read and written.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/IoSummary"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "query": {
-    ///      "description": "The raw ClickHouse SQL query.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
-    )]
-    pub struct OxqlQuerySummary {
-        /// The total duration of the ClickHouse query (network plus execution).
-        pub elapsed_ms: u32,
-        /// The database-assigned query ID.
-        pub id: ::uuid::Uuid,
-        /// Summary of the data read and written.
-        pub io_summary: IoSummary,
-        /// The raw ClickHouse SQL query.
-        pub query: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&OxqlQuerySummary> for OxqlQuerySummary {
-        fn from(value: &OxqlQuerySummary) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OxqlQuerySummary {
-        pub fn builder() -> builder::OxqlQuerySummary {
             Default::default()
         }
     }
@@ -29958,12 +29908,6 @@ pub mod types {
     ///    "query"
     ///  ],
     ///  "properties": {
-    ///    "include_summaries": {
-    ///      "description": "Whether to include ClickHouse query summaries in
-    /// the response.",
-    ///      "default": false,
-    ///      "type": "boolean"
-    ///    },
     ///    "query": {
     ///      "description": "A timeseries query string, written in the Oximeter
     /// query language.",
@@ -29977,9 +29921,6 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct TimeseriesQuery {
-        /// Whether to include ClickHouse query summaries in the response.
-        #[serde(default)]
-        pub include_summaries: bool,
         /// A timeseries query string, written in the Oximeter query language.
         pub query: ::std::string::String,
     }
@@ -47658,129 +47599,12 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct IoCount {
-            bytes: ::std::result::Result<u64, ::std::string::String>,
-            rows: ::std::result::Result<u64, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for IoCount {
-            fn default() -> Self {
-                Self {
-                    bytes: Err("no value supplied for bytes".to_string()),
-                    rows: Err("no value supplied for rows".to_string()),
-                }
-            }
-        }
-
-        impl IoCount {
-            pub fn bytes<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.bytes = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for bytes: {}", e));
-                self
-            }
-            pub fn rows<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u64>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.rows = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for rows: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<IoCount> for super::IoCount {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: IoCount,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    bytes: value.bytes?,
-                    rows: value.rows?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::IoCount> for IoCount {
-            fn from(value: super::IoCount) -> Self {
-                Self {
-                    bytes: Ok(value.bytes),
-                    rows: Ok(value.rows),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct IoSummary {
-            read: ::std::result::Result<super::IoCount, ::std::string::String>,
-            written: ::std::result::Result<super::IoCount, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for IoSummary {
-            fn default() -> Self {
-                Self {
-                    read: Err("no value supplied for read".to_string()),
-                    written: Err("no value supplied for written".to_string()),
-                }
-            }
-        }
-
-        impl IoSummary {
-            pub fn read<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IoCount>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.read = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for read: {}", e));
-                self
-            }
-            pub fn written<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IoCount>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.written = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for written: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<IoSummary> for super::IoSummary {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: IoSummary,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    read: value.read?,
-                    written: value.written?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::IoSummary> for IoSummary {
-            fn from(value: super::IoSummary) -> Self {
-                Self {
-                    read: Ok(value.read),
-                    written: Ok(value.written),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct IpPool {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
             time_created: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -47798,6 +47622,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     ip_version: Err("no value supplied for ip_version".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    pool_type: Err("no value supplied for pool_type".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -47845,6 +47670,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn pool_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
+                self
+            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -47877,6 +47712,7 @@ pub mod types {
                     id: value.id?,
                     ip_version: value.ip_version?,
                     name: value.name?,
+                    pool_type: value.pool_type?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -47890,6 +47726,7 @@ pub mod types {
                     id: Ok(value.id),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
+                    pool_type: Ok(value.pool_type),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -47901,6 +47738,7 @@ pub mod types {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             ip_version: ::std::result::Result<super::IpVersion, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool_type: ::std::result::Result<super::IpPoolType, ::std::string::String>,
         }
 
         impl ::std::default::Default for IpPoolCreate {
@@ -47909,6 +47747,7 @@ pub mod types {
                     description: Err("no value supplied for description".to_string()),
                     ip_version: Ok(super::defaults::ip_pool_create_ip_version()),
                     name: Err("no value supplied for name".to_string()),
+                    pool_type: Ok(super::defaults::ip_pool_create_pool_type()),
                 }
             }
         }
@@ -47944,6 +47783,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn pool_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::IpPoolType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool_type: {}", e));
+                self
+            }
         }
 
         impl ::std::convert::TryFrom<IpPoolCreate> for super::IpPoolCreate {
@@ -47955,6 +47804,7 @@ pub mod types {
                     description: value.description?,
                     ip_version: value.ip_version?,
                     name: value.name?,
+                    pool_type: value.pool_type?,
                 })
             }
         }
@@ -47965,6 +47815,7 @@ pub mod types {
                     description: Ok(value.description),
                     ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
+                    pool_type: Ok(value.pool_type),
                 }
             }
         }
@@ -50087,35 +49938,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct OxqlQueryResult {
-            query_summaries: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
-                ::std::string::String,
-            >,
             tables: ::std::result::Result<::std::vec::Vec<super::OxqlTable>, ::std::string::String>,
         }
 
         impl ::std::default::Default for OxqlQueryResult {
             fn default() -> Self {
                 Self {
-                    query_summaries: Ok(Default::default()),
                     tables: Err("no value supplied for tables".to_string()),
                 }
             }
         }
 
         impl OxqlQueryResult {
-            pub fn query_summaries<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::option::Option<::std::vec::Vec<super::OxqlQuerySummary>>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.query_summaries = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for query_summaries: {}", e)
-                });
-                self
-            }
             pub fn tables<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::vec::Vec<super::OxqlTable>>,
@@ -50134,7 +49968,6 @@ pub mod types {
                 value: OxqlQueryResult,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    query_summaries: value.query_summaries?,
                     tables: value.tables?,
                 })
             }
@@ -50143,95 +49976,7 @@ pub mod types {
         impl ::std::convert::From<super::OxqlQueryResult> for OxqlQueryResult {
             fn from(value: super::OxqlQueryResult) -> Self {
                 Self {
-                    query_summaries: Ok(value.query_summaries),
                     tables: Ok(value.tables),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct OxqlQuerySummary {
-            elapsed_ms: ::std::result::Result<u32, ::std::string::String>,
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            io_summary: ::std::result::Result<super::IoSummary, ::std::string::String>,
-            query: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-
-        impl ::std::default::Default for OxqlQuerySummary {
-            fn default() -> Self {
-                Self {
-                    elapsed_ms: Err("no value supplied for elapsed_ms".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    io_summary: Err("no value supplied for io_summary".to_string()),
-                    query: Err("no value supplied for query".to_string()),
-                }
-            }
-        }
-
-        impl OxqlQuerySummary {
-            pub fn elapsed_ms<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<u32>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.elapsed_ms = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for elapsed_ms: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn io_summary<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IoSummary>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.io_summary = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for io_summary: {}", e));
-                self
-            }
-            pub fn query<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.query = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for query: {}", e));
-                self
-            }
-        }
-
-        impl ::std::convert::TryFrom<OxqlQuerySummary> for super::OxqlQuerySummary {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: OxqlQuerySummary,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    elapsed_ms: value.elapsed_ms?,
-                    id: value.id?,
-                    io_summary: value.io_summary?,
-                    query: value.query?,
-                })
-            }
-        }
-
-        impl ::std::convert::From<super::OxqlQuerySummary> for OxqlQuerySummary {
-            fn from(value: super::OxqlQuerySummary) -> Self {
-                Self {
-                    elapsed_ms: Ok(value.elapsed_ms),
-                    id: Ok(value.id),
-                    io_summary: Ok(value.io_summary),
-                    query: Ok(value.query),
                 }
             }
         }
@@ -57820,33 +57565,18 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesQuery {
-            include_summaries: ::std::result::Result<bool, ::std::string::String>,
             query: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
 
         impl ::std::default::Default for TimeseriesQuery {
             fn default() -> Self {
                 Self {
-                    include_summaries: Ok(Default::default()),
                     query: Err("no value supplied for query".to_string()),
                 }
             }
         }
 
         impl TimeseriesQuery {
-            pub fn include_summaries<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<bool>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.include_summaries = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for include_summaries: {}",
-                        e
-                    )
-                });
-                self
-            }
             pub fn query<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -57865,7 +57595,6 @@ pub mod types {
                 value: TimeseriesQuery,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    include_summaries: value.include_summaries?,
                     query: value.query?,
                 })
             }
@@ -57874,7 +57603,6 @@ pub mod types {
         impl ::std::convert::From<super::TimeseriesQuery> for TimeseriesQuery {
             fn from(value: super::TimeseriesQuery) -> Self {
                 Self {
-                    include_summaries: Ok(value.include_summaries),
                     query: Ok(value.query),
                 }
             }
@@ -61945,6 +61673,10 @@ pub mod types {
         pub(super) fn ip_pool_create_ip_version() -> super::IpVersion {
             super::IpVersion::V4
         }
+
+        pub(super) fn ip_pool_create_pool_type() -> super::IpPoolType {
+            super::IpPoolType::Unicast
+        }
     }
 }
 
@@ -65434,6 +65166,8 @@ pub trait ClientSystemIpPoolsExt {
     fn ip_pool_list(&self) -> builder::IpPoolList<'_>;
     /// Create IP pool
     ///
+    /// IPv6 is not yet supported for unicast pools.
+    ///
     /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
     /// ```ignore
@@ -65506,7 +65240,15 @@ pub trait ClientSystemIpPoolsExt {
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList<'_>;
     /// Add range to IP pool
     ///
-    /// IPv6 ranges are not allowed yet.
+    /// IPv6 ranges are not allowed yet for unicast pools.
+    ///
+    /// For multicast pools, all ranges must be either Any-Source Multicast
+    /// (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and
+    /// SSM ranges in the same pool is not allowed.
+    ///
+    /// ASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field
+    /// != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field
+    /// = 3
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
