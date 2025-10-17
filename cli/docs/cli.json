@@ -1836,14 +1836,6 @@
                   "long_about": "Queries are written in OxQL.",
                   "args": [
                     {
-                      "long": "include-summaries",
-                      "values": [
-                        "true",
-                        "false"
-                      ],
-                      "help": "Whether to include ClickHouse query summaries in the response."
-                    },
-                    {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
                     },
@@ -1928,14 +1920,6 @@
               "about": "Run project-scoped timeseries query",
               "long_about": "Queries are written in OxQL. Project must be specified by name or ID in URL query parameter. The OxQL query will only return timeseries data from the specified project.",
               "args": [
-                {
-                  "long": "include-summaries",
-                  "values": [
-                    "true",
-                    "false"
-                  ],
-                  "help": "Whether to include ClickHouse query summaries in the response."
-                },
                 {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
@@ -3872,6 +3856,7 @@
         {
           "name": "create",
           "about": "Create IP pool",
+          "long_about": "IPv6 is not yet supported for unicast pools.",
           "args": [
             {
               "long": "description"
@@ -3894,6 +3879,14 @@
             },
             {
               "long": "name"
+            },
+            {
+              "long": "pool-type",
+              "values": [
+                "unicast",
+                "multicast"
+              ],
+              "help": "Type of IP pool (defaults to Unicast)"
             },
             {
               "long": "profile",
@@ -3952,8 +3945,8 @@
           "subcommands": [
             {
               "name": "add",
-              "about": "Add range to IP pool",
-              "long_about": "IPv6 ranges are not allowed yet.",
+              "about": "Add range to IP pool.",
+              "long_about": "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
               "args": [
                 {
                   "long": "first"
