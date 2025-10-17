@@ -5419,6 +5419,19 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
+                ::clap::Arg::new("pool-type")
+                    .long("pool-type")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpPoolType::Unicast.to_string(),
+                            types::IpPoolType::Multicast.to_string(),
+                        ]),
+                        |s| types::IpPoolType::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Type of IP pool (defaults to Unicast)"),
+            )
+            .arg(
                 ::clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
@@ -5433,6 +5446,7 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Create IP pool")
+            .long_about("IPv6 is not yet supported for unicast pools.")
     }
 
     pub fn cli_ip_pool_view() -> ::clap::Command {
@@ -5540,8 +5554,14 @@ impl<T: CliConfig> Cli<T> {
                     .action(::clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add range to IP pool")
-            .long_about("IPv6 ranges are not allowed yet.")
+            .about("Add range to IP pool.")
+            .long_about(
+                "IPv6 ranges are not allowed yet for unicast pools.\n\nFor multicast pools, all \
+                 ranges must be either Any-Source Multicast (ASM) or Source-Specific Multicast \
+                 (SSM), but not both. Mixing ASM and SSM ranges in the same pool is not \
+                 allowed.\n\nASM: IPv4 addresses outside 232.0.0.0/8, IPv6 addresses with flag \
+                 field != 3 SSM: IPv4 addresses in 232.0.0.0/8, IPv6 addresses with flag field = 3",
+            )
     }
 
     pub fn cli_ip_pool_range_remove() -> ::clap::Command {
@@ -6963,13 +6983,6 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_system_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
-                ::clap::Arg::new("include-summaries")
-                    .long("include-summaries")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help("Whether to include ClickHouse query summaries in the response."),
-            )
-            .arg(
                 ::clap::Arg::new("query")
                     .long("query")
                     .value_parser(::clap::value_parser!(::std::string::String))
@@ -7302,13 +7315,6 @@ impl<T: CliConfig> Cli<T> {
 
     pub fn cli_timeseries_query() -> ::clap::Command {
         ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("include-summaries")
-                    .long("include-summaries")
-                    .value_parser(::clap::value_parser!(bool))
-                    .required(false)
-                    .help("Whether to include ClickHouse query summaries in the response."),
-            )
             .arg(
                 ::clap::Arg::new("project")
                     .long("project")
@@ -14801,6 +14807,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.name(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::IpPoolType>("pool-type") {
+            request = request.body_map(|body| body.pool_type(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt).unwrap();
@@ -16769,10 +16779,6 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_timeseries_query();
-        if let Some(value) = matches.get_one::<bool>("include-summaries") {
-            request = request.body_map(|body| body.include_summaries(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<::std::string::String>("query") {
             request = request.body_map(|body| body.query(value.clone()))
         }
@@ -17289,10 +17295,6 @@ impl<T: CliConfig> Cli<T> {
         matches: &::clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.timeseries_query();
-        if let Some(value) = matches.get_one::<bool>("include-summaries") {
-            request = request.body_map(|body| body.include_summaries(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
