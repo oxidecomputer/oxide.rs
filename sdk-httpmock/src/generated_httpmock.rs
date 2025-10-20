@@ -6979,6 +6979,255 @@ pub mod operations {
         }
     }
 
+    pub struct InstanceMulticastGroupListWhen(::httpmock::When);
+    impl InstanceMulticastGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/instances/[^/]*/multicast-groups$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/multicast-groups$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceMulticastGroupListThen(::httpmock::Then);
+    impl InstanceMulticastGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroupMemberResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InstanceMulticastGroupJoinWhen(::httpmock::When);
+    impl InstanceMulticastGroupJoinWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/v1/instances/[^/]*/multicast-groups/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/multicast-groups/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/.*/multicast-groups/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceMulticastGroupJoinThen(::httpmock::Then);
+    impl InstanceMulticastGroupJoinThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::MulticastGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct InstanceMulticastGroupLeaveWhen(::httpmock::When);
+    impl InstanceMulticastGroupLeaveWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/instances/[^/]*/multicast-groups/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/multicast-groups/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/.*/multicast-groups/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceMulticastGroupLeaveThen(::httpmock::Then);
+    impl InstanceMulticastGroupLeaveThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct InstanceRebootWhen(::httpmock::When);
     impl InstanceRebootWhen {
         pub fn new(inner: ::httpmock::When) -> Self {
@@ -9688,6 +9937,628 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupListWhen(::httpmock::When);
+    impl MulticastGroupListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/multicast-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct MulticastGroupListThen(::httpmock::Then);
+    impl MulticastGroupListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroupResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupCreateWhen(::httpmock::When);
+    impl MulticastGroupCreateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/multicast-groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::MulticastGroupCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct MulticastGroupCreateThen(::httpmock::Then);
+    impl MulticastGroupCreateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::MulticastGroup) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupViewWhen(::httpmock::When);
+    impl MulticastGroupViewWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/multicast-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/multicast-groups/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct MulticastGroupViewThen(::httpmock::Then);
+    impl MulticastGroupViewThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupUpdateWhen(::httpmock::When);
+    impl MulticastGroupUpdateWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/multicast-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/multicast-groups/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::MulticastGroupUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct MulticastGroupUpdateThen(::httpmock::Then);
+    impl MulticastGroupUpdateThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroup) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupDeleteWhen(::httpmock::When);
+    impl MulticastGroupDeleteWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(::httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/multicast-groups/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/multicast-groups/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct MulticastGroupDeleteThen(::httpmock::Then);
+    impl MulticastGroupDeleteThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupMemberListWhen(::httpmock::When);
+    impl MulticastGroupMemberListWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/multicast-groups/[^/]*/members$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/multicast-groups/{}/members$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<::std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct MulticastGroupMemberListThen(::httpmock::Then);
+    impl MulticastGroupMemberListThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroupMemberResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupMemberAddWhen(::httpmock::When);
+    impl MulticastGroupMemberAddWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(
+                inner.method(::httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/multicast-groups/[^/]*/members$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/multicast-groups/{}/members$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::MulticastGroupMemberAdd) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct MulticastGroupMemberAddThen(::httpmock::Then);
+    impl MulticastGroupMemberAddThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::MulticastGroupMember) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct MulticastGroupMemberRemoveWhen(::httpmock::When);
+    impl MulticastGroupMemberRemoveWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/multicast-groups/[^/]*/members/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn multicast_group(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/multicast-groups/{}/members/.*$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/multicast-groups/.*/members/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct MulticastGroupMemberRemoveThen(::httpmock::Then);
+    impl MulticastGroupMemberRemoveThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -14779,6 +15650,68 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct LookupMulticastGroupByIpWhen(::httpmock::When);
+    impl LookupMulticastGroupByIpWhen {
+        pub fn new(inner: ::httpmock::When) -> Self {
+            Self(inner.method(::httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/multicast-groups/by-ip/[^/]*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> ::httpmock::When {
+            self.0
+        }
+
+        pub fn address(self, value: &::std::net::IpAddr) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/multicast-groups/by-ip/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct LookupMulticastGroupByIpThen(::httpmock::Then);
+    impl LookupMulticastGroupByIpThen {
+        pub fn new(inner: ::httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> ::httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MulticastGroup) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -22740,6 +23673,24 @@ pub trait MockServerExt {
             operations::InstanceEphemeralIpDetachWhen,
             operations::InstanceEphemeralIpDetachThen,
         );
+    fn instance_multicast_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupListWhen,
+            operations::InstanceMulticastGroupListThen,
+        );
+    fn instance_multicast_group_join<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupJoinWhen,
+            operations::InstanceMulticastGroupJoinThen,
+        );
+    fn instance_multicast_group_leave<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupLeaveWhen,
+            operations::InstanceMulticastGroupLeaveThen,
+        );
     fn instance_reboot<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::InstanceRebootWhen, operations::InstanceRebootThen);
@@ -22857,6 +23808,36 @@ pub trait MockServerExt {
     fn silo_metric<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SiloMetricWhen, operations::SiloMetricThen);
+    fn multicast_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupListWhen, operations::MulticastGroupListThen);
+    fn multicast_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupCreateWhen, operations::MulticastGroupCreateThen);
+    fn multicast_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupViewWhen, operations::MulticastGroupViewThen);
+    fn multicast_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupUpdateWhen, operations::MulticastGroupUpdateThen);
+    fn multicast_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupDeleteWhen, operations::MulticastGroupDeleteThen);
+    fn multicast_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::MulticastGroupMemberListWhen,
+            operations::MulticastGroupMemberListThen,
+        );
+    fn multicast_group_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupMemberAddWhen, operations::MulticastGroupMemberAddThen);
+    fn multicast_group_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::MulticastGroupMemberRemoveWhen,
+            operations::MulticastGroupMemberRemoveThen,
+        );
     fn instance_network_interface_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -23097,6 +24078,12 @@ pub trait MockServerExt {
     fn system_metric<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::SystemMetricWhen, operations::SystemMetricThen);
+    fn lookup_multicast_group_by_ip<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::LookupMulticastGroupByIpWhen,
+            operations::LookupMulticastGroupByIpThen,
+        );
     fn networking_address_lot_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(
@@ -24582,6 +25569,51 @@ impl MockServerExt for ::httpmock::MockServer {
         })
     }
 
+    fn instance_multicast_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupListWhen,
+            operations::InstanceMulticastGroupListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceMulticastGroupListWhen::new(when),
+                operations::InstanceMulticastGroupListThen::new(then),
+            )
+        })
+    }
+
+    fn instance_multicast_group_join<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupJoinWhen,
+            operations::InstanceMulticastGroupJoinThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceMulticastGroupJoinWhen::new(when),
+                operations::InstanceMulticastGroupJoinThen::new(then),
+            )
+        })
+    }
+
+    fn instance_multicast_group_leave<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::InstanceMulticastGroupLeaveWhen,
+            operations::InstanceMulticastGroupLeaveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceMulticastGroupLeaveWhen::new(when),
+                operations::InstanceMulticastGroupLeaveThen::new(then),
+            )
+        })
+    }
+
     fn instance_reboot<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
     where
         F: FnOnce(operations::InstanceRebootWhen, operations::InstanceRebootThen),
@@ -24956,6 +25988,108 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SiloMetricWhen::new(when),
                 operations::SiloMetricThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupListWhen, operations::MulticastGroupListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupListWhen::new(when),
+                operations::MulticastGroupListThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_create<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupCreateWhen, operations::MulticastGroupCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupCreateWhen::new(when),
+                operations::MulticastGroupCreateThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_view<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupViewWhen, operations::MulticastGroupViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupViewWhen::new(when),
+                operations::MulticastGroupViewThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_update<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupUpdateWhen, operations::MulticastGroupUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupUpdateWhen::new(when),
+                operations::MulticastGroupUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_delete<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupDeleteWhen, operations::MulticastGroupDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupDeleteWhen::new(when),
+                operations::MulticastGroupDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_member_list<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::MulticastGroupMemberListWhen,
+            operations::MulticastGroupMemberListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupMemberListWhen::new(when),
+                operations::MulticastGroupMemberListThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_member_add<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(operations::MulticastGroupMemberAddWhen, operations::MulticastGroupMemberAddThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupMemberAddWhen::new(when),
+                operations::MulticastGroupMemberAddThen::new(then),
+            )
+        })
+    }
+
+    fn multicast_group_member_remove<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::MulticastGroupMemberRemoveWhen,
+            operations::MulticastGroupMemberRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::MulticastGroupMemberRemoveWhen::new(when),
+                operations::MulticastGroupMemberRemoveThen::new(then),
             )
         })
     }
@@ -25772,6 +26906,21 @@ impl MockServerExt for ::httpmock::MockServer {
             config_fn(
                 operations::SystemMetricWhen::new(when),
                 operations::SystemMetricThen::new(then),
+            )
+        })
+    }
+
+    fn lookup_multicast_group_by_ip<F>(&self, config_fn: F) -> ::httpmock::Mock<'_>
+    where
+        F: FnOnce(
+            operations::LookupMulticastGroupByIpWhen,
+            operations::LookupMulticastGroupByIpThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::LookupMulticastGroupByIpWhen::new(when),
+                operations::LookupMulticastGroupByIpThen::new(then),
             )
         })
     }

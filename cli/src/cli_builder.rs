@@ -433,6 +433,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("instance anti-affinity member remove-instance")
         }
 
+        // Instance multicast commands
+        CliCommand::InstanceMulticastGroupList => Some("instance multicast group list"),
+        CliCommand::InstanceMulticastGroupJoin => Some("instance multicast group join"),
+        CliCommand::InstanceMulticastGroupLeave => Some("instance multicast group leave"),
+
         CliCommand::ProjectList => Some("project list"),
         CliCommand::ProjectCreate => Some("project create"),
         CliCommand::ProjectView => Some("project view"),
@@ -736,6 +741,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SupportBundleView => Some("bundle view"),
         CliCommand::SupportBundleDelete => Some("bundle delete"),
         CliCommand::SupportBundleUpdate => Some("bundle update"),
+
+        // Multicast commands
+        CliCommand::MulticastGroupCreate => Some("multicast group create"),
+        CliCommand::MulticastGroupView => Some("multicast group view"),
+        CliCommand::MulticastGroupUpdate => Some("multicast group update"),
+        CliCommand::MulticastGroupDelete => Some("multicast group delete"),
+        CliCommand::MulticastGroupList => Some("multicast group list"),
+        CliCommand::MulticastGroupMemberList => Some("multicast group member list"),
+        CliCommand::MulticastGroupMemberAdd => Some("multicast group member add"),
+        CliCommand::MulticastGroupMemberRemove => Some("multicast group member remove"),
+        CliCommand::LookupMulticastGroupByIp => Some("multicast group lookup"),
 
         // Implemented as custom command to specify output file
         CliCommand::SupportBundleDownload => None,
