@@ -3132,6 +3132,25 @@ pub mod types {
     ///    {
     ///      "type": "object",
     ///      "required": [
+    ///        "kind",
+    ///        "silo_id"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "scim"
+    ///          ]
+    ///        },
+    ///        "silo_id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
     ///        "kind"
     ///      ],
     ///      "properties": {
@@ -3159,6 +3178,8 @@ pub mod types {
             silo_id: ::uuid::Uuid,
             silo_user_id: ::uuid::Uuid,
         },
+        #[serde(rename = "scim")]
+        Scim { silo_id: ::uuid::Uuid },
         #[serde(rename = "unauthenticated")]
         Unauthenticated,
     }
@@ -66352,21 +66373,6 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn scim_token_create(&self) -> builder::ScimTokenCreate<'_>;
-    /// Delete all SCIM tokens
-    ///
-    /// Specify the silo by name or ID using the `silo` query parameter.
-    ///
-    /// Sends a `DELETE` request to `/v1/system/scim/tokens`
-    ///
-    /// Arguments:
-    /// - `silo`: Name or ID of the silo
-    /// ```ignore
-    /// let response = client.scim_token_delete_all()
-    ///    .silo(silo)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn scim_token_delete_all(&self) -> builder::ScimTokenDeleteAll<'_>;
     /// Fetch SCIM token
     ///
     /// Specify the silo by name or ID using the `silo` query parameter.
@@ -66690,10 +66696,6 @@ impl ClientSystemSilosExt for Client {
 
     fn scim_token_create(&self) -> builder::ScimTokenCreate<'_> {
         builder::ScimTokenCreate::new(self)
-    }
-
-    fn scim_token_delete_all(&self) -> builder::ScimTokenDeleteAll<'_> {
-        builder::ScimTokenDeleteAll::new(self)
     }
 
     fn scim_token_view(&self) -> builder::ScimTokenView<'_> {
@@ -91422,74 +91424,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemSilosExt::scim_token_delete_all`]
-    ///
-    /// [`ClientSystemSilosExt::scim_token_delete_all`]: super::ClientSystemSilosExt::scim_token_delete_all
-    #[derive(Debug, Clone)]
-    pub struct ScimTokenDeleteAll<'a> {
-        client: &'a super::Client,
-        silo: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> ScimTokenDeleteAll<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                silo: Err("silo was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.silo = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to `/v1/system/scim/tokens`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, silo } = self;
-            let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/scim/tokens", client.baseurl,);
-            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-            header_map.append(
-                ::reqwest::header::HeaderName::from_static("api-version"),
-                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
-            );
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .delete(url)
-                .header(
-                    ::reqwest::header::ACCEPT,
-                    ::reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&progenitor_client::QueryParam::new("silo", &silo))
-                .headers(header_map)
-                .build()?;
-            let info = OperationInfo {
-                operation_id: "scim_token_delete_all",
-            };
-            client.pre(&mut request, &info).await?;
-            let result = client.exec(request, &info).await;
-            client.post(&result, &info).await?;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

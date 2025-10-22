@@ -293,7 +293,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::ScimTokenList => Self::cli_scim_token_list(),
             CliCommand::ScimTokenCreate => Self::cli_scim_token_create(),
-            CliCommand::ScimTokenDeleteAll => Self::cli_scim_token_delete_all(),
             CliCommand::ScimTokenView => Self::cli_scim_token_view(),
             CliCommand::ScimTokenDelete => Self::cli_scim_token_delete(),
             CliCommand::SystemQuotasList => Self::cli_system_quotas_list(),
@@ -6653,19 +6652,6 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
-    pub fn cli_scim_token_delete_all() -> ::clap::Command {
-        ::clap::Command::new("")
-            .arg(
-                ::clap::Arg::new("silo")
-                    .long("silo")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the silo"),
-            )
-            .about("Delete all SCIM tokens")
-            .long_about("Specify the silo by name or ID using the `silo` query parameter.")
-    }
-
     pub fn cli_scim_token_view() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -9022,7 +9008,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SystemPolicyUpdate => self.execute_system_policy_update(matches).await,
             CliCommand::ScimTokenList => self.execute_scim_token_list(matches).await,
             CliCommand::ScimTokenCreate => self.execute_scim_token_create(matches).await,
-            CliCommand::ScimTokenDeleteAll => self.execute_scim_token_delete_all(matches).await,
             CliCommand::ScimTokenView => self.execute_scim_token_view(matches).await,
             CliCommand::ScimTokenDelete => self.execute_scim_token_delete(matches).await,
             CliCommand::SystemQuotasList => self.execute_system_quotas_list(matches).await,
@@ -16374,30 +16359,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_scim_token_delete_all(
-        &self,
-        matches: &::clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.scim_token_delete_all();
-        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
-            request = request.silo(value.clone());
-        }
-
-        self.config
-            .execute_scim_token_delete_all(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.success_no_item(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_scim_token_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -20326,14 +20287,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_scim_token_delete_all(
-        &self,
-        matches: &::clap::ArgMatches,
-        request: &mut builder::ScimTokenDeleteAll,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_scim_token_view(
         &self,
         matches: &::clap::ArgMatches,
@@ -21063,7 +21016,6 @@ pub enum CliCommand {
     SystemPolicyUpdate,
     ScimTokenList,
     ScimTokenCreate,
-    ScimTokenDeleteAll,
     ScimTokenView,
     ScimTokenDelete,
     SystemQuotasList,
@@ -21347,7 +21299,6 @@ impl CliCommand {
             CliCommand::SystemPolicyUpdate,
             CliCommand::ScimTokenList,
             CliCommand::ScimTokenCreate,
-            CliCommand::ScimTokenDeleteAll,
             CliCommand::ScimTokenView,
             CliCommand::ScimTokenDelete,
             CliCommand::SystemQuotasList,
