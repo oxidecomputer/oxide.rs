@@ -489,8 +489,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ScimTokenCreate => Some("scim token create"),
         CliCommand::ScimTokenView => Some("scim token view"),
         CliCommand::ScimTokenDelete => Some("scim token delete"),
-        // endpoint to be deleted in https://github.com/oxidecomputer/omicron/pull/9180
-        CliCommand::ScimTokenDeleteAll => None,
 
         CliCommand::SystemQuotasList => Some("silo quotas list"),
         CliCommand::SiloQuotasView => Some("silo quotas view"),
