@@ -7927,7 +7927,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch system release repository description by version",
+                  "about": "Fetch system release repository by version",
                   "args": [
                     {
                       "long": "profile",

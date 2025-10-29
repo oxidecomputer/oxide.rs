@@ -66833,7 +66833,7 @@ pub trait ClientSystemUpdateExt {
     ///    .await;
     /// ```
     fn system_update_repository_upload(&self) -> builder::SystemUpdateRepositoryUpload<'_>;
-    /// Fetch system release repository description by version
+    /// Fetch system release repository by version
     ///
     /// Sends a `GET` request to
     /// `/v1/system/update/repositories/{system_version}`
