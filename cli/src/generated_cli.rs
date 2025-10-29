@@ -7057,7 +7057,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The version to get."),
             )
-            .about("Fetch system release repository description by version")
+            .about("Fetch system release repository by version")
     }
 
     pub fn cli_system_update_status() -> ::clap::Command {
