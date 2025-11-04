@@ -22214,6 +22214,7 @@ pub mod types {
     ///  "enum": [
     ///    "admin",
     ///    "collaborator",
+    ///    "limited_collaborator",
     ///    "viewer"
     ///  ]
     /// }
@@ -22237,6 +22238,8 @@ pub mod types {
         Admin,
         #[serde(rename = "collaborator")]
         Collaborator,
+        #[serde(rename = "limited_collaborator")]
+        LimitedCollaborator,
         #[serde(rename = "viewer")]
         Viewer,
     }
@@ -22252,6 +22255,7 @@ pub mod types {
             match *self {
                 Self::Admin => f.write_str("admin"),
                 Self::Collaborator => f.write_str("collaborator"),
+                Self::LimitedCollaborator => f.write_str("limited_collaborator"),
                 Self::Viewer => f.write_str("viewer"),
             }
         }
@@ -22263,6 +22267,7 @@ pub mod types {
             match value {
                 "admin" => Ok(Self::Admin),
                 "collaborator" => Ok(Self::Collaborator),
+                "limited_collaborator" => Ok(Self::LimitedCollaborator),
                 "viewer" => Ok(Self::Viewer),
                 _ => Err("invalid value".into()),
             }
@@ -25236,6 +25241,7 @@ pub mod types {
     ///  "enum": [
     ///    "admin",
     ///    "collaborator",
+    ///    "limited_collaborator",
     ///    "viewer"
     ///  ]
     /// }
@@ -25259,6 +25265,8 @@ pub mod types {
         Admin,
         #[serde(rename = "collaborator")]
         Collaborator,
+        #[serde(rename = "limited_collaborator")]
+        LimitedCollaborator,
         #[serde(rename = "viewer")]
         Viewer,
     }
@@ -25274,6 +25282,7 @@ pub mod types {
             match *self {
                 Self::Admin => f.write_str("admin"),
                 Self::Collaborator => f.write_str("collaborator"),
+                Self::LimitedCollaborator => f.write_str("limited_collaborator"),
                 Self::Viewer => f.write_str("viewer"),
             }
         }
@@ -25285,6 +25294,7 @@ pub mod types {
             match value {
                 "admin" => Ok(Self::Admin),
                 "collaborator" => Ok(Self::Collaborator),
+                "limited_collaborator" => Ok(Self::LimitedCollaborator),
                 "viewer" => Ok(Self::Viewer),
                 _ => Err("invalid value".into()),
             }
