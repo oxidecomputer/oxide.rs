@@ -61716,7 +61716,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20251008.0.0
+/// Version: 20251208.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -61757,7 +61757,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20251008.0.0"
+        "20251208.0.0"
     }
 
     fn baseurl(&self) -> &str {
