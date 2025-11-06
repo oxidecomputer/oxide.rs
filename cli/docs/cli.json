@@ -1,6 +1,6 @@
 {
   "name": "oxide",
-  "version": "0.13.0+20250730.0.0",
+  "version": "0.14.0+20251008.0.0",
   "about": "Control an Oxide environment",
   "args": [
     {
