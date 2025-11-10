@@ -9622,46 +9622,25 @@ pub mod types {
     ///      "format": "double"
     ///    },
     ///    "p50": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p90": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p99": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "squared_mean": {
     ///      "type": "number",
@@ -9686,11 +9665,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p50: ::std::option::Option<Quantile>,
+        pub p50: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p90: ::std::option::Option<Quantile>,
+        pub p90: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p99: ::std::option::Option<Quantile>,
+        pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: f64,
     }
@@ -9761,46 +9740,25 @@ pub mod types {
     ///      "format": "int64"
     ///    },
     ///    "p50": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p90": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p99": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "squared_mean": {
     ///      "type": "number",
@@ -9825,11 +9783,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<i64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p50: ::std::option::Option<Quantile>,
+        pub p50: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p90: ::std::option::Option<Quantile>,
+        pub p90: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p99: ::std::option::Option<Quantile>,
+        pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: i64,
     }
@@ -41808,18 +41766,9 @@ pub mod types {
             counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
             max: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             min: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
-            p50: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p90: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p99: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
+            p50: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p90: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p99: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
             sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
@@ -41883,7 +41832,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p50 = value
@@ -41893,7 +41842,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p90 = value
@@ -41903,7 +41852,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p99 = value
@@ -41974,18 +41923,9 @@ pub mod types {
             counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
             max: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
             min: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
-            p50: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p90: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p99: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
+            p50: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p90: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p99: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
@@ -42049,7 +41989,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p50 = value
@@ -42059,7 +41999,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p90 = value
@@ -42069,7 +42009,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p99 = value
