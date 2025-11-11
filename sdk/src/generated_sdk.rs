@@ -8917,6 +8917,7 @@ pub mod types {
     ///    "block_size",
     ///    "description",
     ///    "device_path",
+    ///    "disk_type",
     ///    "id",
     ///    "name",
     ///    "project_id",
@@ -8935,6 +8936,9 @@ pub mod types {
     ///    },
     ///    "device_path": {
     ///      "type": "string"
+    ///    },
+    ///    "disk_type": {
+    ///      "$ref": "#/components/schemas/DiskType"
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
@@ -9000,6 +9004,7 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub device_path: ::std::string::String,
+        pub disk_type: DiskType,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// ID of image from which disk was created, if any
@@ -9565,6 +9570,86 @@ pub mod types {
     impl ::std::convert::From<&Self> for DiskState {
         fn from(value: &DiskState) -> Self {
             value.clone()
+        }
+    }
+
+    /// `DiskType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "crucible"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum DiskType {
+        #[serde(rename = "crucible")]
+        Crucible,
+    }
+
+    impl ::std::convert::From<&Self> for DiskType {
+        fn from(value: &DiskType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for DiskType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Crucible => f.write_str("crucible"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for DiskType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "crucible" => Ok(Self::Crucible),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -41368,6 +41453,7 @@ pub mod types {
             block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             device_path: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disk_type: ::std::result::Result<super::DiskType, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             image_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
@@ -41393,6 +41479,7 @@ pub mod types {
                     block_size: Err("no value supplied for block_size".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     device_path: Err("no value supplied for device_path".to_string()),
+                    disk_type: Err("no value supplied for disk_type".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     image_id: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
@@ -41435,6 +41522,16 @@ pub mod types {
                 self.device_path = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for device_path: {}", e));
+                self
+            }
+            pub fn disk_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DiskType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.disk_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for disk_type: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -41536,6 +41633,7 @@ pub mod types {
                     block_size: value.block_size?,
                     description: value.description?,
                     device_path: value.device_path?,
+                    disk_type: value.disk_type?,
                     id: value.id?,
                     image_id: value.image_id?,
                     name: value.name?,
@@ -41555,6 +41653,7 @@ pub mod types {
                     block_size: Ok(value.block_size),
                     description: Ok(value.description),
                     device_path: Ok(value.device_path),
+                    disk_type: Ok(value.disk_type),
                     id: Ok(value.id),
                     image_id: Ok(value.image_id),
                     name: Ok(value.name),
