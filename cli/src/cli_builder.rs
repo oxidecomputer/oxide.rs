@@ -134,6 +134,15 @@ impl Default for NewCli<'_> {
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
                     ),
+                CliCommand::CertificateCreate => cmd
+                    .mut_arg("cert", |arg| {
+                        arg.value_name("cert-file")
+                            .help("path to PEM-formatted string containing public certificate chain")
+                    })
+                    .mut_arg("key", |arg| {
+                        arg.value_name("key-file")
+                            .help("path to PEM-formatted string containing public certificate chain")
+                    }),
 
                 CliCommand::SamlIdentityProviderCreate => cmd
                     .mut_arg("json-body", |arg| arg.required(false))

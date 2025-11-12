@@ -255,6 +255,25 @@ impl CliConfig for OxideOverride {
         Ok(())
     }
 
+    fn execute_certificate_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide::builder::CertificateCreate,
+    ) -> anyhow::Result<()> {
+        let key_path = matches.get_one::<String>("key").unwrap();
+        let key_bytes = std::fs::read(key_path)
+            .with_context(|| format!("failed to read key file {key_path}"))?;
+
+        let cert_path = matches.get_one::<String>("cert").unwrap();
+        let cert_bytes = std::fs::read(cert_path)
+            .with_context(|| format!("failed to read cert file {cert_path}"))?;
+
+        *request = request
+            .to_owned()
+            .body_map(|body| body.key(key_bytes).cert(cert_bytes));
+        Ok(())
+    }
+
     fn execute_saml_identity_provider_create(
         &self,
         matches: &clap::ArgMatches,
