@@ -137,7 +137,7 @@ impl Default for NewCli<'_> {
                 CliCommand::CertificateCreate => cmd
                     .mut_arg("cert", |arg| {
                         arg.value_name("cert-file")
-                            .help("path to PEM-formatted string containing public certificate chain")
+                            .help("path to a PEM-formatted file containing a public certificate chain")
                     })
                     .mut_arg("key", |arg| {
                         arg.value_name("key-file")
