@@ -135,6 +135,9 @@ impl Default for NewCli<'_> {
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
                     ),
 
+                // We'd like users to provide a file rather than an inline string value for ease of use.
+                // Update the help string to note we want a file and add a name for the value being
+                // passed
                 CliCommand::CertificateCreate => cmd
                     .mut_arg("cert", |arg| {
                         arg.value_name("CERT-FILE")
