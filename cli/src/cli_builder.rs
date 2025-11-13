@@ -123,24 +123,25 @@ impl Default for NewCli<'_> {
                     .arg(
                         clap::Arg::new("first")
                             .long("first")
-                            .value_name("ip-addr")
+                            .value_name("IP-ADDR")
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
                     )
                     .arg(
                         clap::Arg::new("last")
                             .long("last")
-                            .value_name("ip-addr")
+                            .value_name("IP-ADDR")
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
                     ),
+
                 CliCommand::CertificateCreate => cmd
                     .mut_arg("cert", |arg| {
-                        arg.value_name("cert-file")
+                        arg.value_name("CERT-FILE")
                             .help("path to a PEM-formatted file containing a public certificate chain")
                     })
                     .mut_arg("key", |arg| {
-                        arg.value_name("key-file")
+                        arg.value_name("KEY-FILE")
                             .help("path to a PEM-formatted file containing a private key")
                     }),
 
@@ -163,14 +164,14 @@ impl Default for NewCli<'_> {
                     .arg(
                         clap::Arg::new("private-key")
                             .long("private-key")
-                            .value_name("key-file")
+                            .value_name("KEY-FILE")
                             .value_parser(clap::value_parser!(PathBuf))
                             .help("path to the request signing RSA private key in PKCS#1 DER format"),
                     )
                     .arg(
                         clap::Arg::new("public-cert")
                             .long("public-cert")
-                            .value_name("cert-file")
+                            .value_name("CERT-FILE")
                             .value_parser(clap::value_parser!(PathBuf))
                             .help("path to the request signing public certificate in DER format"),
                     )
