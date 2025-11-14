@@ -823,7 +823,7 @@
           "args": [
             {
               "long": "cert",
-              "help": "PEM-formatted string containing public certificate chain"
+              "help": "path to a PEM-formatted file containing a public certificate chain"
             },
             {
               "long": "description"
@@ -838,7 +838,7 @@
             },
             {
               "long": "key",
-              "help": "PEM-formatted string containing private key"
+              "help": "path to a PEM-formatted file containing a private key"
             },
             {
               "long": "name"
