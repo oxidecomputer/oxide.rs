@@ -1,5 +1,6 @@
 // The contents of this file are generated; do not modify them.
 
+use anyhow::Context as _;
 use oxide::*;
 pub struct Cli<T: CliConfig> {
     client: Client,
@@ -9116,8 +9117,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9144,8 +9147,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9182,9 +9187,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9264,8 +9270,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9382,8 +9390,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9440,8 +9450,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9715,8 +9727,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AffinityGroupCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AffinityGroupCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9785,8 +9799,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AffinityGroupUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AffinityGroupUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10204,9 +10220,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10352,9 +10369,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AntiAffinityGroupCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AntiAffinityGroupCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10423,9 +10441,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AntiAffinityGroupUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AntiAffinityGroupUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10649,9 +10668,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10736,8 +10756,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10862,8 +10884,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10951,9 +10975,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11046,8 +11071,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11136,8 +11163,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11206,8 +11235,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11276,8 +11307,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11441,8 +11474,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11643,8 +11678,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11722,8 +11759,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11930,8 +11969,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11968,8 +12009,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12034,8 +12077,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12357,9 +12402,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InternetGatewayIpAddressCreate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InternetGatewayIpAddressCreate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12501,9 +12548,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::InternetGatewayIpPoolCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InternetGatewayIpPoolCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12633,9 +12681,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::InternetGatewayCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InternetGatewayCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12801,9 +12850,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13018,8 +13068,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13225,9 +13277,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13308,9 +13362,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13396,8 +13452,10 @@ impl<T: CliConfig> Cli<T> {
     pub async fn execute_policy_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13461,8 +13519,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13515,8 +13575,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13588,8 +13650,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13669,8 +13733,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14004,8 +14070,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14145,9 +14213,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14329,8 +14398,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::LldpLinkConfig>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::LldpLinkConfig>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14371,9 +14442,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14570,8 +14642,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14632,8 +14706,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14694,9 +14770,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14797,8 +14874,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14851,8 +14930,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14940,8 +15021,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14970,8 +15053,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15052,8 +15137,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15090,8 +15177,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15224,8 +15313,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15250,8 +15341,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15384,8 +15477,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15523,8 +15618,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_allow_list_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15557,8 +15654,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15607,8 +15706,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15713,8 +15814,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15803,9 +15906,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15990,8 +16094,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ServiceIcmpConfig>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ServiceIcmpConfig>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16081,9 +16187,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16197,9 +16304,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16292,8 +16400,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16512,8 +16622,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16649,8 +16761,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16715,8 +16829,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16745,8 +16861,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16923,9 +17041,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16991,8 +17110,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_update_trust_root_create();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<::serde_json::Value>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<::serde_json::Value>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17265,8 +17386,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17514,9 +17637,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17613,8 +17737,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17699,8 +17825,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17824,8 +17952,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17901,8 +18031,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18034,8 +18166,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18115,8 +18249,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18282,8 +18418,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18348,8 +18486,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18409,8 +18549,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18451,9 +18593,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18510,8 +18653,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
