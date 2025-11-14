@@ -268,6 +268,8 @@ impl CliConfig for OxideOverride {
         let cert_bytes = std::fs::read(cert_path)
             .with_context(|| format!("failed to read cert file {cert_path}"))?;
 
+        // Note that key and cert will already be set by the generated code,
+        // but to the path of the files rather than to their contents.
         *request = request
             .to_owned()
             .body_map(|body| body.key(key_bytes).cert(cert_bytes));
