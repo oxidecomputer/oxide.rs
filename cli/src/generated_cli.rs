@@ -389,8 +389,16 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help(
-                        "Optional lifetime for the access token in seconds. If not specified, the \
-                         silo's max TTL will be used (if set).",
+                        "Optional lifetime for the access token in seconds.\n\nThis value will be \
+                         validated during the confirmation step. If not specified, it defaults to \
+                         the silo's max TTL, which can be seen at `/v1/auth-settings`.  If \
+                         specified, must not exceed the silo's max TTL.\n\nSome special logic \
+                         applies when authenticating the confirmation request with an existing \
+                         device token: the requested TTL must not produce an expiration time \
+                         later than the authenticating token's expiration. If no TTL is \
+                         specified, the expiration will be the lesser of the silo max and the \
+                         authenticating token's expiration time. To get the longest allowed \
+                         lifetime, omit the TTL and authenticate with a web console session.",
                     ),
             )
             .arg(
@@ -441,7 +449,13 @@ impl<T: CliConfig> Cli<T> {
             .long_about(
                 "This endpoint is designed to be accessed by the user agent (browser), not the \
                  client requesting the token. So we do not actually return the token here; it \
-                 will be returned in response to the poll on `/device/token`.",
+                 will be returned in response to the poll on `/device/token`.\n\nSome special \
+                 logic applies when authenticating this request with an existing device token \
+                 instead of a console session: the requested TTL must not produce an expiration \
+                 time later than the authenticating token's expiration. If no TTL was specified \
+                 in the initial grant request, the expiration will be the lesser of the silo max \
+                 and the authenticating token's expiration time. To get the longest allowed \
+                 lifetime, omit the TTL and authenticate with a web console session.",
             )
     }
 

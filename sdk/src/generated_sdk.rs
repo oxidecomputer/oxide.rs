@@ -8788,8 +8788,17 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "ttl_seconds": {
-    ///      "description": "Optional lifetime for the access token in seconds.
-    /// If not specified, the silo's max TTL will be used (if set).",
+    ///      "description": "Optional lifetime for the access token in
+    /// seconds.\n\nThis value will be validated during the confirmation step.
+    /// If not specified, it defaults to the silo's max TTL, which can be seen
+    /// at `/v1/auth-settings`.  If specified, must not exceed the silo's max
+    /// TTL.\n\nSome special logic applies when authenticating the confirmation
+    /// request with an existing device token: the requested TTL must not
+    /// produce an expiration time later than the authenticating token's
+    /// expiration. If no TTL is specified, the expiration will be the lesser of
+    /// the silo max and the authenticating token's expiration time. To get the
+    /// longest allowed lifetime, omit the TTL and authenticate with a web
+    /// console session.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -8806,8 +8815,20 @@ pub mod types {
     )]
     pub struct DeviceAuthRequest {
         pub client_id: ::uuid::Uuid,
-        /// Optional lifetime for the access token in seconds. If not specified,
-        /// the silo's max TTL will be used (if set).
+        /// Optional lifetime for the access token in seconds.
+        ///
+        /// This value will be validated during the confirmation step. If not
+        /// specified, it defaults to the silo's max TTL, which can be seen at
+        /// `/v1/auth-settings`.  If specified, must not exceed the silo's max
+        /// TTL.
+        ///
+        /// Some special logic applies when authenticating the confirmation
+        /// request with an existing device token: the requested TTL must not
+        /// produce an expiration time later than the authenticating token's
+        /// expiration. If no TTL is specified, the expiration will be the
+        /// lesser of the silo max and the authenticating token's expiration
+        /// time. To get the longest allowed lifetime, omit the TTL and
+        /// authenticate with a web console session.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
@@ -63462,6 +63483,14 @@ pub trait ClientConsoleAuthExt {
     /// not the client requesting the token. So we do not actually return the
     /// token here; it will be returned in response to the poll on
     /// `/device/token`.
+    ///
+    /// Some special logic applies when authenticating this request with an
+    /// existing device token instead of a console session: the requested TTL
+    /// must not produce an expiration time later than the authenticating
+    /// token's expiration. If no TTL was specified in the initial grant
+    /// request, the expiration will be the lesser of the silo max and the
+    /// authenticating token's expiration time. To get the longest allowed
+    /// lifetime, omit the TTL and authenticate with a web console session.
     ///
     /// Sends a `POST` request to `/device/confirm`
     ///
