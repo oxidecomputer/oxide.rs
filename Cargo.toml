@@ -16,7 +16,7 @@ assert_cmd = "2.0.17"
 async-trait = "0.1.89"
 base64 = "0.22.1"
 built = { version = "0.8.0", features = ["git2"] }
-bytes = "1.10.1"
+bytes = "1.11.0"
 camino = { version = "1.2", features = ["serde1"] }
 chrono = { version = "0.4.42", features = ["serde"] }
 clap = { version = "4.5.52", features = ["derive", "string", "env", "wrap_help"] }
