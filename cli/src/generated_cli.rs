@@ -1,5 +1,6 @@
 // The contents of this file are generated; do not modify them.
 
+use anyhow::Context as _;
 use oxide::*;
 pub struct Cli<T: CliConfig> {
     client: Client,
@@ -116,6 +117,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
             CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
             CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
+            CliCommand::InstanceMulticastGroupList => Self::cli_instance_multicast_group_list(),
+            CliCommand::InstanceMulticastGroupJoin => Self::cli_instance_multicast_group_join(),
+            CliCommand::InstanceMulticastGroupLeave => Self::cli_instance_multicast_group_leave(),
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
@@ -153,6 +157,14 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::CurrentUserSshKeyView => Self::cli_current_user_ssh_key_view(),
             CliCommand::CurrentUserSshKeyDelete => Self::cli_current_user_ssh_key_delete(),
             CliCommand::SiloMetric => Self::cli_silo_metric(),
+            CliCommand::MulticastGroupList => Self::cli_multicast_group_list(),
+            CliCommand::MulticastGroupCreate => Self::cli_multicast_group_create(),
+            CliCommand::MulticastGroupView => Self::cli_multicast_group_view(),
+            CliCommand::MulticastGroupUpdate => Self::cli_multicast_group_update(),
+            CliCommand::MulticastGroupDelete => Self::cli_multicast_group_delete(),
+            CliCommand::MulticastGroupMemberList => Self::cli_multicast_group_member_list(),
+            CliCommand::MulticastGroupMemberAdd => Self::cli_multicast_group_member_add(),
+            CliCommand::MulticastGroupMemberRemove => Self::cli_multicast_group_member_remove(),
             CliCommand::InstanceNetworkInterfaceList => Self::cli_instance_network_interface_list(),
             CliCommand::InstanceNetworkInterfaceCreate => {
                 Self::cli_instance_network_interface_create()
@@ -233,6 +245,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
             CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
             CliCommand::SystemMetric => Self::cli_system_metric(),
+            CliCommand::LookupMulticastGroupByIp => Self::cli_lookup_multicast_group_by_ip(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
             CliCommand::NetworkingAddressLotView => Self::cli_networking_address_lot_view(),
@@ -376,8 +389,16 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
                     .required(false)
                     .help(
-                        "Optional lifetime for the access token in seconds. If not specified, the \
-                         silo's max TTL will be used (if set).",
+                        "Optional lifetime for the access token in seconds.\n\nThis value will be \
+                         validated during the confirmation step. If not specified, it defaults to \
+                         the silo's max TTL, which can be seen at `/v1/auth-settings`.  If \
+                         specified, must not exceed the silo's max TTL.\n\nSome special logic \
+                         applies when authenticating the confirmation request with an existing \
+                         device token: the requested TTL must not produce an expiration time \
+                         later than the authenticating token's expiration. If no TTL is \
+                         specified, the expiration will be the lesser of the silo max and the \
+                         authenticating token's expiration time. To get the longest allowed \
+                         lifetime, omit the TTL and authenticate with a web console session.",
                     ),
             )
             .arg(
@@ -428,7 +449,13 @@ impl<T: CliConfig> Cli<T> {
             .long_about(
                 "This endpoint is designed to be accessed by the user agent (browser), not the \
                  client requesting the token. So we do not actually return the token here; it \
-                 will be returned in response to the poll on `/device/token`.",
+                 will be returned in response to the poll on `/device/token`.\n\nSome special \
+                 logic applies when authenticating this request with an existing device token \
+                 instead of a console session: the requested TTL must not produce an expiration \
+                 time later than the authenticating token's expiration. If no TTL was specified \
+                 in the initial grant request, the expiration will be the lesser of the silo max \
+                 and the authenticating token's expiration time. To get the longest allowed \
+                 lifetime, omit the TTL and authenticate with a web console session.",
             )
     }
 
@@ -3000,6 +3027,87 @@ impl<T: CliConfig> Cli<T> {
             .about("Detach and deallocate ephemeral IP from instance")
     }
 
+    pub fn cli_instance_multicast_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("List multicast groups for instance")
+    }
+
+    pub fn cli_instance_multicast_group_join() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Join multicast group.")
+            .long_about(
+                "This is functionally equivalent to adding the instance via the group's member \
+                 management endpoint or updating the instance's `multicast_groups` field. All \
+                 approaches modify the same membership and trigger reconciliation.",
+            )
+    }
+
+    pub fn cli_instance_multicast_group_leave() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Leave multicast group.")
+            .long_about(
+                "This is functionally equivalent to removing the instance via the group's member \
+                 management endpoint or updating the instance's `multicast_groups` field. All \
+                 approaches modify the same membership and trigger reconciliation.",
+            )
+    }
+
     pub fn cli_instance_reboot() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -3952,6 +4060,280 @@ impl<T: CliConfig> Cli<T> {
             .about("View metrics")
             .long_about(
                 "View CPU, memory, or storage utilization metrics at the silo or project level.",
+            )
+    }
+
+    pub fn cli_multicast_group_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List all multicast groups.")
+    }
+
+    pub fn cli_multicast_group_create() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-ip")
+                    .long("multicast-ip")
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
+                    .required(false)
+                    .help(
+                        "The multicast IP address to allocate. If None, one will be allocated \
+                         from the default pool.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("mvlan")
+                    .long("mvlan")
+                    .value_parser(::clap::value_parser!(u16))
+                    .required(false)
+                    .help(
+                        "Multicast VLAN (MVLAN) for egress multicast traffic to upstream \
+                         networks. Tags packets leaving the rack to traverse VLAN-segmented \
+                         upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1 are reserved by \
+                         IEEE 802.1Q standard).",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                ::clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "Name or ID of the IP pool to allocate from. If None, uses the default \
+                         multicast pool.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a multicast group.")
+            .long_about(
+                "Multicast groups are fleet-scoped resources that can be joined by instances \
+                 across projects and silos. A single multicast IP serves all group members \
+                 regardless of project or silo boundaries.",
+            )
+    }
+
+    pub fn cli_multicast_group_view() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .about("Fetch a multicast group.")
+    }
+
+    pub fn cli_multicast_group_update() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(::clap::value_parser!(::std::string::String))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("mvlan")
+                    .long("mvlan")
+                    .value_parser(::clap::value_parser!(u16))
+                    .required(false)
+                    .help(
+                        "Multicast VLAN (MVLAN) for egress multicast traffic to upstream \
+                         networks. Set to null to clear the MVLAN. Valid range: 2-4094 when \
+                         provided. Omit the field to leave mvlan unchanged.",
+                    ),
+            )
+            .arg(
+                ::clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(::clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update a multicast group.")
+    }
+
+    pub fn cli_multicast_group_delete() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .about("Delete a multicast group.")
+    }
+
+    pub fn cli_multicast_group_member_list() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(::clap::value_parser!(::std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List members of a multicast group.")
+    }
+
+    pub fn cli_multicast_group_member_add() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("Name or ID of the instance to add to the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                ::clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(::clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                ::clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(::clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add instance to a multicast group.")
+            .long_about(
+                "Functionally equivalent to updating the instance's `multicast_groups` field. \
+                 Both approaches modify the same underlying membership and trigger the same \
+                 reconciliation logic.\n\nSpecify instance by name (requires `?project=<name>`) \
+                 or UUID.",
+            )
+    }
+
+    pub fn cli_multicast_group_member_remove() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("multicast-group")
+                    .long("multicast-group")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the multicast group"),
+            )
+            .arg(
+                ::clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(::clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Remove instance from a multicast group.")
+            .long_about(
+                "Functionally equivalent to removing the group from the instance's \
+                 `multicast_groups` field. Both approaches modify the same underlying membership \
+                 and trigger reconciliation.\n\nSpecify instance by name (requires \
+                 `?project=<name>`) or UUID.",
             )
     }
 
@@ -5869,6 +6251,18 @@ impl<T: CliConfig> Cli<T> {
             )
     }
 
+    pub fn cli_lookup_multicast_group_by_ip() -> ::clap::Command {
+        ::clap::Command::new("")
+            .arg(
+                ::clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
+                    .required(true)
+                    .help("IP address of the multicast group"),
+            )
+            .about("Look up multicast group by IP address.")
+    }
+
     pub fn cli_networking_address_lot_list() -> ::clap::Command {
         ::clap::Command::new("")
             .arg(
@@ -6444,7 +6838,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("rack-id")
                     .value_parser(::clap::value_parser!(::uuid::Uuid))
                     .required_unless_present("json-body")
-                    .help("The containing the switch this loopback address will be configured on."),
+                    .help(
+                        "The rack containing the switch this loopback address will be configured \
+                         on.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("switch-location")
@@ -8731,6 +9128,15 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceEphemeralIpDetach => {
                 self.execute_instance_ephemeral_ip_detach(matches).await
             }
+            CliCommand::InstanceMulticastGroupList => {
+                self.execute_instance_multicast_group_list(matches).await
+            }
+            CliCommand::InstanceMulticastGroupJoin => {
+                self.execute_instance_multicast_group_join(matches).await
+            }
+            CliCommand::InstanceMulticastGroupLeave => {
+                self.execute_instance_multicast_group_leave(matches).await
+            }
             CliCommand::InstanceReboot => self.execute_instance_reboot(matches).await,
             CliCommand::InstanceSerialConsole => {
                 self.execute_instance_serial_console(matches).await
@@ -8796,6 +9202,20 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_current_user_ssh_key_delete(matches).await
             }
             CliCommand::SiloMetric => self.execute_silo_metric(matches).await,
+            CliCommand::MulticastGroupList => self.execute_multicast_group_list(matches).await,
+            CliCommand::MulticastGroupCreate => self.execute_multicast_group_create(matches).await,
+            CliCommand::MulticastGroupView => self.execute_multicast_group_view(matches).await,
+            CliCommand::MulticastGroupUpdate => self.execute_multicast_group_update(matches).await,
+            CliCommand::MulticastGroupDelete => self.execute_multicast_group_delete(matches).await,
+            CliCommand::MulticastGroupMemberList => {
+                self.execute_multicast_group_member_list(matches).await
+            }
+            CliCommand::MulticastGroupMemberAdd => {
+                self.execute_multicast_group_member_add(matches).await
+            }
+            CliCommand::MulticastGroupMemberRemove => {
+                self.execute_multicast_group_member_remove(matches).await
+            }
             CliCommand::InstanceNetworkInterfaceList => {
                 self.execute_instance_network_interface_list(matches).await
             }
@@ -8912,6 +9332,9 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_ip_pool_service_range_remove(matches).await
             }
             CliCommand::SystemMetric => self.execute_system_metric(matches).await,
+            CliCommand::LookupMulticastGroupByIp => {
+                self.execute_lookup_multicast_group_by_ip(matches).await
+            }
             CliCommand::NetworkingAddressLotList => {
                 self.execute_networking_address_lot_list(matches).await
             }
@@ -9116,8 +9539,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9144,8 +9569,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9182,9 +9609,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9264,8 +9692,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9382,8 +9812,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SupportBundleCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9440,8 +9872,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SupportBundleUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9715,8 +10149,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AffinityGroupCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AffinityGroupCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -9785,8 +10221,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AffinityGroupUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AffinityGroupUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10204,9 +10642,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AlertSubscriptionCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10352,9 +10791,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AntiAffinityGroupCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AntiAffinityGroupCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10423,9 +10863,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AntiAffinityGroupUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AntiAffinityGroupUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10649,9 +11090,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloAuthSettingsUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10736,8 +11178,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10862,8 +11306,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -10951,9 +11397,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11046,8 +11493,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11136,8 +11585,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11206,8 +11657,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11276,8 +11729,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11441,8 +11896,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11643,8 +12100,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11722,8 +12181,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InstanceUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11930,8 +12391,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -11968,8 +12431,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12034,8 +12499,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12069,6 +12536,98 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_instance_ephemeral_ip_detach(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_multicast_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_multicast_group_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_instance_multicast_group_list(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_multicast_group_join(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_multicast_group_join();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_instance_multicast_group_join(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_multicast_group_leave(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.instance_multicast_group_leave();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_instance_multicast_group_leave(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -12357,9 +12916,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InternetGatewayIpAddressCreate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InternetGatewayIpAddressCreate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12501,9 +13062,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::InternetGatewayIpPoolCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InternetGatewayIpPoolCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12633,9 +13195,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::InternetGatewayCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::InternetGatewayCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -12801,9 +13364,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13018,8 +13582,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13142,6 +13708,303 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_multicast_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_multicast_group_list(matches, &mut request)?;
+        self.config.list_start::<types::MulticastGroupResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MulticastGroupResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_create();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("multicast-ip") {
+            request = request.body_map(|body| body.multicast_ip(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u16>("mvlan") {
+            request = request.body_map(|body| body.mvlan(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.body_map(|body| body.pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::MulticastGroupCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_multicast_group_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        self.config
+            .execute_multicast_group_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_update();
+        if let Some(value) = matches.get_one::<::std::string::String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u16>("mvlan") {
+            request = request.body_map(|body| body.mvlan(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::MulticastGroupUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_multicast_group_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        self.config
+            .execute_multicast_group_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_member_list();
+        if let Some(value) = matches.get_one::<::std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config
+            .execute_multicast_group_member_list(matches, &mut request)?;
+        self.config
+            .list_start::<types::MulticastGroupMemberResultsPage>();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MulticastGroupMemberResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_member_add(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_member_add();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.body_map(|body| body.instance(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::MulticastGroupMemberAdd>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_multicast_group_member_add(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_multicast_group_member_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.multicast_group_member_remove();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("multicast-group") {
+            request = request.multicast_group(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config
+            .execute_multicast_group_member_remove(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_no_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_instance_network_interface_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -13225,9 +14088,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13308,9 +14173,11 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
             let body_value =
-                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt).unwrap();
+                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt)
+                    .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13396,8 +14263,10 @@ impl<T: CliConfig> Cli<T> {
     pub async fn execute_policy_update(&self, matches: &::clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13461,8 +14330,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13515,8 +14386,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13588,8 +14461,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -13669,8 +14544,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14004,8 +14881,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14145,9 +15024,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14329,8 +15209,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::LldpLinkConfig>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::LldpLinkConfig>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14371,9 +15253,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14570,8 +15453,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14632,8 +15517,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14694,9 +15581,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14797,8 +15685,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14851,8 +15741,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14940,8 +15832,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -14970,8 +15864,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15052,8 +15948,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15090,8 +15988,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15224,8 +16124,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15250,8 +16152,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15326,6 +16230,30 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_lookup_multicast_group_by_ip(
+        &self,
+        matches: &::clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.lookup_multicast_group_by_ip();
+        if let Some(value) = matches.get_one::<::std::net::IpAddr>("address") {
+            request = request.address(value.clone());
+        }
+
+        self.config
+            .execute_lookup_multicast_group_by_ip(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.success_item(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_address_lot_list(
         &self,
         matches: &::clap::ArgMatches,
@@ -15384,8 +16312,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15523,8 +16453,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.networking_allow_list_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15557,8 +16489,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15607,8 +16541,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15713,8 +16649,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15803,9 +16741,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -15990,8 +16929,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ServiceIcmpConfig>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::ServiceIcmpConfig>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16081,9 +17022,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16197,9 +17139,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16292,8 +17235,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16512,8 +17457,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16649,8 +17596,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16715,8 +17664,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16745,8 +17696,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16923,9 +17876,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::SetTargetReleaseParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -16991,8 +17945,10 @@ impl<T: CliConfig> Cli<T> {
     ) -> anyhow::Result<()> {
         let mut request = self.client.system_update_trust_root_create();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<::serde_json::Value>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<::serde_json::Value>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17265,8 +18221,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17514,9 +18472,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17613,8 +18572,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17699,8 +18660,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17824,8 +18787,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -17901,8 +18866,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18034,8 +19001,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18115,8 +19084,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18282,8 +19253,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18348,8 +19321,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18409,8 +19384,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18451,9 +19428,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookReceiverUpdate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -18510,8 +19488,10 @@ impl<T: CliConfig> Cli<T> {
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt).unwrap();
+            let body_txt = std::fs::read_to_string(value)
+                .with_context(|| format!("failed to read {}", value.display()))?;
+            let body_value = serde_json::from_str::<types::WebhookSecretCreate>(&body_txt)
+                .with_context(|| format!("failed to parse {}", value.display()))?;
             request = request.body(body_value);
         }
 
@@ -19271,6 +20251,30 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_multicast_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceMulticastGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_instance_multicast_group_join(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceMulticastGroupJoin,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_instance_multicast_group_leave(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::InstanceMulticastGroupLeave,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_instance_reboot(
         &self,
         matches: &::clap::ArgMatches,
@@ -19499,6 +20503,70 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::SiloMetric,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_create(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_view(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_update(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_delete(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_member_list(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupMemberList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_member_add(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupMemberAdd,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_multicast_group_member_remove(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::MulticastGroupMemberRemove,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -20011,6 +21079,14 @@ pub trait CliConfig {
         &self,
         matches: &::clap::ArgMatches,
         request: &mut builder::SystemMetric,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_lookup_multicast_group_by_ip(
+        &self,
+        matches: &::clap::ArgMatches,
+        request: &mut builder::LookupMulticastGroupByIp,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -20889,6 +21965,9 @@ pub enum CliCommand {
     InstanceExternalIpList,
     InstanceEphemeralIpAttach,
     InstanceEphemeralIpDetach,
+    InstanceMulticastGroupList,
+    InstanceMulticastGroupJoin,
+    InstanceMulticastGroupLeave,
     InstanceReboot,
     InstanceSerialConsole,
     InstanceSerialConsoleStream,
@@ -20918,6 +21997,14 @@ pub enum CliCommand {
     CurrentUserSshKeyView,
     CurrentUserSshKeyDelete,
     SiloMetric,
+    MulticastGroupList,
+    MulticastGroupCreate,
+    MulticastGroupView,
+    MulticastGroupUpdate,
+    MulticastGroupDelete,
+    MulticastGroupMemberList,
+    MulticastGroupMemberAdd,
+    MulticastGroupMemberRemove,
     InstanceNetworkInterfaceList,
     InstanceNetworkInterfaceCreate,
     InstanceNetworkInterfaceView,
@@ -20982,6 +22069,7 @@ pub enum CliCommand {
     IpPoolServiceRangeAdd,
     IpPoolServiceRangeRemove,
     SystemMetric,
+    LookupMulticastGroupByIp,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
     NetworkingAddressLotView,
@@ -21172,6 +22260,9 @@ impl CliCommand {
             CliCommand::InstanceExternalIpList,
             CliCommand::InstanceEphemeralIpAttach,
             CliCommand::InstanceEphemeralIpDetach,
+            CliCommand::InstanceMulticastGroupList,
+            CliCommand::InstanceMulticastGroupJoin,
+            CliCommand::InstanceMulticastGroupLeave,
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
             CliCommand::InstanceSerialConsoleStream,
@@ -21201,6 +22292,14 @@ impl CliCommand {
             CliCommand::CurrentUserSshKeyView,
             CliCommand::CurrentUserSshKeyDelete,
             CliCommand::SiloMetric,
+            CliCommand::MulticastGroupList,
+            CliCommand::MulticastGroupCreate,
+            CliCommand::MulticastGroupView,
+            CliCommand::MulticastGroupUpdate,
+            CliCommand::MulticastGroupDelete,
+            CliCommand::MulticastGroupMemberList,
+            CliCommand::MulticastGroupMemberAdd,
+            CliCommand::MulticastGroupMemberRemove,
             CliCommand::InstanceNetworkInterfaceList,
             CliCommand::InstanceNetworkInterfaceCreate,
             CliCommand::InstanceNetworkInterfaceView,
@@ -21265,6 +22364,7 @@ impl CliCommand {
             CliCommand::IpPoolServiceRangeAdd,
             CliCommand::IpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
+            CliCommand::LookupMulticastGroupByIp,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotView,

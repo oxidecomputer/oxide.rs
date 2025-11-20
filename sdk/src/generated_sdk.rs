@@ -8788,8 +8788,17 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "ttl_seconds": {
-    ///      "description": "Optional lifetime for the access token in seconds.
-    /// If not specified, the silo's max TTL will be used (if set).",
+    ///      "description": "Optional lifetime for the access token in
+    /// seconds.\n\nThis value will be validated during the confirmation step.
+    /// If not specified, it defaults to the silo's max TTL, which can be seen
+    /// at `/v1/auth-settings`.  If specified, must not exceed the silo's max
+    /// TTL.\n\nSome special logic applies when authenticating the confirmation
+    /// request with an existing device token: the requested TTL must not
+    /// produce an expiration time later than the authenticating token's
+    /// expiration. If no TTL is specified, the expiration will be the lesser of
+    /// the silo max and the authenticating token's expiration time. To get the
+    /// longest allowed lifetime, omit the TTL and authenticate with a web
+    /// console session.",
     ///      "type": [
     ///        "integer",
     ///        "null"
@@ -8806,8 +8815,20 @@ pub mod types {
     )]
     pub struct DeviceAuthRequest {
         pub client_id: ::uuid::Uuid,
-        /// Optional lifetime for the access token in seconds. If not specified,
-        /// the silo's max TTL will be used (if set).
+        /// Optional lifetime for the access token in seconds.
+        ///
+        /// This value will be validated during the confirmation step. If not
+        /// specified, it defaults to the silo's max TTL, which can be seen at
+        /// `/v1/auth-settings`.  If specified, must not exceed the silo's max
+        /// TTL.
+        ///
+        /// Some special logic applies when authenticating the confirmation
+        /// request with an existing device token: the requested TTL must not
+        /// produce an expiration time later than the authenticating token's
+        /// expiration. If no TTL is specified, the expiration will be the
+        /// lesser of the silo max and the authenticating token's expiration
+        /// time. To get the longest allowed lifetime, omit the TTL and
+        /// authenticate with a web console session.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ttl_seconds: ::std::option::Option<::std::num::NonZeroU32>,
     }
@@ -8917,6 +8938,7 @@ pub mod types {
     ///    "block_size",
     ///    "description",
     ///    "device_path",
+    ///    "disk_type",
     ///    "id",
     ///    "name",
     ///    "project_id",
@@ -8935,6 +8957,9 @@ pub mod types {
     ///    },
     ///    "device_path": {
     ///      "type": "string"
+    ///    },
+    ///    "disk_type": {
+    ///      "$ref": "#/components/schemas/DiskType"
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
@@ -9000,6 +9025,7 @@ pub mod types {
         /// human-readable free-form text about a resource
         pub description: ::std::string::String,
         pub device_path: ::std::string::String,
+        pub disk_type: DiskType,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: ::uuid::Uuid,
         /// ID of image from which disk was created, if any
@@ -9568,6 +9594,86 @@ pub mod types {
         }
     }
 
+    /// `DiskType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "crucible"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        schemars :: JsonSchema,
+    )]
+    pub enum DiskType {
+        #[serde(rename = "crucible")]
+        Crucible,
+    }
+
+    impl ::std::convert::From<&Self> for DiskType {
+        fn from(value: &DiskType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for DiskType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Crucible => f.write_str("crucible"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for DiskType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "crucible" => Ok(Self::Crucible),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for DiskType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// A distribution is a sequence of bins and counts in those bins, and some
     /// statistical information tracked to compute the mean, standard deviation,
     /// and quantile estimates.
@@ -9622,46 +9728,25 @@ pub mod types {
     ///      "format": "double"
     ///    },
     ///    "p50": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p90": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p99": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "squared_mean": {
     ///      "type": "number",
@@ -9686,11 +9771,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p50: ::std::option::Option<Quantile>,
+        pub p50: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p90: ::std::option::Option<Quantile>,
+        pub p90: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p99: ::std::option::Option<Quantile>,
+        pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: f64,
     }
@@ -9761,46 +9846,25 @@ pub mod types {
     ///      "format": "int64"
     ///    },
     ///    "p50": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p90": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "p99": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/Quantile"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
     ///    },
     ///    "squared_mean": {
     ///      "type": "number",
@@ -9825,11 +9889,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub min: ::std::option::Option<i64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p50: ::std::option::Option<Quantile>,
+        pub p50: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p90: ::std::option::Option<Quantile>,
+        pub p90: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub p99: ::std::option::Option<Quantile>,
+        pub p99: ::std::option::Option<f64>,
         pub squared_mean: f64,
         pub sum_of_samples: i64,
     }
@@ -15127,6 +15191,17 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "multicast_groups": {
+    ///      "description": "The multicast groups this instance should
+    /// join.\n\nThe instance will be automatically added as a member of the
+    /// specified multicast groups during creation, enabling it to send and
+    /// receive multicast traffic for those groups.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
+    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
@@ -15256,6 +15331,13 @@ pub mod types {
         pub hostname: Hostname,
         /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
+        /// The multicast groups this instance should join.
+        ///
+        /// The instance will be automatically added as a member of the
+        /// specified multicast groups during creation, enabling it to send and
+        /// receive multicast traffic for those groups.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub multicast_groups: ::std::vec::Vec<NameOrId>,
         pub name: Name,
         /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
@@ -16321,6 +16403,21 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "multicast_groups": {
+    ///      "description": "Multicast groups this instance should join.\n\nWhen
+    /// specified, this replaces the instance's current multicast group
+    /// membership with the new set of groups. The instance will leave any
+    /// groups not listed here and join any new groups that are specified.\n\nIf
+    /// not provided (None), the instance's multicast group membership will not
+    /// be changed.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
+    ///    },
     ///    "ncpus": {
     ///      "description": "The number of vCPUs to be allocated to the
     /// instance",
@@ -16374,6 +16471,16 @@ pub mod types {
         pub cpu_platform: ::std::option::Option<InstanceCpuPlatform>,
         /// The amount of RAM (in bytes) to be allocated to the instance
         pub memory: ByteCount,
+        /// Multicast groups this instance should join.
+        ///
+        /// When specified, this replaces the instance's current multicast group
+        /// membership with the new set of groups. The instance will leave any
+        /// groups not listed here and join any new groups that are specified.
+        ///
+        /// If not provided (None), the instance's multicast group membership
+        /// will not be changed.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub multicast_groups: ::std::option::Option<::std::vec::Vec<NameOrId>>,
         /// The number of vCPUs to be allocated to the instance
         pub ncpus: InstanceCpuCount,
     }
@@ -19461,8 +19568,8 @@ pub mod types {
     ///      "minimum": 0.0
     ///    },
     ///    "rack_id": {
-    ///      "description": "The containing the switch this loopback address
-    /// will be configured on.",
+    ///      "description": "The rack containing the switch this loopback
+    /// address will be configured on.",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
@@ -19493,8 +19600,8 @@ pub mod types {
         pub anycast: bool,
         /// The subnet mask to use for the address.
         pub mask: u8,
-        /// The containing the switch this loopback address will be configured
-        /// on.
+        /// The rack containing the switch this loopback address will be
+        /// configured on.
         pub rack_id: ::uuid::Uuid,
         /// The location of the switch within the rack this loopback address
         /// will be configured on.
@@ -19988,6 +20095,602 @@ pub mod types {
 
     impl MissingDatum {
         pub fn builder() -> builder::MissingDatum {
+            Default::default()
+        }
+    }
+
+    /// View of a Multicast Group
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a Multicast Group",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "ip_pool_id",
+    ///    "multicast_ip",
+    ///    "name",
+    ///    "source_ips",
+    ///    "state",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip_pool_id": {
+    ///      "description": "The ID of the IP pool this resource belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "multicast_ip": {
+    ///      "description": "The multicast IP address held by this resource.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "mvlan": {
+    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
+    /// to upstream networks. None means no VLAN tagging on egress.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "source_ips": {
+    ///      "description": "Source IP addresses for Source-Specific Multicast
+    /// (SSM). Empty array means any source is allowed.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "ip"
+    ///      }
+    ///    },
+    ///    "state": {
+    ///      "description": "Current state of the multicast group.",
+    ///      "type": "string"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroup {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The ID of the IP pool this resource belongs to.
+        pub ip_pool_id: ::uuid::Uuid,
+        /// The multicast IP address held by this resource.
+        pub multicast_ip: ::std::net::IpAddr,
+        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
+        /// networks. None means no VLAN tagging on egress.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mvlan: ::std::option::Option<u16>,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// Source IP addresses for Source-Specific Multicast (SSM). Empty array
+        /// means any source is allowed.
+        pub source_ips: ::std::vec::Vec<::std::net::IpAddr>,
+        /// Current state of the multicast group.
+        pub state: ::std::string::String,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&MulticastGroup> for MulticastGroup {
+        fn from(value: &MulticastGroup) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroup {
+        pub fn builder() -> builder::MulticastGroup {
+            Default::default()
+        }
+    }
+
+    /// Create-time parameters for a multicast group.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time parameters for a multicast group.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "multicast_ip": {
+    ///      "description": "The multicast IP address to allocate. If None, one
+    /// will be allocated from the default pool.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "mvlan": {
+    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
+    /// to upstream networks. Tags packets leaving the rack to traverse
+    /// VLAN-segmented upstream networks.\n\nValid range: 2-4094 (VLAN IDs 0-1
+    /// are reserved by IEEE 802.1Q standard).",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "pool": {
+    ///      "description": "Name or ID of the IP pool to allocate from. If
+    /// None, uses the default multicast pool.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "source_ips": {
+    ///      "description": "Source IP addresses for Source-Specific Multicast
+    /// (SSM).\n\nNone uses default behavior (Any-Source Multicast). Empty list
+    /// explicitly allows any source (Any-Source Multicast). Non-empty list
+    /// restricts to specific sources (SSM).",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "ip"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupCreate {
+        pub description: ::std::string::String,
+        /// The multicast IP address to allocate. If None, one will be allocated
+        /// from the default pool.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub multicast_ip: ::std::option::Option<::std::net::IpAddr>,
+        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
+        /// networks. Tags packets leaving the rack to traverse VLAN-segmented
+        /// upstream networks.
+        ///
+        /// Valid range: 2-4094 (VLAN IDs 0-1 are reserved by IEEE 802.1Q
+        /// standard).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mvlan: ::std::option::Option<u16>,
+        pub name: Name,
+        /// Name or ID of the IP pool to allocate from. If None, uses the
+        /// default multicast pool.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pool: ::std::option::Option<NameOrId>,
+        /// Source IP addresses for Source-Specific Multicast (SSM).
+        ///
+        /// None uses default behavior (Any-Source Multicast). Empty list
+        /// explicitly allows any source (Any-Source Multicast). Non-empty list
+        /// restricts to specific sources (SSM).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupCreate> for MulticastGroupCreate {
+        fn from(value: &MulticastGroupCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroupCreate {
+        pub fn builder() -> builder::MulticastGroupCreate {
+            Default::default()
+        }
+    }
+
+    /// View of a Multicast Group Member (instance belonging to a multicast
+    /// group)
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a Multicast Group Member (instance belonging to
+    /// a multicast group)",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "instance_id",
+    ///    "multicast_group_id",
+    ///    "name",
+    ///    "state",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "instance_id": {
+    ///      "description": "The ID of the instance that is a member of this
+    /// group.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "multicast_group_id": {
+    ///      "description": "The ID of the multicast group this member belongs
+    /// to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "state": {
+    ///      "description": "Current state of the multicast group membership.",
+    ///      "type": "string"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupMember {
+        /// human-readable free-form text about a resource
+        pub description: ::std::string::String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: ::uuid::Uuid,
+        /// The ID of the instance that is a member of this group.
+        pub instance_id: ::uuid::Uuid,
+        /// The ID of the multicast group this member belongs to.
+        pub multicast_group_id: ::uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// Current state of the multicast group membership.
+        pub state: ::std::string::String,
+        /// timestamp when this resource was created
+        pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupMember> for MulticastGroupMember {
+        fn from(value: &MulticastGroupMember) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroupMember {
+        pub fn builder() -> builder::MulticastGroupMember {
+            Default::default()
+        }
+    }
+
+    /// Parameters for adding an instance to a multicast group.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for adding an instance to a multicast
+    /// group.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "instance"
+    ///  ],
+    ///  "properties": {
+    ///    "instance": {
+    ///      "description": "Name or ID of the instance to add to the multicast
+    /// group",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupMemberAdd {
+        /// Name or ID of the instance to add to the multicast group
+        pub instance: NameOrId,
+    }
+
+    impl ::std::convert::From<&MulticastGroupMemberAdd> for MulticastGroupMemberAdd {
+        fn from(value: &MulticastGroupMemberAdd) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroupMemberAdd {
+        pub fn builder() -> builder::MulticastGroupMemberAdd {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MulticastGroupMember"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupMemberResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<MulticastGroupMember>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupMemberResultsPage> for MulticastGroupMemberResultsPage {
+        fn from(value: &MulticastGroupMemberResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroupMemberResultsPage {
+        pub fn builder() -> builder::MulticastGroupMemberResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MulticastGroup"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupResultsPage {
+        /// list of items on this page of results
+        pub items: ::std::vec::Vec<MulticastGroup>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupResultsPage> for MulticastGroupResultsPage {
+        fn from(value: &MulticastGroupResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MulticastGroupResultsPage {
+        pub fn builder() -> builder::MulticastGroupResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Update-time parameters for a multicast group.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Update-time parameters for a multicast group.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "mvlan": {
+    ///      "description": "Multicast VLAN (MVLAN) for egress multicast traffic
+    /// to upstream networks. Set to null to clear the MVLAN. Valid range:
+    /// 2-4094 when provided. Omit the field to leave mvlan unchanged.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "name": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "source_ips": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "ip"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct MulticastGroupUpdate {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        /// Multicast VLAN (MVLAN) for egress multicast traffic to upstream
+        /// networks. Set to null to clear the MVLAN. Valid range: 2-4094 when
+        /// provided. Omit the field to leave mvlan unchanged.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mvlan: ::std::option::Option<u16>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<Name>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub source_ips: ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+    }
+
+    impl ::std::convert::From<&MulticastGroupUpdate> for MulticastGroupUpdate {
+        fn from(value: &MulticastGroupUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for MulticastGroupUpdate {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                mvlan: Default::default(),
+                name: Default::default(),
+                source_ips: Default::default(),
+            }
+        }
+    }
+
+    impl MulticastGroupUpdate {
+        pub fn builder() -> builder::MulticastGroupUpdate {
             Default::default()
         }
     }
@@ -41410,6 +42113,7 @@ pub mod types {
             block_size: ::std::result::Result<super::ByteCount, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             device_path: ::std::result::Result<::std::string::String, ::std::string::String>,
+            disk_type: ::std::result::Result<super::DiskType, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             image_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
@@ -41435,6 +42139,7 @@ pub mod types {
                     block_size: Err("no value supplied for block_size".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     device_path: Err("no value supplied for device_path".to_string()),
+                    disk_type: Err("no value supplied for disk_type".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     image_id: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
@@ -41477,6 +42182,16 @@ pub mod types {
                 self.device_path = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for device_path: {}", e));
+                self
+            }
+            pub fn disk_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DiskType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.disk_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for disk_type: {}", e));
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -41578,6 +42293,7 @@ pub mod types {
                     block_size: value.block_size?,
                     description: value.description?,
                     device_path: value.device_path?,
+                    disk_type: value.disk_type?,
                     id: value.id?,
                     image_id: value.image_id?,
                     name: value.name?,
@@ -41597,6 +42313,7 @@ pub mod types {
                     block_size: Ok(value.block_size),
                     description: Ok(value.description),
                     device_path: Ok(value.device_path),
+                    disk_type: Ok(value.disk_type),
                     id: Ok(value.id),
                     image_id: Ok(value.image_id),
                     name: Ok(value.name),
@@ -41808,18 +42525,9 @@ pub mod types {
             counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
             max: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             min: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
-            p50: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p90: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p99: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
+            p50: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p90: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p99: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
             sum_of_samples: ::std::result::Result<f64, ::std::string::String>,
         }
@@ -41883,7 +42591,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p50 = value
@@ -41893,7 +42601,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p90 = value
@@ -41903,7 +42611,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p99 = value
@@ -41974,18 +42682,9 @@ pub mod types {
             counts: ::std::result::Result<::std::vec::Vec<u64>, ::std::string::String>,
             max: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
             min: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
-            p50: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p90: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
-            p99: ::std::result::Result<
-                ::std::option::Option<super::Quantile>,
-                ::std::string::String,
-            >,
+            p50: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p90: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
+            p99: ::std::result::Result<::std::option::Option<f64>, ::std::string::String>,
             squared_mean: ::std::result::Result<f64, ::std::string::String>,
             sum_of_samples: ::std::result::Result<i64, ::std::string::String>,
         }
@@ -42049,7 +42748,7 @@ pub mod types {
             }
             pub fn p50<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p50 = value
@@ -42059,7 +42758,7 @@ pub mod types {
             }
             pub fn p90<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p90 = value
@@ -42069,7 +42768,7 @@ pub mod types {
             }
             pub fn p99<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::Quantile>>,
+                T: ::std::convert::TryInto<::std::option::Option<f64>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.p99 = value
@@ -45839,6 +46538,8 @@ pub mod types {
             >,
             hostname: ::std::result::Result<super::Hostname, ::std::string::String>,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            multicast_groups:
+                ::std::result::Result<::std::vec::Vec<super::NameOrId>, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
             network_interfaces: ::std::result::Result<
@@ -45865,6 +46566,7 @@ pub mod types {
                     external_ips: Ok(Default::default()),
                     hostname: Err("no value supplied for hostname".to_string()),
                     memory: Err("no value supplied for memory".to_string()),
+                    multicast_groups: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                     network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
@@ -45972,6 +46674,19 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
+            pub fn multicast_groups<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::NameOrId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_groups = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for multicast_groups: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -46052,6 +46767,7 @@ pub mod types {
                     external_ips: value.external_ips?,
                     hostname: value.hostname?,
                     memory: value.memory?,
+                    multicast_groups: value.multicast_groups?,
                     name: value.name?,
                     ncpus: value.ncpus?,
                     network_interfaces: value.network_interfaces?,
@@ -46074,6 +46790,7 @@ pub mod types {
                     external_ips: Ok(value.external_ips),
                     hostname: Ok(value.hostname),
                     memory: Ok(value.memory),
+                    multicast_groups: Ok(value.multicast_groups),
                     name: Ok(value.name),
                     ncpus: Ok(value.ncpus),
                     network_interfaces: Ok(value.network_interfaces),
@@ -46716,6 +47433,10 @@ pub mod types {
                 ::std::string::String,
             >,
             memory: ::std::result::Result<super::ByteCount, ::std::string::String>,
+            multicast_groups: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::NameOrId>>,
+                ::std::string::String,
+            >,
             ncpus: ::std::result::Result<super::InstanceCpuCount, ::std::string::String>,
         }
 
@@ -46728,6 +47449,7 @@ pub mod types {
                     boot_disk: Err("no value supplied for boot_disk".to_string()),
                     cpu_platform: Err("no value supplied for cpu_platform".to_string()),
                     memory: Err("no value supplied for memory".to_string()),
+                    multicast_groups: Ok(Default::default()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                 }
             }
@@ -46777,6 +47499,19 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for memory: {}", e));
                 self
             }
+            pub fn multicast_groups<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::NameOrId>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_groups = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for multicast_groups: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn ncpus<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::InstanceCpuCount>,
@@ -46799,6 +47534,7 @@ pub mod types {
                     boot_disk: value.boot_disk?,
                     cpu_platform: value.cpu_platform?,
                     memory: value.memory?,
+                    multicast_groups: value.multicast_groups?,
                     ncpus: value.ncpus?,
                 })
             }
@@ -46811,6 +47547,7 @@ pub mod types {
                     boot_disk: Ok(value.boot_disk),
                     cpu_platform: Ok(value.cpu_platform),
                     memory: Ok(value.memory),
+                    multicast_groups: Ok(value.multicast_groups),
                     ncpus: Ok(value.ncpus),
                 }
             }
@@ -49791,6 +50528,736 @@ pub mod types {
                 Self {
                     datum_type: Ok(value.datum_type),
                     start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroup {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            ip_pool_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            multicast_ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            source_ips:
+                ::std::result::Result<::std::vec::Vec<::std::net::IpAddr>, ::std::string::String>,
+            state: ::std::result::Result<::std::string::String, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroup {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
+                    multicast_ip: Err("no value supplied for multicast_ip".to_string()),
+                    mvlan: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    source_ips: Err("no value supplied for source_ips".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl MulticastGroup {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_pool_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
+                self
+            }
+            pub fn multicast_ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for multicast_ip: {}", e)
+                });
+                self
+            }
+            pub fn mvlan<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u16>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mvlan = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn source_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::net::IpAddr>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroup> for super::MulticastGroup {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroup,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    ip_pool_id: value.ip_pool_id?,
+                    multicast_ip: value.multicast_ip?,
+                    mvlan: value.mvlan?,
+                    name: value.name?,
+                    source_ips: value.source_ips?,
+                    state: value.state?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroup> for MulticastGroup {
+            fn from(value: super::MulticastGroup) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    ip_pool_id: Ok(value.ip_pool_id),
+                    multicast_ip: Ok(value.multicast_ip),
+                    mvlan: Ok(value.mvlan),
+                    name: Ok(value.name),
+                    source_ips: Ok(value.source_ips),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupCreate {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            multicast_ip: ::std::result::Result<
+                ::std::option::Option<::std::net::IpAddr>,
+                ::std::string::String,
+            >,
+            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool: ::std::result::Result<
+                ::std::option::Option<super::NameOrId>,
+                ::std::string::String,
+            >,
+            source_ips: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroupCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    multicast_ip: Ok(Default::default()),
+                    mvlan: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    pool: Ok(Default::default()),
+                    source_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MulticastGroupCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn multicast_ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_ip = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for multicast_ip: {}", e)
+                });
+                self
+            }
+            pub fn mvlan<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u16>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mvlan = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn pool<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                self
+            }
+            pub fn source_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupCreate> for super::MulticastGroupCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    multicast_ip: value.multicast_ip?,
+                    mvlan: value.mvlan?,
+                    name: value.name?,
+                    pool: value.pool?,
+                    source_ips: value.source_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupCreate> for MulticastGroupCreate {
+            fn from(value: super::MulticastGroupCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    multicast_ip: Ok(value.multicast_ip),
+                    mvlan: Ok(value.mvlan),
+                    name: Ok(value.name),
+                    pool: Ok(value.pool),
+                    source_ips: Ok(value.source_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupMember {
+            description: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            instance_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            multicast_group_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<super::Name, ::std::string::String>,
+            state: ::std::result::Result<::std::string::String, ::std::string::String>,
+            time_created: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            time_modified: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroupMember {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    instance_id: Err("no value supplied for instance_id".to_string()),
+                    multicast_group_id: Err("no value supplied for multicast_group_id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl MulticastGroupMember {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn instance_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.instance_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
+                self
+            }
+            pub fn multicast_group_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.multicast_group_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for multicast_group_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Name>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupMember> for super::MulticastGroupMember {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupMember,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    instance_id: value.instance_id?,
+                    multicast_group_id: value.multicast_group_id?,
+                    name: value.name?,
+                    state: value.state?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupMember> for MulticastGroupMember {
+            fn from(value: super::MulticastGroupMember) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    instance_id: Ok(value.instance_id),
+                    multicast_group_id: Ok(value.multicast_group_id),
+                    name: Ok(value.name),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupMemberAdd {
+            instance: ::std::result::Result<super::NameOrId, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for MulticastGroupMemberAdd {
+            fn default() -> Self {
+                Self {
+                    instance: Err("no value supplied for instance".to_string()),
+                }
+            }
+        }
+
+        impl MulticastGroupMemberAdd {
+            pub fn instance<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NameOrId>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.instance = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupMemberAdd> for super::MulticastGroupMemberAdd {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupMemberAdd,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    instance: value.instance?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupMemberAdd> for MulticastGroupMemberAdd {
+            fn from(value: super::MulticastGroupMemberAdd) -> Self {
+                Self {
+                    instance: Ok(value.instance),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupMemberResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::MulticastGroupMember>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroupMemberResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MulticastGroupMemberResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MulticastGroupMember>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupMemberResultsPage>
+            for super::MulticastGroupMemberResultsPage
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupMemberResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupMemberResultsPage>
+            for MulticastGroupMemberResultsPage
+        {
+            fn from(value: super::MulticastGroupMemberResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupResultsPage {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::MulticastGroup>,
+                ::std::string::String,
+            >,
+            next_page: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroupResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MulticastGroupResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MulticastGroup>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupResultsPage> for super::MulticastGroupResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupResultsPage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupResultsPage> for MulticastGroupResultsPage {
+            fn from(value: super::MulticastGroupResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MulticastGroupUpdate {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            mvlan: ::std::result::Result<::std::option::Option<u16>, ::std::string::String>,
+            name: ::std::result::Result<::std::option::Option<super::Name>, ::std::string::String>,
+            source_ips: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                ::std::string::String,
+            >,
+        }
+
+        impl ::std::default::Default for MulticastGroupUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    mvlan: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                    source_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MulticastGroupUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn mvlan<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u16>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mvlan = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mvlan: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::Name>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn source_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<::std::net::IpAddr>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.source_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<MulticastGroupUpdate> for super::MulticastGroupUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MulticastGroupUpdate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    mvlan: value.mvlan?,
+                    name: value.name?,
+                    source_ips: value.source_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::MulticastGroupUpdate> for MulticastGroupUpdate {
+            fn from(value: super::MulticastGroupUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    mvlan: Ok(value.mvlan),
+                    name: Ok(value.name),
+                    source_ips: Ok(value.source_ips),
                 }
             }
         }
@@ -61716,7 +63183,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20251008.0.0
+/// Version: 20251208.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -61757,7 +63224,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20251008.0.0"
+        "20251208.0.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -62016,6 +63483,14 @@ pub trait ClientConsoleAuthExt {
     /// not the client requesting the token. So we do not actually return the
     /// token here; it will be returned in response to the poll on
     /// `/device/token`.
+    ///
+    /// Some special logic applies when authenticating this request with an
+    /// existing device token instead of a console session: the requested TTL
+    /// must not produce an expiration time later than the authenticating
+    /// token's expiration. If no TTL was specified in the initial grant
+    /// request, the expiration will be the lesser of the silo max and the
+    /// authenticating token's expiration time. To get the longest allowed
+    /// lifetime, omit the TTL and authenticate with a web console session.
     ///
     /// Sends a `POST` request to `/device/confirm`
     ///
@@ -62788,6 +64263,223 @@ pub trait ClientExperimentalExt {
     ///    .await;
     /// ```
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList<'_>;
+    /// List multicast groups for instance
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/multicast-groups`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_multicast_group_list()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_multicast_group_list(&self) -> builder::InstanceMulticastGroupList<'_>;
+    /// Join multicast group
+    ///
+    /// This is functionally equivalent to adding the instance via the group's
+    /// member management endpoint or updating the instance's `multicast_groups`
+    /// field. All approaches modify the same membership and trigger
+    /// reconciliation.
+    ///
+    /// Sends a `PUT` request to
+    /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_multicast_group_join()
+    ///    .instance(instance)
+    ///    .multicast_group(multicast_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_multicast_group_join(&self) -> builder::InstanceMulticastGroupJoin<'_>;
+    /// Leave multicast group
+    ///
+    /// This is functionally equivalent to removing the instance via the group's
+    /// member management endpoint or updating the instance's `multicast_groups`
+    /// field. All approaches modify the same membership and trigger
+    /// reconciliation.
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_multicast_group_leave()
+    ///    .instance(instance)
+    ///    .multicast_group(multicast_group)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_multicast_group_leave(&self) -> builder::InstanceMulticastGroupLeave<'_>;
+    /// List all multicast groups
+    ///
+    /// Sends a `GET` request to `/v1/multicast-groups`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.multicast_group_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_list(&self) -> builder::MulticastGroupList<'_>;
+    /// Create a multicast group
+    ///
+    /// Multicast groups are fleet-scoped resources that can be joined by
+    /// instances across projects and silos. A single multicast IP serves all
+    /// group members regardless of project or silo boundaries.
+    ///
+    /// Sends a `POST` request to `/v1/multicast-groups`
+    ///
+    /// ```ignore
+    /// let response = client.multicast_group_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_create(&self) -> builder::MulticastGroupCreate<'_>;
+    /// Fetch a multicast group
+    ///
+    /// Sends a `GET` request to `/v1/multicast-groups/{multicast_group}`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// ```ignore
+    /// let response = client.multicast_group_view()
+    ///    .multicast_group(multicast_group)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_view(&self) -> builder::MulticastGroupView<'_>;
+    /// Update a multicast group
+    ///
+    /// Sends a `PUT` request to `/v1/multicast-groups/{multicast_group}`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `body`
+    /// ```ignore
+    /// let response = client.multicast_group_update()
+    ///    .multicast_group(multicast_group)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_update(&self) -> builder::MulticastGroupUpdate<'_>;
+    /// Delete a multicast group
+    ///
+    /// Sends a `DELETE` request to `/v1/multicast-groups/{multicast_group}`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// ```ignore
+    /// let response = client.multicast_group_delete()
+    ///    .multicast_group(multicast_group)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_delete(&self) -> builder::MulticastGroupDelete<'_>;
+    /// List members of a multicast group
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/multicast-groups/{multicast_group}/members`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.multicast_group_member_list()
+    ///    .multicast_group(multicast_group)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_>;
+    /// Add instance to a multicast group
+    ///
+    /// Functionally equivalent to updating the instance's `multicast_groups`
+    /// field. Both approaches modify the same underlying membership and trigger
+    /// the same reconciliation logic.
+    ///
+    /// Specify instance by name (requires `?project=<name>`) or UUID.
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/multicast-groups/{multicast_group}/members`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.multicast_group_member_add()
+    ///    .multicast_group(multicast_group)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_member_add(&self) -> builder::MulticastGroupMemberAdd<'_>;
+    /// Remove instance from a multicast group
+    ///
+    /// Functionally equivalent to removing the group from the instance's
+    /// `multicast_groups` field. Both approaches modify the same underlying
+    /// membership and trigger reconciliation.
+    ///
+    /// Specify instance by name (requires `?project=<name>`) or UUID.
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/multicast-groups/{multicast_group}/members/{instance}`
+    ///
+    /// Arguments:
+    /// - `multicast_group`: Name or ID of the multicast group
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.multicast_group_member_remove()
+    ///    .multicast_group(multicast_group)
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn multicast_group_member_remove(&self) -> builder::MulticastGroupMemberRemove<'_>;
+    /// Look up multicast group by IP address
+    ///
+    /// Sends a `GET` request to `/v1/system/multicast-groups/by-ip/{address}`
+    ///
+    /// Arguments:
+    /// - `address`: IP address of the multicast group
+    /// ```ignore
+    /// let response = client.lookup_multicast_group_by_ip()
+    ///    .address(address)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn lookup_multicast_group_by_ip(&self) -> builder::LookupMulticastGroupByIp<'_>;
     /// Run project-scoped timeseries query
     ///
     /// Queries are written in OxQL. Project must be specified by name or ID in
@@ -62906,6 +64598,54 @@ impl ClientExperimentalExt for Client {
 
     fn instance_affinity_group_list(&self) -> builder::InstanceAffinityGroupList<'_> {
         builder::InstanceAffinityGroupList::new(self)
+    }
+
+    fn instance_multicast_group_list(&self) -> builder::InstanceMulticastGroupList<'_> {
+        builder::InstanceMulticastGroupList::new(self)
+    }
+
+    fn instance_multicast_group_join(&self) -> builder::InstanceMulticastGroupJoin<'_> {
+        builder::InstanceMulticastGroupJoin::new(self)
+    }
+
+    fn instance_multicast_group_leave(&self) -> builder::InstanceMulticastGroupLeave<'_> {
+        builder::InstanceMulticastGroupLeave::new(self)
+    }
+
+    fn multicast_group_list(&self) -> builder::MulticastGroupList<'_> {
+        builder::MulticastGroupList::new(self)
+    }
+
+    fn multicast_group_create(&self) -> builder::MulticastGroupCreate<'_> {
+        builder::MulticastGroupCreate::new(self)
+    }
+
+    fn multicast_group_view(&self) -> builder::MulticastGroupView<'_> {
+        builder::MulticastGroupView::new(self)
+    }
+
+    fn multicast_group_update(&self) -> builder::MulticastGroupUpdate<'_> {
+        builder::MulticastGroupUpdate::new(self)
+    }
+
+    fn multicast_group_delete(&self) -> builder::MulticastGroupDelete<'_> {
+        builder::MulticastGroupDelete::new(self)
+    }
+
+    fn multicast_group_member_list(&self) -> builder::MulticastGroupMemberList<'_> {
+        builder::MulticastGroupMemberList::new(self)
+    }
+
+    fn multicast_group_member_add(&self) -> builder::MulticastGroupMemberAdd<'_> {
+        builder::MulticastGroupMemberAdd::new(self)
+    }
+
+    fn multicast_group_member_remove(&self) -> builder::MulticastGroupMemberRemove<'_> {
+        builder::MulticastGroupMemberRemove::new(self)
+    }
+
+    fn lookup_multicast_group_by_ip(&self) -> builder::LookupMulticastGroupByIp<'_> {
+        builder::LookupMulticastGroupByIp::new(self)
     }
 
     fn timeseries_query(&self) -> builder::TimeseriesQuery<'_> {
@@ -77510,6 +79250,313 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientExperimentalExt::instance_multicast_group_list`]
+    ///
+    /// [`ClientExperimentalExt::instance_multicast_group_list`]: super::ClientExperimentalExt::instance_multicast_group_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceMulticastGroupList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceMulticastGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/multicast-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroupMemberResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                instance,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/multicast-groups",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "instance_multicast_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::instance_multicast_group_join`]
+    ///
+    /// [`ClientExperimentalExt::instance_multicast_group_join`]: super::ClientExperimentalExt::instance_multicast_group_join
+    #[derive(Debug, Clone)]
+    pub struct InstanceMulticastGroupJoin<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        multicast_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceMulticastGroupJoin<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                multicast_group,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/multicast-groups/{}",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "instance_multicast_group_join",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::instance_multicast_group_leave`]
+    ///
+    /// [`ClientExperimentalExt::instance_multicast_group_leave`]: super::ClientExperimentalExt::instance_multicast_group_leave
+    #[derive(Debug, Clone)]
+    pub struct InstanceMulticastGroupLeave<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        multicast_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceMulticastGroupLeave<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/instances/{instance}/multicast-groups/{multicast_group}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                multicast_group,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/multicast-groups/{}",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "instance_multicast_group_leave",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_reboot`]
     ///
     /// [`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot
@@ -81145,6 +83192,909 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_list`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_list`]: super::ClientExperimentalExt::multicast_group_list
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> MulticastGroupList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/multicast-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroupResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/multicast-groups", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/multicast-groups`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::MulticastGroup, Error<types::Error>>> + Unpin + 'a
+        {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_create`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_create`]: super::ClientExperimentalExt::multicast_group_create
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::MulticastGroupCreate, String>,
+    }
+
+    impl<'a> MulticastGroupCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::MulticastGroupCreate>,
+            <V as std::convert::TryInto<types::MulticastGroupCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `MulticastGroupCreate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::MulticastGroupCreate,
+            ) -> types::builder::MulticastGroupCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/multicast-groups`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::MulticastGroupCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/multicast-groups", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_create",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_view`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_view`]: super::ClientExperimentalExt::multicast_group_view
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupView<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> MulticastGroupView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/multicast-groups/{multicast_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                multicast_group,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_view",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_update`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_update`]: super::ClientExperimentalExt::multicast_group_update
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupUpdate<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+        body: Result<types::builder::MulticastGroupUpdate, String>,
+    }
+
+    impl<'a> MulticastGroupUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::MulticastGroupUpdate>,
+            <V as std::convert::TryInto<types::MulticastGroupUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `MulticastGroupUpdate` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::MulticastGroupUpdate,
+            ) -> types::builder::MulticastGroupUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/multicast-groups/{multicast_group}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
+            let Self {
+                client,
+                multicast_group,
+                body,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::MulticastGroupUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_update",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_delete`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_delete`]: super::ClientExperimentalExt::multicast_group_delete
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupDelete<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> MulticastGroupDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/multicast-groups/{multicast_group}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                multicast_group,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_delete",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_member_list`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_member_list`]: super::ClientExperimentalExt::multicast_group_member_list
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupMemberList<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+        limit: Result<Option<::std::num::NonZeroU32>, String>,
+        page_token: Result<Option<::std::string::String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> MulticastGroupMemberList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.page_token = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for page_token failed".to_string()
+            });
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/multicast-groups/{multicast_group}/members`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroupMemberResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                multicast_group,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}/members",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "page_token",
+                    &page_token,
+                ))
+                .query(&progenitor_client::QueryParam::new("sort_by", &sort_by))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_member_list",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/multicast-groups/{multicast_group}/members`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::MulticastGroupMember, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use ::futures::StreamExt;
+            use ::futures::TryFutureExt;
+            use ::futures::TryStreamExt;
+            let next = Self {
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_member_add`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_member_add`]: super::ClientExperimentalExt::multicast_group_member_add
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupMemberAdd<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::MulticastGroupMemberAdd, String>,
+    }
+
+    impl<'a> MulticastGroupMemberAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::MulticastGroupMemberAdd>,
+            <V as std::convert::TryInto<types::MulticastGroupMemberAdd>>::Error: std::fmt::Display,
+        {
+            self.body = value.try_into().map(From::from).map_err(|s| {
+                format!(
+                    "conversion to `MulticastGroupMemberAdd` for body failed: {}",
+                    s
+                )
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::MulticastGroupMemberAdd,
+            ) -> types::builder::MulticastGroupMemberAdd,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/multicast-groups/{multicast_group}/members`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroupMember>, Error<types::Error>> {
+            let Self {
+                client,
+                multicast_group,
+                project,
+                body,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| {
+                    types::MulticastGroupMemberAdd::try_from(v).map_err(|e| e.to_string())
+                })
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}/members",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_member_add",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::multicast_group_member_remove`]
+    ///
+    /// [`ClientExperimentalExt::multicast_group_member_remove`]: super::ClientExperimentalExt::multicast_group_member_remove
+    #[derive(Debug, Clone)]
+    pub struct MulticastGroupMemberRemove<'a> {
+        client: &'a super::Client,
+        multicast_group: Result<types::NameOrId, String>,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> MulticastGroupMemberRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                multicast_group: Err("multicast_group was not initialized".to_string()),
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn multicast_group<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.multicast_group = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for multicast_group failed".to_string());
+            self
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/multicast-groups/{multicast_group}/members/{instance}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                multicast_group,
+                instance,
+                project,
+            } = self;
+            let multicast_group = multicast_group.map_err(Error::InvalidRequest)?;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/multicast-groups/{}/members/{}",
+                client.baseurl,
+                encode_path(&multicast_group.to_string()),
+                encode_path(&instance.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("project", &project))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "multicast_group_member_remove",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
@@ -88414,6 +91364,80 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientExperimentalExt::lookup_multicast_group_by_ip`]
+    ///
+    /// [`ClientExperimentalExt::lookup_multicast_group_by_ip`]: super::ClientExperimentalExt::lookup_multicast_group_by_ip
+    #[derive(Debug, Clone)]
+    pub struct LookupMulticastGroupByIp<'a> {
+        client: &'a super::Client,
+        address: Result<::std::net::IpAddr, String>,
+    }
+
+    impl<'a> LookupMulticastGroupByIp<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                address: Err("address was not initialized".to_string()),
+            }
+        }
+
+        pub fn address<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::net::IpAddr>,
+        {
+            self.address = value.try_into().map_err(|_| {
+                "conversion to `:: std :: net :: IpAddr` for address failed".to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/multicast-groups/by-ip/{address}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MulticastGroup>, Error<types::Error>> {
+            let Self { client, address } = self;
+            let address = address.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/multicast-groups/by-ip/{}",
+                client.baseurl,
+                encode_path(&address.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "lookup_multicast_group_by_ip",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

@@ -636,6 +636,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceNetworkInterfaceView => Some("instance nic view"),
         CliCommand::InstanceNetworkInterfaceUpdate => Some("instance nic update"),
         CliCommand::InstanceNetworkInterfaceDelete => Some("instance nic delete"),
+        CliCommand::InstanceMulticastGroupList => {
+            Some("experimental instance multicast-group list")
+        }
+        CliCommand::InstanceMulticastGroupJoin => {
+            Some("experimental instance multicast-group join")
+        }
+        CliCommand::InstanceMulticastGroupLeave => {
+            Some("experimental instance multicast-group leave")
+        }
 
         CliCommand::PolicyView => Some("policy view"),
         CliCommand::PolicyUpdate => Some("policy update"),
@@ -733,6 +742,18 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProbeDelete => Some("experimental system probe delete"),
         CliCommand::ProbeList => Some("experimental system probe list"),
         CliCommand::ProbeView => Some("experimental system probe view"),
+
+        CliCommand::MulticastGroupList => Some("experimental multicast-group list"),
+        CliCommand::MulticastGroupCreate => Some("experimental multicast-group create"),
+        CliCommand::MulticastGroupView => Some("experimental multicast-group view"),
+        CliCommand::MulticastGroupDelete => Some("experimental multicast-group delete"),
+        CliCommand::MulticastGroupUpdate => Some("experimental multicast-group update"),
+        CliCommand::MulticastGroupMemberList => Some("experimental multicast-group member list"),
+        CliCommand::MulticastGroupMemberAdd => Some("experimental multicast-group member add"),
+        CliCommand::MulticastGroupMemberRemove => {
+            Some("experimental multicast-group member remove")
+        }
+        CliCommand::LookupMulticastGroupByIp => Some("experimental multicast-group lookup-by-ip"),
 
         // Metrics-related subcommands
         CliCommand::TimeseriesQuery => Some("experimental timeseries query"),
