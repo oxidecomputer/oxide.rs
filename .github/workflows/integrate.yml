@@ -105,6 +105,7 @@ jobs:
         run: |
           openapi_spec_file=$(curl -s https://raw.githubusercontent.com/oxidecomputer/omicron/main/openapi/nexus/nexus-latest.json)
           SHA=$(curl -s "https://api.github.com/repos/oxidecomputer/omicron/commits?path=openapi/nexus/${openapi_spec_file}&per_page=1" | jq -r '.[].sha')
+          echo "file=${openapi_spec_file}" >> $GITHUB_OUTPUT
           echo "full=${SHA}" >> $GITHUB_OUTPUT
           echo "short=${SHA:0:8}" >> $GITHUB_OUTPUT
         id: schema_sha
@@ -214,8 +215,8 @@ jobs:
               if [ title != "" ]; then title+=","; fi
               title+=" oxide.json to omicron:${{ steps.schema_sha.outputs.short }}"
 
-              schemaLabel="nexus-latest.json \`${{ steps.schema_sha.outputs.short }}\`"
-              schemaUrl="https://github.com/oxidecomputer/omicron/blob/${{ steps.schema_sha.outputs.full }}/openapi/nexus/nexus-latest.json"
+              schemaLabel="${{ steps.schema_sha.outputs.file }} \`${{ steps.schema_sha.outputs.short }}\`"
+              schemaUrl="https://github.com/oxidecomputer/omicron/blob/${{ steps.schema_sha.outputs.full }}/openapi/nexus/${{ steps.schema_sha.outputs.file }}"
 
               echo "Generated code against [$schemaLabel]($schemaUrl)" >> body
               echo "" >> body
