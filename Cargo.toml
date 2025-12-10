@@ -71,7 +71,7 @@ toml_edit = "0.23.7"
 tracing = "0.1.43"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter", "json"] }
 url = "2.5.7"
-uuid = { version = "1.18.1", features = ["serde", "v4"] }
+uuid = { version = "1.19.0", features = ["serde", "v4"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
