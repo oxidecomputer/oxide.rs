@@ -130,7 +130,7 @@ checksum = "3109e49b1e4909e9db6515a30c633684d68cdeaa252f215214cb4fa1a5bfee2c"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.110",
+ "syn 2.0.111",
  "synstructure",
 ]
 
@@ -142,7 +142,7 @@ checksum = "7b18050c2cd6fe86c3a76584ef5e0baf286d038cda203eb6223df2cc413565f7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.110",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -1022,9 +1022,9 @@ dependencies = [
 
 [[package]]
 name = "dropshot"
-version = "0.16.5"
+version = "0.16.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ee062e12b3b08e748f90e92efe0b93d53a28403bd900fd9e69e6be66bbddc4f"
+checksum = "4d0df98c06659ab85a454f32dc36ca5dbc6500bd2a58f25ede4dc1f1d478904e"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1036,7 +1036,7 @@ dependencies = [
  "dropshot_endpoint",
  "form_urlencoded",
  "futures",
- "hostname 0.4.1",
+ "hostname 0.4.2",
  "http 1.4.0",
  "http-body-util",
  "hyper 1.8.1",
@@ -1072,9 +1072,9 @@ dependencies = [
 
 [[package]]
 name = "dropshot_endpoint"
-version = "0.16.5"
+version = "0.16.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0430a45e1a3cc8aaf1396c2ca2a4c1215ab253cbcda7ca7ed7beb107e0591bd1"
+checksum = "7e53aef8838e0e341485590738ab180a6dceff3565ffcb198d5f365fea650378"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -1537,13 +1537,13 @@ dependencies = [
 
 [[package]]
 name = "hostname"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a56f203cd1c76362b69e3863fd987520ac36cf70a8c92627449b2f64a8cf7d65"
+checksum = "617aaa3557aef3810a6369d0a99fac8a080891b68bd9f9812a1eeda0c0730cbd"
 dependencies = [
  "cfg-if",
  "libc",
- "windows-link 0.1.2",
+ "windows-link 0.2.0",
 ]
 
 [[package]]
@@ -1728,9 +1728,9 @@ dependencies = [
 
 [[package]]
 name = "hyper-util"
-version = "0.1.18"
+version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52e9a2a24dc5c6821e71a7030e1e14b7b632acac55c40e9d2e082c621261bb56"
+checksum = "727805d60e7938b76b826a6ef209eb70eaa1812794f9424d4a4e2d740662df5f"
 dependencies = [
  "base64 0.22.1",
  "bytes",
@@ -1747,6 +1747,7 @@ dependencies = [
  "socket2 0.6.0",
  "system-configuration",
  "tokio",
+ "tower-layer",
  "tower-service",
  "tracing",
  "windows-registry",
