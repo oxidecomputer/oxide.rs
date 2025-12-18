@@ -826,7 +826,7 @@ pub struct CmdAddrAdd {
 
     /// Address to add.
     #[arg(long)]
-    addr: oxnet::Ipv4Net,
+    addr: oxnet::IpNet,
 
     /// Address lot to allocate from.
     #[arg(long)]
@@ -843,7 +843,7 @@ impl AuthenticatedCmd for CmdAddrAdd {
         let mut settings =
             current_port_settings(client, &self.rack, &self.switch, &self.port).await?;
         let addr = Address {
-            address: IpNet::V4(self.addr.to_string().parse().unwrap()),
+            address: self.addr.to_string().parse().unwrap(),
             address_lot: self.lot.clone(),
             vlan_id: self.vlan,
         };
