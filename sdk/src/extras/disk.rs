@@ -172,8 +172,8 @@ pub mod builder {
 /// Types for disk extra operations.
 pub mod types {
     use crate::types::{
-        self, BlockSize, ByteCount, DiskCreate, DiskSource, DiskState, FinalizeDisk, ImageCreate,
-        ImageSource, ImportBlocksBulkWrite, Name, NameOrId,
+        self, BlockSize, ByteCount, DiskBackend, DiskCreate, DiskSource, DiskState, FinalizeDisk,
+        ImageCreate, ImageSource, ImportBlocksBulkWrite, Name, NameOrId,
     };
     use crate::{
         Client, ClientDisksExt, ClientImagesExt, ClientSnapshotsExt, Error, ResponseValue,
@@ -318,9 +318,9 @@ pub mod types {
                 .body(DiskCreate {
                     name: self.disk.clone(),
                     description: self.description.clone(),
-                    disk_source: DiskSource::ImportingBlocks {
+                    disk_backend: DiskBackend::Distributed(DiskSource::ImportingBlocks {
                         block_size: self.disk_info.disk_block_size.clone(),
-                    },
+                    }),
                     size: self.disk_info.disk_size.clone(),
                 })
                 .send()

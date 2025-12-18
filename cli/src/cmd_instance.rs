@@ -8,8 +8,8 @@ use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use oxide::types::{
-    ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment, Name,
-    NameOrId,
+    ByteCount, DiskBackend, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment,
+    Name, NameOrId,
 };
 
 use oxide::ClientInstancesExt;
@@ -269,9 +269,9 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                     .description(self.description.clone())
                     .boot_disk(InstanceDiskAttachment::Create {
                         description: format!("{} disk", *self.name),
-                        disk_source: DiskSource::Image {
+                        disk_backend: DiskBackend::Distributed(DiskSource::Image {
                             image_id: image_view.id,
-                        },
+                        }),
                         name: format!("{}-disk", *self.name)
                             .parse()
                             .expect("valid disk name"),

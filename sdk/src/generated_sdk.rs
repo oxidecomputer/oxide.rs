@@ -4987,6 +4987,13 @@ pub mod types {
     ///      ]
     ///    },
     ///    {
+    ///      "description": "There is an ongoing Connection Collision that hasn't yet been resolved. Two connections are maintained until one connection receives an Open or is able to progress into Established.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "connection_collision"
+    ///      ]
+    ///    },
+    ///    {
     ///      "description": "Synchronizing with peer.",
     ///      "type": "string",
     ///      "enum": [
@@ -5036,6 +5043,11 @@ pub mod types {
         /// Waiting for keepaliave or notification from peer.
         #[serde(rename = "open_confirm")]
         OpenConfirm,
+        /// There is an ongoing Connection Collision that hasn't yet been
+        /// resolved. Two connections are maintained until one connection
+        /// receives an Open or is able to progress into Established.
+        #[serde(rename = "connection_collision")]
+        ConnectionCollision,
         /// Synchronizing with peer.
         #[serde(rename = "session_setup")]
         SessionSetup,
@@ -5059,6 +5071,7 @@ pub mod types {
                 Self::Active => f.write_str("active"),
                 Self::OpenSent => f.write_str("open_sent"),
                 Self::OpenConfirm => f.write_str("open_confirm"),
+                Self::ConnectionCollision => f.write_str("connection_collision"),
                 Self::SessionSetup => f.write_str("session_setup"),
                 Self::Established => f.write_str("established"),
             }
@@ -5074,6 +5087,7 @@ pub mod types {
                 "active" => Ok(Self::Active),
                 "open_sent" => Ok(Self::OpenSent),
                 "open_confirm" => Ok(Self::OpenConfirm),
+                "connection_collision" => Ok(Self::ConnectionCollision),
                 "session_setup" => Ok(Self::SessionSetup),
                 "established" => Ok(Self::Established),
                 _ => Err("invalid value".into()),
@@ -9057,6 +9071,78 @@ pub mod types {
         }
     }
 
+    /// The source of a `Disk`'s blocks
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The source of a `Disk`'s blocks",
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "local"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "disk_source",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "disk_source": {
+    ///          "description": "The initial source for this disk",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/DiskSource"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "distributed"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "disk_source")]
+    pub enum DiskBackend {
+        #[serde(rename = "local")]
+        Local,
+        #[serde(rename = "distributed")]
+        Distributed(DiskSource),
+    }
+
+    impl ::std::convert::From<&Self> for DiskBackend {
+        fn from(value: &DiskBackend) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<DiskSource> for DiskBackend {
+        fn from(value: DiskSource) -> Self {
+            Self::Distributed(value)
+        }
+    }
+
     /// Create-time parameters for a `Disk`
     ///
     /// <details><summary>JSON schema</summary>
@@ -9067,7 +9153,7 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "description",
-    ///    "disk_source",
+    ///    "disk_backend",
     ///    "name",
     ///    "size"
     ///  ],
@@ -9075,11 +9161,11 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
-    ///    "disk_source": {
-    ///      "description": "The initial source for this disk",
+    ///    "disk_backend": {
+    ///      "description": "The source for this `Disk`'s blocks",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/DiskSource"
+    ///          "$ref": "#/components/schemas/DiskBackend"
     ///        }
     ///      ]
     ///    },
@@ -9103,8 +9189,8 @@ pub mod types {
     )]
     pub struct DiskCreate {
         pub description: ::std::string::String,
-        /// The initial source for this disk
-        pub disk_source: DiskSource,
+        /// The source for this `Disk`'s blocks
+        pub disk_backend: DiskBackend,
         pub name: Name,
         /// The total size of the Disk (in bytes)
         pub size: ByteCount,
@@ -9219,13 +9305,13 @@ pub mod types {
         }
     }
 
-    /// Different sources for a disk
+    /// Different sources for a Distributed Disk
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Different sources for a disk",
+    ///  "description": "Different sources for a Distributed Disk",
     ///  "oneOf": [
     ///    {
     ///      "description": "Create a blank disk",
@@ -9602,7 +9688,8 @@ pub mod types {
     /// {
     ///  "type": "string",
     ///  "enum": [
-    ///    "crucible"
+    ///    "distributed",
+    ///    "local"
     ///  ]
     /// }
     /// ```
@@ -9621,8 +9708,10 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum DiskType {
-        #[serde(rename = "crucible")]
-        Crucible,
+        #[serde(rename = "distributed")]
+        Distributed,
+        #[serde(rename = "local")]
+        Local,
     }
 
     impl ::std::convert::From<&Self> for DiskType {
@@ -9634,7 +9723,8 @@ pub mod types {
     impl ::std::fmt::Display for DiskType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Crucible => f.write_str("crucible"),
+                Self::Distributed => f.write_str("distributed"),
+                Self::Local => f.write_str("local"),
             }
         }
     }
@@ -9643,7 +9733,8 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
-                "crucible" => Ok(Self::Crucible),
+                "distributed" => Ok(Self::Distributed),
+                "local" => Ok(Self::Local),
                 _ => Err("invalid value".into()),
             }
         }
@@ -15387,7 +15478,7 @@ pub mod types {
     ///      "type": "object",
     ///      "required": [
     ///        "description",
-    ///        "disk_source",
+    ///        "disk_backend",
     ///        "name",
     ///        "size",
     ///        "type"
@@ -15396,11 +15487,11 @@ pub mod types {
     ///        "description": {
     ///          "type": "string"
     ///        },
-    ///        "disk_source": {
-    ///          "description": "The initial source for this disk",
+    ///        "disk_backend": {
+    ///          "description": "The source for this `Disk`'s blocks",
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/DiskSource"
+    ///              "$ref": "#/components/schemas/DiskBackend"
     ///            }
     ///          ]
     ///        },
@@ -15460,8 +15551,8 @@ pub mod types {
         #[serde(rename = "create")]
         Create {
             description: ::std::string::String,
-            /// The initial source for this disk
-            disk_source: DiskSource,
+            /// The source for this `Disk`'s blocks
+            disk_backend: DiskBackend,
             name: Name,
             /// The total size of the Disk (in bytes)
             size: ByteCount,
@@ -42330,7 +42421,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct DiskCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            disk_source: ::std::result::Result<super::DiskSource, ::std::string::String>,
+            disk_backend: ::std::result::Result<super::DiskBackend, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             size: ::std::result::Result<super::ByteCount, ::std::string::String>,
         }
@@ -42339,7 +42430,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
-                    disk_source: Err("no value supplied for disk_source".to_string()),
+                    disk_backend: Err("no value supplied for disk_backend".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     size: Err("no value supplied for size".to_string()),
                 }
@@ -42357,14 +42448,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
-            pub fn disk_source<T>(mut self, value: T) -> Self
+            pub fn disk_backend<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::DiskSource>,
+                T: ::std::convert::TryInto<super::DiskBackend>,
                 T::Error: ::std::fmt::Display,
             {
-                self.disk_source = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk_source: {}", e));
+                self.disk_backend = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for disk_backend: {}", e)
+                });
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -42396,7 +42487,7 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
-                    disk_source: value.disk_source?,
+                    disk_backend: value.disk_backend?,
                     name: value.name?,
                     size: value.size?,
                 })
@@ -42407,7 +42498,7 @@ pub mod types {
             fn from(value: super::DiskCreate) -> Self {
                 Self {
                     description: Ok(value.description),
-                    disk_source: Ok(value.disk_source),
+                    disk_backend: Ok(value.disk_backend),
                     name: Ok(value.name),
                     size: Ok(value.size),
                 }
@@ -63183,7 +63274,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20251208.0.0
+/// Version: 2025121200.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -63224,7 +63315,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "20251208.0.0"
+        "2025121200.0.0"
     }
 
     fn baseurl(&self) -> &str {
