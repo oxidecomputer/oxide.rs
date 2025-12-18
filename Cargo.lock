@@ -130,7 +130,7 @@ checksum = "3109e49b1e4909e9db6515a30c633684d68cdeaa252f215214cb4fa1a5bfee2c"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.110",
+ "syn 2.0.111",
  "synstructure",
 ]
 
@@ -142,7 +142,7 @@ checksum = "7b18050c2cd6fe86c3a76584ef5e0baf286d038cda203eb6223df2cc413565f7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.110",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -2876,7 +2876,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#4b3545a6a35d91fafb8c55ca5456876d90303e5c"
+source = "git+https://github.com/oxidecomputer/progenitor#a2ff7ded7d1ce98b2194cef7a851910fd248187f"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2899,7 +2899,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#4b3545a6a35d91fafb8c55ca5456876d90303e5c"
+source = "git+https://github.com/oxidecomputer/progenitor#a2ff7ded7d1ce98b2194cef7a851910fd248187f"
 dependencies = [
  "heck",
  "http 1.4.0",
