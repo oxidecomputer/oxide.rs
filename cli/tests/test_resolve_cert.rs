@@ -8,7 +8,6 @@
 //! TLS certificates. This mechanism should not be copied! Instead use httpmock
 //! or--better--generated mocks from the local sdk-httpmock crate.
 
-use assert_cmd::Command;
 use dropshot::{
     endpoint, ApiDescription, ConfigDropshot, ConfigLogging, ConfigLoggingLevel, ConfigTls,
     HttpError, HttpResponseUpdatedNoContent, HttpServerStarter, RequestContext,
@@ -87,8 +86,7 @@ async fn test_resolve_and_cacert() {
     // This is non-async, blocking code so we need to shove it into its own
     // task. We're just looking for the command to succeed.
     tokio::task::spawn_blocking(move || {
-        Command::cargo_bin("oxide")
-            .unwrap()
+        assert_cmd::cargo::cargo_bin_cmd!("oxide")
             .env(
                 "OXIDE_HOST",
                 format!("https://{}:{}", HOSTNAME, addr.port()),
@@ -117,8 +115,7 @@ async fn test_insecure_cert_validation() {
     // This is non-async, blocking code so we need to shove it into its own
     // task. We're just looking for the command to succeed.
     tokio::task::spawn_blocking(move || {
-        Command::cargo_bin("oxide")
-            .unwrap()
+        assert_cmd::cargo::cargo_bin_cmd!("oxide")
             .env(
                 "OXIDE_HOST",
                 format!("https://{}:{}", HOSTNAME, addr.port()),
@@ -148,8 +145,7 @@ async fn test_insecure_hostname_verification() {
     // This is non-async, blocking code so we need to shove it into its own
     // task. We're just looking for the command to succeed.
     tokio::task::spawn_blocking(move || {
-        Command::cargo_bin("oxide")
-            .unwrap()
+        assert_cmd::cargo::cargo_bin_cmd!("oxide")
             .env(
                 "OXIDE_HOST",
                 format!("https://wrong-hostname:{}", addr.port()),

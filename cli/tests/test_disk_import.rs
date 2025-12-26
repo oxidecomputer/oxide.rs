@@ -5,7 +5,6 @@
 // Copyright 2025 Oxide Computer Company
 
 use anyhow::Result;
-use assert_cmd::Command;
 use httpmock::MockServer;
 use oxide::types::Disk;
 use oxide::types::Image;
@@ -137,8 +136,7 @@ fn test_disk_import() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import")
@@ -214,8 +212,7 @@ fn test_disk_import_sparse() {
     let test_file = Testfile::new_blank(CHUNK_SIZE * 10).unwrap();
     test_file.random_data_in_chunk(4).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_sparse")
@@ -257,8 +254,7 @@ fn test_disk_import_disk_exists_already() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_sparse")
@@ -318,8 +314,7 @@ fn test_disk_import_snapshot_exists_already() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_snapshot_exists_already")
@@ -390,8 +385,7 @@ fn test_disk_import_image_exists_already() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_image_exists_already")
@@ -455,8 +449,7 @@ fn test_disk_create_fail() {
 
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
@@ -482,8 +475,7 @@ fn test_disk_create_fail() {
 fn test_disk_import_bad_block_size() {
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -508,8 +500,7 @@ fn test_disk_import_bad_block_size() {
 fn test_disk_import_bad_file_size() {
     let test_file = Testfile::new_random(512 + 1).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -580,8 +571,7 @@ fn test_disk_write_import_fail() {
 
     let temp_dir = tempfile::tempdir().unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
@@ -622,8 +612,7 @@ fn test_disk_import_required_parameters() {
   --image-version <IMAGE_VERSION>
   --image <IMAGE>"#;
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -652,8 +641,7 @@ fn test_disk_import_required_parameters() {
   --image-version <IMAGE_VERSION>
   --image-description <IMAGE_DESCRIPTION>"#;
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -679,8 +667,7 @@ fn test_disk_import_required_parameters() {
     let output: &str = r#"error: the following required arguments were not provided:
   --snapshot <SNAPSHOT>"#;
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -718,8 +705,7 @@ fn test_disk_import_required_parameters() {
         bad_path.clone().into_os_string().to_str().unwrap()
     );
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
@@ -759,8 +745,7 @@ fn test_disk_import_start() {
         then.no_content();
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -784,8 +769,7 @@ fn test_disk_import_stop() {
         then.no_content();
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -809,8 +793,7 @@ fn test_disk_import_write() {
         then.no_content();
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -838,8 +821,7 @@ fn test_disk_import_finalize() {
         then.no_content();
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")

@@ -4,7 +4,6 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use assert_cmd::Command;
 use httpmock::MockServer;
 use oxide_httpmock::MockServerExt;
 
@@ -52,8 +51,7 @@ fn test_bundle_download_ranges() {
             .body([1; 1024]);
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -116,8 +114,7 @@ fn test_bundle_download_range_too_large_response() {
             .body([0; 4096]);
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
