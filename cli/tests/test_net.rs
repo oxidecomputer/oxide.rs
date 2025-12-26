@@ -313,7 +313,7 @@ fn test_port_config() {
     mock_ports.assert();
     mock_lots.assert();
     mock_lot_blocks.assert();
-    mock_bgp_configs.assert_hits(2);
+    mock_bgp_configs.assert_calls(2);
     mock_switch0_qsfp0_settings_view.assert();
     mock_switch1_qsfp0_settings_view.assert();
 }

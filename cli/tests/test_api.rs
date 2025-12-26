@@ -51,7 +51,7 @@ fn test_simple_api_call() {
         .success()
         .stdout(predicate::str::diff("{\n  \"a\": \"b\"\n}\n"));
 
-    mock.assert_hits(2);
+    mock.assert_calls(2);
 }
 
 #[derive(Serialize)]
