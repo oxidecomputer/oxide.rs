@@ -157,7 +157,7 @@ fn test_disk_import() {
 
     disk_create_mock.assert();
     start_bulk_write_mock.assert();
-    disk_bulk_write_mock.assert_hits(2);
+    disk_bulk_write_mock.assert_calls(2);
     stop_bulk_write_mock.assert();
     finalize_mock.assert();
 }
@@ -466,7 +466,7 @@ fn test_disk_create_fail() {
         .assert()
         .failure();
 
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert_calls(2);
     disk_create_mock.assert();
 }
 
@@ -593,10 +593,10 @@ fn test_disk_write_import_fail() {
         .failure()
         .stderr(predicate::str::is_match(output).unwrap());
 
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert_calls(2);
     disk_create_mock.assert();
     start_bulk_write_mock.assert();
-    disk_bulk_write_mock.assert_hits(2);
+    disk_bulk_write_mock.assert_calls(2);
 }
 
 // Test for required parameters being supplied

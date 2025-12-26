@@ -90,7 +90,7 @@ fn test_project_list_paginated() {
     mock_p1.assert();
     mock_p2.assert();
     // Because we hit the limit, we should not fetch the final page.
-    mock_p3.assert_hits(0);
+    mock_p3.assert_calls(0);
 }
 
 #[test]
