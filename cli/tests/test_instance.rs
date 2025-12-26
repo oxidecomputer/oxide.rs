@@ -4,7 +4,6 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use assert_cmd::Command;
 use httpmock::prelude::*;
 use oxide::types::{InstanceSerialConsoleData, NameOrId};
 use oxide_httpmock::MockServerExt;
@@ -36,8 +35,7 @@ fn test_instance_create() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("instance")
@@ -73,8 +71,7 @@ fn test_instance_serial_history() {
         then.ok(&results);
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -113,8 +110,7 @@ fn test_instance_serial_console() {
     // terminal (which it only does once the first binary frame is received).
     let pred = predicate::str::contains("Connection lost.");
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("instance")

@@ -4,7 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use assert_cmd::Command;
 use httpmock::MockServer;
 use oxide::types::{Project, ProjectResultsPage};
 use oxide_httpmock::MockServerExt;
@@ -26,8 +25,7 @@ fn test_project_simple_list() {
         then.ok(&results);
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -75,8 +73,7 @@ fn test_project_list_paginated() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -131,8 +128,7 @@ fn test_project_list_paginated_fail() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -159,8 +155,7 @@ fn test_project_delete() {
         then.no_content();
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")

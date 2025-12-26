@@ -4,7 +4,6 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use assert_cmd::Command;
 use chrono::prelude::*;
 use httpmock::MockServer;
 use oxide::types::{
@@ -297,8 +296,7 @@ fn test_port_config() {
 
     tracing_subscriber::fmt().init();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")

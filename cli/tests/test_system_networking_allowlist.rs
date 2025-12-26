@@ -4,7 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use assert_cmd::Command;
 use chrono::{TimeZone, Utc};
 use httpmock::MockServer;
 use oxide::types::{AllowList, AllowListUpdate, AllowedSourceIps};
@@ -14,8 +13,7 @@ use oxide_httpmock::MockServerExt;
 #[test]
 fn test_allowlist_neither() {
     #[cfg(not(target_os = "windows"))]
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "")
         .env("OXIDE_TOKEN", "fake-token")
@@ -34,8 +32,7 @@ fn test_allowlist_neither() {
 #[test]
 fn test_allowlist_both() {
     #[cfg(not(target_os = "windows"))]
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "")
         .env("OXIDE_TOKEN", "fake-token")
@@ -70,8 +67,7 @@ fn test_allowlist_any() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -106,8 +102,7 @@ fn test_allowlist_one_ip() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -154,8 +149,7 @@ fn test_allowlist_many_ips() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")

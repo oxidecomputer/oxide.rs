@@ -4,12 +4,9 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use assert_cmd::Command;
-
 #[test]
 fn test_docs_json() {
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("docs")
         .assert()
         .success()
