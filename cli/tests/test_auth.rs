@@ -9,7 +9,6 @@ use std::{
     path::Path,
 };
 
-use assert_cmd::Command;
 use chrono::{DateTime, Utc};
 use expectorate::assert_contents;
 use httpmock::{Method::POST, Mock, MockServer};
@@ -147,8 +146,7 @@ fn test_auth_login_first() {
     // Make sure we know how to make non-existent directories.
     let config_dir = temp_dir_path.join(".config").join("oxide");
 
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
         .arg(config_dir.as_os_str())
@@ -234,8 +232,7 @@ fn test_auth_login_existing_default() {
     write_first_config(temp_dir_path);
     assert_mode(&temp_dir_path.join("config.toml"), 0o644);
 
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .arg("--profile")
         .arg("crystal-palace")
@@ -281,8 +278,7 @@ fn test_auth_login_existing_no_default() {
     write_first_creds(temp_dir_path);
     assert_mode(&temp_dir_path.join("credentials.toml"), 0o600);
 
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
         .arg(temp_dir_path.as_os_str())
@@ -340,8 +336,7 @@ fn test_auth_credentials_permissions() {
     assert_mode(&cred_path, 0o644);
 
     // Validate authenticated credentials
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("--config-dir")
         .arg(temp_dir_path.as_os_str())
         .arg("auth")
@@ -370,8 +365,7 @@ fn test_auth_login_double() {
     let temp_dir = tempfile::tempdir().unwrap();
     let temp_dir_path = temp_dir.path();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
         .arg(temp_dir_path.as_os_str())
@@ -382,8 +376,7 @@ fn test_auth_login_double() {
         .arg(server.url(""))
         .assert()
         .success();
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .arg("--config-dir")
         .arg(temp_dir_path.as_os_str())
@@ -493,8 +486,7 @@ fn test_cmd_auth_status() {
     });
 
     // Validate authenticated credentials
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("--config-dir")
         .arg(temp_dir.path().as_os_str())
         .arg("auth")
@@ -515,8 +507,7 @@ fn test_cmd_auth_status() {
     );
 
     // Validate empty `credentials.toml` does not error.
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("--config-dir")
         .arg(empty_creds_dir.path().as_os_str())
         .arg("auth")
@@ -564,8 +555,7 @@ fn test_cmd_auth_status_env() {
     );
 
     // Validate authenticated credentials
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("auth")
         .arg("status")
         .env("OXIDE_HOST", server.url(""))
@@ -578,8 +568,7 @@ fn test_cmd_auth_status_env() {
         ));
 
     // OXIDE_PROFILE also works, uses creds file
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_PROFILE", "funky-town")
         .arg("--config-dir")
         .arg(temp_dir.path().as_os_str())
@@ -593,8 +582,7 @@ fn test_cmd_auth_status_env() {
         ));
 
     // OXIDE_HOST conflicts with OXIDE_PROFILE
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "oxide-token-good")
         .env("OXIDE_PROFILE", "ignored")
@@ -622,8 +610,7 @@ fn test_cmd_auth_status_env() {
     });
 
     // Try invalid credentials.
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("auth")
         .arg("status")
         .env("OXIDE_HOST", server.url(""))
@@ -655,8 +642,7 @@ fn test_cmd_auth_debug_logging() {
         });
     });
 
-    let cmd = Command::cargo_bin("oxide")
-        .unwrap()
+    let cmd = assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .arg("--debug")
         .arg("auth")
         .arg("status")
@@ -695,4 +681,27 @@ fn test_cmd_auth_debug_logging() {
         .eval(stderr_str));
 
     oxide_mock.assert();
+}
+
+#[test]
+fn test_cmd_auth_login() {
+    use predicates::str;
+
+    let temp_dir = tempfile::tempdir().unwrap();
+
+    let bad_url = "sys.oxide.invalid";
+
+    // Validate connection error details are printed
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
+        .arg("--config-dir")
+        .arg(temp_dir.path().as_os_str())
+        .arg("auth")
+        .arg("login")
+        .arg("--host")
+        .arg(bad_url)
+        .assert()
+        .failure()
+        .stderr(str::starts_with(
+            "Request failed: client error: error sending request",
+        ));
 }

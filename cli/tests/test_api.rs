@@ -4,7 +4,6 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use assert_cmd::Command;
 use httpmock::prelude::*;
 use predicates::prelude::*;
 use serde::Serialize;
@@ -28,8 +27,7 @@ fn test_simple_api_call() {
             ));
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("api")
@@ -38,8 +36,7 @@ fn test_simple_api_call() {
         .success()
         .stdout(predicate::str::diff("{\n  \"a\": \"b\"\n}\n"));
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("api")
@@ -141,8 +138,7 @@ fn test_pagination_success() {
     ];
     let output_str = format!("{}\n", serde_json::to_string_pretty(&output).unwrap());
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("api")
@@ -211,8 +207,7 @@ fn test_pagination_midway_failure() {
         "HTTP status client error (404 Not Found)",
     );
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("api")

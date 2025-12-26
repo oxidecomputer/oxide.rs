@@ -639,31 +639,6 @@ fn create_private_file(path: &Path) -> Result<File> {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn test_cmd_auth_login() {
-        use assert_cmd::Command;
-        use predicates::str;
-
-        let temp_dir = tempfile::tempdir().unwrap();
-
-        let bad_url = "sys.oxide.invalid";
-
-        // Validate connection error details are printed
-        Command::cargo_bin("oxide")
-            .unwrap()
-            .arg("--config-dir")
-            .arg(temp_dir.path().as_os_str())
-            .arg("auth")
-            .arg("login")
-            .arg("--host")
-            .arg(bad_url)
-            .assert()
-            .failure()
-            .stderr(str::starts_with(
-                "Request failed: client error: error sending request",
-            ));
-    }
-
-    #[test]
     fn test_parse_host() {
         use super::parse_host;
 

@@ -4,7 +4,6 @@
 
 // Copyright 2025 Oxide Computer Company
 
-use assert_cmd::Command;
 use chrono::{DateTime, Utc};
 use httpmock::MockServer;
 use oxide::types::{TufRepo, TufRepoUpload, TufRepoUploadStatus};
@@ -34,8 +33,7 @@ fn test_update_upload() {
     let repo_path = tempdir_path.join("repo");
     std::fs::write(&repo_path, CONTENTS).unwrap();
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")

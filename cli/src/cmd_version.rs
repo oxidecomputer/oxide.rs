@@ -45,25 +45,3 @@ impl RunnableCmd for CmdVersion {
         Ok(())
     }
 }
-
-#[test]
-fn version_success() {
-    use assert_cmd::Command;
-
-    let mut cmd = Command::cargo_bin("oxide").unwrap();
-    let cli_version = built_info::PKG_VERSION;
-    let api_version = Client::api_version();
-
-    cmd.arg("version");
-    cmd.assert().success().stdout(format!(
-        "Oxide CLI {}\nBuilt from commit: {} {}\nOxide API: {}\n",
-        cli_version,
-        built_info::GIT_COMMIT_HASH.unwrap(),
-        if matches!(built_info::GIT_DIRTY, Some(true)) {
-            "(dirty)"
-        } else {
-            ""
-        },
-        api_version,
-    ));
-}

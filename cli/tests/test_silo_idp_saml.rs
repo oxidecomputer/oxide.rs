@@ -4,7 +4,6 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use assert_cmd::Command;
 use base64::Engine;
 use httpmock::MockServer;
 use oxide::types::{
@@ -47,8 +46,7 @@ fn test_silo_idp_saml_create() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -135,8 +133,7 @@ fn test_silo_idp_saml_create_with_files() {
         });
     });
 
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
@@ -177,8 +174,7 @@ fn test_silo_idp_saml_create_with_files() {
 
 #[test]
 fn test_silo_idp_saml_create_requires_key_and_cert() {
-    Command::cargo_bin("oxide")
-        .unwrap()
+    assert_cmd::cargo::cargo_bin_cmd!("oxide")
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", "invalid.url")
         .env("OXIDE_TOKEN", "fake-token")
