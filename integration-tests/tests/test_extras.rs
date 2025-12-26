@@ -113,7 +113,7 @@ async fn test_disk_import() {
     // Assert this endpoint before the next request to avoid defining an
     // expectation for whether this call should be made upon immediate
     // cancellation.
-    disk_view_mock.assert_hits(2);
+    disk_view_mock.assert_calls(2);
 
     let (fut_to_cancel, handle) = client
         .disk_import()
@@ -133,9 +133,9 @@ async fn test_disk_import() {
     );
 
     // No calls received for the cancelled request.
-    disk_create_mock.assert_hits(2);
-    start_bulk_write_mock.assert_hits(2);
-    disk_bulk_write_mock.assert_hits(2);
-    stop_bulk_write_mock.assert_hits(2);
-    finalize_mock.assert_hits(2);
+    disk_create_mock.assert_calls(2);
+    start_bulk_write_mock.assert_calls(2);
+    disk_bulk_write_mock.assert_calls(2);
+    stop_bulk_write_mock.assert_calls(2);
+    finalize_mock.assert_calls(2);
 }

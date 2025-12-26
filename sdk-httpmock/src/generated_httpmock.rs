@@ -159,12 +159,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -175,12 +170,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -191,12 +181,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -207,12 +192,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -464,12 +444,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -480,12 +455,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -496,12 +466,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -819,12 +784,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.header("range", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.headers
-                        .as_ref()
-                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
-                        .is_none()
-                }))
+                Self(self.0.header_missing("range"))
             }
         }
     }
@@ -880,12 +840,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.header("range", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.headers
-                        .as_ref()
-                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
-                        .is_none()
-                }))
+                Self(self.0.header_missing("range"))
             }
         }
     }
@@ -952,12 +907,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.header("range", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.headers
-                        .as_ref()
-                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
-                        .is_none()
-                }))
+                Self(self.0.header_missing("range"))
             }
         }
     }
@@ -1024,12 +974,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.header("range", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.headers
-                        .as_ref()
-                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
-                        .is_none()
-                }))
+                Self(self.0.header_missing("range"))
             }
         }
     }
@@ -1082,12 +1027,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.header("range", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.headers
-                        .as_ref()
-                        .and_then(|hs| hs.iter().find(|(key, _)| key == "range"))
-                        .is_none()
-                }))
+                Self(self.0.header_missing("range"))
             }
         }
     }
@@ -1207,12 +1147,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -1223,12 +1158,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -1239,12 +1169,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -1255,12 +1180,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -1395,12 +1315,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -1472,12 +1387,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -1553,12 +1463,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -1628,12 +1533,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -1644,12 +1544,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -1660,12 +1555,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -1676,12 +1566,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -1763,12 +1648,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -1850,12 +1730,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -1937,12 +1812,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -2003,12 +1873,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("filter", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "filter"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("filter"))
             }
         }
 
@@ -2019,12 +1884,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -2035,12 +1895,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
     }
@@ -2106,12 +1961,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -2122,12 +1972,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -2138,12 +1983,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -2335,12 +2175,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("delivered", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "delivered"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("delivered"))
             }
         }
 
@@ -2351,12 +2186,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("failed", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "failed"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("failed"))
             }
         }
 
@@ -2367,12 +2197,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -2383,12 +2208,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -2399,12 +2219,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("pending", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "pending"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("pending"))
             }
         }
 
@@ -2415,12 +2230,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -2495,12 +2305,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("resend", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "resend"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("resend"))
             }
         }
     }
@@ -2763,12 +2568,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -2779,12 +2579,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -2795,12 +2590,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -2811,12 +2601,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -2952,12 +2737,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -3030,12 +2810,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -3112,12 +2887,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -3185,12 +2955,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -3201,12 +2966,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -3217,12 +2977,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -3233,12 +2988,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -3323,12 +3073,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -3413,12 +3158,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -3503,12 +3243,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -3683,12 +3418,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -3699,12 +3429,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -3715,12 +3440,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -3962,12 +3682,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -3978,12 +3693,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -3994,12 +3704,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -4010,12 +3715,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -4149,12 +3849,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -4225,12 +3920,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -4297,12 +3987,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -4376,12 +4061,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -4451,12 +4131,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -4523,12 +4198,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -4593,12 +4263,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -4609,12 +4274,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -4625,12 +4285,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -4641,12 +4296,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -4781,12 +4431,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -4858,12 +4503,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -4939,12 +4579,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -5011,12 +4646,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -5092,12 +4722,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -5163,12 +4788,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -5179,12 +4799,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -5195,12 +4810,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -5326,12 +4936,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -5342,12 +4947,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -5358,12 +4958,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -5374,12 +4969,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -5445,12 +5035,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -5525,12 +5110,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -5601,12 +5181,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -5738,12 +5313,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -5809,12 +5379,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -5825,12 +5390,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -5841,12 +5401,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -5857,12 +5412,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -5996,12 +5546,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -6072,12 +5617,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6152,12 +5692,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -6227,12 +5762,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -6243,12 +5773,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -6259,12 +5784,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6275,12 +5795,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -6353,12 +5868,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -6369,12 +5879,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -6385,12 +5890,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6401,12 +5901,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -6478,12 +5973,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -6494,12 +5984,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -6510,12 +5995,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6526,12 +6006,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -6606,12 +6081,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6690,12 +6160,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6774,12 +6239,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -6852,12 +6312,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -6934,12 +6389,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7009,12 +6459,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7096,12 +6541,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7183,12 +6623,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7255,12 +6690,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7335,12 +6765,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("from_start", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "from_start"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("from_start"))
             }
         }
 
@@ -7351,12 +6776,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("max_bytes", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "max_bytes"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("max_bytes"))
             }
         }
 
@@ -7367,12 +6787,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("most_recent", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "most_recent"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("most_recent"))
             }
         }
 
@@ -7383,12 +6798,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7461,12 +6871,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("most_recent", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "most_recent"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("most_recent"))
             }
         }
 
@@ -7477,12 +6882,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7536,12 +6936,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -7552,12 +6947,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -7568,12 +6958,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -7584,12 +6969,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -7661,12 +7041,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7738,12 +7113,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -7809,12 +7179,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("gateway", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("gateway"))
             }
         }
 
@@ -7825,12 +7190,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -7841,12 +7201,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -7857,12 +7212,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -7873,12 +7223,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -7889,12 +7234,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -7964,12 +7304,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -7980,12 +7315,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -8062,12 +7392,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("cascade", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("cascade"))
             }
         }
 
@@ -8078,12 +7403,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("gateway", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("gateway"))
             }
         }
 
@@ -8094,12 +7414,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8110,12 +7425,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8176,12 +7486,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("gateway", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("gateway"))
             }
         }
 
@@ -8192,12 +7497,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -8208,12 +7508,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -8224,12 +7519,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8240,12 +7530,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -8256,12 +7541,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8331,12 +7611,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8347,12 +7622,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -8431,12 +7701,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("cascade", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("cascade"))
             }
         }
 
@@ -8447,12 +7712,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("gateway", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "gateway"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("gateway"))
             }
         }
 
@@ -8463,12 +7723,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8479,12 +7734,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8545,12 +7795,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -8561,12 +7806,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -8577,12 +7817,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8593,12 +7828,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -8609,12 +7839,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8680,12 +7905,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8765,12 +7985,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8781,12 +7996,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8858,12 +8068,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("cascade", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "cascade"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("cascade"))
             }
         }
 
@@ -8874,12 +8079,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -8890,12 +8090,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -8956,12 +8151,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -8972,12 +8162,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -8988,12 +8173,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -9284,12 +8464,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -9300,12 +8475,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -9316,12 +8486,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -9443,12 +8608,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -9459,12 +8619,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -9475,12 +8630,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -9546,12 +8696,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -9562,12 +8707,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -9578,12 +8718,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -9830,12 +8965,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("end_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("end_time"))
             }
         }
 
@@ -9846,12 +8976,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -9862,12 +8987,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("order", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "order"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("order"))
             }
         }
 
@@ -9878,12 +8998,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -9894,12 +9009,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -9910,12 +9020,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("start_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("start_time"))
             }
         }
     }
@@ -9981,12 +9086,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -9997,12 +9097,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -10013,12 +9108,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -10334,12 +9424,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -10350,12 +9435,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -10366,12 +9446,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -10446,12 +9521,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -10537,12 +9607,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -10603,12 +9668,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("instance"))
             }
         }
 
@@ -10619,12 +9679,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -10635,12 +9690,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -10651,12 +9701,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -10667,12 +9712,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -10742,12 +9782,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -10823,12 +9858,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("instance"))
             }
         }
 
@@ -10839,12 +9869,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -10916,12 +9941,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("instance"))
             }
         }
 
@@ -10932,12 +9952,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -11013,12 +10028,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("instance", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("instance"))
             }
         }
 
@@ -11029,12 +10039,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -11264,12 +10269,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -11280,12 +10280,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -11296,12 +10291,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -11731,12 +10721,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -11747,12 +10732,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -11763,12 +10743,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -11779,12 +10754,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -11918,12 +10888,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -11994,12 +10959,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -12060,12 +11020,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("end_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("end_time"))
             }
         }
 
@@ -12076,12 +11031,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12092,12 +11042,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12108,12 +11053,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -12124,12 +11064,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("start_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("start_time"))
             }
         }
     }
@@ -12195,12 +11130,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12211,12 +11141,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12227,12 +11152,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -12392,12 +11312,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12408,12 +11323,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12424,12 +11334,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -12495,12 +11400,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12511,12 +11411,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12527,12 +11422,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -12662,12 +11552,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12678,12 +11563,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12694,12 +11574,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -12895,12 +11770,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -12911,12 +11781,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -12927,12 +11792,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -13005,12 +11865,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -13021,12 +11876,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -13037,12 +11887,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -13172,12 +12017,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -13188,12 +12028,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
     }
@@ -13259,12 +12094,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -13275,12 +12105,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -13291,12 +12116,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -13307,12 +12127,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("switch_port_id", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "switch_port_id"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("switch_port_id"))
             }
         }
     }
@@ -13721,12 +12536,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -13737,12 +12547,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -13753,12 +12558,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -13888,12 +12688,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -13904,12 +12699,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -13920,12 +12710,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("silo"))
             }
         }
 
@@ -13936,12 +12721,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -14269,12 +13049,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("silo"))
             }
         }
     }
@@ -14340,12 +13115,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -14356,12 +13126,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -14372,12 +13137,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -14693,12 +13453,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -14709,12 +13464,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
     }
@@ -14918,12 +13668,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -14934,12 +13679,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -14950,12 +13690,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -15347,12 +14082,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -15363,12 +14093,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
     }
@@ -15549,12 +14274,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("end_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("end_time"))
             }
         }
 
@@ -15565,12 +14285,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -15581,12 +14296,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("order", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "order"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("order"))
             }
         }
 
@@ -15597,12 +14307,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -15613,12 +14318,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("silo"))
             }
         }
 
@@ -15629,12 +14329,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("start_time", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("start_time"))
             }
         }
     }
@@ -15762,12 +14457,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -15778,12 +14468,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -15794,12 +14479,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -16050,12 +14730,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -16066,12 +14741,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -16082,12 +14752,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -16430,12 +15095,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -16446,12 +15106,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -16462,12 +15117,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -16644,12 +15294,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -16660,12 +15305,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -16676,12 +15316,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -17259,12 +15894,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -17275,12 +15905,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -17291,12 +15916,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -17506,12 +16126,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -17522,12 +16137,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -17538,12 +16148,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("port_settings", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "port_settings"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("port_settings"))
             }
         }
 
@@ -17554,12 +16159,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -17680,12 +16280,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("port_settings", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "port_settings"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("port_settings"))
             }
         }
     }
@@ -18165,12 +16760,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -18181,12 +16771,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -18197,12 +16782,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -18268,12 +16848,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -18284,12 +16859,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -18300,12 +16870,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -18556,12 +17121,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -18572,12 +17132,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -18588,12 +17143,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -18970,12 +17520,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -18986,12 +17531,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
     }
@@ -19057,12 +17597,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -19073,12 +17608,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -19089,12 +17619,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -19399,12 +17924,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -19415,12 +17935,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -19431,12 +17946,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -19684,12 +18194,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -19700,12 +18205,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -19716,12 +18216,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("silo", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("silo"))
             }
         }
 
@@ -19732,12 +18227,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -19868,12 +18358,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -19884,12 +18369,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -19900,12 +18380,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -20033,12 +18508,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -20049,12 +18519,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -20065,12 +18530,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -20263,12 +18723,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("group", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "group"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("group"))
             }
         }
 
@@ -20279,12 +18734,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -20295,12 +18745,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -20311,12 +18756,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -20448,12 +18888,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -20464,12 +18899,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -20480,12 +18910,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -20613,12 +19038,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -20629,12 +19049,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -20645,12 +19060,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -20771,12 +19181,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -20846,12 +19251,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -20925,12 +19325,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -20941,12 +19336,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -20957,12 +19347,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -20973,12 +19358,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("router"))
             }
         }
 
@@ -20989,12 +19369,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -21005,12 +19380,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21076,12 +19446,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21096,12 +19461,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -21177,12 +19537,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21193,12 +19548,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("router"))
             }
         }
 
@@ -21209,12 +19559,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21286,12 +19631,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21302,12 +19642,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("router"))
             }
         }
 
@@ -21318,12 +19653,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -21399,12 +19729,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21415,12 +19740,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("router", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("router"))
             }
         }
 
@@ -21431,12 +19751,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21497,12 +19812,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -21513,12 +19823,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -21529,12 +19834,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21545,12 +19845,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -21561,12 +19856,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21632,12 +19922,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21717,12 +20002,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21733,12 +20013,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21810,12 +20085,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21826,12 +20096,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -21907,12 +20172,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -21923,12 +20183,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -21989,12 +20244,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -22005,12 +20255,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -22021,12 +20266,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22037,12 +20277,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -22053,12 +20288,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -22124,12 +20354,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22209,12 +20434,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22225,12 +20445,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -22302,12 +20517,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22318,12 +20528,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
 
@@ -22399,12 +20604,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22415,12 +20615,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -22488,12 +20683,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -22504,12 +20694,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -22520,12 +20705,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22536,12 +20716,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
 
@@ -22552,12 +20727,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("vpc", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("vpc"))
             }
         }
     }
@@ -22623,12 +20793,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("limit", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("limit"))
             }
         }
 
@@ -22639,12 +20804,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("page_token", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("page_token"))
             }
         }
 
@@ -22655,12 +20815,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22671,12 +20826,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("sort_by", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("sort_by"))
             }
         }
     }
@@ -22810,12 +20960,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }
@@ -22886,12 +21031,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
 
@@ -22966,12 +21106,7 @@ pub mod operations {
             if let Some(value) = value.into() {
                 Self(self.0.query_param("project", value.to_string()))
             } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
-                        .is_none()
-                }))
+                Self(self.0.query_param_missing("project"))
             }
         }
     }

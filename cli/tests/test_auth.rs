@@ -83,10 +83,10 @@ impl<'a> MockOAuth<'a> {
         self.me.assert();
     }
 
-    fn assert_hits(&self, hits: usize) {
-        self.device_auth.assert_hits(hits);
-        self.device_token.assert_hits(hits);
-        self.me.assert_hits(hits);
+    fn assert_calls(&self, hits: usize) {
+        self.device_auth.assert_calls(hits);
+        self.device_token.assert_calls(hits);
+        self.me.assert_calls(hits);
     }
 }
 
@@ -401,7 +401,7 @@ fn test_auth_login_double() {
         &scrub_server(stdout.to_string(), server.url("")),
     );
 
-    mock.assert_hits(2);
+    mock.assert_calls(2);
 
     assert_contents(
         "tests/data/test_auth_double_credentials.toml",
@@ -525,7 +525,7 @@ fn test_cmd_auth_status() {
         .success()
         .stdout(str::is_empty());
 
-    ok.assert_hits(2);
+    ok.assert_calls(2);
     bad.assert();
 }
 
@@ -606,7 +606,7 @@ fn test_cmd_auth_status_env() {
         .failure()
         .stderr(format!("{}\n", oxide::OxideAuthError::HostProfileConflict));
 
-    oxide_mock.assert_hits(2);
+    oxide_mock.assert_calls(2);
 
     let oxide_mock = server.current_user_view(|when, then| {
         when.into_inner()
