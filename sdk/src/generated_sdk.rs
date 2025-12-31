@@ -10011,6 +10011,24 @@ pub mod types {
     /// instance.",
     ///  "type": "object",
     ///  "properties": {
+    ///    "ip_version": {
+    ///      "description": "IP version to use when allocating from the default
+    /// pool. Only used when `pool` is not specified. Required if multiple
+    /// default pools of different IP versions exist. Allocation fails if no
+    /// pool of the requested version is available.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IpVersion"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
     ///    "pool": {
     ///      "description": "Name or ID of the IP pool used to allocate an
     /// address. If unspecified, the default IP pool will be used.",
@@ -10035,6 +10053,12 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct EphemeralIpCreate {
+        /// IP version to use when allocating from the default pool. Only used
+        /// when `pool` is not specified. Required if multiple default pools of
+        /// different IP versions exist. Allocation fails if no pool of the
+        /// requested version is available.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip_version: ::std::option::Option<IpVersion>,
         /// Name or ID of the IP pool used to allocate an address. If
         /// unspecified, the default IP pool will be used.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -10050,6 +10074,7 @@ pub mod types {
     impl ::std::default::Default for EphemeralIpCreate {
         fn default() -> Self {
             Self {
+                ip_version: Default::default(),
                 pool: Default::default(),
             }
         }
@@ -10344,6 +10369,24 @@ pub mod types {
     ///        "type"
     ///      ],
     ///      "properties": {
+    ///        "ip_version": {
+    ///          "description": "IP version to use when allocating from the
+    /// default pool. Only used when `pool` is not specified. Required if
+    /// multiple default pools of different IP versions exist. Allocation fails
+    /// if no pool of the requested version is available.",
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/IpVersion"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        },
     ///        "pool": {
     ///          "oneOf": [
     ///            {
@@ -10402,6 +10445,12 @@ pub mod types {
         /// default IP pool if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
+            /// IP version to use when allocating from the default pool. Only
+            /// used when `pool` is not specified. Required if multiple default
+            /// pools of different IP versions exist. Allocation fails if no
+            /// pool of the requested version is available.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            ip_version: ::std::option::Option<IpVersion>,
             #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
             pool: ::std::option::Option<NameOrId>,
         },
@@ -11650,6 +11699,24 @@ pub mod types {
     ///      ],
     ///      "format": "ip"
     ///    },
+    ///    "ip_version": {
+    ///      "description": "IP version to use when allocating from the default
+    /// pool. Only used when both `ip` and `pool` are not specified. Required if
+    /// multiple default pools of different IP versions exist. Allocation fails
+    /// if no pool of the requested version is available.",
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/IpVersion"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
@@ -11684,6 +11751,12 @@ pub mod types {
         /// `pool`.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ip: ::std::option::Option<::std::net::IpAddr>,
+        /// IP version to use when allocating from the default pool. Only used
+        /// when both `ip` and `pool` are not specified. Required if multiple
+        /// default pools of different IP versions exist. Allocation fails if no
+        /// pool of the requested version is available.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ip_version: ::std::option::Option<IpVersion>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -17541,7 +17614,9 @@ pub mod types {
     ///    "is_default": {
     ///      "description": "When a pool is the default for a silo, floating IPs
     /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified. There can be at most one default for a given silo.",
+    /// is specified.\n\nA silo can have at most one default pool per
+    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
+    /// IPv6), allowing up to 4 default pools total.",
     ///      "type": "boolean"
     ///    },
     ///    "silo": {
@@ -17557,7 +17632,11 @@ pub mod types {
     pub struct IpPoolLinkSilo {
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
-        /// specified. There can be at most one default for a given silo.
+        /// specified.
+        ///
+        /// A silo can have at most one default pool per combination of pool
+        /// type (unicast or multicast) and IP version (IPv4 or IPv6), allowing
+        /// up to 4 default pools total.
         pub is_default: bool,
         pub silo: NameOrId,
     }
@@ -17760,7 +17839,9 @@ pub mod types {
     ///    "is_default": {
     ///      "description": "When a pool is the default for a silo, floating IPs
     /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified. There can be at most one default for a given silo.",
+    /// is specified.\n\nA silo can have at most one default pool per
+    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
+    /// IPv6), allowing up to 4 default pools total.",
     ///      "type": "boolean"
     ///    },
     ///    "silo_id": {
@@ -17778,7 +17859,11 @@ pub mod types {
         pub ip_pool_id: ::uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
-        /// specified. There can be at most one default for a given silo.
+        /// specified.
+        ///
+        /// A silo can have at most one default pool per combination of pool
+        /// type (unicast or multicast) and IP version (IPv4 or IPv6), allowing
+        /// up to 4 default pools total.
         pub is_default: bool,
         pub silo_id: ::uuid::Uuid,
     }
@@ -17863,9 +17948,11 @@ pub mod types {
     ///    "is_default": {
     ///      "description": "When a pool is the default for a silo, floating IPs
     /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified. There can be at most one default for a given silo, so when
-    /// a pool is made default, an existing default will remain linked but will
-    /// no longer be the default.",
+    /// is specified.\n\nA silo can have at most one default pool per
+    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
+    /// IPv6), allowing up to 4 default pools total. When a pool is made
+    /// default, an existing default of the same type and version will remain
+    /// linked but will no longer be the default.",
     ///      "type": "boolean"
     ///    }
     ///  }
@@ -17878,9 +17965,13 @@ pub mod types {
     pub struct IpPoolSiloUpdate {
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
-        /// specified. There can be at most one default for a given silo, so
-        /// when a pool is made default, an existing default will remain linked
-        /// but will no longer be the default.
+        /// specified.
+        ///
+        /// A silo can have at most one default pool per combination of pool
+        /// type (unicast or multicast) and IP version (IPv4 or IPv6), allowing
+        /// up to 4 default pools total. When a pool is made default, an
+        /// existing default of the same type and version will remain linked but
+        /// will no longer be the default.
         pub is_default: bool,
     }
 
@@ -25571,7 +25662,9 @@ pub mod types {
     ///    "is_default": {
     ///      "description": "When a pool is the default for a silo, floating IPs
     /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified. There can be at most one default for a given silo.",
+    /// is specified.\n\nA silo can have at most one default pool per
+    /// combination of pool type (unicast or multicast) and IP version (IPv4 or
+    /// IPv6), allowing up to 4 default pools total.",
     ///      "type": "boolean"
     ///    },
     ///    "name": {
@@ -25607,7 +25700,11 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
-        /// specified. There can be at most one default for a given silo.
+        /// specified.
+        ///
+        /// A silo can have at most one default pool per combination of pool
+        /// type (unicast or multicast) and IP version (IPv4 or IPv6), allowing
+        /// up to 4 default pools total.
         pub is_default: bool,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
@@ -42926,6 +43023,10 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct EphemeralIpCreate {
+            ip_version: ::std::result::Result<
+                ::std::option::Option<super::IpVersion>,
+                ::std::string::String,
+            >,
             pool: ::std::result::Result<
                 ::std::option::Option<super::NameOrId>,
                 ::std::string::String,
@@ -42935,12 +43036,23 @@ pub mod types {
         impl ::std::default::Default for EphemeralIpCreate {
             fn default() -> Self {
                 Self {
+                    ip_version: Ok(Default::default()),
                     pool: Ok(Default::default()),
                 }
             }
         }
 
         impl EphemeralIpCreate {
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
+                self
+            }
             pub fn pool<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
@@ -42958,13 +43070,17 @@ pub mod types {
             fn try_from(
                 value: EphemeralIpCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self { pool: value.pool? })
+                Ok(Self {
+                    ip_version: value.ip_version?,
+                    pool: value.pool?,
+                })
             }
         }
 
         impl ::std::convert::From<super::EphemeralIpCreate> for EphemeralIpCreate {
             fn from(value: super::EphemeralIpCreate) -> Self {
                 Self {
+                    ip_version: Ok(value.ip_version),
                     pool: Ok(value.pool),
                 }
             }
@@ -43595,6 +43711,10 @@ pub mod types {
                 ::std::option::Option<::std::net::IpAddr>,
                 ::std::string::String,
             >,
+            ip_version: ::std::result::Result<
+                ::std::option::Option<super::IpVersion>,
+                ::std::string::String,
+            >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             pool: ::std::result::Result<
                 ::std::option::Option<super::NameOrId>,
@@ -43607,6 +43727,7 @@ pub mod types {
                 Self {
                     description: Err("no value supplied for description".to_string()),
                     ip: Ok(Default::default()),
+                    ip_version: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     pool: Ok(Default::default()),
                 }
@@ -43632,6 +43753,16 @@ pub mod types {
                 self.ip = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn ip_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip_version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -43664,6 +43795,7 @@ pub mod types {
                 Ok(Self {
                     description: value.description?,
                     ip: value.ip?,
+                    ip_version: value.ip_version?,
                     name: value.name?,
                     pool: value.pool?,
                 })
@@ -43675,6 +43807,7 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     ip: Ok(value.ip),
+                    ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
                     pool: Ok(value.pool),
                 }
@@ -63274,7 +63407,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2025121200.0.0
+/// Version: 2025122300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -63315,7 +63448,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2025121200.0.0"
+        "2025122300.0.0"
     }
 
     fn baseurl(&self) -> &str {
