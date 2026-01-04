@@ -15382,7 +15382,7 @@ pub mod types {
     ///      "description": "The network interfaces to be created for this
     /// instance.",
     ///      "default": {
-    ///        "type": "default"
+    ///        "type": "default_dual_stack"
     ///      },
     ///      "allOf": [
     ///        {
@@ -15658,7 +15658,7 @@ pub mod types {
     ///    "description",
     ///    "id",
     ///    "instance_id",
-    ///    "ip",
+    ///    "ip_stack",
     ///    "mac",
     ///    "name",
     ///    "primary",
@@ -15683,10 +15683,13 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "ip": {
-    ///      "description": "The IP address assigned to this interface.",
-    ///      "type": "string",
-    ///      "format": "ip"
+    ///    "ip_stack": {
+    ///      "description": "The VPC-private IP stack for this interface.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/PrivateIpStack"
+    ///        }
+    ///      ]
     ///    },
     ///    "mac": {
     ///      "description": "The MAC address assigned to this interface.",
@@ -15725,15 +15728,6 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
-    ///    "transit_ips": {
-    ///      "description": "A set of additional networks that this interface
-    /// may send and receive traffic on.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpNet"
-    ///      }
-    ///    },
     ///    "vpc_id": {
     ///      "description": "The VPC to which the interface belongs.",
     ///      "type": "string",
@@ -15753,8 +15747,8 @@ pub mod types {
         pub id: ::uuid::Uuid,
         /// The Instance to which the interface belongs.
         pub instance_id: ::uuid::Uuid,
-        /// The IP address assigned to this interface.
-        pub ip: ::std::net::IpAddr,
+        /// The VPC-private IP stack for this interface.
+        pub ip_stack: PrivateIpStack,
         /// The MAC address assigned to this interface.
         pub mac: MacAddr,
         /// unique, mutable, user-controlled identifier for each resource
@@ -15768,10 +15762,6 @@ pub mod types {
         pub time_created: ::chrono::DateTime<::chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: ::chrono::DateTime<::chrono::offset::Utc>,
-        /// A set of additional networks that this interface may send and
-        /// receive traffic on.
-        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC to which the interface belongs.
         pub vpc_id: ::uuid::Uuid,
     }
@@ -15824,9 +15814,8 @@ pub mod types {
     ///      }
     ///    },
     ///    {
-    ///      "description": "The default networking configuration for an
-    /// instance is to create a single primary interface with an
-    /// automatically-assigned IP address. The IP will be pulled from the
+    ///      "description": "Create a single primary interface with an
+    /// automatically-assigned IPv4 address.\n\nThe IP will be pulled from the
     /// Project's default VPC / VPC Subnet.",
     ///      "type": "object",
     ///      "required": [
@@ -15836,7 +15825,41 @@ pub mod types {
     ///        "type": {
     ///          "type": "string",
     ///          "enum": [
-    ///            "default"
+    ///            "default_ipv4"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Create a single primary interface with an
+    /// automatically-assigned IPv6 address.\n\nThe IP will be pulled from the
+    /// Project's default VPC / VPC Subnet.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "default_ipv6"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Create a single primary interface with
+    /// automatically-assigned IPv4 and IPv6 addresses.\n\nThe IPs will be
+    /// pulled from the Project's default VPC / VPC Subnet.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "default_dual_stack"
     ///          ]
     ///        }
     ///      }
@@ -15872,8 +15895,12 @@ pub mod types {
         /// designated the primary interface for the instance.
         #[serde(rename = "create")]
         Create(::std::vec::Vec<InstanceNetworkInterfaceCreate>),
-        #[serde(rename = "default")]
-        Default,
+        #[serde(rename = "default_ipv4")]
+        DefaultIpv4,
+        #[serde(rename = "default_ipv6")]
+        DefaultIpv6,
+        #[serde(rename = "default_dual_stack")]
+        DefaultDualStack,
         #[serde(rename = "none")]
         None,
     }
@@ -15911,14 +15938,32 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
-    ///    "ip": {
-    ///      "description": "The IP address for the interface. One will be
-    /// auto-assigned if not provided.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
+    ///    "ip_config": {
+    ///      "description": "The IP stack configuration for this
+    /// interface.\n\nIf not provided, a default configuration will be used,
+    /// which creates a dual-stack IPv4 / IPv6 interface.",
+    ///      "default": {
+    ///        "type": "dual_stack",
+    ///        "value": {
+    ///          "v4": {
+    ///            "ip": {
+    ///              "type": "auto"
+    ///            },
+    ///            "transit_ips": []
+    ///          },
+    ///          "v6": {
+    ///            "ip": {
+    ///              "type": "auto"
+    ///            },
+    ///            "transit_ips": []
+    ///          }
+    ///        }
+    ///      },
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/PrivateIpStackCreate"
+    ///        }
+    ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -15930,15 +15975,6 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
-    ///    },
-    ///    "transit_ips": {
-    ///      "description": "A set of additional networks that this interface
-    /// may send and receive traffic on.",
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpNet"
-    ///      }
     ///    },
     ///    "vpc_name": {
     ///      "description": "The VPC in which to create the interface.",
@@ -15957,17 +15993,15 @@ pub mod types {
     )]
     pub struct InstanceNetworkInterfaceCreate {
         pub description: ::std::string::String,
-        /// The IP address for the interface. One will be auto-assigned if not
-        /// provided.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip: ::std::option::Option<::std::net::IpAddr>,
+        /// The IP stack configuration for this interface.
+        ///
+        /// If not provided, a default configuration will be used, which creates
+        /// a dual-stack IPv4 / IPv6 interface.
+        #[serde(default = "defaults::instance_network_interface_create_ip_config")]
+        pub ip_config: PrivateIpStackCreate,
         pub name: Name,
         /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
-        /// A set of additional networks that this interface may send and
-        /// receive traffic on.
-        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub transit_ips: ::std::vec::Vec<IpNet>,
         /// The VPC in which to create the interface.
         pub vpc_name: Name,
     }
@@ -16089,7 +16123,7 @@ pub mod types {
     ///    },
     ///    "transit_ips": {
     ///      "description": "A set of additional networks that this interface
-    /// may send and receive traffic on.",
+    /// may send and receive traffic on",
     ///      "default": [],
     ///      "type": "array",
     ///      "items": {
@@ -16122,7 +16156,7 @@ pub mod types {
         #[serde(default)]
         pub primary: bool,
         /// A set of additional networks that this interface may send and
-        /// receive traffic on.
+        /// receive traffic on
         #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub transit_ips: ::std::vec::Vec<IpNet>,
     }
@@ -18355,6 +18389,80 @@ pub mod types {
         }
     }
 
+    /// How a VPC-private IP address is assigned to a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "How a VPC-private IP address is assigned to a network
+    /// interface.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Automatically assign an IP address from the VPC
+    /// Subnet.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Explicitly assign a specific address, if
+    /// available.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "ipv4"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum Ipv4Assignment {
+        #[serde(rename = "auto")]
+        Auto,
+        /// Explicitly assign a specific address, if available.
+        #[serde(rename = "explicit")]
+        Explicit(::std::net::Ipv4Addr),
+    }
+
+    impl ::std::convert::From<&Self> for Ipv4Assignment {
+        fn from(value: &Ipv4Assignment) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::std::net::Ipv4Addr> for Ipv4Assignment {
+        fn from(value: ::std::net::Ipv4Addr) -> Self {
+            Self::Explicit(value)
+        }
+    }
+
     /// An IPv4 subnet, including prefix and prefix length
     ///
     /// <details><summary>JSON schema</summary>
@@ -18518,6 +18626,80 @@ pub mod types {
     impl Ipv4Range {
         pub fn builder() -> builder::Ipv4Range {
             Default::default()
+        }
+    }
+
+    /// How a VPC-private IP address is assigned to a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "How a VPC-private IP address is assigned to a network
+    /// interface.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Automatically assign an IP address from the VPC
+    /// Subnet.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Explicitly assign a specific address, if
+    /// available.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "ipv6"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum Ipv6Assignment {
+        #[serde(rename = "auto")]
+        Auto,
+        /// Explicitly assign a specific address, if available.
+        #[serde(rename = "explicit")]
+        Explicit(::std::net::Ipv6Addr),
+    }
+
+    impl ::std::convert::From<&Self> for Ipv6Assignment {
+        fn from(value: &Ipv6Assignment) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<::std::net::Ipv6Addr> for Ipv6Assignment {
+        fn from(value: ::std::net::Ipv6Addr) -> Self {
+            Self::Explicit(value)
         }
     }
 
@@ -21375,13 +21557,12 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "id",
-    ///    "ip",
+    ///    "ip_config",
     ///    "kind",
     ///    "mac",
     ///    "name",
     ///    "primary",
     ///    "slot",
-    ///    "subnet",
     ///    "vni"
     ///  ],
     ///  "properties": {
@@ -21389,9 +21570,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "ip": {
-    ///      "type": "string",
-    ///      "format": "ip"
+    ///    "ip_config": {
+    ///      "$ref": "#/components/schemas/PrivateIpConfig"
     ///    },
     ///    "kind": {
     ///      "$ref": "#/components/schemas/NetworkInterfaceKind"
@@ -21410,16 +21590,6 @@ pub mod types {
     ///      "format": "uint8",
     ///      "minimum": 0.0
     ///    },
-    ///    "subnet": {
-    ///      "$ref": "#/components/schemas/IpNet"
-    ///    },
-    ///    "transit_ips": {
-    ///      "default": [],
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/IpNet"
-    ///      }
-    ///    },
     ///    "vni": {
     ///      "$ref": "#/components/schemas/Vni"
     ///    }
@@ -21432,15 +21602,12 @@ pub mod types {
     )]
     pub struct NetworkInterface {
         pub id: ::uuid::Uuid,
-        pub ip: ::std::net::IpAddr,
+        pub ip_config: PrivateIpConfig,
         pub kind: NetworkInterfaceKind,
         pub mac: MacAddr,
         pub name: Name,
         pub primary: bool,
         pub slot: u8,
-        pub subnet: IpNet,
-        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub transit_ips: ::std::vec::Vec<IpNet>,
         pub vni: Vni,
     }
 
@@ -22498,6 +22665,726 @@ pub mod types {
 
     impl Points {
         pub fn builder() -> builder::Points {
+            Default::default()
+        }
+    }
+
+    /// VPC-private IP address configuration for a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "VPC-private IP address configuration for a network
+    /// interface.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The interface has only an IPv4 configuration.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v4"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv4Config"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface has only an IPv6 configuration.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v6"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv6Config"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface is dual-stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "dual_stack"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "object",
+    ///          "required": [
+    ///            "v4",
+    ///            "v6"
+    ///          ],
+    ///          "properties": {
+    ///            "v4": {
+    ///              "description": "The interface's IPv4 configuration.",
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/PrivateIpv4Config"
+    ///                }
+    ///              ]
+    ///            },
+    ///            "v6": {
+    ///              "description": "The interface's IPv6 configuration.",
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/PrivateIpv6Config"
+    ///                }
+    ///              ]
+    ///            }
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum PrivateIpConfig {
+        /// The interface has only an IPv4 configuration.
+        #[serde(rename = "v4")]
+        V4(PrivateIpv4Config),
+        /// The interface has only an IPv6 configuration.
+        #[serde(rename = "v6")]
+        V6(PrivateIpv6Config),
+        /// The interface is dual-stack.
+        #[serde(rename = "dual_stack")]
+        DualStack {
+            /// The interface's IPv4 configuration.
+            v4: PrivateIpv4Config,
+            /// The interface's IPv6 configuration.
+            v6: PrivateIpv6Config,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for PrivateIpConfig {
+        fn from(value: &PrivateIpConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv4Config> for PrivateIpConfig {
+        fn from(value: PrivateIpv4Config) -> Self {
+            Self::V4(value)
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv6Config> for PrivateIpConfig {
+        fn from(value: PrivateIpv6Config) -> Self {
+            Self::V6(value)
+        }
+    }
+
+    /// The VPC-private IP stack for a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The VPC-private IP stack for a network interface.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The interface has only an IPv4 stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v4"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv4Stack"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface has only an IPv6 stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v6"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv6Stack"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface is dual-stack IPv4 and IPv6.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "dual_stack"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "object",
+    ///          "required": [
+    ///            "v4",
+    ///            "v6"
+    ///          ],
+    ///          "properties": {
+    ///            "v4": {
+    ///              "$ref": "#/components/schemas/PrivateIpv4Stack"
+    ///            },
+    ///            "v6": {
+    ///              "$ref": "#/components/schemas/PrivateIpv6Stack"
+    ///            }
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum PrivateIpStack {
+        /// The interface has only an IPv4 stack.
+        #[serde(rename = "v4")]
+        V4(PrivateIpv4Stack),
+        /// The interface has only an IPv6 stack.
+        #[serde(rename = "v6")]
+        V6(PrivateIpv6Stack),
+        /// The interface is dual-stack IPv4 and IPv6.
+        #[serde(rename = "dual_stack")]
+        DualStack {
+            v4: PrivateIpv4Stack,
+            v6: PrivateIpv6Stack,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for PrivateIpStack {
+        fn from(value: &PrivateIpStack) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv4Stack> for PrivateIpStack {
+        fn from(value: PrivateIpv4Stack) -> Self {
+            Self::V4(value)
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv6Stack> for PrivateIpStack {
+        fn from(value: PrivateIpv6Stack) -> Self {
+            Self::V6(value)
+        }
+    }
+
+    /// Create parameters for a network interface's IP stack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create parameters for a network interface's IP stack.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The interface has only an IPv4 stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v4"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv4StackCreate"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface has only an IPv6 stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "v6"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "$ref": "#/components/schemas/PrivateIpv6StackCreate"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The interface has both an IPv4 and IPv6 stack.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "dual_stack"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "object",
+    ///          "required": [
+    ///            "v4",
+    ///            "v6"
+    ///          ],
+    ///          "properties": {
+    ///            "v4": {
+    ///              "$ref": "#/components/schemas/PrivateIpv4StackCreate"
+    ///            },
+    ///            "v6": {
+    ///              "$ref": "#/components/schemas/PrivateIpv6StackCreate"
+    ///            }
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type", content = "value")]
+    pub enum PrivateIpStackCreate {
+        /// The interface has only an IPv4 stack.
+        #[serde(rename = "v4")]
+        V4(PrivateIpv4StackCreate),
+        /// The interface has only an IPv6 stack.
+        #[serde(rename = "v6")]
+        V6(PrivateIpv6StackCreate),
+        /// The interface has both an IPv4 and IPv6 stack.
+        #[serde(rename = "dual_stack")]
+        DualStack {
+            v4: PrivateIpv4StackCreate,
+            v6: PrivateIpv6StackCreate,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for PrivateIpStackCreate {
+        fn from(value: &PrivateIpStackCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv4StackCreate> for PrivateIpStackCreate {
+        fn from(value: PrivateIpv4StackCreate) -> Self {
+            Self::V4(value)
+        }
+    }
+
+    impl ::std::convert::From<PrivateIpv6StackCreate> for PrivateIpStackCreate {
+        fn from(value: PrivateIpv6StackCreate) -> Self {
+            Self::V6(value)
+        }
+    }
+
+    /// VPC-private IPv4 configuration for a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "VPC-private IPv4 configuration for a network
+    /// interface.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip",
+    ///    "subnet"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "VPC-private IP address.",
+    ///      "type": "string",
+    ///      "format": "ipv4"
+    ///    },
+    ///    "subnet": {
+    ///      "description": "The IP subnet.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv4Net"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "Additional networks on which the interface can send
+    /// / receive traffic.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv4Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv4Config {
+        /// VPC-private IP address.
+        pub ip: ::std::net::Ipv4Addr,
+        /// The IP subnet.
+        pub subnet: Ipv4Net,
+        /// Additional networks on which the interface can send / receive
+        /// traffic.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<Ipv4Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv4Config> for PrivateIpv4Config {
+        fn from(value: &PrivateIpv4Config) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv4Config {
+        pub fn builder() -> builder::PrivateIpv4Config {
+            Default::default()
+        }
+    }
+
+    /// The VPC-private IPv4 stack for a network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The VPC-private IPv4 stack for a network interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip",
+    ///    "transit_ips"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "The VPC-private IPv4 address for the interface.",
+    ///      "type": "string",
+    ///      "format": "ipv4"
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional IPv4 networks that this
+    /// interface may send and receive traffic on.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv4Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv4Stack {
+        /// The VPC-private IPv4 address for the interface.
+        pub ip: ::std::net::Ipv4Addr,
+        /// A set of additional IPv4 networks that this interface may send and
+        /// receive traffic on.
+        pub transit_ips: ::std::vec::Vec<Ipv4Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv4Stack> for PrivateIpv4Stack {
+        fn from(value: &PrivateIpv4Stack) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv4Stack {
+        pub fn builder() -> builder::PrivateIpv4Stack {
+            Default::default()
+        }
+    }
+
+    /// Configuration for a network interface's IPv4 addressing.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Configuration for a network interface's IPv4
+    /// addressing.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "The VPC-private address to assign to the
+    /// interface.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv4Assignment"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "Additional IP networks the interface can send /
+    /// receive on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv4Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv4StackCreate {
+        /// The VPC-private address to assign to the interface.
+        pub ip: Ipv4Assignment,
+        /// Additional IP networks the interface can send / receive on.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<Ipv4Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv4StackCreate> for PrivateIpv4StackCreate {
+        fn from(value: &PrivateIpv4StackCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv4StackCreate {
+        pub fn builder() -> builder::PrivateIpv4StackCreate {
+            Default::default()
+        }
+    }
+
+    /// VPC-private IPv6 configuration for a network interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "VPC-private IPv6 configuration for a network
+    /// interface.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip",
+    ///    "subnet",
+    ///    "transit_ips"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "VPC-private IP address.",
+    ///      "type": "string",
+    ///      "format": "ipv6"
+    ///    },
+    ///    "subnet": {
+    ///      "description": "The IP subnet.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv6Net"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "Additional networks on which the interface can send
+    /// / receive traffic.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv6Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv6Config {
+        /// VPC-private IP address.
+        pub ip: ::std::net::Ipv6Addr,
+        /// The IP subnet.
+        pub subnet: Ipv6Net,
+        /// Additional networks on which the interface can send / receive
+        /// traffic.
+        pub transit_ips: ::std::vec::Vec<Ipv6Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv6Config> for PrivateIpv6Config {
+        fn from(value: &PrivateIpv6Config) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv6Config {
+        pub fn builder() -> builder::PrivateIpv6Config {
+            Default::default()
+        }
+    }
+
+    /// The VPC-private IPv6 stack for a network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The VPC-private IPv6 stack for a network interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip",
+    ///    "transit_ips"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "The VPC-private IPv6 address for the interface.",
+    ///      "type": "string",
+    ///      "format": "ipv6"
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "A set of additional IPv6 networks that this
+    /// interface may send and receive traffic on.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv6Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv6Stack {
+        /// The VPC-private IPv6 address for the interface.
+        pub ip: ::std::net::Ipv6Addr,
+        /// A set of additional IPv6 networks that this interface may send and
+        /// receive traffic on.
+        pub transit_ips: ::std::vec::Vec<Ipv6Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv6Stack> for PrivateIpv6Stack {
+        fn from(value: &PrivateIpv6Stack) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv6Stack {
+        pub fn builder() -> builder::PrivateIpv6Stack {
+            Default::default()
+        }
+    }
+
+    /// Configuration for a network interface's IPv6 addressing.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Configuration for a network interface's IPv6
+    /// addressing.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip"
+    ///  ],
+    ///  "properties": {
+    ///    "ip": {
+    ///      "description": "The VPC-private address to assign to the
+    /// interface.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv6Assignment"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "transit_ips": {
+    ///      "description": "Additional IP networks the interface can send /
+    /// receive on.",
+    ///      "default": [],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Ipv6Net"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    pub struct PrivateIpv6StackCreate {
+        /// The VPC-private address to assign to the interface.
+        pub ip: Ipv6Assignment,
+        /// Additional IP networks the interface can send / receive on.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub transit_ips: ::std::vec::Vec<Ipv6Net>,
+    }
+
+    impl ::std::convert::From<&PrivateIpv6StackCreate> for PrivateIpv6StackCreate {
+        fn from(value: &PrivateIpv6StackCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl PrivateIpv6StackCreate {
+        pub fn builder() -> builder::PrivateIpv6StackCreate {
             Default::default()
         }
     }
@@ -47052,7 +47939,7 @@ pub mod types {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             instance_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            ip_stack: ::std::result::Result<super::PrivateIpStack, ::std::string::String>,
             mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             primary: ::std::result::Result<bool, ::std::string::String>,
@@ -47065,8 +47952,6 @@ pub mod types {
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
-            transit_ips:
-                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
             vpc_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
@@ -47076,14 +47961,13 @@ pub mod types {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     instance_id: Err("no value supplied for instance_id".to_string()),
-                    ip: Err("no value supplied for ip".to_string()),
+                    ip_stack: Err("no value supplied for ip_stack".to_string()),
                     mac: Err("no value supplied for mac".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     primary: Err("no value supplied for primary".to_string()),
                     subnet_id: Err("no value supplied for subnet_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
-                    transit_ips: Ok(Default::default()),
                     vpc_id: Err("no value supplied for vpc_id".to_string()),
                 }
             }
@@ -47120,14 +48004,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
                 self
             }
-            pub fn ip<T>(mut self, value: T) -> Self
+            pub fn ip_stack<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T: ::std::convert::TryInto<super::PrivateIpStack>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ip = value
+                self.ip_stack = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                    .map_err(|e| format!("error converting supplied value for ip_stack: {}", e));
                 self
             }
             pub fn mac<T>(mut self, value: T) -> Self
@@ -47190,16 +48074,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn transit_ips<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.transit_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
-                self
-            }
             pub fn vpc_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::uuid::Uuid>,
@@ -47221,14 +48095,13 @@ pub mod types {
                     description: value.description?,
                     id: value.id?,
                     instance_id: value.instance_id?,
-                    ip: value.ip?,
+                    ip_stack: value.ip_stack?,
                     mac: value.mac?,
                     name: value.name?,
                     primary: value.primary?,
                     subnet_id: value.subnet_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
-                    transit_ips: value.transit_ips?,
                     vpc_id: value.vpc_id?,
                 })
             }
@@ -47240,14 +48113,13 @@ pub mod types {
                     description: Ok(value.description),
                     id: Ok(value.id),
                     instance_id: Ok(value.instance_id),
-                    ip: Ok(value.ip),
+                    ip_stack: Ok(value.ip_stack),
                     mac: Ok(value.mac),
                     name: Ok(value.name),
                     primary: Ok(value.primary),
                     subnet_id: Ok(value.subnet_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
-                    transit_ips: Ok(value.transit_ips),
                     vpc_id: Ok(value.vpc_id),
                 }
             }
@@ -47256,14 +48128,9 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct InstanceNetworkInterfaceCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            ip: ::std::result::Result<
-                ::std::option::Option<::std::net::IpAddr>,
-                ::std::string::String,
-            >,
+            ip_config: ::std::result::Result<super::PrivateIpStackCreate, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             subnet_name: ::std::result::Result<super::Name, ::std::string::String>,
-            transit_ips:
-                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
             vpc_name: ::std::result::Result<super::Name, ::std::string::String>,
         }
 
@@ -47271,10 +48138,9 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
-                    ip: Ok(Default::default()),
+                    ip_config: Ok(super::defaults::instance_network_interface_create_ip_config()),
                     name: Err("no value supplied for name".to_string()),
                     subnet_name: Err("no value supplied for subnet_name".to_string()),
-                    transit_ips: Ok(Default::default()),
                     vpc_name: Err("no value supplied for vpc_name".to_string()),
                 }
             }
@@ -47291,14 +48157,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
-            pub fn ip<T>(mut self, value: T) -> Self
+            pub fn ip_config<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
+                T: ::std::convert::TryInto<super::PrivateIpStackCreate>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ip = value
+                self.ip_config = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                    .map_err(|e| format!("error converting supplied value for ip_config: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -47319,16 +48185,6 @@ pub mod types {
                 self.subnet_name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
-                self
-            }
-            pub fn transit_ips<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.transit_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
                 self
             }
             pub fn vpc_name<T>(mut self, value: T) -> Self
@@ -47352,10 +48208,9 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
-                    ip: value.ip?,
+                    ip_config: value.ip_config?,
                     name: value.name?,
                     subnet_name: value.subnet_name?,
-                    transit_ips: value.transit_ips?,
                     vpc_name: value.vpc_name?,
                 })
             }
@@ -47367,10 +48222,9 @@ pub mod types {
             fn from(value: super::InstanceNetworkInterfaceCreate) -> Self {
                 Self {
                     description: Ok(value.description),
-                    ip: Ok(value.ip),
+                    ip_config: Ok(value.ip_config),
                     name: Ok(value.name),
                     subnet_name: Ok(value.subnet_name),
-                    transit_ips: Ok(value.transit_ips),
                     vpc_name: Ok(value.vpc_name),
                 }
             }
@@ -51511,15 +52365,12 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct NetworkInterface {
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            ip: ::std::result::Result<::std::net::IpAddr, ::std::string::String>,
+            ip_config: ::std::result::Result<super::PrivateIpConfig, ::std::string::String>,
             kind: ::std::result::Result<super::NetworkInterfaceKind, ::std::string::String>,
             mac: ::std::result::Result<super::MacAddr, ::std::string::String>,
             name: ::std::result::Result<super::Name, ::std::string::String>,
             primary: ::std::result::Result<bool, ::std::string::String>,
             slot: ::std::result::Result<u8, ::std::string::String>,
-            subnet: ::std::result::Result<super::IpNet, ::std::string::String>,
-            transit_ips:
-                ::std::result::Result<::std::vec::Vec<super::IpNet>, ::std::string::String>,
             vni: ::std::result::Result<super::Vni, ::std::string::String>,
         }
 
@@ -51527,14 +52378,12 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     id: Err("no value supplied for id".to_string()),
-                    ip: Err("no value supplied for ip".to_string()),
+                    ip_config: Err("no value supplied for ip_config".to_string()),
                     kind: Err("no value supplied for kind".to_string()),
                     mac: Err("no value supplied for mac".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     primary: Err("no value supplied for primary".to_string()),
                     slot: Err("no value supplied for slot".to_string()),
-                    subnet: Err("no value supplied for subnet".to_string()),
-                    transit_ips: Ok(Default::default()),
                     vni: Err("no value supplied for vni".to_string()),
                 }
             }
@@ -51551,14 +52400,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn ip<T>(mut self, value: T) -> Self
+            pub fn ip_config<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::net::IpAddr>,
+                T: ::std::convert::TryInto<super::PrivateIpConfig>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ip = value
+                self.ip_config = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                    .map_err(|e| format!("error converting supplied value for ip_config: {}", e));
                 self
             }
             pub fn kind<T>(mut self, value: T) -> Self
@@ -51611,26 +52460,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for slot: {}", e));
                 self
             }
-            pub fn subnet<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<super::IpNet>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.subnet = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
-                self
-            }
-            pub fn transit_ips<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::IpNet>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.transit_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
-                self
-            }
             pub fn vni<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Vni>,
@@ -51650,14 +52479,12 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     id: value.id?,
-                    ip: value.ip?,
+                    ip_config: value.ip_config?,
                     kind: value.kind?,
                     mac: value.mac?,
                     name: value.name?,
                     primary: value.primary?,
                     slot: value.slot?,
-                    subnet: value.subnet?,
-                    transit_ips: value.transit_ips?,
                     vni: value.vni?,
                 })
             }
@@ -51667,14 +52494,12 @@ pub mod types {
             fn from(value: super::NetworkInterface) -> Self {
                 Self {
                     id: Ok(value.id),
-                    ip: Ok(value.ip),
+                    ip_config: Ok(value.ip_config),
                     kind: Ok(value.kind),
                     mac: Ok(value.mac),
                     name: Ok(value.name),
                     primary: Ok(value.primary),
                     slot: Ok(value.slot),
-                    subnet: Ok(value.subnet),
-                    transit_ips: Ok(value.transit_ips),
                     vni: Ok(value.vni),
                 }
             }
@@ -52150,6 +52975,394 @@ pub mod types {
                     start_times: Ok(value.start_times),
                     timestamps: Ok(value.timestamps),
                     values: Ok(value.values),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv4Config {
+            ip: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
+            subnet: ::std::result::Result<super::Ipv4Net, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv4Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv4Config {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    transit_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl PrivateIpv4Config {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Ipv4Net>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv4Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv4Config> for super::PrivateIpv4Config {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv4Config,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    subnet: value.subnet?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv4Config> for PrivateIpv4Config {
+            fn from(value: super::PrivateIpv4Config) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    subnet: Ok(value.subnet),
+                    transit_ips: Ok(value.transit_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv4Stack {
+            ip: ::std::result::Result<::std::net::Ipv4Addr, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv4Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv4Stack {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    transit_ips: Err("no value supplied for transit_ips".to_string()),
+                }
+            }
+        }
+
+        impl PrivateIpv4Stack {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::Ipv4Addr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv4Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv4Stack> for super::PrivateIpv4Stack {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv4Stack,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv4Stack> for PrivateIpv4Stack {
+            fn from(value: super::PrivateIpv4Stack) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    transit_ips: Ok(value.transit_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv4StackCreate {
+            ip: ::std::result::Result<super::Ipv4Assignment, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv4Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv4StackCreate {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    transit_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl PrivateIpv4StackCreate {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Ipv4Assignment>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv4Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv4StackCreate> for super::PrivateIpv4StackCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv4StackCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv4StackCreate> for PrivateIpv4StackCreate {
+            fn from(value: super::PrivateIpv4StackCreate) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    transit_ips: Ok(value.transit_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv6Config {
+            ip: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
+            subnet: ::std::result::Result<super::Ipv6Net, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv6Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv6Config {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    transit_ips: Err("no value supplied for transit_ips".to_string()),
+                }
+            }
+        }
+
+        impl PrivateIpv6Config {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::Ipv6Addr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Ipv6Net>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv6Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv6Config> for super::PrivateIpv6Config {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv6Config,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    subnet: value.subnet?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv6Config> for PrivateIpv6Config {
+            fn from(value: super::PrivateIpv6Config) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    subnet: Ok(value.subnet),
+                    transit_ips: Ok(value.transit_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv6Stack {
+            ip: ::std::result::Result<::std::net::Ipv6Addr, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv6Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv6Stack {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    transit_ips: Err("no value supplied for transit_ips".to_string()),
+                }
+            }
+        }
+
+        impl PrivateIpv6Stack {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::net::Ipv6Addr>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv6Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv6Stack> for super::PrivateIpv6Stack {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv6Stack,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv6Stack> for PrivateIpv6Stack {
+            fn from(value: super::PrivateIpv6Stack) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    transit_ips: Ok(value.transit_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct PrivateIpv6StackCreate {
+            ip: ::std::result::Result<super::Ipv6Assignment, ::std::string::String>,
+            transit_ips:
+                ::std::result::Result<::std::vec::Vec<super::Ipv6Net>, ::std::string::String>,
+        }
+
+        impl ::std::default::Default for PrivateIpv6StackCreate {
+            fn default() -> Self {
+                Self {
+                    ip: Err("no value supplied for ip".to_string()),
+                    transit_ips: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl PrivateIpv6StackCreate {
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::Ipv6Assignment>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn transit_ips<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Ipv6Net>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.transit_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for transit_ips: {}", e));
+                self
+            }
+        }
+
+        impl ::std::convert::TryFrom<PrivateIpv6StackCreate> for super::PrivateIpv6StackCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PrivateIpv6StackCreate,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ip: value.ip?,
+                    transit_ips: value.transit_ips?,
+                })
+            }
+        }
+
+        impl ::std::convert::From<super::PrivateIpv6StackCreate> for PrivateIpv6StackCreate {
+            fn from(value: super::PrivateIpv6StackCreate) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    transit_ips: Ok(value.transit_ips),
                 }
             }
         }
@@ -63439,7 +64652,20 @@ pub mod types {
 
         pub(super) fn instance_create_network_interfaces(
         ) -> super::InstanceNetworkInterfaceAttachment {
-            super::InstanceNetworkInterfaceAttachment::Default
+            super::InstanceNetworkInterfaceAttachment::DefaultDualStack
+        }
+
+        pub(super) fn instance_network_interface_create_ip_config() -> super::PrivateIpStackCreate {
+            super::PrivateIpStackCreate::DualStack {
+                v4: super::PrivateIpv4StackCreate {
+                    ip: super::Ipv4Assignment::Auto,
+                    transit_ips: vec![],
+                },
+                v6: super::PrivateIpv6StackCreate {
+                    ip: super::Ipv6Assignment::Auto,
+                    transit_ips: vec![],
+                },
+            }
         }
 
         pub(super) fn ip_pool_create_ip_version() -> super::IpVersion {
@@ -63457,7 +64683,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026010100.0.0
+/// Version: 2026010300.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -63498,7 +64724,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026010100.0.0"
+        "2026010300.0.0"
     }
 
     fn baseurl(&self) -> &str {

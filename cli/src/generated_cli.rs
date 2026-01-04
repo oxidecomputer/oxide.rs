@@ -4431,16 +4431,6 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the instance"),
             )
             .arg(
-                ::clap::Arg::new("ip")
-                    .long("ip")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(false)
-                    .help(
-                        "The IP address for the interface. One will be auto-assigned if not \
-                         provided.",
-                    ),
-            )
-            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -14113,10 +14103,6 @@ impl<T: CliConfig> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
-            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
