@@ -2050,6 +2050,24 @@ impl<T: CliConfig> Cli<T> {
                     ),
             )
             .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "IP version to use when allocating from the default pool. Only used when \
+                         both `ip` and `pool` are not specified. Required if multiple default \
+                         pools of different IP versions exist. Allocation fails if no pool of the \
+                         requested version is available.",
+                    ),
+            )
+            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -2973,6 +2991,24 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
+            )
+            .arg(
+                ::clap::Arg::new("ip-version")
+                    .long("ip-version")
+                    .value_parser(::clap::builder::TypedValueParser::map(
+                        ::clap::builder::PossibleValuesParser::new([
+                            types::IpVersion::V4.to_string(),
+                            types::IpVersion::V6.to_string(),
+                        ]),
+                        |s| types::IpVersion::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help(
+                        "IP version to use when allocating from the default pool. Only used when \
+                         `pool` is not specified. Required if multiple default pools of different \
+                         IP versions exist. Allocation fails if no pool of the requested version \
+                         is available.",
+                    ),
             )
             .arg(
                 ::clap::Arg::new("pool")
@@ -6010,8 +6046,10 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body")
                     .help(
                         "When a pool is the default for a silo, floating IPs and instance \
-                         ephemeral IPs will come from that pool when no other pool is specified. \
-                         There can be at most one default for a given silo.",
+                         ephemeral IPs will come from that pool when no other pool is \
+                         specified.\n\nA silo can have at most one default pool per combination \
+                         of pool type (unicast or multicast) and IP version (IPv4 or IPv6), \
+                         allowing up to 4 default pools total.",
                     ),
             )
             .arg(
@@ -6058,10 +6096,12 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body")
                     .help(
                         "When a pool is the default for a silo, floating IPs and instance \
-                         ephemeral IPs will come from that pool when no other pool is specified. \
-                         There can be at most one default for a given silo, so when a pool is \
-                         made default, an existing default will remain linked but will no longer \
-                         be the default.",
+                         ephemeral IPs will come from that pool when no other pool is \
+                         specified.\n\nA silo can have at most one default pool per combination \
+                         of pool type (unicast or multicast) and IP version (IPv4 or IPv6), \
+                         allowing up to 4 default pools total. When a pool is made default, an \
+                         existing default of the same type and version will remain linked but \
+                         will no longer be the default.",
                     ),
             )
             .arg(
@@ -11572,6 +11612,10 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.ip(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.body_map(|body| body.ip_version(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -12488,6 +12532,10 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.instance_ephemeral_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
+            request = request.body_map(|body| body.ip_version(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
