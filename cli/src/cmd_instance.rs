@@ -9,7 +9,7 @@ use async_trait::async_trait;
 use clap::Parser;
 use oxide::types::{
     ByteCount, DiskBackend, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment,
-    Name, NameOrId,
+    IpVersion, Name, NameOrId,
 };
 
 use oxide::ClientInstancesExt;
@@ -277,7 +277,10 @@ impl crate::AuthenticatedCmd for CmdInstanceFromImage {
                             .expect("valid disk name"),
                         size: self.size.clone(),
                     })
-                    .external_ips(vec![ExternalIpCreate::Ephemeral { pool: None }])
+                    .external_ips(vec![ExternalIpCreate::Ephemeral {
+                        ip_version: Some(IpVersion::V4),
+                        pool: None,
+                    }])
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
                     .ncpus(self.ncpus.clone())
