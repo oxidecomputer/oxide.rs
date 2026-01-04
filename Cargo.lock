@@ -2807,9 +2807,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.103"
+version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ee95bc4ef87b8d5ba32e8b7714ccc834865276eab0aed5c9958d00ec45f49e8"
+checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
 dependencies = [
  "unicode-ident",
 ]
@@ -2817,7 +2817,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#4c06c8c01e23f5092c97ab95b8359ae2511316a2"
+source = "git+https://github.com/oxidecomputer/progenitor#8792f334317f08182ec4a0eab2cd3f7a614013dd"
 dependencies = [
  "progenitor-impl",
 ]
@@ -2840,7 +2840,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.11.2"
-source = "git+https://github.com/oxidecomputer/progenitor#4c06c8c01e23f5092c97ab95b8359ae2511316a2"
+source = "git+https://github.com/oxidecomputer/progenitor#8792f334317f08182ec4a0eab2cd3f7a614013dd"
 dependencies = [
  "heck",
  "http 1.4.0",
