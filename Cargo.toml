@@ -85,3 +85,4 @@ lto = "thin"
 
 [patch.crates-io]
 progenitor-client = { git = "https://github.com/danieleades/progenitor", branch = "refactor" }
+typify = { git = "https://github.com/danieleades/typify", branch = "refactor" }
