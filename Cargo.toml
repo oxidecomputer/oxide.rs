@@ -82,3 +82,6 @@ lto = "thin"
 #progenitor = { path = "../progenitor/progenitor" }
 #[patch."https://github.com/oxidecomputer/typify"]
 #typify = { path = "../typify/typify" }
+
+[patch.crates-io]
+progenitor-client = { git = "https://github.com/danieleades/progenitor", branch = "refactor" }
