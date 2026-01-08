@@ -78,7 +78,12 @@ uuid = { version = "1.19.0", features = ["serde", "v4"] }
 inherits = "release"
 lto = "thin"
 
-#[patch."https://github.com/oxidecomputer/progenitor"]
-#progenitor = { path = "../progenitor/progenitor" }
-#[patch."https://github.com/oxidecomputer/typify"]
-#typify = { path = "../typify/typify" }
+[patch."https://github.com/oxidecomputer/progenitor"]
+progenitor = { git = "https://github.com/danieleades/progenitor.git", branch = "refactor2" }
+
+[patch."https://github.com/oxidecomputer/typify"]
+typify = { git = "https://github.com/danieleades/typify.git", branch = "refactor2" }
+
+[patch.crates-io]
+typify = { git = "https://github.com/danieleades/typify.git", branch = "refactor2" }
+progenitor = { git = "https://github.com/danieleades/progenitor.git", branch = "refactor2" }
