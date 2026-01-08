@@ -541,12 +541,6 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                ::clap::Arg::new("ip-pool")
-                    .long("ip-pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false),
-            )
-            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
@@ -2039,49 +2033,10 @@ impl<T: CliConfig> Cli<T> {
                     .required_unless_present("json-body"),
             )
             .arg(
-                ::clap::Arg::new("ip")
-                    .long("ip")
-                    .value_parser(::clap::value_parser!(::std::net::IpAddr))
-                    .required(false)
-                    .help(
-                        "An IP address to reserve for use as a floating IP. This field is \
-                         optional: when not set, an address will be automatically chosen from \
-                         `pool`. If set, then the IP must be available in the resolved `pool`.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("ip-version")
-                    .long("ip-version")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::IpVersion::V4.to_string(),
-                            types::IpVersion::V6.to_string(),
-                        ]),
-                        |s| types::IpVersion::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help(
-                        "IP version to use when allocating from the default pool. Only used when \
-                         both `ip` and `pool` are not specified. Required if multiple default \
-                         pools of different IP versions exist. Allocation fails if no pool of the \
-                         requested version is available.",
-                    ),
-            )
-            .arg(
                 ::clap::Arg::new("name")
                     .long("name")
                     .value_parser(::clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
-            )
-            .arg(
-                ::clap::Arg::new("pool")
-                    .long("pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "The parent IP pool that a floating IP is pulled from. If unset, the \
-                         default pool is selected.",
-                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -2991,34 +2946,6 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(::clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the instance"),
-            )
-            .arg(
-                ::clap::Arg::new("ip-version")
-                    .long("ip-version")
-                    .value_parser(::clap::builder::TypedValueParser::map(
-                        ::clap::builder::PossibleValuesParser::new([
-                            types::IpVersion::V4.to_string(),
-                            types::IpVersion::V6.to_string(),
-                        ]),
-                        |s| types::IpVersion::try_from(s).unwrap(),
-                    ))
-                    .required(false)
-                    .help(
-                        "IP version to use when allocating from the default pool. Only used when \
-                         `pool` is not specified. Required if multiple default pools of different \
-                         IP versions exist. Allocation fails if no pool of the requested version \
-                         is available.",
-                    ),
-            )
-            .arg(
-                ::clap::Arg::new("pool")
-                    .long("pool")
-                    .value_parser(::clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "Name or ID of the IP pool used to allocate an address. If unspecified, \
-                         the default IP pool will be used.",
-                    ),
             )
             .arg(
                 ::clap::Arg::new("project")
@@ -9705,10 +9632,6 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {
-            request = request.body_map(|body| body.ip_pool(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -11598,20 +11521,8 @@ impl<T: CliConfig> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<::std::net::IpAddr>("ip") {
-            request = request.body_map(|body| body.ip(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
-            request = request.body_map(|body| body.ip_version(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
-            request = request.body_map(|body| body.pool(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -12522,14 +12433,6 @@ impl<T: CliConfig> Cli<T> {
         let mut request = self.client.instance_ephemeral_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IpVersion>("ip-version") {
-            request = request.body_map(|body| body.ip_version(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
-            request = request.body_map(|body| body.pool(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {

@@ -749,6 +749,121 @@ pub mod types {
         }
     }
 
+    /// Specify how to allocate a floating IP address.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Specify how to allocate a floating IP address.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Reserve a specific IP address.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "ip": {
+    ///          "description": "The IP address to reserve. Must be available in
+    /// the pool.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "pool": {
+    ///          "description": "The pool containing this address. If not
+    /// specified, the default pool for the address's IP version is used.",
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/NameOrId"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Automatically allocate an IP address from a
+    /// specified pool.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "pool_selector": {
+    ///          "description": "Pool selection.\n\nIf omitted, this field uses
+    /// the silo's default pool. If the silo has default pools for both IPv4 and
+    /// IPv6, the request will fail unless `ip_version` is specified in the pool
+    /// selector.",
+    ///          "default": {
+    ///            "ip_version": null,
+    ///            "type": "auto"
+    ///          },
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PoolSelector"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum AddressSelector {
+        /// Reserve a specific IP address.
+        #[serde(rename = "explicit")]
+        Explicit {
+            /// The IP address to reserve. Must be available in the pool.
+            ip: ::std::net::IpAddr,
+            /// The pool containing this address. If not specified, the default
+            /// pool for the address's IP version is used.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            pool: ::std::option::Option<NameOrId>,
+        },
+        /// Automatically allocate an IP address from a specified pool.
+        #[serde(rename = "auto")]
+        Auto {
+            /// Pool selection.
+            ///
+            /// If omitted, this field uses the silo's default pool. If the silo
+            /// has default pools for both IPv4 and IPv6, the request will fail
+            /// unless `ip_version` is specified in the pool selector.
+            #[serde(default = "defaults::address_selector_auto_pool_selector")]
+            pool_selector: PoolSelector,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for AddressSelector {
+        fn from(value: &AddressSelector) -> Self {
+            value.clone()
+        }
+    }
+
     /// View of an Affinity Group
     ///
     /// <details><summary>JSON schema</summary>
@@ -10011,37 +10126,15 @@ pub mod types {
     /// instance.",
     ///  "type": "object",
     ///  "properties": {
-    ///    "ip_version": {
-    ///      "description": "IP version to use when allocating from the default
-    /// pool. Only used when `pool` is not specified. Required if multiple
-    /// default pools of different IP versions exist. Allocation fails if no
-    /// pool of the requested version is available.",
-    ///      "oneOf": [
+    ///    "pool_selector": {
+    ///      "description": "Pool to allocate from.",
+    ///      "default": {
+    ///        "ip_version": null,
+    ///        "type": "auto"
+    ///      },
+    ///      "allOf": [
     ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpVersion"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
-    ///    "pool": {
-    ///      "description": "Name or ID of the IP pool used to allocate an
-    /// address. If unspecified, the default IP pool will be used.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
+    ///          "$ref": "#/components/schemas/PoolSelector"
     ///        }
     ///      ]
     ///    }
@@ -10053,16 +10146,9 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct EphemeralIpCreate {
-        /// IP version to use when allocating from the default pool. Only used
-        /// when `pool` is not specified. Required if multiple default pools of
-        /// different IP versions exist. Allocation fails if no pool of the
-        /// requested version is available.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip_version: ::std::option::Option<IpVersion>,
-        /// Name or ID of the IP pool used to allocate an address. If
-        /// unspecified, the default IP pool will be used.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pool: ::std::option::Option<NameOrId>,
+        /// Pool to allocate from.
+        #[serde(default = "defaults::ephemeral_ip_create_pool_selector")]
+        pub pool_selector: PoolSelector,
     }
 
     impl ::std::convert::From<&EphemeralIpCreate> for EphemeralIpCreate {
@@ -10074,8 +10160,7 @@ pub mod types {
     impl ::std::default::Default for EphemeralIpCreate {
         fn default() -> Self {
             Self {
-                ip_version: Default::default(),
-                pool: Default::default(),
+                pool_selector: defaults::ephemeral_ip_create_pool_selector(),
             }
         }
     }
@@ -10362,42 +10447,21 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is automatically assigned from the provided IP pool
-    /// or the default IP pool if not specified.",
+    /// access. The address is automatically assigned from a pool.",
     ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "ip_version": {
-    ///          "description": "IP version to use when allocating from the
-    /// default pool. Only used when `pool` is not specified. Required if
-    /// multiple default pools of different IP versions exist. Allocation fails
-    /// if no pool of the requested version is available.",
-    ///          "oneOf": [
+    ///        "pool_selector": {
+    ///          "description": "Pool to allocate from.",
+    ///          "default": {
+    ///            "ip_version": null,
+    ///            "type": "auto"
+    ///          },
+    ///          "allOf": [
     ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/IpVersion"
-    ///                }
-    ///              ]
-    ///            }
-    ///          ]
-    ///        },
-    ///        "pool": {
-    ///          "oneOf": [
-    ///            {
-    ///              "type": "null"
-    ///            },
-    ///            {
-    ///              "allOf": [
-    ///                {
-    ///                  "$ref": "#/components/schemas/NameOrId"
-    ///                }
-    ///              ]
+    ///              "$ref": "#/components/schemas/PoolSelector"
     ///            }
     ///          ]
     ///        },
@@ -10441,18 +10505,12 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
         /// An IP address providing both inbound and outbound access. The
-        /// address is automatically assigned from the provided IP pool or the
-        /// default IP pool if not specified.
+        /// address is automatically assigned from a pool.
         #[serde(rename = "ephemeral")]
         Ephemeral {
-            /// IP version to use when allocating from the default pool. Only
-            /// used when `pool` is not specified. Required if multiple default
-            /// pools of different IP versions exist. Allocation fails if no
-            /// pool of the requested version is available.
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            ip_version: ::std::option::Option<IpVersion>,
-            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-            pool: ::std::option::Option<NameOrId>,
+            /// Pool to allocate from.
+            #[serde(default = "defaults::external_ip_create_ephemeral_pool_selector")]
+            pool_selector: PoolSelector,
         },
         /// An IP address providing both inbound and outbound access. The
         /// address is an existing floating IP object assigned to the current
@@ -11685,56 +11743,26 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
+    ///    "address_selector": {
+    ///      "description": "IP address allocation method.",
+    ///      "default": {
+    ///        "pool_selector": {
+    ///          "ip_version": null,
+    ///          "type": "auto"
+    ///        },
+    ///        "type": "auto"
+    ///      },
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AddressSelector"
+    ///        }
+    ///      ]
+    ///    },
     ///    "description": {
     ///      "type": "string"
     ///    },
-    ///    "ip": {
-    ///      "description": "An IP address to reserve for use as a floating IP.
-    /// This field is optional: when not set, an address will be automatically
-    /// chosen from `pool`. If set, then the IP must be available in the
-    /// resolved `pool`.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "ip"
-    ///    },
-    ///    "ip_version": {
-    ///      "description": "IP version to use when allocating from the default
-    /// pool. Only used when both `ip` and `pool` are not specified. Required if
-    /// multiple default pools of different IP versions exist. Allocation fails
-    /// if no pool of the requested version is available.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/IpVersion"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "pool": {
-    ///      "description": "The parent IP pool that a floating IP is pulled
-    /// from. If unset, the default pool is selected.",
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
     ///    }
     ///  }
     /// }
@@ -11744,24 +11772,11 @@ pub mod types {
         :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
     )]
     pub struct FloatingIpCreate {
+        /// IP address allocation method.
+        #[serde(default = "defaults::floating_ip_create_address_selector")]
+        pub address_selector: AddressSelector,
         pub description: ::std::string::String,
-        /// An IP address to reserve for use as a floating IP. This field is
-        /// optional: when not set, an address will be automatically chosen from
-        /// `pool`. If set, then the IP must be available in the resolved
-        /// `pool`.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip: ::std::option::Option<::std::net::IpAddr>,
-        /// IP version to use when allocating from the default pool. Only used
-        /// when both `ip` and `pool` are not specified. Required if multiple
-        /// default pools of different IP versions exist. Allocation fails if no
-        /// pool of the requested version is available.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip_version: ::std::option::Option<IpVersion>,
         pub name: Name,
-        /// The parent IP pool that a floating IP is pulled from. If unset, the
-        /// default pool is selected.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pool: ::std::option::Option<NameOrId>,
     }
 
     impl ::std::convert::From<&FloatingIpCreate> for FloatingIpCreate {
@@ -22669,6 +22684,99 @@ pub mod types {
         }
     }
 
+    /// Specify which IP pool to allocate from.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Specify which IP pool to allocate from.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Use the specified pool by name or ID.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "pool",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "pool": {
+    ///          "description": "The pool to allocate from.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NameOrId"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "explicit"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Use the default pool for the silo.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "ip_version": {
+    ///          "description": "IP version to use when multiple default pools exist. Required if both IPv4 and IPv6 default pools are configured.",
+    ///          "oneOf": [
+    ///            {
+    ///              "type": "null"
+    ///            },
+    ///            {
+    ///              "allOf": [
+    ///                {
+    ///                  "$ref": "#/components/schemas/IpVersion"
+    ///                }
+    ///              ]
+    ///            }
+    ///          ]
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "auto"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize, :: serde :: Serialize, Clone, Debug, schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum PoolSelector {
+        /// Use the specified pool by name or ID.
+        #[serde(rename = "explicit")]
+        Explicit {
+            /// The pool to allocate from.
+            pool: NameOrId,
+        },
+        /// Use the default pool for the silo.
+        #[serde(rename = "auto")]
+        Auto {
+            /// IP version to use when multiple default pools exist. Required if
+            /// both IPv4 and IPv6 default pools are configured.
+            #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+            ip_version: ::std::option::Option<IpVersion>,
+        },
+    }
+
+    impl ::std::convert::From<&Self> for PoolSelector {
+        fn from(value: &PoolSelector) -> Self {
+            value.clone()
+        }
+    }
+
     /// VPC-private IP address configuration for a network interface.
     ///
     /// <details><summary>JSON schema</summary>
@@ -23491,22 +23599,20 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
-    ///    "ip_pool": {
-    ///      "oneOf": [
-    ///        {
-    ///          "type": "null"
-    ///        },
-    ///        {
-    ///          "allOf": [
-    ///            {
-    ///              "$ref": "#/components/schemas/NameOrId"
-    ///            }
-    ///          ]
-    ///        }
-    ///      ]
-    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "pool_selector": {
+    ///      "description": "Pool to allocate from.",
+    ///      "default": {
+    ///        "ip_version": null,
+    ///        "type": "auto"
+    ///      },
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/PoolSelector"
+    ///        }
+    ///      ]
     ///    },
     ///    "sled": {
     ///      "type": "string",
@@ -23521,9 +23627,10 @@ pub mod types {
     )]
     pub struct ProbeCreate {
         pub description: ::std::string::String,
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub ip_pool: ::std::option::Option<NameOrId>,
         pub name: Name,
+        /// Pool to allocate from.
+        #[serde(default = "defaults::probe_create_pool_selector")]
+        pub pool_selector: PoolSelector,
         pub sled: ::uuid::Uuid,
     }
 
@@ -43932,44 +44039,26 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct EphemeralIpCreate {
-            ip_version: ::std::result::Result<
-                ::std::option::Option<super::IpVersion>,
-                ::std::string::String,
-            >,
-            pool: ::std::result::Result<
-                ::std::option::Option<super::NameOrId>,
-                ::std::string::String,
-            >,
+            pool_selector: ::std::result::Result<super::PoolSelector, ::std::string::String>,
         }
 
         impl ::std::default::Default for EphemeralIpCreate {
             fn default() -> Self {
                 Self {
-                    ip_version: Ok(Default::default()),
-                    pool: Ok(Default::default()),
+                    pool_selector: Ok(super::defaults::ephemeral_ip_create_pool_selector()),
                 }
             }
         }
 
         impl EphemeralIpCreate {
-            pub fn ip_version<T>(mut self, value: T) -> Self
+            pub fn pool_selector<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
+                T: ::std::convert::TryInto<super::PoolSelector>,
                 T::Error: ::std::fmt::Display,
             {
-                self.ip_version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
-                self
-            }
-            pub fn pool<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                self.pool_selector = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for pool_selector: {}", e)
+                });
                 self
             }
         }
@@ -43980,8 +44069,7 @@ pub mod types {
                 value: EphemeralIpCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    ip_version: value.ip_version?,
-                    pool: value.pool?,
+                    pool_selector: value.pool_selector?,
                 })
             }
         }
@@ -43989,8 +44077,7 @@ pub mod types {
         impl ::std::convert::From<super::EphemeralIpCreate> for EphemeralIpCreate {
             fn from(value: super::EphemeralIpCreate) -> Self {
                 Self {
-                    ip_version: Ok(value.ip_version),
-                    pool: Ok(value.pool),
+                    pool_selector: Ok(value.pool_selector),
                 }
             }
         }
@@ -44615,35 +44702,35 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
+            address_selector: ::std::result::Result<super::AddressSelector, ::std::string::String>,
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            ip: ::std::result::Result<
-                ::std::option::Option<::std::net::IpAddr>,
-                ::std::string::String,
-            >,
-            ip_version: ::std::result::Result<
-                ::std::option::Option<super::IpVersion>,
-                ::std::string::String,
-            >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
-            pool: ::std::result::Result<
-                ::std::option::Option<super::NameOrId>,
-                ::std::string::String,
-            >,
         }
 
         impl ::std::default::Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
+                    address_selector: Ok(super::defaults::floating_ip_create_address_selector()),
                     description: Err("no value supplied for description".to_string()),
-                    ip: Ok(Default::default()),
-                    ip_version: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
-                    pool: Ok(Default::default()),
                 }
             }
         }
 
         impl FloatingIpCreate {
+            pub fn address_selector<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::AddressSelector>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.address_selector = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_selector: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::string::String>,
@@ -44652,26 +44739,6 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn ip<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::net::IpAddr>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
-                self
-            }
-            pub fn ip_version<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::IpVersion>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.ip_version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_version: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -44684,16 +44751,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn pool<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.pool = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
-                self
-            }
         }
 
         impl ::std::convert::TryFrom<FloatingIpCreate> for super::FloatingIpCreate {
@@ -44702,11 +44759,9 @@ pub mod types {
                 value: FloatingIpCreate,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    address_selector: value.address_selector?,
                     description: value.description?,
-                    ip: value.ip?,
-                    ip_version: value.ip_version?,
                     name: value.name?,
-                    pool: value.pool?,
                 })
             }
         }
@@ -44714,11 +44769,9 @@ pub mod types {
         impl ::std::convert::From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
+                    address_selector: Ok(value.address_selector),
                     description: Ok(value.description),
-                    ip: Ok(value.ip),
-                    ip_version: Ok(value.ip_version),
                     name: Ok(value.name),
-                    pool: Ok(value.pool),
                 }
             }
         }
@@ -53491,11 +53544,8 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct ProbeCreate {
             description: ::std::result::Result<::std::string::String, ::std::string::String>,
-            ip_pool: ::std::result::Result<
-                ::std::option::Option<super::NameOrId>,
-                ::std::string::String,
-            >,
             name: ::std::result::Result<super::Name, ::std::string::String>,
+            pool_selector: ::std::result::Result<super::PoolSelector, ::std::string::String>,
             sled: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
         }
 
@@ -53503,8 +53553,8 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
-                    ip_pool: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
+                    pool_selector: Ok(super::defaults::probe_create_pool_selector()),
                     sled: Err("no value supplied for sled".to_string()),
                 }
             }
@@ -53521,16 +53571,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
-            pub fn ip_pool<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<super::NameOrId>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.ip_pool = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
-                self
-            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::Name>,
@@ -53539,6 +53579,16 @@ pub mod types {
                 self.name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn pool_selector<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PoolSelector>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pool_selector = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for pool_selector: {}", e)
+                });
                 self
             }
             pub fn sled<T>(mut self, value: T) -> Self
@@ -53560,8 +53610,8 @@ pub mod types {
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     description: value.description?,
-                    ip_pool: value.ip_pool?,
                     name: value.name?,
+                    pool_selector: value.pool_selector?,
                     sled: value.sled?,
                 })
             }
@@ -53571,8 +53621,8 @@ pub mod types {
             fn from(value: super::ProbeCreate) -> Self {
                 Self {
                     description: Ok(value.description),
-                    ip_pool: Ok(value.ip_pool),
                     name: Ok(value.name),
+                    pool_selector: Ok(value.pool_selector),
                     sled: Ok(value.sled),
                 }
             }
@@ -64650,6 +64700,32 @@ pub mod types {
             V
         }
 
+        pub(super) fn address_selector_auto_pool_selector() -> super::PoolSelector {
+            super::PoolSelector::Auto {
+                ip_version: ::std::option::Option::None,
+            }
+        }
+
+        pub(super) fn ephemeral_ip_create_pool_selector() -> super::PoolSelector {
+            super::PoolSelector::Auto {
+                ip_version: ::std::option::Option::None,
+            }
+        }
+
+        pub(super) fn external_ip_create_ephemeral_pool_selector() -> super::PoolSelector {
+            super::PoolSelector::Auto {
+                ip_version: ::std::option::Option::None,
+            }
+        }
+
+        pub(super) fn floating_ip_create_address_selector() -> super::AddressSelector {
+            super::AddressSelector::Auto {
+                pool_selector: super::PoolSelector::Auto {
+                    ip_version: ::std::option::Option::None,
+                },
+            }
+        }
+
         pub(super) fn instance_create_network_interfaces(
         ) -> super::InstanceNetworkInterfaceAttachment {
             super::InstanceNetworkInterfaceAttachment::DefaultDualStack
@@ -64675,6 +64751,12 @@ pub mod types {
         pub(super) fn ip_pool_create_pool_type() -> super::IpPoolType {
             super::IpPoolType::Unicast
         }
+
+        pub(super) fn probe_create_pool_selector() -> super::PoolSelector {
+            super::PoolSelector::Auto {
+                ip_version: ::std::option::Option::None,
+            }
+        }
     }
 }
 
@@ -64683,7 +64765,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 2026010300.0.0
+/// Version: 2026010500.0.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -64724,7 +64806,7 @@ impl Client {
 
 impl ClientInfo<()> for Client {
     fn api_version() -> &'static str {
-        "2026010300.0.0"
+        "2026010500.0.0"
     }
 
     fn baseurl(&self) -> &str {
