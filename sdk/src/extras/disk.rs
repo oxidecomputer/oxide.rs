@@ -505,7 +505,7 @@ pub mod types {
             let snapshot_id = self
                 .client
                 .snapshot_view()
-                .project(&self.project)
+                .project(self.project.clone())
                 .snapshot(image_info.snapshot.clone())
                 .send()
                 .await
@@ -513,7 +513,7 @@ pub mod types {
 
             self.client
                 .image_create()
-                .project(&self.project)
+                .project(self.project.clone())
                 .body(ImageCreate {
                     name: image_info.image.clone(),
                     description: image_info.image_description.clone(),
@@ -570,7 +570,7 @@ pub mod types {
                 format!("disk \"{}\" exists already", &*self.disk),
                 self.client
                     .disk_view()
-                    .project(&self.project)
+                    .project(self.project.clone())
                     .disk(self.disk.clone())
                     .send()
                     .await,
@@ -581,7 +581,7 @@ pub mod types {
                     format!("snapshot \"{}\" exists already", &*image_info.snapshot),
                     self.client
                         .snapshot_view()
-                        .project(&self.project)
+                        .project(self.project.clone())
                         .snapshot(image_info.snapshot.clone())
                         .send()
                         .await,
@@ -591,7 +591,7 @@ pub mod types {
                     format!("image \"{}\" exists already", &*image_info.image),
                     self.client
                         .image_view()
-                        .project(&self.project)
+                        .project(self.project.clone())
                         .image(image_info.image.clone())
                         .send()
                         .await,
@@ -605,7 +605,7 @@ pub mod types {
             let response = self
                 .client
                 .disk_view()
-                .project(&self.project)
+                .project(self.project.clone())
                 .disk(self.disk.clone())
                 .send()
                 .await?;
@@ -639,7 +639,7 @@ pub mod types {
         async fn unwind_disk_delete(&self) -> Result<(), DiskImportError> {
             self.client
                 .disk_delete()
-                .project(&self.project)
+                .project(self.project.clone())
                 .disk(self.disk.clone())
                 .send()
                 .await
@@ -656,7 +656,7 @@ pub mod types {
         async fn unwind_disk_finalize(&self) -> Result<(), DiskImportError> {
             self.client
                 .disk_finalize_import()
-                .project(&self.project)
+                .project(self.project.clone())
                 .disk(self.disk.clone())
                 .send()
                 .await
@@ -673,7 +673,7 @@ pub mod types {
         async fn unwind_disk_bulk_write_stop(&self) -> Result<(), DiskImportError> {
             self.client
                 .disk_bulk_write_import_stop()
-                .project(&self.project)
+                .project(self.project.clone())
                 .disk(self.disk.clone())
                 .send()
                 .await
@@ -822,7 +822,7 @@ pub mod types {
             self.client
                 .disk_bulk_write_import()
                 .disk(&*self.disk)
-                .project(&self.project)
+                .project(self.project.clone())
                 .body(ImportBlocksBulkWrite {
                     offset: chunk.offset,
                     base64_encoded_data,
